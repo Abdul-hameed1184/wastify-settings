@@ -4,8 +4,12 @@ export interface IProperty {
     lgaName: string;
     wardName: string;
     propertyCode: string;
-    noOfDistinctApartments: number;
+    noOfDistinctApartment: number;
+    propertyTypeName: string;
+    ownerFullName: string;
+    ownerId:string;
     stateName: string;
+    pspOperatorId: number;
     propertyDescription: string
     
 }

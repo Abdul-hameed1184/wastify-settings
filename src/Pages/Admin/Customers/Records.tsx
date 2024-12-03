@@ -8,7 +8,6 @@ import {
   TableHeadCell,
   TableRow,
 } from "flowbite-react";
-import { IoPeople } from "react-icons/io5";
 import AdminCard from "../../../Component/Card/AdminCard";
 import { Paragraph2XlGreenMargin } from "../../../Component/Paragraph";
 import axios from "axios";
@@ -18,10 +17,12 @@ import CustomerModal from "../../../Component/Modal/CustomerModal";
 import CreatePropertyModal from "../../../Component/Modal/CreatePropertyModal";
 import { IProperty } from "../../../models/property.interface";
 import CreateApartmentModal from "../../../Component/Modal/CreateApartmentModal";
+import { IOperator } from "../../../models/operator.interface";
+import { IPropertyType } from "../../../models/propertType.interface";
 
 const Records:React.FC = () => {
   const [AllPropertyRecords, setAllPropertyRecords] = useState([]);
-  const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS"));
+  const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   // console.log(operator);
   const [currentPage, setCurrentPage] = useState(1);
   const [transactionsPerPage] = useState(10);
@@ -74,6 +75,9 @@ const Records:React.FC = () => {
       });
   };
 
+
+    
+
   useEffect(() => {
     HandleTotalProperties();
     HandleAllProperties();
@@ -91,7 +95,7 @@ const Records:React.FC = () => {
         )
       : [];
 
-  const paginate = (pageNumber) => {
+  const paginate = (pageNumber: number) => {
     if (pageNumber < 1) {
       setCurrentPage(1);
     } else if (
@@ -124,8 +128,8 @@ const Records:React.FC = () => {
           />
         </div>
       </div>
-      <div className="flex justify-items-end">
-      <div className="w-1/3">
+      <div className="grid justify-items-end mb-4">
+          <div className="w-1/3">
       <ButtonsPrimary type="button" name="Add Property" onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}/>
       </div>
       </div>
@@ -136,20 +140,20 @@ const Records:React.FC = () => {
         </div>
         <div className="overflow-x-auto font-Poppins mt-3">
           <Table striped>
-            <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
-              <TableHeadCell>Property ID</TableHeadCell>
+            <TableHead className=" font-Poppins text-xl capitalize text-white bg-green dark:text-white">
+              {/* <TableHeadCell>Property ID</TableHeadCell> */}
               <TableHeadCell>Property address</TableHeadCell>
               <TableHeadCell>LGA</TableHeadCell>
               <TableHeadCell>Ward</TableHeadCell>
               <TableHeadCell>Property code</TableHeadCell>
               <TableHeadCell>Number of Distinct Apartment</TableHeadCell>{" "}
-              <TableHeadCell>Add/View Apartment</TableHeadCell>{" "}
+              {/* <TableHeadCell>Add/View Apartment</TableHeadCell>{" "} */}
               {/*Number of Customers Changed*/}
               {/* <TableHeadCell>Customer details</TableHeadCell> */}
-              <TableHeadCell>Action</TableHeadCell>
+              <TableHeadCell>Add/View Apartment</TableHeadCell>
             </TableHead>
-            <TableBody className="divide-y font-Poppins ">
-              {currentTransactions?.map((item, index) => (
+            <TableBody className="divide-y font-Poppins text-xl ">
+              {currentTransactions?.map((item:IProperty, index) => (
                 <TableRow
                   className={
                     index % 2 === 0
@@ -158,19 +162,19 @@ const Records:React.FC = () => {
                   }
                   key={index}
                 >
-                  <TableCell>{item.id}</TableCell>
+                  {/* <TableCell>{item.id}</TableCell> */}
                   <TableCell>{item.propertyAddress} </TableCell>
                   <TableCell>{item.lgaName} </TableCell>
                   <TableCell>{item.wardName}</TableCell>
                   <TableCell>{item.propertyCode}</TableCell>
                   <TableCell>{item.noOfDistinctApartment}</TableCell>
-                  <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell>
+                  {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
                   <TableCell>
                     <ButtonsPrimary
-                      name={"View More"}
-                      onClick={() => handleToggleOpen(item.id)} type={undefined} loading={undefined}                    />
+                      name={"+ / View More"}
+                      onClick={() => handleToggleOpen(item.id)} type={"button"} loading={undefined} />
                   </TableCell>
-                  <TableCell> ... </TableCell>
+                  {/* <TableCell> ... </TableCell> */}
                 </TableRow>
               ))}
 
@@ -187,16 +191,16 @@ const Records:React.FC = () => {
             </TableBody>
           </Table>
           {/* Pagination */}
-          <div className="flex justify-end items-center h-20 my-10 w-1/4 ">
-            <div className="w-full h-10 border border-primary2 flex items-center justify-end rounded-md px-5">
+          <div className="flex justify-center items-center h-20 my-10 w-full ">
+            <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
               <button
-                className={` `}
+                className={`text-green font-weight-bold`}
                 onClick={() => paginate(currentPage - 1)}
                 disabled={currentPage === 1}
               >
                 Previous
               </button>
-              <div className="ml-4 h-full">
+              <div className="mx-8 h-full">
                 {AllPropertyRecords &&
                   AllPropertyRecords.length &&
                   Array.from({
@@ -216,7 +220,7 @@ const Records:React.FC = () => {
                   ))}
               </div>
               <button
-                className={`ml-3 `}
+                className={`text-green font-weight-bold`}
                 onClick={() => paginate(currentPage + 1)}
                 disabled={
                   !AllPropertyRecords ||

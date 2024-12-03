@@ -59,7 +59,7 @@ const CustomerModal:React.FC<Props> = ({ openModal, setOpenModal, propertyId, se
 
   return (
     <Modal show={openModal} onClose={() => setOpenModal(false)} size={"5xl"}>
-      <Modal.Header>Customer Details</Modal.Header>
+      <Modal.Header>Property Details - {customerDetails[0]?.propertyAddress}</Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
           <Table striped>
@@ -90,8 +90,9 @@ const CustomerModal:React.FC<Props> = ({ openModal, setOpenModal, propertyId, se
           </Table>
         </div>
       </Modal.Body>
+      {/* <Modal.Header>Property Details - {customerDetails[0]?.propertyAddress}</Modal.Header> */}
       <Modal.Footer  className="flex justify-between items-center p-4">
-
+                
       <div className="w-1/3">
           <ButtonsPrimary
             onClick={() => {
@@ -107,7 +108,7 @@ const CustomerModal:React.FC<Props> = ({ openModal, setOpenModal, propertyId, se
               setOpenCreateApartmentModal(true)
               setOpenModal(false);
             } }
-            name={"Add Customer"} type={undefined} loading={undefined}          />
+            name={"Add Apartment"} type={undefined} loading={undefined}          />
             </div>
       </Modal.Footer>
     </Modal>

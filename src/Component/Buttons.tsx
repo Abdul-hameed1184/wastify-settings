@@ -1,6 +1,14 @@
 import React from 'react'
 
-export const ButtonsPrimary = ({type, onClick, name, loading}) => {
+
+type Props = {
+  type: "submit" | "reset" | "button" ;
+  onClick?: () => void;
+  name: string;
+  loading?: boolean;
+  icon?:string;
+}
+export const ButtonsPrimary:React.FC<Props> = ({type, onClick, name, loading}) => {
   return (
     <button type={type} onClick={onClick} 
     className={`text-white bg-green  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'}`}
@@ -10,7 +18,7 @@ export const ButtonsPrimary = ({type, onClick, name, loading}) => {
 </button>
   )
 }
-export const ButtonsPrimaryBlack = ({type, onClick, name, loading}) => {
+export const ButtonsPrimaryBlack:React.FC<Props> = ({type, onClick, name, loading}) => {
   return (
     <button type={type} onClick={onClick} 
     className={`text-white bg-black  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-black'}`}
@@ -20,7 +28,7 @@ export const ButtonsPrimaryBlack = ({type, onClick, name, loading}) => {
 </button>
   )
 }
-export const ButtonsPrimaryIcon = ({type, onClick, name, icon, loading}) => {
+export const ButtonsPrimaryIcon:React.FC<Props> = ({type, onClick, name, icon, loading}) => {
   return (
     <button type={type} onClick={onClick} 
     className={`text-white bg-green  w-full h-14 inline-flex justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'}`}
@@ -30,7 +38,7 @@ export const ButtonsPrimaryIcon = ({type, onClick, name, icon, loading}) => {
 </button>
   )
 }
-export const ButtonsSecondary = ({type, onClick, name, loading}) => {
+export const ButtonsSecondary:React.FC<Props> = ({type, onClick, name, loading}) => {
   return (
     <button type={type} onClick={onClick} 
     className={`text-white bg-gray  w-full h-14  justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightgray' : 'bg-gray'}`}
@@ -40,7 +48,7 @@ export const ButtonsSecondary = ({type, onClick, name, loading}) => {
 </button>
   )
 }
-export const ButtonsSecondaryIcon = ({type, onClick, name, icon,loading}) => {
+export const ButtonsSecondaryIcon:React.FC<Props> = ({type, onClick, name, icon,loading}) => {
   return (
     <button type={type} onClick={onClick} 
     className={`text-white bg-gray  w-full h-14 inline-flex justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightgray' : 'bg-gray'}`}
@@ -52,7 +60,7 @@ export const ButtonsSecondaryIcon = ({type, onClick, name, icon,loading}) => {
 </button>
   )
 }
-export const ButtonsWhite = ({type, onClick, name,loading}) => {
+export const ButtonsWhite:React.FC<Props> = ({type, onClick, name,loading}) => {
   return (
     <button type={type} onClick={onClick} 
     className='text-gray bg-white  w-full h-14  justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border'
@@ -64,7 +72,7 @@ export const ButtonsWhite = ({type, onClick, name,loading}) => {
 }
 
 
-export const Button = ({type, onClick, name,loading}) => {
+export const Button:React.FC<Props> = ({type, onClick, name,loading}) => {
   return (
     <button type={type} onClick={onClick} 
     className={`text-white font-weight-bold bg-green my-4 w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'}`}

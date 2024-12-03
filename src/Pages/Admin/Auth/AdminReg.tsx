@@ -13,6 +13,7 @@ import { ButtonsPrimary } from "../../../Component/Buttons";
 import { AdminLogo } from "../../../Component/AlternateLogos";
 import axios from "axios";
 import baseURL from "../../../utils/apiConfig";
+import { IState } from "../../../models/location.interface";
 
 const validate = (values) => {
   const errors = {};
@@ -522,7 +523,7 @@ const AdminReg = () => {
                   value={formik.values.state} // Bind to formik values
                 >
                   <option value="">Select State</option>
-                  {allState?.map((state) => (
+                  {allState && allState.map((state:IState) => (
                     <option key={state.id} value={state.id}>
                       {state.name}
                     </option>

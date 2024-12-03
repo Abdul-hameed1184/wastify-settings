@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useFormik } from "formik";
-import { ToastContainer, toast } from "react-toastify";
+import { FormikValues, useFormik } from "formik";
+import { ToastContainer, Zoom, toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { login } from "../../../Features/authSlice";
 import {
   ParagraphExtraSmallError,
   ParagraphSmall2,
@@ -15,8 +14,12 @@ import { ButtonsPrimary } from "../../../Component/Buttons";
 import { AdminLogo } from "../../../Component/AlternateLogos";
 import baseURL from "../../../utils/apiConfig";
 
-const validate = (values) => {
-  const errors = {};
+interface Errors {
+  email: string;
+  password:string;
+}
+const validate = (values: {email: string, password: string}) => {
+  const errors:FormikValues= {};
 
   if (!values.email) {
     errors.email = "Email is Required";
@@ -124,9 +127,6 @@ const AdminLogin = () => {
     },
   });
 
-  const handleLogin = () => {
-    navigate("/dashboard");
-  };
   return (
     <main className="p-10">
       <div className="flex items-center justify-center mt-10 lg:justify-start">
@@ -142,13 +142,26 @@ const AdminLogin = () => {
               Login to{" "}
               <span className="text-green">Wasteefy Management System</span>
             </p>
-            <ToastContainer />
+            <ToastContainer 
+       position="top-center"
+       autoClose={5000}
+       hideProgressBar
+       newestOnTop={false}
+       closeOnClick
+       rtl={false}
+       pauseOnFocusLoss
+       draggable
+       pauseOnHover
+       theme="light"
+       transition={Zoom}
+      />
 
             <div className="w-full lg:w-4/5">
               <ParagraphSmall2 content={"Email"} />
               <InputFieldGray
                 type={"email"}
                 name={"email"}
+                placeholder={"Email"}
                 onChange={formik.handleChange}
                 value={formik.values.email}
               />
@@ -162,6 +175,7 @@ const AdminLogin = () => {
               <InputFieldGray
                 type={istoggle ? "text" : "password"}
                 name={"password"}
+                placeholder={"Password"}
                 onChange={formik.handleChange}
                 value={formik.values.password}
               />

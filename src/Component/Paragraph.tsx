@@ -1,6 +1,7 @@
 import React from 'react'
 type Props = {
-  content: string
+  content: string;
+  name?: string;
 }
 
 export const ParagraphSmall :React.FC<Props>= ({content}) => {
@@ -33,6 +34,13 @@ export const ParagraphExtraSmall :React.FC<Props>= ({content}) => {
     <p className='text-xxs font-Poppins font-thin not-italic text-white leading-2'>{content}</p>
   )
 }
+
+export const ParagraphError :React.FC<Props>= ({content}) => {
+  return (
+    <p className='text-lg font-Poppins font-thick not-italic text-error text-center leading-2 m-1'>{content}</p>
+  )
+}
+
 export const ParagraphExtraSmallError :React.FC<Props>= ({content}) => {
   return (
     <p className='text-sm font-Poppins font-thin not-italic text-error text-center leading-2 m-1'>{content}</p>

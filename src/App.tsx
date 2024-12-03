@@ -42,7 +42,8 @@ import AdminResetPassword from "./Pages/Admin/Auth/AdminResetPassword";
 import ResetPasswordVerify from "./Pages/Auth/ResetPasswordVerify";
 import Customer from "./Pages/Admin/Billing/Customer";
 import AllCustomers from "./Pages/Admin/Billing/AllCustomers";
-
+import { ToastContainer, Zoom } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const navigate = useNavigate();
@@ -67,6 +68,19 @@ function App() {
     <>
       {/* UseNavigate in reaxct pass static parameters needed for the next route through it  */}
       <ScrolltoTop />
+      <ToastContainer 
+       position="top-center"
+       autoClose={5000}
+       hideProgressBar
+       newestOnTop={false}
+       closeOnClick
+       rtl={false}
+       pauseOnFocusLoss
+       draggable
+       pauseOnHover
+       theme="light"
+       transition={Zoom}
+      />
       <Routes>
         {/* Auth routes start */}
         <Route path="/" element={<Home />} />

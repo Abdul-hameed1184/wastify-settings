@@ -14,3 +14,9 @@ export interface IWard {
     id: number;
     name: string;
 }
+
+export interface ILocation {
+    latitude: string;
+    longitude: string;
+
+}
