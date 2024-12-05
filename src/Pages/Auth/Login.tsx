@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TiTimes } from "react-icons/ti";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useFormik } from "formik";
+import { FormikValues, useFormik } from "formik";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -11,14 +11,13 @@ import {
   Paragraph2Xl,
   ParagraphExtraSmallError,
   ParagraphLargeWhite,
-  ParagraphSmall,
 } from "../../Component/Paragraph";
 import { InputFieldSecondaryGreen } from "../../Component/InputField";
 import { ButtonsPrimary } from "../../Component/Buttons";
 import baseURL from "../../utils/apiConfig";
 
-const validate = (values) => {
-  const errors = {};
+const validate = (values:FormikValues) => {
+  const errors:FormikValues = {};
 
   if (!values.phone) {
     errors.phone = "Phone Number is Required";
@@ -108,7 +107,7 @@ const Login = () => {
         </div>
         <div className="mt-10 md:mt-3 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
           <div className="flex justify-end mr-8">
-            <Link to="/" smooth="true" duration={500}>
+            <Link to="/">
               <TiTimes size={24} className="bg-green text-white rounded-2xl" />
             </Link>
           </div>
@@ -153,8 +152,6 @@ const Login = () => {
               <div className="flex justify-end mr-8">
                 <Link
                   to="/forget-password"
-                  smooth="true"
-                  duration={500}
                   className=" text-green text-sm underline"
                 >
                   Forgot password?

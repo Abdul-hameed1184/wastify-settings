@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
-import { useFormik } from "formik";
+import { FormikValues, useFormik } from "formik";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -13,12 +13,12 @@ import baseURL from "../../../utils/apiConfig";
 import { InputFieldSecondaryGreen } from "../../../Component/InputField";
 import { ButtonsPrimary } from "../../../Component/Buttons";
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const validate = (values) => {
-  const errors = {};
+const validate = (values: FormikValues) => {
+  const errors: FormikValues = {};
   // if (!values.propertyTypeId) {
   //     errors.propertyTypeId = 'Property Type is Required';
   // }
@@ -44,7 +44,7 @@ const Pricing = () => {
   const [selectproperty, setSelectedProperty] = useState("");
   const [selectpropertyAmount, setSelectedPropertyAmount] = useState("");
   const [billsID, setBillID] = useState("");
-  const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS"));
+  const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "");
 
   // Fetch property data
   const HandleFetchProperty = () => {
@@ -59,23 +59,23 @@ const Pricing = () => {
 
         // Filter objects based on type
         const residentialProperties = responseData.filter(
-          (item) => item.name === "Residential"
+          (item: any) => item.name === "Residential"
         );
         const commercialProperties = responseData.filter(
-          (item) => item.name === "Commercial"
+          (item: any) => item.name === "Commercial"
         );
         const mixedProperties = responseData.filter(
-          (item) => item.name === "Mixed Property"
+          (item: any) => item.name === "Mixed Property"
         );
         const governmentReservedProperties = responseData.filter(
-          (item) => item.name === "Goverment Reserved Areas"
+          (item: any) => item.name === "Goverment Reserved Areas"
         );
 
         // Sort arrays based on id
-        residentialProperties.sort((a, b) => a.id - b.id);
-        commercialProperties.sort((a, b) => a.id - b.id);
-        mixedProperties.sort((a, b) => a.id - b.id);
-        governmentReservedProperties.sort((a, b) => a.id - b.id);
+        residentialProperties.sort((a:any, b:any) => a.id - b.id);
+        commercialProperties.sort((a:any, b:any) => a.id - b.id);
+        mixedProperties.sort((a:any, b:any) => a.id - b.id);
+        governmentReservedProperties.sort((a:any, b:any) => a.id - b.id);
 
         setResidentials(residentialProperties);
         setCommercials(commercialProperties);
@@ -96,7 +96,7 @@ const Pricing = () => {
     setErrors("");
   };
 
-  const handleTabChange = (tabIndex) => {
+  const handleTabChange = (tabIndex:number) => {
     // When a tab is changed, set the selectPropertyTypeId based on the tab and the respective property's ID
     // console.log("tabIndex", tabIndex);
 
@@ -159,7 +159,7 @@ const Pricing = () => {
 
   const formik = useFormik({
     initialValues: {
-      // amount: selectpropertyAmount,
+      amount: 0,
     },
     validate,
     onSubmit: (values) => {

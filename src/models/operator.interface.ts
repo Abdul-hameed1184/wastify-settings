@@ -12,5 +12,6 @@ export interface IOperator {
     userId: string;
     wardId: number;
     wardName: string;
+    operatorName?: string;
 
 }

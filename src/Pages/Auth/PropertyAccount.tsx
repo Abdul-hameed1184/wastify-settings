@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useFormik } from "formik";
+import { FormikValues, useFormik } from "formik";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -28,11 +28,13 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 import { IoClose } from "react-icons/io5";
+import { ILga, IState, IWard } from "../../models/location.interface";
+import { IOperator } from "../../models/operator.interface";
 
 const LIBRARIES = ["places"];
 
-const validate = (values) => {
-  const errors = {};
+const validate = (values:FormikValues) => {
+  const errors:FormikValues = {};
   if (!values.pspOperatorId) {
     errors.pspOperatorId = "PSP Operator is Required";
   }
@@ -55,19 +57,19 @@ export default function Places() {
   return <PropertyAccount />;
 }
 
-const PropertyAccount = () => {
+const PropertyAccount:React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedState, setSelectedState] = useState(null);
-  const [selectedLGA, setSelectedLGA] = useState(null);
-  const [allState, setAllState] = useState([]);
-  const [StateSelectedID, setStateSelectedID] = useState();
-  const [LgaSelectedID, setLgaSelectedID] = useState();
-  const [WardSelectedID, setWardSelectedID] = useState();
+  const [selectedState, setSelectedState] = useState<{lga: ILga}>();
+  const [selectedLGA, setSelectedLGA] = useState<{ward: IWard}>();
+  const [allState, setAllState] = useState<IState[]>([]);
+  const [StateSelectedID, setStateSelectedID] = useState<number>();
+  const [LgaSelectedID, setLgaSelectedID] = useState<number>();
+  const [WardSelectedID, setWardSelectedID] = useState<number>();
   const [PspOperatorList, setPspOperatorList] = useState([]);
   const [loading, SetLoading] = useState(false);
   const [loadingPSP, SetLoadingPSP] = useState(false);
-  const [addressValues, SetAddressValues] = useState(initialAddress);
+ // const [addressValues, SetAddressValues] = useState<string>(initialAddress);
   const [selected, setSelected] = useState(null);
   const [formValuess, setFormValuess] = useState({
     propertyAddress: "",
@@ -148,9 +150,9 @@ const PropertyAccount = () => {
   const handleStateChange = (e) => {
     const stateId = parseInt(e.target.value, 10);
     setStateSelectedID(stateId);
-    const selectedState = allState.find((state) => state.id === stateId);
-    setSelectedState(selectedState);
-    setSelectedLGA(null);
+    const setState = allState.find((state) => state.id === stateId);
+    setSelectedState(setState);
+  //  setSelectedLGA();
   };
 
   const handleLGAChange = (e) => {
@@ -289,7 +291,7 @@ const PropertyAccount = () => {
 
         <div className="md:mt-1 md:mb-10 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
           <div className="flex justify-start mt-6 ml-6 md:mt-2">
-            <Link to="/propertyunit" smooth="true" duration={500}>
+            <Link to="/propertyunit">
               <IoChevronBack
                 size={28}
                 className="bg-green text-white rounded-2xl"
@@ -330,7 +332,7 @@ const PropertyAccount = () => {
               >
                 <option>Select your LGA</option>
                 {selectedState &&
-                  selectedState.lgas.map((lga) => (
+                  selectedState.lgas.map((lga:ILga) => (
                     <option key={lga.id} value={lga.id}>
                       {lga.name}
                     </option>
@@ -347,7 +349,7 @@ const PropertyAccount = () => {
               >
                 <option>Select your ward</option>
                 {selectedLGA &&
-                  selectedLGA.wards.map((ward) => (
+                  selectedLGA.wards.map((ward:IWard) => (
                     <option key={ward.id} value={ward.id}>
                       {ward.name}
                     </option>
@@ -371,7 +373,7 @@ const PropertyAccount = () => {
                 disabled={loadingPSP}
               >
                 <option value="">Select PSP Operator</option>
-                {PspOperatorList.map((operator) => (
+                {PspOperatorList.map((operator:IOperator) => (
                   <option key={operator.id} value={operator.id}>
                     {operator.operatorName}
                   </option>
@@ -387,8 +389,8 @@ const PropertyAccount = () => {
             <div className="mt-6 mx-4 md:mt-2">
               <ButtonsPrimary
                 name={"Continue"}
-                isLoading={loading}
-                isDisabled={loading}
+                loading={loading}
+                disabled={loading}
                 type={"submit"}
               />
             </div>

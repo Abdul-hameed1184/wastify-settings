@@ -66,6 +66,7 @@ const Dash = () => {
   };
 
   useEffect(() => {
+    console.log('Dash')
     FetchDash();
 
     updateDateTime(); // Initial call to set the date and time immediately

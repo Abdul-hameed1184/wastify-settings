@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "flowbite-react";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../Features/authSlice";
+import { selectUser } from "../../Features/authSlice"
 import { RoundedLogo } from "../../Component/AlternateLogos";
 import ProfileCard from "../../Component/Card/ProfileCard";
 import ProfileSlider from "../../Component/Slider/ProfileSlider";
@@ -25,7 +25,7 @@ const Profile = () => {
     }
   };
 
-  const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") );
+  const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS")||"");
   console.log("customer", customer);
 
   const FetchDash = () => {
@@ -65,7 +65,7 @@ const Profile = () => {
           <Card className="max-w-sm border-transparent">
             <div className="flex justify-around flex-wrap">
               <div className="w-[30%] cursor-pointer">
-                <Link to="/wastebills" smooth={true} duration={500}>
+                <Link to="/wastebills">
                   <img
                     src="Images/wastebill.png"
                     alt=""
@@ -77,7 +77,7 @@ const Profile = () => {
                 </Link>
               </div>
               <div className="w-[30%] cursor-pointer">
-                <Link to="/payment-history" smooth={true} duration={500}>
+                <Link to="/payment-history">
                   <img
                     src="Images/paymenthistory.png"
                     alt=""
@@ -89,7 +89,7 @@ const Profile = () => {
                 </Link>
               </div>
               <div className="w-[30%] cursor-pointer">
-                <Link to="/view-history" smooth={true} duration={500}>
+                <Link to="/view-history">
                   <img src="Images/property.png" alt="" className="w-20 h-16" />
                   <p className="text-xs font-Poppins font-medium not-italic text-gray leading-6">
                     View property
@@ -97,7 +97,7 @@ const Profile = () => {
                 </Link>
               </div>
               <div className="mt-5 cursor-pointer">
-                <Link to="/support" smooth={true} duration={500}>
+                <Link to="/support">
                   <img src="Images/support.png" alt="" className="w-16 h-16" />
                   <p className="text-xs font-Poppins font-medium not-italic text-support leading-6">
                     Help & Support

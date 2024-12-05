@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useFormik } from 'formik';
+import { FormikValues, useFormik } from 'formik';
 import { ToastContainer, toast } from "react-toastify";
 import axios from 'axios';
 import { Paragraph2Xl, ParagraphExtraSmallError, ParagraphLargeWhite, ParagraphSmall } from '../../Component/Paragraph';
@@ -11,8 +11,8 @@ import { ButtonsPrimary } from '../../Component/Buttons';
 import styles from './Checkbox.module.css';
 import baseURL from '../../utils/apiConfig';
 
-const validate = values => {
-    const errors = {};
+const validate = (values:FormikValues) => {
+    const errors:FormikValues = {};
 
     if (!values.firstname) {
         errors.firstname = 'First Name is Required';
@@ -128,7 +128,7 @@ const CreateAccount = () => {
 
                 <div className="md:mt-1 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
                     <div className="flex justify-start mt-6 ml-6 md:mt-1 md:ml-3">
-                        <Link to="/signup" smooth="true" duration={500}>
+                        <Link to="/signup">
                             <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
                         </Link>
                     </div>

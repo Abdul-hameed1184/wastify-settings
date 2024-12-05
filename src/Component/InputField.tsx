@@ -1,11 +1,11 @@
 import React from 'react'
 
 type Props = {
-  type: string;
-  name: string;
-  value: string;
-  placeholder: string;
-  onChange: (value: any) => void;
+  type?: string;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  onChange?: (value: any) => void;
   error?: string | null;
   required?: boolean;
   list?:string;

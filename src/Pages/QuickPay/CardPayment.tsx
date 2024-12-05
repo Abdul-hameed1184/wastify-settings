@@ -1,11 +1,11 @@
-import React from 'react'
+
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { Paragraph2Xl, ParagraphSmall, ParagraphSmall2 } from '../../Component/Paragraph';
 import { InputField, InputFieldSecondary } from '../../Component/InputField';
 import { ButtonsPrimary } from '../../Component/Buttons';
 
-const CardPayment = () => {
+const CardPayment:React.FC = () => {
     const navigate = useNavigate();
 
     const HandlePay = () => {
@@ -15,7 +15,7 @@ const CardPayment = () => {
     return (
         <main className='mt-10 mx-4'>
             <div className="flex justify-start mt-6 ml-6">
-                <Link to="/paymentmode" smooth="true" duration={500}>
+                <Link to="/paymentmode">
                     <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
                 </Link>
             </div>

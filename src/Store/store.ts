@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-import authReducer from '../Features/authSlice';
-import adminSidebarReducer from '../Features/adminSidebarSlice';
+import authReducer from "../Features/authSlice"
+import adminSidebarReducer from "../Features/adminSidebarSlice"
 
 const rootReducer = combineReducers({
     // Add your reducers here 

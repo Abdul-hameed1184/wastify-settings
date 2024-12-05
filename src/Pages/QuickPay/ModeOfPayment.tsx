@@ -6,7 +6,7 @@ import { ButtonsPrimary } from '../../Component/Buttons';
 
 const ModeOfPayment = () => {
     const navigate = useNavigate();
-    const [selectedType, setSelectedType] = useState('');
+    const [selectedType, setSelectedType] = useState<string>('');
 
     //handle type selection
     const HandleTypeSelection = (e) => {
@@ -22,7 +22,7 @@ const ModeOfPayment = () => {
     return (
         <main className='mt-10 mx-4'>
             <div className="flex justify-start mt-6 ml-6">
-                <Link to="/confirmation" smooth="true" duration={500}>
+                <Link to="/confirmation">
                     <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
                 </Link>
             </div>

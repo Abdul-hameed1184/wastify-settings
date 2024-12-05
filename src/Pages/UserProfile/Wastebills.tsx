@@ -6,14 +6,14 @@ import CurrentBill from "../../Component/Card/CurrentBill";
 import axios from "axios";
 import baseURL from "../../utils/apiConfig";
 
-function classNames(...classes) {
+function classNames(...classes:string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const Wastebills = () => {
-  const [activeTab, setActiveTab] = useState("current");
+  const [activeTab, setActiveTab] = useState<string>("current");
 
-  const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS"));
+  const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS")||"");
   console.log("customerWaste", customer);
 
   const FetchBills = () => {
@@ -41,7 +41,7 @@ const Wastebills = () => {
   return (
     <main>
       <div className="flex justify-start mt-10 ml-6">
-        <Link to="/profile" smooth="true" duration={500}>
+        <Link to="/profile">
           <IoChevronBack
             size={28}
             className="bg-green text-white rounded-2xl"

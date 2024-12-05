@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 
 
 type Props = {
-  type: "submit" | "reset" | "button" ;
+  type?: "submit" | "reset" | "button" ;
   onClick?: () => void;
   name: string;
   loading?: boolean;
-  icon?:string;
+  icon?:ReactNode;
+  disabled?: boolean;
 }
 export const ButtonsPrimary:React.FC<Props> = ({type, onClick, name, loading}) => {
   return (

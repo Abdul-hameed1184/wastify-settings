@@ -6,7 +6,7 @@ const Support = () => {
     return (
         <main className='bg-green'>
             <div className="flex justify-start pt-10 ml-6">
-                <Link to="/profile" smooth="true" duration={500}>
+                <Link to="/profile">
                     <IoChevronBack size={28} className='bg-gray text-white rounded-2xl' />
                 </Link>
             </div>

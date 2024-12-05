@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import PropTypes from "prop-types";
 import AdminNavbar from './AdminNavbar'
 import AdminSidebar from './AdminSidebar'
@@ -10,6 +10,10 @@ type Props = {
   }
 
 const AdminLayout:React.FC<Props> = ({children}) => {
+
+    useEffect(() => {
+        console.log('AdminLayout')
+    })
     return (
         <div>
             <AdminNavbar />
@@ -39,8 +43,5 @@ const AdminLayout:React.FC<Props> = ({children}) => {
     )
 }
 
-AdminLayout.propTypes = {
-    children: PropTypes.node.isRequired,
-};
 
 export default AdminLayout

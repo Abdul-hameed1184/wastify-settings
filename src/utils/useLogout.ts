@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { IDecodeToken } from './models/decodedtoken.interface';
 const useLogout = () => {
-    const [token] = useState(sessionStorage.getItem('SESSION_AUTH_TOKEN'))
-    const navigate = useNavigate();
+    const [token] = useState(sessionStorage.getItem('SESSION_AUTH_TOKEN')||"")
 
-    const decodeToken = (token) => {
+    const decodeToken = (token:string) => {
         try {
           return jwtDecode(token);
         } catch (error) {
@@ -17,8 +17,8 @@ const useLogout = () => {
 
     const logout = () => {
         try {
-            const userDetails = decodeToken(token);
-            if (userDetails.role === 1) {
+            const userDetails:IDecodeToken = decodeToken(token)||{};
+            if (userDetails?.role === 1) {
                 sessionStorage.removeItem('SESSION_AUTH_TOKEN')
                 sessionStorage.removeItem('AUTH_USERDETAILS')
                 return true;
@@ -32,7 +32,6 @@ const useLogout = () => {
 
         } catch (err) {
             return false;
-            console.log(err)
         }
     }
     return logout;
