@@ -181,7 +181,7 @@ const AllCustomers = () => {
                         </div>
                         <div className='w-32'> <ButtonsPrimaryBlack name={"Send Bill"} onClick={handleToggleOpen} /></div>
                     </div>
-                    <CreateBillModal openModal={openModal} setOpenModal={setOpenModal} />
+                    <CreateBillModal openModal={openModal} setOpenModal={setOpenModal} customer={undefined} type={undefined} />
                 </div>
             </div>
         </main>

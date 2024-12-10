@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 const Transaction = () => {
     const [bills, setbills] = useState([]);
     const [allproperties, setAllProperties] = useState([]);
-    const operator = JSON.parse(sessionStorage.getItem('AUTH_ADMIN_DETAILS'));
+    const operator = JSON.parse(sessionStorage.getItem('AUTH_ADMIN_DETAILS')||"");
     const [currentPage, setCurrentPage] = useState(1);
     const [transactionsPerPage] = useState(10);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
@@ -24,21 +24,21 @@ const Transaction = () => {
         console.log("propertyType", propertyType);
     }
 
-    const FetchOperatorsills = () => {
-        axios.get(baseURL + 'customerBilling/' + operator.pspOperatorId, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((res) => {
-                const responseData = res.data?.data;
-                console.log(responseData);
-                // setAllProperties(responseData)
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    };
+    // const FetchOperatorsills = () => {
+    //     axios.get(baseURL + 'customerBilling/' + operator.id, {
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //     })
+    //         .then((res) => {
+    //             const responseData = res.data?.data;
+    //             console.log(responseData);
+    //             // setAllProperties(responseData)
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // };
     // const FetchOperatorsills = () => {
     //     axios.get(baseURL + 'customer/psp-operator/' + operator.pspOperatorId, {
     //         headers: {
@@ -55,9 +55,9 @@ const Transaction = () => {
     //         });
     // };
 
-    useEffect(() => {
-        FetchOperatorsills()
-    }, [])
+    // useEffect(() => {
+    //     FetchOperatorsills()
+    // }, [])
 
     const indexOfLastTransaction = currentPage * transactionsPerPage;
     const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;

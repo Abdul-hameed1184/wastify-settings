@@ -5,13 +5,25 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import {
   Paragraph2Green,
+  Paragraph2XlGreen,
   Paragraph2XlGreenMargin,
   ParagraphExtraSmallError,
+  ParagraphLarge,
+  ParagraphSmall2,
   ParagraphTextSettings,
+  ParagraphXl,
 } from "../../../Component/Paragraph";
 import baseURL from "../../../utils/apiConfig";
 import { InputFieldSecondaryGreen } from "../../../Component/InputField";
-import { ButtonsPrimary } from "../../../Component/Buttons";
+import { ButtonsPrimary, ButtonsSecondaryIcon } from "../../../Component/Buttons";
+import { getPropertyTypes } from "../../../api/property/property.service";
+import { IApartmentType, IPropertyType } from "../../../models/propertType.interface";
+import { createBillSetup, getPspOperatorBill, updateBillSetup } from "../../../api/bill/psp-operator-pricing";
+import { IOperator } from "../../../models/operator.interface";
+import { getApartmentType } from "../../../api/property/apartment.service";
+import { IApartmentTypeBill } from "../../../models/apartmentTypeBill.interface";
+import Loader from "../../../Component/Loader";
+import { ICreateBill } from "../../../models/createbill.interface";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -30,22 +42,27 @@ const validate = (values: FormikValues) => {
   return errors;
 };
 
-const Pricing = () => {
+const Pricing:React.FC = () => {
   const [residentials, setResidentials] = useState([]);
   const [commercials, setCommercials] = useState([]);
   const [mixedProperties, setMixedProperties] = useState([]);
   const [governmentReserved, setGovernmentReserved] = useState([]);
   const [selectProperty, setSelectProperty] = useState("");
   const [selectPropertyTypeId, setSelectPropertyTypeId] = useState("");
+  const [ propertyType, setPropertyType ] = useState<IPropertyType[]>([])
   const [errors, setErrors] = useState({});
 
   const [loading, SetLoading] = useState(false);
   const [bills, setBills] = useState([]);
   const [selectproperty, setSelectedProperty] = useState("");
-  const [selectpropertyAmount, setSelectedPropertyAmount] = useState("");
+  const [selectpropertyAmount, setSelectedPropertyAmount] = useState(0);
   const [billsID, setBillID] = useState("");
-  const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "");
-
+  const [apartmentType, setApartmentType ] = useState<IApartmentType[]>([]);
+  const [ apartmentTypeBill, setApartmentTypeBill ] = useState<IApartmentTypeBill[]>([]);
+  const [ selectedApartmentTypeBill, setSelectedApartmentTypeBill ] = useState<IApartmentTypeBill>();
+  const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "");
+  const [ loader, setLoader ]= useState<boolean>(true);
+  const [ editBill, setEditBill ] =useState<boolean>(false);
   // Fetch property data
   const HandleFetchProperty = () => {
     axios
@@ -88,6 +105,19 @@ const Pricing = () => {
         console.log(err);
       });
   };
+
+  useEffect(()=>{
+
+    (async () => {
+      const prop = await getPropertyTypes();
+      setPropertyType(prop.data.data);
+      const pspBill = await getPspOperatorBill(3);
+      setApartmentTypeBill(pspBill.data.data.data);
+      const apartType = await getApartmentType();
+      setApartmentType(apartType.data.data);
+    })();
+    setLoader(false);
+  },[]) 
 
   // Handle property type change - SHOULD BE APARTMENT TYPE
   const handlePropertyTypeChange = (e) => {
@@ -152,8 +182,48 @@ const Pricing = () => {
     amount: selectpropertyAmount,
   };
 
+  const handleCreateBill = async () => {
+    try{
+      if(selectedApartmentTypeBill){
+    const data = await createBillSetup({
+      pspOperatorId: operator.id,
+      amount: selectpropertyAmount,
+      apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
+    });
+    console.log(data);
+  //  toast.success(data.message)
+  }
+
+   
+  }catch(e){
+    console.log(e);
+   // toast.error(e)
+  }
+}
+  const handleUpdateBill = async () => {
+    try{
+      if(selectedApartmentTypeBill){
+    const data = await updateBillSetup({
+      pspOperatorId: operator.id,
+      amount: selectpropertyAmount,
+      apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
+      id: selectedApartmentTypeBill.id
+    });
+    console.log(data);
+  //  toast.success(data.message)
+  }
+
+   
+  }catch(e){
+    console.log(e);
+   // toast.error(e)
+  }
+
+  }
+
+
   const handlePriceChange = (e) => {
-    setSelectedPropertyAmount(e.target.value);
+    setSelectedPropertyAmount(parseInt(e.target.value));
     setErrors("");
   };
 
@@ -268,7 +338,89 @@ const Pricing = () => {
   return (
     <>
       <div>
-        <form onSubmit={formik.handleSubmit}>
+{ loader ? <Loader /> :
+        <div className="w-full border border-transparent rounded-lg ring-2 ring-transparent shadow-2xl px-5 py-14">
+            <ToastContainer />
+
+            <Paragraph2XlGreenMargin content={"Pricing"} />
+            <ParagraphTextSettings content={"Setup property price"} />
+            <div className="">
+              <div className="mt-8 mb-8">
+              <ParagraphXl content={"Property Type"} />
+              <select
+              className="form-select form-select-xl mb-3 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base mt-1 ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
+               aria-label=".form-select-lg example"
+               onChange={(e) => setSelectPropertyTypeId(e.target.value)}
+               >
+             { propertyType && propertyType.map((x:IPropertyType) => {
+              return (<option value={x.id}> {x.name} </option>)
+             }) }
+                </select>
+              </div>
+              <ParagraphXl content={"Apartment Type"} />
+              <div className=" flex flex-row align-items-center justify-content-center">
+
+              <select
+              className="form-select form-select-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
+               aria-label=".form-select-lg example"
+               onChange={(e) =>{
+                const selectedId = parseInt(e.target.value); // Get the selected id
+                const selectedObject = apartmentTypeBill.find(
+                  (x: IApartmentTypeBill) => x.id === selectedId
+                ); // Find the matching object
+                setSelectedApartmentTypeBill(selectedObject); 
+              }
+               }
+               >
+                     <option disabled selected>Select Apartment Type</option>
+             { apartmentTypeBill && apartmentTypeBill.map((x:IApartmentTypeBill) => {
+               
+              return (<option value={x.id}> {x.apartmentTypeName} </option>)
+             }) }
+                </select> 
+                <div className="w-1/5 mx-4 mb-3">
+                <ButtonsPrimary name={"Add Apartment"}/>
+                </div>
+
+              </div>
+              
+     { selectedApartmentTypeBill &&  
+      
+      <div className="mt-8 flex flex-row  align-items-center justify-content-center">
+        
+               { !editBill ? 
+              <div className="flex flex-row">
+                <Paragraph2XlGreen content={selectedApartmentTypeBill.amount} />
+                <div className="w-1/5 mx-4 mb-3">
+                <ButtonsPrimary name={"       Edit  "} onClick={() => setEditBill(true)} />
+                  </div>
+                  </div> 
+                  : 
+                  <div>
+               <div className="flex flex-row">
+                
+               <input
+                className="form-control form-control-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
+                placeholder={"New Bill"}
+                  type={"number"}
+                  name={"amount"}
+                  onChange={handlePriceChange}
+                  
+                />
+                         <div className="w-1/5 mx-4 mb-3">
+                <ButtonsPrimary name={"Update Bill"} onClick={handleUpdateBill}/>
+                </div>
+                </div>
+            
+               </div>
+               
+}
+              </div>}
+              
+            </div>
+          </div>
+          }
+          <form onSubmit={formik.handleSubmit}>
           <div className="w-full border border-transparent rounded-lg ring-2 ring-transparent shadow-2xl px-5 py-14">
             <ToastContainer />
             <Paragraph2XlGreenMargin content={"Pricing"} />

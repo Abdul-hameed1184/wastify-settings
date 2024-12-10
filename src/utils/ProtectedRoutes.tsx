@@ -3,7 +3,7 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode';
 
 const ProtectedRoutes = () => {
-  const [loggedIn, setLoggedIn] = useState(null);
+  const [loggedIn, setLoggedIn] = useState<boolean>(null);
   const [token] = useState(sessionStorage.getItem('SESSION_AUTH_TOKEN'))
   const navigate = useNavigate();
 
