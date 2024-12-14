@@ -19,16 +19,16 @@ const AdminSidebar = () => {
     const { pathname } = location;
     const logout = useLogout();
     const dispatch = useDispatch();
-    const toggle = useSelector(state => state.sidebar.isOpen);
+    const toggle = useSelector((state: { sidebar: { isOpen:boolean}}) => state.sidebar.isOpen);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const handleOptionClick = (option) => {
         setIsActive(option)
 
-        if (windowWidth < 1010) {
+        // if (windowWidth < 1010) {
             
             dispatch(toggleSidebar()); 
-        }
+        // }
     };
     const handleLogOut = () => {
         const isLoggedOut = logout();
@@ -54,10 +54,10 @@ const AdminSidebar = () => {
     return (
         <>
          {/* desktop viww */}
-        <main className={`fixed transform  ease-in-out duration-500 delay-300 ${toggle ? "translate-x-0" : "-translate-x-full"} w-4/5 lg:w-1/5 py-10 mt-10 h-screen lg:flex flex-col bg-white shadow-2xl font-Poppins z-20`}>
+        <main className={`admin-sidebar fixed transform  ease-in-out duration-500 delay-300 ${toggle ? "translate-x-0" : "-translate-x-full"} w-4/5 lg:w-1/5 py-10 mt-10 h-screen lg:flex flex-col bg-white shadow-2xl font-Poppins z-20`}>
             
             <NavLink to="/dashboard/"
-                className={` w-full my-2 h-12 ${isActive === "/dashboard/" ? "rounded-lg lg:bg-green lg:text-white text-green" : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white hover:rounded-lg`}
+                className={` w-full p-4 ${isActive === "/dashboard/" ? "lg:bg-green lg:text-white text-green" : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
@@ -67,7 +67,7 @@ const AdminSidebar = () => {
             </NavLink>
             
             <NavLink to="/dashboard/revenue"
-                className={` w-full my-2 h-12 ${isActive === "/dashboard/revenue" ? "rounded-lg lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white hover:rounded-lg`}
+                className={` w-full p-4 ${isActive === "/dashboard/revenue" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard/revenue")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
@@ -77,7 +77,7 @@ const AdminSidebar = () => {
             </NavLink>
 
             <NavLink to="/dashboard/records"
-                className={` w-full my-2 h-12 ${isActive === "/dashboard/records" ? "rounded-lg lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white hover:rounded-lg`}
+                className={` w-full p-4 ${isActive === "/dashboard/records" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard/records")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
@@ -87,7 +87,7 @@ const AdminSidebar = () => {
             </NavLink>
 
             <NavLink to="/dashboard/billing"
-                className={` w-full my-2 h-12 ${isActive === "/dashboard/billing" ? "rounded-lg lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white hover:rounded-lg`}
+                className={` w-full p-4 ${isActive === "/dashboard/billing" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard/billing")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
@@ -97,7 +97,7 @@ const AdminSidebar = () => {
             </NavLink>
 
             <NavLink to="/dashboard/reports"
-                className={` w-full my-2 h-12 ${isActive === "/dashboard/reports" ? "rounded-lg lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white hover:rounded-lg`}
+                className={` w-full p-4 ${isActive === "/dashboard/reports" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard/reports")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
@@ -107,7 +107,7 @@ const AdminSidebar = () => {
             </NavLink>
 
             <NavLink to="/dashboard/customer"
-                className={` w-full my-2 h-12 ${isActive === "/dashboard/customer" ? "rounded-lg lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white hover:rounded-lg`}
+                className={` w-full p-4  ${isActive === "/dashboard/customer" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard/customer")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
@@ -117,7 +117,7 @@ const AdminSidebar = () => {
             </NavLink>
 
             <NavLink to="/dashboard/settings"
-                className={` w-full my-2 h-12 ${isActive === "/dashboard/settings" ? "rounded-lg lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white hover:rounded-lg`}
+                className={` w-full p-4 ${isActive === "/dashboard/settings" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard/settings")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
@@ -127,7 +127,7 @@ const AdminSidebar = () => {
             </NavLink>
 
             <button
-                className={` w-full my-2 h-12 ${isActive === "/admin-login" ? "rounded-lg lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white hover:rounded-lg`}
+                className={` w-full p-4 ${isActive === "/admin-login" ? " lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleLogOut()} type='button'
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">

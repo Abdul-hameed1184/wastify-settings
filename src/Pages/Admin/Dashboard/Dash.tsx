@@ -24,7 +24,7 @@ const Dash = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
   const [dash, setDash] = useState([]);
-  const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS"));
+  const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
 
   //   console.log(operator); --- why is operator logging all times here
   const FetchDash = () => {
@@ -79,11 +79,11 @@ const Dash = () => {
     <main className="px-4">
       <div className="flex flex-col lg:flex-row gap-5">
         <div className="lg:w-[80%]">
-          <ParagraphXlGreenNoMargin content={`Wasteefy Management System`} />
+          <Paragraph2XlGreen content={`Wasteefy Management System`} />
           <div className="">
-            <p className="text-base font-inter font-medium not-italic text-green leading-6 m-1">
-              Welcome back{" "}
-              <span className="text-grayRounded">
+            <p className="flex text-base font-inter font-medium not-italic text-green leading-6 mt-4">
+              Welcome,{"   "}
+              <span className="text-grayRounded font-bold text-2xl">
                 {" "}
                 {operator ? operator.businessName : "Business Name"}.
               </span>{" "}
@@ -124,7 +124,7 @@ const Dash = () => {
         <Paragraph2XlGreenMargin content={"Recent Transactions"} />
         <div className="overflow-x-auto font-Poppins mt-3">
           <Table striped>
-            <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
+            <TableHead className=" font-Poppins text-xl capitalize text-white bg-green dark:text-white">
               <TableHeadCell>Date & Time</TableHeadCell>
               <TableHeadCell>Username</TableHeadCell>
               <TableHeadCell>Address</TableHeadCell>

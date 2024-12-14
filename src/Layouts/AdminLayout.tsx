@@ -31,10 +31,10 @@ const AdminLayout:React.FC<Props> = ({children}) => {
        transition={Zoom}
       />
             <div className="flex">
-                <div className="w-full mt-10 lg:w-1/5 lg:mt-5">
+            
                     <AdminSidebar />
-                </div>
-                <div className="w-full lg:w-4/5 mt-28 lg:mx-10">
+ 
+                <div className="w-full flex-1 lg:w-4/5 mt-28 lg:mx-10">
                     <main>{children}</main>
                 </div>
             </div>

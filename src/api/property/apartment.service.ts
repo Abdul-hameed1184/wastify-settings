@@ -1,4 +1,5 @@
 
+import { IApartmentType } from '../../models/apartmentType.interface';
 import axios from '../api.config'
 
 export const getPropertyApartments = (propertyId:number) => {
@@ -12,4 +13,8 @@ export const getApartmentType = () => {
 export const createApartment = ({propertyId, apartmentData }: {propertyId: number, apartmentData: {customerId?: string, apartmentTypeId: number, description: string}[]}) => {
     console.log({propertyId, apartmentData})
     return axios.post(`/apartment`, {propertyId, apartmentData });
+}
+
+export const createApartmentType =(apartmentType: IApartmentType) => {
+    return axios.post(`/apartmentType`, apartmentType);
 }

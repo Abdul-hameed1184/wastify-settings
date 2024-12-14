@@ -3,9 +3,3 @@ export interface IPropertyType {
     name: string;
     description: string;
 }
-
-export interface IApartmentType {
-    id: number;
-    name: string;
-    description: string;
-}

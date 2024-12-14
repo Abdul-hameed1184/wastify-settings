@@ -7,10 +7,15 @@ export const getPspOperatorBill = (pspOperatorId) => {
 }
 
 export const createBillSetup = (bill: ICreateBill) => {
+    console.log(bill);
     return axios.post(`/billSetup`, bill);
 }
 
-export const updateBillSetup = (bill: IUpdateBill) => {
-    console.log(bill)
-    return axios.put(`/billSetup/7`, bill);
+export const updateBillSetup = (id:number, bill: IUpdateBill) => {
+    console.log(id, bill)
+    return axios.put(`/billSetup/${id}`, bill);
+}
+
+export const getBillingByOperator = (operatorId:number) => {
+    return axios.get(`/apartmentBilling/billing-by-psp-operator-id/${operatorId}`)
 }

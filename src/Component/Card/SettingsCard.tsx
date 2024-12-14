@@ -4,7 +4,7 @@ import { ParagraphSettings, ParagraphTextSettings } from '../Paragraph'
 
 const SettingsCard = ({icon, title, text, path}) => {
   return (
-    <Link to={path} className='w-full h-40 inline-block border border-transparent rounded-lg ring-2 ring-transparent shadow-2xl p-5 '>
+    <Link to={path} className='w-full h-40 inline-block border border-Oldgreen rounded-lg ring-2 ring-transparent shadow p-5 '>
         <div className="flex gap-10 items-center">
             <div className="h-10 w-10 ">
                 {icon}

@@ -45,7 +45,7 @@ import AllCustomers from "./Pages/Admin/Billing/AllCustomers";
 import { ToastContainer, Zoom } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-function App() {
+const App:React.FC = () =>  {
   const navigate = useNavigate();
   axios.interceptors.request.use(function (config) {
     const token = sessionStorage.getItem('SESSION_AUTH_TOKEN');

@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 'flowbite-react';
-import { Paragraph2XlGreenMargin, ParagraphBlack } from '../../../Component/Paragraph';
+import { Paragraph2Xl, Paragraph2XlGreenMargin, ParagraphBlack } from '../../../Component/Paragraph';
 import { InputField, InputFieldSecondary } from '../../../Component/InputField';
 import { ButtonsPrimary, ButtonsPrimaryBlack, ButtonsWhite } from '../../../Component/Buttons';
 import baseURL from '../../../utils/apiConfig';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import { Link } from 'react-router-dom';
+import { getBillingByOperator } from '../../../api/bill/psp-operator-pricing';
+import { IOperator } from '../../../models/operator.interface';
 
 const Transaction = () => {
     const [bills, setbills] = useState([]);
     const [allproperties, setAllProperties] = useState([]);
-    const operator = JSON.parse(sessionStorage.getItem('AUTH_ADMIN_DETAILS')||"");
+    const operator: IOperator = JSON.parse(sessionStorage.getItem('AUTH_ADMIN_DETAILS') || "");
     const [currentPage, setCurrentPage] = useState(1);
     const [transactionsPerPage] = useState(10);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [selectedCustomerPType, setSelectedCustomerPType] = useState(null);
 
+    useEffect(() => {
+        (async () => {
+            const allProperties = await getBillingByOperator(operator.id);
+            console.log(allProperties)
+        })()
+    }, [])
 
     const handleNavigate = (customerData, propertyType) => {
         setSelectedCustomer(customerData);
@@ -40,7 +48,7 @@ const Transaction = () => {
     //         });
     // };
     // const FetchOperatorsills = () => {
-    //     axios.get(baseURL + 'customer/psp-operator/' + operator.pspOperatorId, {
+    //     axios.get(baseURL + 'apartmentBilling/billing-by-psp-operator-id/' + operator.pspOperatorId, {
     //         headers: {
     //             "Content-Type": "application/json",
     //         },
@@ -79,10 +87,12 @@ const Transaction = () => {
     };
     return (
         <main className='px-4 '>
+     
             <div className="my-10">
                 <div className="bg-lightBackground py-5 rounded-3xl shadow-2xl">
-                    <Paragraph2XlGreenMargin content={"Customer Billing"} />
-                    <div className="overflow-x-auto font-Poppins mt-3">
+                    <Paragraph2XlGreenMargin content={"Customer Billings"} />
+         { allproperties.length ?        
+          <div className="overflow-x-auto font-Poppins mt-3">
                         <Table striped >
                             <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
                                 <TableHeadCell>Property ID</TableHeadCell>
@@ -115,16 +125,16 @@ const Transaction = () => {
 
                             </TableBody>
                         </Table>
-                        <div className="flex justify-center items-center h-20 my-10 w-1/4 ">
-                            <div className="w-full h-10 border border-primary2 flex items-center justify-center rounded-md px-5">
+                        <div className="flex justify-center items-center h-20 my-10 w-full">
+                            <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
                                 <button
-                                    className={` `}
+                                    className={`text-green font-weight-bold`}
                                     onClick={() => paginate(currentPage - 1)}
                                     disabled={currentPage === 1}
                                 >
                                     Previous
                                 </button>
-                                <div className="ml-4 h-full">
+                                <div className="mx-8 h-full">
                                     {allproperties &&
                                         allproperties.length &&
                                         Array.from({
@@ -145,7 +155,7 @@ const Transaction = () => {
                                         ))}
                                 </div>
                                 <button
-                                    className={`ml-3 `}
+                                    className={`text-green font-weight-bold`}
                                     onClick={() => paginate(currentPage + 1)}
                                     disabled={
                                         !allproperties ||
@@ -159,7 +169,8 @@ const Transaction = () => {
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div> : <Paragraph2Xl content={"no Billing for Customers"} />
+}
                 </div>
             </div>
         </main>

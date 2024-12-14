@@ -5,6 +5,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import {
   Paragraph2Green,
+  Paragraph2Xl,
   Paragraph2XlGreen,
   Paragraph2XlGreenMargin,
   ParagraphExtraSmallError,
@@ -15,12 +16,12 @@ import {
 } from "../../../Component/Paragraph";
 import baseURL from "../../../utils/apiConfig";
 import { InputFieldSecondaryGreen } from "../../../Component/InputField";
-import { ButtonsPrimary, ButtonsSecondaryIcon } from "../../../Component/Buttons";
+import { ButtonsPrimary, ButtonsSecondary, ButtonsSecondaryIcon } from "../../../Component/Buttons";
 import { getPropertyTypes } from "../../../api/property/property.service";
 import { IApartmentType, IPropertyType } from "../../../models/propertType.interface";
 import { createBillSetup, getPspOperatorBill, updateBillSetup } from "../../../api/bill/psp-operator-pricing";
 import { IOperator } from "../../../models/operator.interface";
-import { getApartmentType } from "../../../api/property/apartment.service";
+import { createApartmentType, getApartmentType } from "../../../api/property/apartment.service";
 import { IApartmentTypeBill } from "../../../models/apartmentTypeBill.interface";
 import Loader from "../../../Component/Loader";
 import { ICreateBill } from "../../../models/createbill.interface";
@@ -63,6 +64,7 @@ const Pricing:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "");
   const [ loader, setLoader ]= useState<boolean>(true);
   const [ editBill, setEditBill ] =useState<boolean>(false);
+  const [ update, setUpdate ] = useState<boolean>(true);
   // Fetch property data
   const HandleFetchProperty = () => {
     axios
@@ -114,6 +116,7 @@ const Pricing:React.FC = () => {
       const pspBill = await getPspOperatorBill(3);
       setApartmentTypeBill(pspBill.data.data.data);
       const apartType = await getApartmentType();
+      console.log(apartType)
       setApartmentType(apartType.data.data);
     })();
     setLoader(false);
@@ -164,8 +167,6 @@ const Pricing:React.FC = () => {
     }
   };
 
-  console.log("selectPropertyTypeId", selectPropertyTypeId); //CONSIDER IMPORTANT,SHOULD BE SENT TO THE BACKEND
-
   useEffect(() => {
     HandleFetchProperty();
   }, []);
@@ -203,11 +204,10 @@ const Pricing:React.FC = () => {
   const handleUpdateBill = async () => {
     try{
       if(selectedApartmentTypeBill){
-    const data = await updateBillSetup({
+    const data = await updateBillSetup(selectedApartmentTypeBill.id, {
       pspOperatorId: operator.id,
       amount: selectpropertyAmount,
       apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
-      id: selectedApartmentTypeBill.id
     });
     console.log(data);
   //  toast.success(data.message)
@@ -358,7 +358,7 @@ const Pricing:React.FC = () => {
                 </select>
               </div>
               <ParagraphXl content={"Apartment Type"} />
-              <div className=" flex flex-row align-items-center justify-content-center">
+        {  update ?    <div className=" flex flex-row align-items-center justify-content-center">
 
               <select
               className="form-select form-select-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
@@ -379,12 +379,55 @@ const Pricing:React.FC = () => {
              }) }
                 </select> 
                 <div className="w-1/5 mx-4 mb-3">
-                <ButtonsPrimary name={"Add Apartment"}/>
+                {/* <ButtonsPrimary name={"Add Apartment Type"} onClick={()=>
+                  setUpdate(!update)
+                  }/> */}
                 </div>
 
-              </div>
+              </div>: <CreateApartmentType setUpdate={setUpdate} update={update} />}
+
               
-     { selectedApartmentTypeBill &&  
+     { selectedApartmentTypeBill &&  <div>
+
+      { update &&
+      
+      <div className="mt-8 flex flex-row  align-items-center justify-content-center">
+        
+               { editBill  ? 
+              <div className="flex flex-row">
+                <Paragraph2Xl content={selectedApartmentTypeBill.amount} />
+                <div className="w-2/5 mx-4 mb-3">
+                <ButtonsPrimary name={"Edit Bill"} onClick={() => setEditBill(true)} />
+                  </div>
+                  </div> 
+                  : 
+      
+               <div className="flex flex-row">
+                
+               <input
+                className="form-control form-control-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
+                placeholder={"New Bill"}
+                  type={"number"}
+                  name={"amount"}
+                  onChange={handlePriceChange}
+                  defaultValue={selectedApartmentTypeBill.amount}
+                  
+                />
+                         <div className="w-1/5 mx-4 mb-3">
+                <ButtonsPrimary name={"Update Bill"} onClick={() =>{ 
+                  handleUpdateBill()
+                }}/>
+                </div>
+          
+            
+               </div>
+               
+}
+              </div>
+}
+              </div>}
+
+              {/* { selectedApartmentTypeBill &&  
       
       <div className="mt-8 flex flex-row  align-items-center justify-content-center">
         
@@ -415,191 +458,78 @@ const Pricing:React.FC = () => {
                </div>
                
 }
-              </div>}
+              </div>} */}
               
             </div>
           </div>
           }
-          <form onSubmit={formik.handleSubmit}>
-          <div className="w-full border border-transparent rounded-lg ring-2 ring-transparent shadow-2xl px-5 py-14">
-            <ToastContainer />
-            <Paragraph2XlGreenMargin content={"Pricing"} />
-            <ParagraphTextSettings content={"Setup property price"} />
-            <div className="">
-              <div className="mt-8">
-                <Tab.Group onChange={handleTabChange}>
-                  <Tab.List className="flex space-x-1 rounded-full bg-lightgrayer">
-                    <Tab
-                      className={({ selected }) =>
-                        classNames(
-                          "w-full rounded-full py-2.5 text-base font-medium leading-5 font-sans",
-                          "focus:outline-none focus:ring-0",
-                          selected ? "bg-green shadow text-white" : "text-white"
-                        )
-                      }
-                    >
-                      Residential
-                    </Tab>
-                    <Tab
-                      className={({ selected }) =>
-                        classNames(
-                          "w-full rounded-full py-2.5 text-base font-medium leading-5 font-sans",
-                          "focus:outline-none focus:ring-0",
-                          selected ? "bg-green shadow text-white" : "text-white"
-                        )
-                      }
-                    >
-                      Commercial
-                    </Tab>
-                    <Tab
-                      className={({ selected }) =>
-                        classNames(
-                          "w-full rounded-full py-2.5 text-base font-medium leading-5 font-sans",
-                          "focus:outline-none focus:ring-0",
-                          selected ? "bg-green shadow text-white" : "text-white"
-                        )
-                      }
-                    >
-                      Mixed Property
-                    </Tab>
-                    <Tab
-                      className={({ selected }) =>
-                        classNames(
-                          "w-full rounded-full py-2.5 text-base font-medium leading-5 font-sans",
-                          "focus:outline-none focus:ring-0",
-                          selected ? "bg-green shadow text-white" : "text-white"
-                        )
-                      }
-                    >
-                      Government Reserved Areas
-                    </Tab>
-                  </Tab.List>
-                  <Tab.Panels className="mt-2">
-                    <Tab.Panel>
-                      <div className="mt-10 mx-4">
-                        <select
-                          id="residential"
-                          className="border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-green text-base mt-1 ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-                          name="propertyTypeId"
-                          onChange={handlePropertyTypeChange}
-                          value={selectProperty}
-                        >
-                          <option value="">Select Residential Type</option>
-                          {residentials?.map((res) => (
-                            <option key={res.id} value={res.id}>
-                              {res.name}
-                            </option>
-                          ))}
-                        </select>
-                        {errors.propertyTypeId && (
-                          <ParagraphExtraSmallError
-                            content={errors.propertyTypeId}
-                          />
-                        )}
-                      </div>
-                    </Tab.Panel>
 
-                    <Tab.Panel>
-                      <div className="mt-10 mx-4">
-                        <select
-                          id="commercial"
-                          className="border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-green text-base mt-1 ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-                          name="propertyTypeId"
-                          onChange={handlePropertyTypeChange}
-                          value={selectProperty}
-                        >
-                          <option value="">Select Commercial Type</option>
-                          {commercials?.map((com) => (
-                            <option key={com.id} value={com.id}>
-                              {com.name}
-                            </option>
-                          ))}
-                        </select>
-                        {errors.propertyTypeId && (
-                          <ParagraphExtraSmallError
-                            content={errors.propertyTypeId}
-                          />
-                        )}
-                      </div>
-                    </Tab.Panel>
-
-                    <Tab.Panel>
-                      <div className="mt-10 mx-4">
-                        <select
-                          id="mixedProperty"
-                          className="border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-green text-base mt-1 ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-                          name="propertyTypeId"
-                          onChange={handlePropertyTypeChange}
-                          value={selectProperty}
-                        >
-                          <option value="">Select Mixed Property Type</option>
-                          {mixedProperties?.map((mix) => (
-                            <option key={mix.id} value={mix.id}>
-                              {mix.name}
-                            </option>
-                          ))}
-                        </select>
-                        {errors.propertyTypeId && (
-                          <ParagraphExtraSmallError
-                            content={errors.propertyTypeId}
-                          />
-                        )}
-                      </div>
-                    </Tab.Panel>
-
-                    <Tab.Panel>
-                      <div className="mt-10 mx-4">
-                        <select
-                          id="governmentReserved"
-                          className="border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-green text-base mt-1 ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-                          name="propertyTypeId"
-                          onChange={handlePropertyTypeChange}
-                          value={selectProperty}
-                        >
-                          <option value="">
-                            Select Government Reserved Areas
-                          </option>
-                          {governmentReserved?.map((gov) => (
-                            <option key={gov.id} value={gov.id}>
-                              {gov.name}
-                            </option>
-                          ))}
-                        </select>
-                        {errors.propertyTypeId && (
-                          <ParagraphExtraSmallError
-                            content={errors.propertyTypeId}
-                          />
-                        )}
-                      </div>
-                    </Tab.Panel>
-                  </Tab.Panels>
-                </Tab.Group>
-              </div>
-              <div className="mt-8 px-4">
-                <InputFieldSecondaryGreen
-                  placeholder={"Amount (000,000.00)"}
-                  type={"number"}
-                  name={"amount"}
-                  onChange={handlePriceChange}
-                  value={selectpropertyAmount}
-                />
-                {errors.amount ? (
-                  <ParagraphExtraSmallError content={errors.amount} />
-                ) : null}
-              </div>
-            </div>
-          </div>
-          <div className="mt-8 flex w-1/6">
-            <ButtonsPrimary
-              name={billsID ? "Update Bill" : "Save"}
-              type={"submit"}
-              loading={loading}
-            />
-          </div>
-        </form>
       </div>
     </>
   );
 };
 
 export default Pricing;
+
+
+export const CreateApartmentType = ({ setUpdate, update }) => {
+
+  const [ description, setDescription ] = useState<string>("");
+  const [ apartmentType, setApartmentType ] = useState<string>("");
+
+  const handleCreateBill = async () => {
+    try{
+    const data = await createApartmentType({
+      name: apartmentType,
+      description
+    });
+    console.log(data);
+    toast.success("Apartment Type created")
+    setUpdate(!update);
+  }catch(e){
+    console.log(e)
+  }
+  }
+
+  return (
+    <div>
+
+<div className="flex flex-row">
+                
+                <input
+                 className="form-control form-control-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
+                 placeholder={"Apartment Type"}
+                   type={"text"}
+                   name={"apartmentType"}
+                   onChange={(e) => setApartmentType(e.target.value)}
+                   
+                 />
+                         
+           
+             
+                </div>
+                <div className="flex flex-col">
+                <div className="w-100">
+                <textarea
+                 className="form-control form-control-xl mb-3 w-100 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-50 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
+                 placeholder={"Aparment type description"}
+                 onChange={(e) => setDescription(e.target.value)}
+                   name={"description"}
+                   
+                 />
+                 </div>
+                          <div className="my-2 flex gap-2 justify-space-between">
+                            <div className="w-1/5">
+                          <ButtonsSecondary name={"Cancel"} onClick={() =>setUpdate(!update)}/>
+                  </div>
+                  <div className="w-1/5">
+                 <ButtonsPrimary name={"Create Bill"} onClick={() =>handleCreateBill()}/>
+                 </div>
+                 </div>
+           
+             
+                </div>
+      
+    </div>
+  )
+}

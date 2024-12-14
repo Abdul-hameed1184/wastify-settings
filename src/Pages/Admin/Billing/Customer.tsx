@@ -2,7 +2,7 @@ import React from "react";
 import { InputFieldGreenWhite } from "../../../Component/InputField";
 import { ButtonsPrimaryBlack } from "../../../Component/Buttons";
 
-const Customer = () => {
+const Customer:React.FC = () => {
   return (
     <main className="mb-10">
       <div className="w-full h-full border-solid border-[1px] shadow-2xl py-8 border-black rounded-lg">
