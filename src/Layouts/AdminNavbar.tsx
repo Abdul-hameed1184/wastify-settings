@@ -17,7 +17,7 @@ const AdminNavbar = () => {
         dispatch(toggleSidebar());
     };
     return (
-        <main className='fixed w-full shadow items-center px-4 bg-white h-20 flex z-30 justify-between'>
+        <main className='fixed w-full shadow-2xl items-center px-4 bg-white h-20 flex z-30 justify-between'>
             <div className=" flex gap-3 lg:px-5 lg:w-1/5">
                 <div onClick={handleToggle} className=" z-10 ">
                     {!toggle ? 

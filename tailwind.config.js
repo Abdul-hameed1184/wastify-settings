@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+import * as xds from 'flowbite/plugin';
+export const tail = {
   content: [
     "index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
@@ -32,7 +33,8 @@ module.exports = {
       colors:{
         black: '#000000',
         gray: '#4B4F5A',
-        lightGreen: '#96C63D4D', 
+     lightGreen: '#96C63D', 
+   //lightGreen:'#c7f76d',
         green: '#719F1C',
         Oldgreen: '#96C63D',
         navgreen: '#AAC27D',
@@ -53,7 +55,8 @@ module.exports = {
     },
   },
   plugins: [
-    require('flowbite/plugin'),
+    xds
   ],
 }
 
+export default tail;

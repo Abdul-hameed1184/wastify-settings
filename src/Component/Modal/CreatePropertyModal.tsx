@@ -242,7 +242,7 @@ const CreatePropertyModal: React.FC<Props> = ({
               </div>
             </div>
           </div>
-          <div className=" w-full">
+          <div className=" w-full my-4">
             {/* <ButtonsPrimary
                 onClick={() => { 
                   setOpenModal(false);

@@ -54,7 +54,7 @@ const AdminSidebar = () => {
     return (
         <>
          {/* desktop viww */}
-        <main className={`admin-sidebar fixed transform  ease-in-out duration-500 delay-300 ${toggle ? "translate-x-0" : "-translate-x-full"} w-4/5 lg:w-1/5 py-10 mt-10 h-screen lg:flex flex-col bg-white shadow-2xl font-Poppins z-20`}>
+        <main className={`admin-sidebar fixed transform  ease-in-out duration-500 delay-300 ${toggle ? "translate-x-0" : "-translate-x-full"} w-4/5 lg:w-1/5 py-10 mt-10 h-screen lg:flex flex-col bg-white shadow-2xl font-Poppins z-20 overflow-auto`}>
             
             <NavLink to="/dashboard/"
                 className={` w-full p-4 ${isActive === "/dashboard/" ? "lg:bg-green lg:text-white text-green" : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
@@ -67,7 +67,7 @@ const AdminSidebar = () => {
             </NavLink>
             
             <NavLink to="/dashboard/revenue"
-                className={` w-full p-4 ${isActive === "/dashboard/revenue" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
+                className={` w-full p-4 ${isActive === "/dashboard/revenue" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-lightGreen  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard/revenue")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">

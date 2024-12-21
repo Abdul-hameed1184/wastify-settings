@@ -4,11 +4,11 @@ import { IProperty } from "../../models/property.interface"
 import { useEffect, useState } from "react"
 import { getCustomers } from "../../api/customer/customer.service";
 import { createApartment, getApartmentType } from "../../api/property/apartment.service";
-import { IApartmentType } from "../../models/propertType.interface";
 import { ICustomer } from "../../models/customer.interface";
 import { AxiosResponse } from "axios";
 import { FormikValues, useFormik } from "formik";
 import { toast } from "react-toastify";
+import { IApartmentType } from "../../models/apartmentType.interface";
 
 type Props = {
     openModal: boolean;
@@ -19,7 +19,7 @@ const CreateApartmentModal:React.FC<Props> = ({ openModal, setOpenModal, propert
 
   const [ apartmentTypes, setApartmentTypes ] = useState<IApartmentType[]>();
   const [ customers, setCustomers ] = useState<ICustomer[]>([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>()
+  const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
   const [apartmentTypeId, setApartmentTypeId] = useState<number>();
   const [ errorMessage, setErrorMessage ] = useState<string>();
 
@@ -53,10 +53,10 @@ const CreateApartmentModal:React.FC<Props> = ({ openModal, setOpenModal, propert
       propertyId: null,
         customerId: null,
         apartmentTypeId: null,
-        description : ""
+        description : "",
+        selectedCustomer: null
     },
     onSubmit: (values) => {
-      console.log(selectedCustomer);
       handleCreateApartment(values);
     },
   });

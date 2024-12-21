@@ -12,13 +12,13 @@ import AdminCard from "../../../Component/Card/AdminCard";
 import { Paragraph2XlGreenMargin } from "../../../Component/Paragraph";
 import axios from "axios";
 import baseURL from "../../../utils/apiConfig";
-import { Button, ButtonsPrimary } from "../../../Component/Buttons";
+import { Button, ButtonsPrimary, ButtonsPrimaryIcon } from "../../../Component/Buttons";
 import CustomerModal from "../../../Component/Modal/CustomerModal";
 import CreatePropertyModal from "../../../Component/Modal/CreatePropertyModal";
 import { IProperty } from "../../../models/property.interface";
 import CreateApartmentModal from "../../../Component/Modal/CreateApartmentModal";
 import { IOperator } from "../../../models/operator.interface";
-import { IPropertyType } from "../../../models/propertType.interface";
+import { FaPlusCircle } from "react-icons/fa";
 
 const Records:React.FC = () => {
   const [AllPropertyRecords, setAllPropertyRecords] = useState([]);
@@ -34,9 +34,10 @@ const Records:React.FC = () => {
   const [selectedProperty, setSelectedProperty] = useState<IProperty>()
   
   const [ openCreateApartmentModal, setOpenCreateApartmentModal ] = useState<boolean>(false);
-  const handleToggleOpen = (propertyId: number) => {
+  const handleToggleOpen = (property:IProperty) => {
     setOpenModal(true);
-    setSelectedPropertyId(propertyId);
+    setSelectedPropertyId(property.id);
+    setSelectedProperty(property)
   };
 
   //this functions gets the total number of properties
@@ -130,7 +131,8 @@ const Records:React.FC = () => {
       </div>
       <div className="grid justify-items-end mb-4">
           <div className="w-1/3">
-      <ButtonsPrimary type="button" name="Add Property" onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}/>
+      <ButtonsPrimaryIcon icon={<FaPlusCircle />
+} type="button" name={"Add Property"} onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}/>
       </div>
       </div>
       <div className="bg-lightBackground py-5 rounded-3xl shadow-2xl">
@@ -172,7 +174,7 @@ const Records:React.FC = () => {
                   <TableCell>
                     <ButtonsPrimary
                       name={"+ / View More"}
-                      onClick={() => handleToggleOpen(item.id)} type={"button"} loading={undefined} />
+                      onClick={() => handleToggleOpen(item)} type={"button"} loading={undefined} />
                   </TableCell>
                   {/* <TableCell> ... </TableCell> */}
                 </TableRow>
@@ -186,8 +188,7 @@ const Records:React.FC = () => {
                 propertyId={selectedPropertyId}
                 setOpenCreateApartmentModal={setOpenCreateApartmentModal}
               />}
-                { selectedProperty &&  <CreateApartmentModal openModal={openCreateApartmentModal} setOpenModal={setOpenCreateApartmentModal} property={selectedProperty}  />
-              }
+
             </TableBody>
           </Table>
           {/* Pagination */}
@@ -236,6 +237,8 @@ const Records:React.FC = () => {
           </div>
         </div>
       </div>
+   {selectedProperty && <CreateApartmentModal openModal={openCreateApartmentModal} setOpenModal={setOpenCreateApartmentModal} property={selectedProperty}  />
+}              
       <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
      </main>
   );
