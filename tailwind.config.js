@@ -55,7 +55,7 @@ export const tail = {
     },
   },
   plugins: [
-    xds
+    require('flowbite/plugin')
   ],
 }
 
