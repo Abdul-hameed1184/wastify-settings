@@ -107,6 +107,7 @@ const Pricing: React.FC = () => {
       setPropertyType(prop.data.data);
       const pspBill = await getPspOperatorBill(operator.id);
       setApartmentTypeBill(pspBill.data.data.data);
+      console.log(pspBill.data.data.data)
       const apartType = await getApartmentType();
       console.log(apartType);
       setApartmentType(apartType.data.data);
@@ -234,10 +235,10 @@ const Pricing: React.FC = () => {
               )}
 
               {selectedApartmentTypeBill && (
-                <div>
-                  {update && (
+                
+      
                     <div className="mt-8 flex flex-row  align-items-center justify-content-center">
-                      {editBill ? (
+                      {!editBill ? (
                         <div className="flex flex-row">
                           <Paragraph2Xl
                             content={selectedApartmentTypeBill.amount}
@@ -269,8 +270,8 @@ const Pricing: React.FC = () => {
                           </div>
                         </div>
                       )}
-                    </div>
-                  )}
+    
+                  
                 </div>
               )}
 

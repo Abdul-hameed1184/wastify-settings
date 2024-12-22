@@ -4,8 +4,7 @@ import { Paragraph2Xl, Paragraph2XlGreenMargin, ParagraphBlack } from '../../../
 import { InputField, InputFieldSecondary } from '../../../Component/InputField';
 import { ButtonsPrimary, ButtonsPrimaryBlack, ButtonsWhite } from '../../../Component/Buttons';
 import baseURL from '../../../utils/apiConfig';
-import axios, { all } from 'axios';
-import { Link } from 'react-router-dom';
+
 import { getBillingByOperator } from '../../../api/bill/psp-operator-pricing';
 import { IOperator } from '../../../models/operator.interface';
 
@@ -31,41 +30,6 @@ const Transaction = () => {
         console.log("customerData", customerData);
         console.log("propertyType", propertyType);
     }
-
-    // const FetchOperatorsills = () => {
-    //     axios.get(baseURL + 'customerBilling/' + operator.id, {
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //     })
-    //         .then((res) => {
-    //             const responseData = res.data?.data;
-    //             console.log(responseData);
-    //             // setAllProperties(responseData)
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // };
-    // const FetchOperatorsills = () => {
-    //     axios.get(baseURL + 'apartmentBilling/billing-by-psp-operator-id/' + operator.pspOperatorId, {
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //     })
-    //         .then((res) => {
-    //             const responseData = res.data?.data;
-    //             console.log(responseData);
-    //             setAllProperties(responseData)
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // };
-
-    // useEffect(() => {
-    //     FetchOperatorsills()
-    // }, [])
 
     const indexOfLastTransaction = currentPage * transactionsPerPage;
     const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
