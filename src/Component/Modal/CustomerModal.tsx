@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import baseURL from "../../utils/apiConfig";
-import { Button, Modal } from "flowbite-react";
+import { Modal } from "flowbite-react";
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableHeadCell,
   TableRow,
 } from "flowbite-react";
-import { ButtonsPrimary, ButtonsPrimaryBlack } from "../Buttons";
+import { ButtonsPrimary } from "../Buttons";
 import { IApartment } from "../../models/apartment.interface";
 
 

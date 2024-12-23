@@ -1,5 +1,4 @@
 import React, { ReactNode, useEffect } from 'react'
-import PropTypes from "prop-types";
 import AdminNavbar from './AdminNavbar'
 import AdminSidebar from './AdminSidebar'
 import { ToastContainer, Zoom } from 'react-toastify';

@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-import * as xds from 'flowbite/plugin';
 export const tail = {
   content: [
     "index.html",
@@ -55,7 +54,7 @@ export const tail = {
     },
   },
   plugins: [
-    require('flowbite/plugin')
+    import('flowbite/plugin')
   ],
 }
 

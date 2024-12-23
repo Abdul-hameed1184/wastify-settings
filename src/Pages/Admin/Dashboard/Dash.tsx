@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RiBarChart2Fill } from "react-icons/ri";
 import { FaHouse } from "react-icons/fa6";
 import { BiTransfer } from "react-icons/bi";
-import axios from "axios";
 import {
   Table,
   TableBody,
@@ -14,70 +13,85 @@ import {
 import {
   Paragraph2XlGreen,
   Paragraph2XlGreenMargin,
-  ParagraphLargeGreen,
   ParagraphXlGreenNoMargin,
 } from "../../../Component/Paragraph";
 import AdminCard from "../../../Component/Card/AdminCard";
-import baseURL from "../../../utils/apiConfig";
+import { ToastContainer, Zoom } from "react-toastify";
+import { getPspOperatorDashboard } from "../../../api/psp-operator/psp-operator.service";
+import { IPspOperatorDashboard } from "../../../models/psp-operator.dashboard.interface";
+import Loader from "../../../Component/Loader";
 
 const Dash = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
-  const [dash, setDash] = useState([]);
+  const [dash, setDash] = useState<IPspOperatorDashboard>();
+  const [ loading, setLoading] = useState<boolean>(true);
   const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
 
-  //   console.log(operator); --- why is operator logging all times here
-  const FetchDash = () => {
-    axios
-      .get(baseURL + "dashboard/psp-operator/" + operator.id, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => {
-        const responseData = res.data?.data;
-        // console.log(responseData);
-        setDash(responseData);
-        // setbills()
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+
 
   const updateDateTime = () => {
     const now = new Date();
 
     // Format date as "23 January 2023"
-    const dateOptions = { day: "2-digit", month: "long", year: "numeric" };
+    const dateOptions: Intl.DateTimeFormatOptions = { day: "2-digit", month: "long", year: "numeric" };
     const formattedDate = now.toLocaleDateString("en-GB", dateOptions);
 
     // Format time as "14:23:45"
-    const timeOptions = {
+    const timeOptions:Intl.DateTimeFormatOptions = {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
       hour12: false,
     };
-    const formattedTime = now.toLocaleTimeString("en-GB", timeOptions);
+    const formattedTime: string  = now.toLocaleTimeString("en-GB", timeOptions);
 
     setCurrentDate(formattedDate);
     setCurrentTime(formattedTime);
   };
 
   useEffect(() => {
-    console.log('Dash')
-    FetchDash();
+    try{
+    (async() => {
+      const data = await getPspOperatorDashboard(operator.id)
+      console.log(data.data.data)
+      setDash(data.data.data);
 
     updateDateTime(); // Initial call to set the date and time immediately
     const intervalId = setInterval(updateDateTime, 1000); // Update every second
 
     return () => clearInterval(intervalId);
-  }, []);
+    })();
+  }catch(e){
+    console.log(e)
+  }finally{
+    setLoading(false)
+  }
+
+  }, [operator.id]);
+  
+  if(loading){
+    return <Loader />
+  }
 
   return (
     <main className="px-4">
-      <div className="flex flex-col lg:flex-row gap-5">
+       <ToastContainer 
+       position="top-center"
+       autoClose={5000}
+       hideProgressBar
+       newestOnTop={false}
+       closeOnClick
+       rtl={false}
+       pauseOnFocusLoss
+       draggable
+       pauseOnHover
+       theme="light"
+       transition={Zoom}
+      />
+{   dash &&    
+  <div>
+    <div className="flex flex-col lg:flex-row gap-5">
         <div className="lg:w-[80%]">
           <Paragraph2XlGreen content={`Wasteefy Management System`} />
           <div className="">
@@ -99,25 +113,27 @@ const Dash = () => {
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Revenue"}
-            amount={`N${dash?.totalRevenue}`}
+            amount={`N${dash.totalRevenue}`}
             icon={<RiBarChart2Fill className="text-green w-10 h-8" />}
           />
         </div>
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Property"}
-            amount={dash?.totalProperties}
+            amount={dash.totalProperties}
             icon={<FaHouse className="text-green w-10 h-7 mt-1" />}
           />
         </div>
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Overdue Payments"}
-            amount={`N${dash?.totalOverDuePayment}`}
+            amount={`N${dash.totalOverDuePayment}`}
             icon={<BiTransfer className="text-green w-10 h-7 mt-1" />}
           />
         </div>
       </div>
+      </div>
+      }
 
       {/* recent transaction  */}
       <div className="bg-lightBackground py-5 rounded-3xl shadow-2xl">

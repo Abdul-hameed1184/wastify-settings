@@ -1,4 +1,5 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
+import React from "react";
 import Home from "./Pages/Home";
 import ScrolltoTop from "./Component/ScrolltoTop";
 import SignUp from "./Pages/Auth/SignUp";
@@ -44,6 +45,12 @@ import Customer from "./Pages/Admin/Billing/Customer";
 import AllCustomers from "./Pages/Admin/Billing/AllCustomers";
 import { ToastContainer, Zoom } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import CreateCustomer from "./Pages/Admin/AddCustomer/CreateCustomer";
+import UserAccess from "./Pages/Admin/Settings/UserAccess";
+import Security from "./Pages/Admin/Settings/Security";
+import CompanyProfile from "./Pages/Admin/Settings/CompanyProfile";
+import NotificationSettings from "./Pages/Admin/Settings/NotificationSettings";
+import AppSettings from "./Pages/Admin/Settings/AppSettings";
 
 const App:React.FC = () =>  {
   const navigate = useNavigate();
@@ -138,6 +145,7 @@ const App:React.FC = () =>  {
                 <Routes>
                   <Route path="" element={<Dash />} />
                   <Route path="revenue" element={<RevenueIndex />} />
+                  <Route path="customer" element={<CreateCustomer />} />
                   <Route path="records" element={<Records />} />
                   <Route path="billing" element={<Transaction />} />
                   <Route path="billing-customer-all" element={<AllCustomers />} />
@@ -145,6 +153,11 @@ const App:React.FC = () =>  {
                   <Route path="reports" element={<Reports />} />
                   <Route path="settings" element={<All />} />
                   <Route path="pricing" element={<Pricing />} />
+                  <Route path="user-access" element={<UserAccess />} />
+                  <Route path="security" element={<Security />} />
+                  <Route path="company-settings" element={<CompanyProfile />} />
+                  <Route path="notification-settings" element={<NotificationSettings />} />
+                  <Route path="app-settings" element={<AppSettings />} />
                 </Routes>
               </AdminLayout>
             }
