@@ -51,6 +51,8 @@ import Security from "./Pages/Admin/Settings/Security";
 import CompanyProfile from "./Pages/Admin/Settings/CompanyProfile";
 import NotificationSettings from "./Pages/Admin/Settings/NotificationSettings";
 import AppSettings from "./Pages/Admin/Settings/AppSettings";
+import Property from "./Pages/Admin/Billing/Property";
+import CreateApartmentBill from "./Pages/Admin/Billing/CreateApartmentBill";
 
 const App:React.FC = () =>  {
   const navigate = useNavigate();
@@ -71,6 +73,8 @@ const App:React.FC = () =>  {
       return Promise.reject(error);
     }
   );
+
+
   return (
     <>
       {/* UseNavigate in reaxct pass static parameters needed for the next route through it  */}
@@ -148,6 +152,8 @@ const App:React.FC = () =>  {
                   <Route path="customer" element={<CreateCustomer />} />
                   <Route path="records" element={<Records />} />
                   <Route path="billing" element={<Transaction />} />
+                  <Route path="property" element={<Property />} />
+                  <Route path="create-bill" element={<CreateApartmentBill />} />
                   <Route path="billing-customer-all" element={<AllCustomers />} />
                   <Route path="billing-customer-details" element={<Customer />} />
                   <Route path="reports" element={<Reports />} />

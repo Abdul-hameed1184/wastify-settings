@@ -1,7 +1,4 @@
 import { Card } from "flowbite-react";
-import React from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../Features/authSlice";
 import { ParagraphLarge, ParagraphNoMargin } from "../Paragraph";
 
 const ProfileCard = ({ dashBoard }) => {

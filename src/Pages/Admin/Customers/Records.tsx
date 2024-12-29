@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaCirclePlus, FaHouse } from "react-icons/fa6";
+import { FaHouse } from "react-icons/fa6";
 import {
   Table,
   TableBody,
@@ -10,28 +10,34 @@ import {
 } from "flowbite-react";
 import AdminCard from "../../../Component/Card/AdminCard";
 import { Paragraph2XlGreenMargin } from "../../../Component/Paragraph";
-import axios from "axios";
-import baseURL from "../../../utils/apiConfig";
-import { Button, ButtonsPrimary, ButtonsPrimaryIcon } from "../../../Component/Buttons";
+import { ButtonsPrimary, ButtonsPrimaryIcon } from "../../../Component/Buttons";
 import CustomerModal from "../../../Component/Modal/CustomerModal";
 import CreatePropertyModal from "../../../Component/Modal/CreatePropertyModal";
 import { IProperty } from "../../../models/property.interface";
 import CreateApartmentModal from "../../../Component/Modal/CreateApartmentModal";
 import { IOperator } from "../../../models/operator.interface";
 import { FaPlusCircle } from "react-icons/fa";
+import { getPropertyByOperator } from "../../../api/psp-operator/psp-operator.service";
+import { IPaginatedProperty } from "../../../models/paginatedPropertyByOperator.interface";
+import Loader from "../../../Component/Loader";
+import { ICustomer } from "../../../models/customer.interface";
+import Customer from "../Billing/Customer";
+import { IApartment } from "../../../models/apartment.interface";
 
 const Records:React.FC = () => {
-  const [AllPropertyRecords, setAllPropertyRecords] = useState([]);
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
-  // console.log(operator);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [transactionsPerPage] = useState(10);
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false)
 
-  const [allProperties, setAllProperties] = useState(null);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
+  const [ page, setPage] = useState<number>(1);
+  const [ customer, setCustomer] = useState<IApartment>();
+  const [ viewCustomer, setViewCustomer] = useState<boolean>(false)
+
+
+  const [ properties, setProperties ] = useState<IPaginatedProperty>();
   const [selectedPropertyId, setSelectedPropertyId] = useState<number>();
-  const [selectedProperty, setSelectedProperty] = useState<IProperty>()
+  const [selectedProperty, setSelectedProperty] = useState<IProperty>();
+  const [ loading, setLoading ] = useState<boolean>(true)
   
   const [ openCreateApartmentModal, setOpenCreateApartmentModal ] = useState<boolean>(false);
   const handleToggleOpen = (property:IProperty) => {
@@ -40,82 +46,32 @@ const Records:React.FC = () => {
     setSelectedProperty(property)
   };
 
-  //this functions gets the total number of properties
-  const HandleTotalProperties = () => {
-    axios
-      .get(baseURL + "dashboard/psp-operator/" + operator.id, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => {
-        const responseData = res.data?.data;
-        // console.log(responseData);
-        setAllProperties(responseData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const getProperties = async () => {
+    const data = await getPropertyByOperator(operator.id, page);
+  setProperties(data.data.data);
+   console.log(data);
 
-  //this function takes care of all property records that is displayed on the table
-  const HandleAllProperties = () => {
-    axios
-      .get(baseURL + "property/list", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => {
-        const responseData = res.data?.data;
-        // console.log("pr", responseData.length);
-        setAllPropertyRecords(responseData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-
+  }
     
 
   useEffect(() => {
-    HandleTotalProperties();
-    HandleAllProperties();
+    try{
+    getProperties();
+    }catch(e){
+      console.log(e)
+    }
+    setLoading(false)
   }, []);
 
-  // console.log("all property records", AllPropertyRecords);
 
-  const indexOfLastTransaction = currentPage * transactionsPerPage;
-  const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
-  const currentTransactions =
-    AllPropertyRecords && AllPropertyRecords?.length
-      ? AllPropertyRecords.slice(
-          indexOfFirstTransaction,
-          indexOfLastTransaction
-        )
-      : [];
 
-  const paginate = (pageNumber: number) => {
-    if (pageNumber < 1) {
-      setCurrentPage(1);
-    } else if (
-      pageNumber > Math.ceil(AllPropertyRecords?.length / transactionsPerPage)
-    ) {
-      setCurrentPage(
-        Math.ceil(AllPropertyRecords?.length / transactionsPerPage)
-      );
-    } else {
-      setCurrentPage(pageNumber);
-    }
-  };
-
-  const handleCreateApartmentModal = (item:IProperty) => {
-      setOpenCreateApartmentModal(!openCreateApartmentModal);
-      setSelectedProperty(item);
+  if(loading){
+    return <Loader  />
   }
 
   return (
+    <>    
+    {!viewCustomer && 
     <main className="px-4">
       <div className="flex flex-col lg:flex-row justify-between my-10">
         {/* <div className="w-full lg:w-[45%]">
@@ -124,7 +80,7 @@ const Records:React.FC = () => {
         <div className="w-full mt-5 lg:mt-0 ">
           <AdminCard
             heading={"Total Property"}
-            amount={AllPropertyRecords?.length}
+            amount={properties?.total}
             icon={<FaHouse className="text-green w-10 h-6 mt-1" />}
           />
         </div>
@@ -140,7 +96,7 @@ const Records:React.FC = () => {
         <div>
           
         </div>
-        <div className="overflow-x-auto font-Poppins mt-3">
+{  properties &&      <div className="overflow-x-auto font-Poppins mt-3">
           <Table striped>
             <TableHead className=" font-Poppins text-xl capitalize text-white bg-green dark:text-white">
               {/* <TableHeadCell>Property ID</TableHeadCell> */}
@@ -155,7 +111,7 @@ const Records:React.FC = () => {
               <TableHeadCell>Add/View Apartment</TableHeadCell>
             </TableHead>
             <TableBody className="divide-y font-Poppins text-xl ">
-              {currentTransactions?.map((item:IProperty, index) => (
+              {properties.data.map((item:IProperty, index) => (
                 <TableRow
                   className={
                     index % 2 === 0
@@ -187,6 +143,9 @@ const Records:React.FC = () => {
                 setOpenModal={setOpenModal}
                 propertyId={selectedPropertyId}
                 setOpenCreateApartmentModal={setOpenCreateApartmentModal}
+                setCustomer={setCustomer}
+                setViewCustomer={setViewCustomer}
+
               />}
 
             </TableBody>
@@ -196,25 +155,24 @@ const Records:React.FC = () => {
             <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
               <button
                 className={`text-green font-weight-bold`}
-                onClick={() => paginate(currentPage - 1)}
-                disabled={currentPage === 1}
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
               >
                 Previous
               </button>
               <div className="mx-8 h-full">
-                {AllPropertyRecords &&
-                  AllPropertyRecords.length &&
+                {
                   Array.from({
                     length: Math.ceil(
-                      AllPropertyRecords.length / transactionsPerPage
+                      (properties.total/properties.per_page)
                     ),
                   }).map((_, index) => (
                     <button
                       className={`w-8 h-full  ${
-                        currentPage === index + 1 ? "bg-green text-white " : ""
+                        page === index + 1 ? "bg-green text-white " : ""
                       } mr-2`}
                       key={index}
-                      onClick={() => paginate(index + 1)}
+                      onClick={() => setPage(page + 1)}
                     >
                       {index + 1}
                     </button>
@@ -222,25 +180,26 @@ const Records:React.FC = () => {
               </div>
               <button
                 className={`text-green font-weight-bold`}
-                onClick={() => paginate(currentPage + 1)}
-                disabled={
-                  !AllPropertyRecords ||
-                  currentPage ===
-                    Math.ceil(
-                      (AllPropertyRecords?.length || 0) / transactionsPerPage
-                    )
-                }
+                onClick={() => setPage(page + 1)}
+                disabled={Math.ceil(properties.total/properties.per_page) <= page + 1}
               >
                 Next
               </button>
             </div>
           </div>
-        </div>
+        </div>}
       </div>
    {selectedProperty && <CreateApartmentModal openModal={openCreateApartmentModal} setOpenModal={setOpenCreateApartmentModal} property={selectedProperty}  />
 }              
       <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
-     </main>
+     </main>}
+
+     {
+      viewCustomer && <Customer />
+     }
+
+     </>
+
   );
 };
 

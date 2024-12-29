@@ -54,7 +54,7 @@ const Dash = () => {
     try{
     (async() => {
       const data = await getPspOperatorDashboard(operator.id)
-      console.log(data.data.data)
+      console.log(data.data)
       setDash(data.data.data);
 
     updateDateTime(); // Initial call to set the date and time immediately

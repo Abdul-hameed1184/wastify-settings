@@ -8,3 +8,4 @@ export const getPropertyTypes = () => {
 export const createProperty = (property: IProperty) => {
     return axios.post(`/property`, property)
 }
+
