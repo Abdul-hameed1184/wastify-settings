@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./Pages/Home";
 import ScrolltoTop from "./Component/ScrolltoTop";
 import SignUp from "./Pages/Auth/SignUp";
@@ -81,6 +81,7 @@ const App:React.FC = () =>  {
        theme="light"
        transition={Zoom}
       />
+      <BrowserRouter basename="https://abg.wasteefy.com/">
       <Routes>
         {/* Auth routes start */}
         <Route path="/" element={<Home />} />
@@ -153,6 +154,7 @@ const App:React.FC = () =>  {
         </Route>
         {/* Admin routes end */}
       </Routes>
+      </BrowserRouter>
     </>
   );
 }
