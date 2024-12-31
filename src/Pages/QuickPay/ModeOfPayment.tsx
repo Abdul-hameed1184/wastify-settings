@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
-import { Paragraph2, Paragraph2Xl, ParagraphSmall } from '../../Component/Paragraph';
+import { Paragraph2Xl, ParagraphSmall } from '../../Component/Paragraph';
 import { ButtonsPrimary } from '../../Component/Buttons';
 
 const ModeOfPayment = () => {
@@ -34,11 +34,11 @@ const ModeOfPayment = () => {
 
             <div className="">
                 <div className="my-6">
-                    <label className=" cursor-pointer w-full gap-4">
+                    <label className=" cursor-pointer w-full gap-4">{""}
                         <input type="radio" className="peer sr-only" name="paymenttype" value={'card'} checked={selectedType === 'card'} onChange={HandleTypeSelection} />
                         <div className="flex  justify-between py-3 px-4 overflow-hidden rounded-lg bg-lightGreen ring-2 ring-lightGreen border shadow-md  transition-all active:scale-95 peer-checked:ring-black peer-checked:ring-4">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" className="fill-white stroke-black mt-2" width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="fill-white stroke-black mt-2" width="32" height="32" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <circle cx="12" cy="12" r="9" />
                                 <path d="M9 12l2 2l4 -4" />
@@ -53,11 +53,11 @@ const ModeOfPayment = () => {
                     </label>
                 </div>
                 <div className="my-6">
-                    <label className=" cursor-pointer w-full gap-4">
+                    <label className=" cursor-pointer w-full gap-4">{""}
                         <input type="radio" className="peer sr-only" name="paymenttype" value={'transfer'} checked={selectedType === 'transfer'} onChange={HandleTypeSelection} />
                         <div className="flex  justify-between py-3 px-4 overflow-hidden rounded-lg bg-lightGreen ring-2 ring-lightGreen border shadow-md  transition-all active:scale-95 peer-checked:ring-black peer-checked:ring-4">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" className="fill-white stroke-black mt-2" width="32" height="32" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="fill-white stroke-black mt-2" width="32" height="32" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#2c3e50" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <circle cx="12" cy="12" r="9" />
                                 <path d="M9 12l2 2l4 -4" />

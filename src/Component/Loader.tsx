@@ -2,11 +2,11 @@ import React from 'react';
 
 const Loader:React.FC = () => {
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </div>
-    </div>
+    <div
+    className="flex items-center justify-center min-h-screen bg-gray-100"
+  >
+    <div className="w-16 h-16 border-b-8 border-green rounded-full animate-spin"></div>
+  </div>
   );
 };
 

@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, Zoom, toast } from "react-toastify";
 import {
 
-  Paragraph2Xl,
   Paragraph2XlGreenMargin,
   ParagraphTextSettings,
   ParagraphXl,
 } from "../../../Component/Paragraph";
-import baseURL from "../../../utils/apiConfig";
 
 import {
   ButtonsPrimary,
-  ButtonsSecondary,
 
 } from "../../../Component/Buttons";
 import { getPropertyTypes } from "../../../api/property/property.service";
@@ -24,29 +20,18 @@ import {
   updateBillSetup,
 } from "../../../api/bill/psp-operator-pricing";
 import { IOperator } from "../../../models/operator.interface";
-import {
-  createApartmentType,
-  getApartmentType,
-} from "../../../api/property/apartment.service";
 import { IApartmentTypeBill } from "../../../models/apartmentTypeBill.interface";
+
 import Loader from "../../../Component/Loader";
-import { IApartmentType } from "../../../models/apartmentType.interface";
 
 
 
 
 const Pricing: React.FC = () => {
-  const [residentials, setResidentials] = useState([]);
-  const [commercials, setCommercials] = useState([]);
-  const [mixedProperties, setMixedProperties] = useState([]);
-  const [governmentReserved, setGovernmentReserved] = useState([]);
-  const [selectPropertyTypeId, setSelectPropertyTypeId] = useState("");
+  const [ loading, setLoading ] = useState<boolean>(true);
   const [propertyType, setPropertyType] = useState<IPropertyType[]>([]);
-  const [errors, setErrors] = useState({});
-
-  const [bills, setBills] = useState([]);
   const [selectpropertyAmount, setSelectedPropertyAmount] = useState(0);
-  const [apartmentType, setApartmentType] = useState<IApartmentType[]>([]);
+  // const [apartmentType, setApartmentType] = useState<IApartmentType[]>([]);
   const [apartmentTypeBill, setApartmentTypeBill] = useState<
     IApartmentTypeBill[]
   >([]);
@@ -55,79 +40,31 @@ const Pricing: React.FC = () => {
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
   );
-  const [loader, setLoader] = useState<boolean>(true);
   const [editBill, setEditBill] = useState<boolean>(false);
-  const [update, setUpdate] = useState<boolean>(true);
   // Fetch property data
-  const HandleFetchProperty = () => {
-    axios
-      .get(baseURL + "propertyType/list", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => {
-        const responseData = res.data?.data;
 
-        // Filter objects based on type
-        const residentialProperties = responseData.filter(
-          (item: any) => item.name === "Residential"
-        );
-        const commercialProperties = responseData.filter(
-          (item: any) => item.name === "Commercial"
-        );
-        const mixedProperties = responseData.filter(
-          (item: any) => item.name === "Mixed Property"
-        );
-        const governmentReservedProperties = responseData.filter(
-          (item: any) => item.name === "Goverment Reserved Areas"
-        );
-
-        // Sort arrays based on id
-        residentialProperties.sort((a: any, b: any) => a.id - b.id);
-        commercialProperties.sort((a: any, b: any) => a.id - b.id);
-        mixedProperties.sort((a: any, b: any) => a.id - b.id);
-        governmentReservedProperties.sort((a: any, b: any) => a.id - b.id);
-
-        setResidentials(residentialProperties);
-        setCommercials(commercialProperties);
-        setMixedProperties(mixedProperties);
-        setGovernmentReserved(governmentReservedProperties);
-
-        console.log("residential", residentials);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   useEffect(() => {
     (async () => {
-      const prop = await getPropertyTypes();
-      setPropertyType(prop.data.data);
-      const pspBill = await getPspOperatorBill(operator.id);
-      setApartmentTypeBill(pspBill.data.data.data);
-      console.log(pspBill.data.data.data)
-      const apartType = await getApartmentType();
-      console.log(apartType);
-      setApartmentType(apartType.data.data);
+      try{
+   
+     getAparmentTypeBill();
+      }catch(e){
+        console.log(e)
+      }finally{
+        setLoading(false);
+      }
     })();
-    setLoader(false);
+
   }, []);
 
-
-  useEffect(() => {
-    HandleFetchProperty();
-  }, []);
-
-  // Set selectPropertyTypeId based on the default tab (Residential) after data is loaded
-  useEffect(() => {
-    if (residentials.length > 0) {
-      setSelectPropertyTypeId(residentials[0].id); // Set ID of the first residential property by default
-    }
-  }, [residentials]);
-
-
+  const getAparmentTypeBill =async () => {
+    const prop = await getPropertyTypes();
+    setPropertyType(prop.data.data);
+    const pspBill = await getPspOperatorBill(operator.id);
+    setApartmentTypeBill(pspBill.data.data.data);
+    console.log(pspBill.data.data.data)
+  }
 
   const handleUpdateBill = async () => {
     try {
@@ -137,52 +74,48 @@ const Pricing: React.FC = () => {
           amount: selectpropertyAmount,
           apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
         });
+        console.log(data.data.data)
+        toast.success(data.data.message);
+        getAparmentTypeBill();
+       
+        setSelectedApartmentTypeBill(data.data.data);
+        setEditBill(!editBill);
 
-        console.log(data);
-        toast.success(data.data.data);
       }
     } catch (e) {
+      toast.error("Unable to update bill");
       console.log(e);
-      toast.error(e.message);
     }
   };
 
   const handlePriceChange = (e) => {
     setSelectedPropertyAmount(parseInt(e.target.value));
-    setErrors("");
   };
 
-
-
-  const FetchAllBills = () => {
-    axios
-      .get(baseURL + "billSetup/bill-setup-by-psp-operator/" + operator.id, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => {
-        // console.log("ills fetched property", res);
-        const data = res.data.data;
-        console.log("Bills", data);
-        setBills(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  useEffect(() => {
-    FetchAllBills();
-  }, []);
+  if(loading){
+    return <Loader />
+  }
 
   return (
     <>
       <div>
-        {loader ? (
-          <Loader />
-        ) : (
+      <ToastContainer 
+       position="top-center"
+       autoClose={5000}
+       hideProgressBar
+       newestOnTop={false}
+       closeOnClick
+       rtl={false}
+       pauseOnFocusLoss
+       draggable
+       pauseOnHover
+       theme="light"
+       transition={Zoom}
+      />
+
+ 
           <div className="w-full vh-100 border border-transparent rounded-lg ring-2 ring-transparent shadow px-5 py-14">
-            <ToastContainer />
+
 
             <Paragraph2XlGreenMargin content={"Pricing"} />
             <ParagraphTextSettings content={"Setup property price"} />
@@ -192,7 +125,6 @@ const Pricing: React.FC = () => {
                 <select
                   className="form-select form-select-xl mb-3 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base mt-1 ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
                   aria-label=".form-select-lg example"
-                  onChange={(e) => setSelectPropertyTypeId(e.target.value)}
                 >
                   {propertyType &&
                     propertyType.map((x: IPropertyType, y:number) => {
@@ -201,7 +133,7 @@ const Pricing: React.FC = () => {
                 </select>
               </div>
               <ParagraphXl content={"Apartment Type"} />
-              {update ? (
+
                 <div className=" flex flex-row align-items-center justify-content-center">
                   <select
                     className="form-select form-select-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
@@ -213,9 +145,10 @@ const Pricing: React.FC = () => {
                       ); // Find the matching object
                       setSelectedApartmentTypeBill(selectedObject);
                     }}
+                    defaultValue={"default"}
                   >
-                    <option disabled selected>
-                      Select Apartment Type
+                    <option disabled value={'default'}>
+                    Select Apartment Type
                     </option>
                     {apartmentTypeBill &&
                       apartmentTypeBill.map((x: IApartmentTypeBill, index:number ) => {
@@ -230,9 +163,7 @@ const Pricing: React.FC = () => {
                   }/> */}
                   </div>
                 </div>
-              ) : (
-                <CreateApartmentType setUpdate={setUpdate} update={update} />
-              )}
+              
 
               {selectedApartmentTypeBill && (
                 
@@ -240,9 +171,8 @@ const Pricing: React.FC = () => {
                     <div className="mt-8 flex flex-row  align-items-center justify-content-center">
                       {!editBill ? (
                         <div className="flex flex-row">
-                          <Paragraph2Xl
-                            content={selectedApartmentTypeBill.amount}
-                          />
+                          <p className="text-4xl m-2 font-inter font-bold not-italic text-green leading-6" >   <span className="font-bold">₦{selectedApartmentTypeBill.amount}</span></p>
+
                           <div className="w-2/5 mx-4 mb-3">
                             <ButtonsPrimary
                               name={"Edit Bill"}
@@ -251,21 +181,21 @@ const Pricing: React.FC = () => {
                           </div>
                         </div>
                       ) : (
-                        <div className="flex flex-row">
+                        <div className="flex flex-row align-items-center  gap-4 justify-items-center">
                           <input
-                            className="form-control form-control-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
+                            className="form-control form-control-xl w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
                             placeholder={"New Bill"}
                             type={"number"}
                             name={"amount"}
                             onChange={handlePriceChange}
-                            defaultValue={selectedApartmentTypeBill.amount}
+                            defaultValue={selectedApartmentTypeBill?.amount}
                           />
-                          <div className="w-1/5 my-4">
+                          <div className="w-1/5">
                             <ButtonsPrimary
                               name={"Update Bill"}
-                              onClick={() => {
-                                handleUpdateBill();
-                              }}
+                              onClick={
+                                handleUpdateBill
+                              }
                             />
                           </div>
                         </div>
@@ -309,70 +239,66 @@ const Pricing: React.FC = () => {
               </div>} */}
             </div>
           </div>
-        )}
+      
       </div>
     </>
   );
 };
 
 export default Pricing;
-type CreateApartmentProps = {
-  setUpdate: (x:boolean) => void;
-  update: boolean;
-}
-export const CreateApartmentType = ({ setUpdate, update }) => {
-  const [description, setDescription] = useState<string>("");
-  const [apartmentType, setApartmentType] = useState<string>("");
+// export const CreateApartmentType = ({ setUpdate, update }) => {
+//   const [description, setDescription] = useState<string>("");
+//   const [apartmentType, setApartmentType] = useState<string>("");
 
-  const handleCreateBill = async () => {
-    try {
-      const data = await createApartmentType({
-        name: apartmentType,
-        description,
-      });
-      console.log(data);
-      toast.success("Apartment Type created");
-      setUpdate(!update);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+//   const handleCreateBill = async () => {
+//     try {
+//       const data = await createApartmentType({
+//         name: apartmentType,
+//         description,
+//       });
+//       console.log(data);
+//       toast.success("Apartment Type created");
+//       setUpdate(!update);
+//     } catch (e) {
+//       console.log(e);
+//     }
+//   };
 
-  return (
-    <div>
-      <div className="flex flex-row">
-        <input
-          className="form-control form-control-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-          placeholder={"Apartment Type"}
-          type={"text"}
-          name={"apartmentType"}
-          onChange={(e) => setApartmentType(e.target.value)}
-        />
-      </div>
-      <div className="flex flex-col">
-        <div className="w-100">
-          <textarea
-            className="form-control form-control-xl mb-3 w-100 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-50 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-            placeholder={"Aparment type description"}
-            onChange={(e) => setDescription(e.target.value)}
-            name={"description"}
-          />
-        </div>
-        <div className="my-2 flex gap-2 justify-space-between">
-          <div className="w-1/5">
-            <ButtonsSecondary
-              name={"Cancel"}
-              onClick={() => setUpdate(!update)}
-            />
-          </div>
-          <div className="w-1/5">
-            <ButtonsPrimary
-              name={"Create Bill"}
-              onClick={() => handleCreateBill()}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <div className="flex flex-row">
+//         <input
+//           className="form-control form-control-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
+//           placeholder={"Apartment Type"}
+//           type={"text"}
+//           name={"apartmentType"}
+//           onChange={(e) => setApartmentType(e.target.value)}
+//         />
+//       </div>
+//       <div className="flex flex-col">
+//         <div className="w-100">
+//           <textarea
+//             className="form-control form-control-xl mb-3 w-100 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-50 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
+//             placeholder={"Aparment type description"}
+//             onChange={(e) => setDescription(e.target.value)}
+//             name={"description"}
+//           />
+//         </div>
+//         <div className="my-2 flex gap-2 justify-space-between">
+//           <div className="w-1/5">
+//             <ButtonsSecondary
+//               name={"Cancel"}
+//               onClick={() => setUpdate(!update)}
+//             />
+//           </div>
+//           <div className="w-1/5">
+//             <ButtonsPrimary
+//               name={"Create Bill"}
+//               onClick={() => handleCreateBill()}
+//             />
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };

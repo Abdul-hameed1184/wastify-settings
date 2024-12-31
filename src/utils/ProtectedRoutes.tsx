@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode';
+import Loader from '../Component/Loader';
+import { IDecodeToken } from './models/decodedtoken.interface';
 
-const ProtectedRoutes = () => {
-  const [loggedIn, setLoggedIn] = useState<boolean>(null);
-  const [token] = useState(sessionStorage.getItem('SESSION_AUTH_TOKEN'))
+
+const ProtectedRoutes:React.FC = () => {
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [token] = useState<string>(sessionStorage.getItem('SESSION_AUTH_TOKEN')||"")
   const navigate = useNavigate();
+  const [ loading, setLoading ] = useState<boolean>(true)
 
   // const checkAuthenticated = async () => {
   //   try {
@@ -26,9 +30,10 @@ const ProtectedRoutes = () => {
   // }, []);
 
   useEffect(() => {
-    const userDetails = decodeToken(token);
+    const userDetails:IDecodeToken|null = decodeToken(token);
  
     if (userDetails) {
+
       const tokenExpired = isTokenExpired(userDetails.exp);
 
       if (tokenExpired) {
@@ -56,8 +61,9 @@ const ProtectedRoutes = () => {
     } else {
       setLoggedIn(false)
     }
+    setLoading(false)
 
-  }, [token]);
+  }, [navigate, token]);
 
 
 
@@ -77,6 +83,10 @@ const ProtectedRoutes = () => {
 
   if (loggedIn === null) {
     return <div className='flex justify-center items-center h-screen'> <img src='loader.gif' className='w-60 h-60' alt='loader' /> </div>;
+  }
+
+  if(loading){
+    return <Loader/>
   }
 
   return (

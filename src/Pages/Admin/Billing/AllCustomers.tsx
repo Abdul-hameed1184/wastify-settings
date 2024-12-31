@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 'flowbite-react';
 import { ParagraphBlack } from '../../../Component/Paragraph';
-import { ButtonsPrimaryBlack, ButtonsWhite } from '../../../Component/Buttons';
+import { ButtonsPrimaryBlack } from '../../../Component/Buttons';
 import { IoIosMore } from "react-icons/io";
-import { RiArrowDropDownLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import CreateBillModal from '../../../Component/Modal/CreateBillModal';
 const AllCustomers = () => {

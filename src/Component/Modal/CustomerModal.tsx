@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import baseURL from "../../utils/apiConfig";
-import { Button, Modal } from "flowbite-react";
+import { Modal } from "flowbite-react";
 import {
   Table,
   TableBody,
@@ -12,6 +12,7 @@ import {
 } from "flowbite-react";
 import { ButtonsPrimary, ButtonsPrimaryBlack } from "../Buttons";
 import { IApartment } from "../../models/apartment.interface";
+import { ICustomer } from "../../models/customer.interface";
 
 
 type Props = {
@@ -19,9 +20,17 @@ type Props = {
   openModal: boolean;
   setOpenModal: (x:boolean) => void;
   setOpenCreateApartmentModal: (x:boolean) => void;
+  setCustomer: (x:ICustomer) => void;
+  setViewCustomer: (x:boolean) => void
 }
-const CustomerModal:React.FC<Props> = ({ openModal, setOpenModal, propertyId, setOpenCreateApartmentModal }) => {
+const CustomerModal:React.FC<Props> = ({ openModal, setOpenModal, propertyId, setOpenCreateApartmentModal, setCustomer, setViewCustomer }) => {
   const [customerDetails, setCustomerDetails] = useState([]);
+
+
+  const viewCustomer = (item:IApartment) => {
+    setCustomer(item);
+    setViewCustomer(true)
+  }
 
   const HandleAllPropertyCustomers = async () => {
     if (propertyId) {
@@ -63,7 +72,7 @@ const CustomerModal:React.FC<Props> = ({ openModal, setOpenModal, propertyId, se
       <Modal.Body>
         <div className="space-y-6">
           <Table striped>
-            <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
+            <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
               <TableHeadCell>Name</TableHeadCell>
               <TableHeadCell>Apartment Type</TableHeadCell>
               <TableHeadCell>Phone number</TableHeadCell>
@@ -84,6 +93,7 @@ const CustomerModal:React.FC<Props> = ({ openModal, setOpenModal, propertyId, se
                     <TableCell>{item.customerFullname} </TableCell>
                     <TableCell>{item.apartmentTypeName} </TableCell>
                     <TableCell>{item.customerPhone} </TableCell>
+                    <TableCell><ButtonsPrimaryBlack name={"View Bill"} onClick={()=>viewCustomer(item)}/></TableCell>
                   </TableRow>
                 ))}
             </TableBody>

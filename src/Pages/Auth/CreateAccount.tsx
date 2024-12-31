@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FormikValues, useFormik } from 'formik';
+import {  useFormik } from 'formik';
 import { ToastContainer, toast } from "react-toastify";
 import axios from 'axios';
 import { Paragraph2Xl, ParagraphExtraSmallError, ParagraphLargeWhite, ParagraphSmall } from '../../Component/Paragraph';
@@ -50,7 +50,7 @@ const validate = (values:FormikValues) => {
     return errors;
 };
 
-const CreateAccount = () => {
+const CreateAccount:React.FC = () => {
     const navigate = useNavigate();
     const [istoggle, setIstoggle] = useState(false);
     const [istoggleConfirm, setIstoggleConfirm] = useState(false);

@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { useState } from 'react'
+import { jwtDecode } from 'jwt-decode';
 import { IDecodeToken } from './models/decodedtoken.interface';
 const useLogout = () => {
     const [token] = useState(sessionStorage.getItem('SESSION_AUTH_TOKEN')||"")
@@ -31,6 +30,7 @@ const useLogout = () => {
               }
 
         } catch (err) {
+           console.log(err)
             return false;
         }
     }
