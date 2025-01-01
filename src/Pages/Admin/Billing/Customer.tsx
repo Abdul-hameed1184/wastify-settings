@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { InputFieldGreenWhite } from "../../../Component/InputField";
 import { ButtonsPrimaryBlack } from "../../../Component/Buttons";
 
-const Customer:React.FC = () => {
+const Customer:React.FC = ({customer}) => {
+  console.log(customer);
+  useEffect(() => {
+    (async()=>{
+      const data = await getApartment
+    })()
+  },[])
   return (
     <main className="mb-10">
       <div className="w-full h-full border-solid border-[1px] shadow-2xl py-8 border-black rounded-lg">

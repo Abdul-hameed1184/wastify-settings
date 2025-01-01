@@ -20,9 +20,8 @@ import { FaPlusCircle } from "react-icons/fa";
 import { getPropertyByOperator } from "../../../api/psp-operator/psp-operator.service";
 import { IPaginatedProperty } from "../../../models/paginatedPropertyByOperator.interface";
 import Loader from "../../../Component/Loader";
-import { ICustomer } from "../../../models/customer.interface";
-import Customer from "../Billing/Customer";
 import { IApartment } from "../../../models/apartment.interface";
+import PropertyApartment from "./ApartmentBill";
 
 const Records:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
@@ -30,7 +29,7 @@ const Records:React.FC = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
   const [ page, setPage] = useState<number>(1);
-  const [ customer, setCustomer] = useState<IApartment>();
+  const [ apartment, setApartment] = useState<IApartment>();
   const [ viewCustomer, setViewCustomer] = useState<boolean>(false)
 
 
@@ -71,7 +70,7 @@ const Records:React.FC = () => {
 
   return (
     <>    
-    {!viewCustomer && 
+
     <main className="px-4">
       <div className="flex flex-col lg:flex-row justify-between my-10">
         {/* <div className="w-full lg:w-[45%]">
@@ -143,7 +142,7 @@ const Records:React.FC = () => {
                 setOpenModal={setOpenModal}
                 propertyId={selectedPropertyId}
                 setOpenCreateApartmentModal={setOpenCreateApartmentModal}
-                setCustomer={setCustomer}
+                setApartment={setApartment}
                 setViewCustomer={setViewCustomer}
 
               />}
@@ -192,11 +191,7 @@ const Records:React.FC = () => {
    {selectedProperty && <CreateApartmentModal openModal={openCreateApartmentModal} setOpenModal={setOpenCreateApartmentModal} property={selectedProperty}  />
 }              
       <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
-     </main>}
-
-     {
-      viewCustomer && <Customer />
-     }
+     </main>
 
      </>
 

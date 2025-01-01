@@ -51,8 +51,11 @@ import Security from "./Pages/Admin/Settings/Security";
 import CompanyProfile from "./Pages/Admin/Settings/CompanyProfile";
 import NotificationSettings from "./Pages/Admin/Settings/NotificationSettings";
 import AppSettings from "./Pages/Admin/Settings/AppSettings";
-import Property from "./Pages/Admin/Billing/Property";
 import CreateApartmentBill from "./Pages/Admin/Billing/CreateApartmentBill";
+import Property from "./Pages/Admin/Customers/Property";
+import Properties from "./Pages/Admin/Customers/Properties";
+import PropertiesLayout from "./Layouts/PropertiesLayout";
+import ApartmentBill from "./Pages/Admin/Customers/ApartmentBill";
 
 const App:React.FC = () =>  {
   const navigate = useNavigate();
@@ -153,7 +156,18 @@ const App:React.FC = () =>  {
                   <Route path="customer" element={<CreateCustomer />} />
                   <Route path="records" element={<Records />} />
                   <Route path="billing" element={<Transaction />} />
-                  <Route path="property" element={<Property />} />
+          <Route
+            path='/properties/*'
+            element={
+            <PropertiesLayout>
+              <Routes>
+              <Route path="" element={<Properties />} />
+              <Route path=":propertyId" element={<Property />} />
+              <Route path=":propertyId/bill" element={<ApartmentBill />} />
+              </Routes>
+            
+              </PropertiesLayout>} />
+  
                   <Route path="create-bill" element={<CreateApartmentBill />} />
                   <Route path="billing-customer-all" element={<AllCustomers />} />
                   <Route path="billing-customer-details" element={<Customer />} />

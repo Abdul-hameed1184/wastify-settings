@@ -18,3 +18,11 @@ export const createApartment = ({propertyId, apartmentData }: {propertyId: numbe
 export const createApartmentType =(apartmentType: IApartmentType) => {
     return axios.post(`/apartmentType`, apartmentType);
 }
+
+export const getApartmentBillings = (billingId: number) => {
+    return axios.get(`/apartmentBilling/${billingId}`);
+}
+
+export const getBillingsByApartmentId = (apartmentId: number) => {
+    return axios.get(`/apartmentBilling/billing-by-apartment/${apartmentId}`);
+}
