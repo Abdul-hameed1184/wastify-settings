@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FaPlusCircle } from "react-icons/fa";
 import { FaHouse } from "react-icons/fa6";
 import { getPropertyByOperator } from "../api/psp-operator/psp-operator.service";
-import { ButtonsPrimaryIcon } from "../Component/Buttons";
 import AdminCard from "../Component/Card/AdminCard";
 import Loader from "../Component/Loader";
 import CreatePropertyModal from "../Component/Modal/CreatePropertyModal";
@@ -55,12 +53,7 @@ const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
           />
         </div>
       </div>
-      <div className="grid justify-items-end mb-4">
-          <div className="w-1/3">
-      <ButtonsPrimaryIcon icon={<FaPlusCircle />
-} type="button" name={"Add Property"} onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}/>
-      </div>
-      </div>
+
       <div className="bg-lightBackground py-5 rounded-3xl shadow-2xl my-4">
             {children}
       </div>

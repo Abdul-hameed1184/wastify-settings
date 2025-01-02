@@ -73,9 +73,9 @@ const Records:React.FC = () => {
 
     <main className="px-4">
       <div className="flex flex-col lg:flex-row justify-between my-10">
-        {/* <div className="w-full lg:w-[45%]">
+        <div className="w-full lg:w-[45%]">
                     <AdminCard heading={"Total Customers"} amount={"300"} icon={<IoPeople className='text-green w-10 h-8' />} />
-                </div> */}
+                </div>
         <div className="w-full mt-5 lg:mt-0 ">
           <AdminCard
             heading={"Total Property"}

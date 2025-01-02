@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ButtonsPrimaryBlack } from '../../../Component/Buttons';
 import { InputFieldGreenWhite } from '../../../Component/InputField';
 import { IApartment } from '../../../models/apartment.interface';
-import { createBillSetup, getPspOperatorBill } from '../../../api/bill/psp-operator-pricing';
+import { getPspOperatorBill } from '../../../api/bill/psp-operator-pricing';
 import { IOperator } from '../../../models/operator.interface';
 import { Paragraph2Xl } from '../../../Component/Paragraph';
 import { useLocation } from 'react-router-dom';

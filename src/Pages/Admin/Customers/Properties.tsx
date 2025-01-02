@@ -8,35 +8,23 @@ import {
   TableRow,
 } from "flowbite-react";
 import { Paragraph2XlGreenMargin } from "../../../Component/Paragraph";
-import { ButtonsPrimary } from "../../../Component/Buttons";
+import { ButtonsPrimary, ButtonsPrimaryIcon } from "../../../Component/Buttons";
 import CreatePropertyModal from "../../../Component/Modal/CreatePropertyModal";
 import { IProperty } from "../../../models/property.interface";
-import CreateApartmentModal from "../../../Component/Modal/CreateApartmentModal";
 import { IOperator } from "../../../models/operator.interface";
 import { getPropertyByOperator } from "../../../api/psp-operator/psp-operator.service";
 import { IPaginatedProperty } from "../../../models/paginatedPropertyByOperator.interface";
 import Loader from "../../../Component/Loader";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { FaPlusCircle } from "react-icons/fa";
 
 const Properties:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
-
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
   const [ page, setPage] = useState<number>(1);
-  const [ viewCustomer, setViewCustomer] = useState<boolean>(false)
-
-
   const [ properties, setProperties ] = useState<IPaginatedProperty>();
-  const [selectedPropertyId, setSelectedPropertyId] = useState<number>();
-  const [selectedProperty, setSelectedProperty] = useState<IProperty>();
   const [ loading, setLoading ] = useState<boolean>(true)
-  
-  const [ openCreateApartmentModal, setOpenCreateApartmentModal ] = useState<boolean>(false);
-  const handleToggleOpen = (property:IProperty) => {
-    setOpenModal(true);
-    setSelectedPropertyId(property.id);
-    setSelectedProperty(property)
-  };
+;
 
   const getProperties = async () => {
     const data = await getPropertyByOperator(operator.id, page);
@@ -70,6 +58,12 @@ const Properties:React.FC = () => {
       <div className="bg-lightBackground py-5 rounded-3xl shadow-2xl">
         <Paragraph2XlGreenMargin content={"Property Records"} />
         <div>
+        <div className="grid justify-items-end mb-4">
+          <div className="w-1/3">
+      <ButtonsPrimaryIcon icon={<FaPlusCircle />
+} type="button" name={"Add Property"} onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}/>
+      </div>
+      </div>
           
         </div>
 {  properties &&      <div className="overflow-x-auto font-Poppins mt-3">

@@ -36,7 +36,8 @@ const CustomerModal:React.FC<Props> = ({ openModal, setOpenModal, propertyId, se
     if (openModal) {
       (async() => {
         const data = await getPropertyApartments(propertyId);
-        setApartments(data.data.data.data);;
+        console.log(data.data.data.data);
+        setApartments(data.data.data.data);
 
       })()
     }
