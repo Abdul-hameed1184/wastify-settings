@@ -3,9 +3,69 @@
 @tailwind utilities;
 
 
+
 /* @import url('https://fonts.googleapis.com/css2?family=Outfit&family=Poppins:wght@100;300;400;500;600;700&display=swap'); */ 
 
 
 main.admin-sidebar {
     font-size: 1.25em;
 }
+
+
+
+/* Typography for headings and paragraphs */
+
+h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  
+  
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+  }
+  
+
+  h4 {
+    font-size: 1.25rem; 
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+
+  h5 {
+    font-size: 1.125rem; 
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+
+  h6 {
+    font-size: 1rem; 
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  

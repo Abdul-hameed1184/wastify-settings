@@ -7,7 +7,7 @@ import {
   TableHeadCell,
   TableRow,
 } from "flowbite-react";
-import { Paragraph2XlGreenMargin } from "../../../Component/Paragraph";
+import { ParagraphLargeGreen } from "../../../Component/Paragraph";
 import { ButtonsPrimary, ButtonsPrimaryIcon } from "../../../Component/Buttons";
 import CreatePropertyModal from "../../../Component/Modal/CreatePropertyModal";
 import { IProperty } from "../../../models/property.interface";
@@ -23,42 +23,29 @@ const Properties:React.FC = () => {
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
   const [ page, setPage] = useState<number>(1);
   const [ properties, setProperties ] = useState<IPaginatedProperty>();
-  const [ loading, setLoading ] = useState<boolean>(true)
-;
-
-  const getProperties = async () => {
-    const data = await getPropertyByOperator(operator.id, page);
-  setProperties(data.data.data);
-   console.log(data);
-
-  }
     
 
   useEffect(() => {
     try{
-    getProperties();
+      (async () => {
+  
+      const data = await getPropertyByOperator(operator.id, page);
+      setProperties(data.data.data);
+    
+      })()
     }catch(e){
       console.log(e)
     }
-    setLoading(false)
   }, []);
 
 
-
-  if(loading){
-    return <Loader  />
-  }
-
   return (
 
-    <main className="px-4">
-      <div className="flex flex-col lg:flex-row justify-between my-10">
-
-      </div>
-      <div className="bg-lightBackground py-5 rounded-3xl shadow-2xl">
-        <Paragraph2XlGreenMargin content={"Property Records"} />
+    <main>
+      <div className="p-5 rounded-3xl shadow-2xl ">
+        <ParagraphLargeGreen content={"Property Records"} />
         <div>
-        <div className="grid justify-items-end mb-4">
+        <div className="grid justify-items-end my-8">
           <div className="w-1/3">
       <ButtonsPrimaryIcon icon={<FaPlusCircle />
 } type="button" name={"Add Property"} onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}/>
@@ -66,15 +53,16 @@ const Properties:React.FC = () => {
       </div>
           
         </div>
+        {!properties && <Loader />}
 {  properties &&      <div className="overflow-x-auto font-Poppins mt-3">
           <Table striped>
-            <TableHead className=" font-Poppins text-xl capitalize text-white bg-green dark:text-white">
+            <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
               {/* <TableHeadCell>Property ID</TableHeadCell> */}
               <TableHeadCell>Property address</TableHeadCell>
-              <TableHeadCell>LGA</TableHeadCell>
+              {/* <TableHeadCell>LGA</TableHeadCell> */}
               <TableHeadCell>Ward</TableHeadCell>
-              <TableHeadCell>Property code</TableHeadCell>
-              <TableHeadCell>Number of Apartment</TableHeadCell>{" "}
+              {/* <TableHeadCell>Property code</TableHeadCell> */}
+              <TableHeadCell>No of Apartments</TableHeadCell>{" "}
               {/* <TableHeadCell>Add/View Apartment</TableHeadCell>{" "} */}
               {/*Number of Customers Changed*/}
               {/* <TableHeadCell>Customer details</TableHeadCell> */}
@@ -92,9 +80,9 @@ const Properties:React.FC = () => {
                 >
                   {/* <TableCell>{item.id}</TableCell> */}
                   <TableCell>{item.propertyAddress} </TableCell>
-                  <TableCell>{item.lgaName} </TableCell>
+                  {/* <TableCell>{item.lgaName} </TableCell> */}
                   <TableCell>{item.wardName}</TableCell>
-                  <TableCell>{item.propertyCode}</TableCell>
+                  {/* <TableCell>{item.propertyCode}</TableCell> */}
                   <TableCell>{item.noOfDistinctApartment}</TableCell>
                   {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
                   <TableCell>

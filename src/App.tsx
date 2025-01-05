@@ -51,11 +51,11 @@ import Security from "./Pages/Admin/Settings/Security";
 import CompanyProfile from "./Pages/Admin/Settings/CompanyProfile";
 import NotificationSettings from "./Pages/Admin/Settings/NotificationSettings";
 import AppSettings from "./Pages/Admin/Settings/AppSettings";
-import CreateApartmentBill from "./Pages/Admin/Billing/CreateApartmentBill";
 import Property from "./Pages/Admin/Customers/Property";
 import Properties from "./Pages/Admin/Customers/Properties";
 import PropertiesLayout from "./Layouts/PropertiesLayout";
 import ApartmentBill from "./Pages/Admin/Customers/ApartmentBill";
+
 
 const App:React.FC = () =>  {
   const navigate = useNavigate();
@@ -76,6 +76,7 @@ const App:React.FC = () =>  {
       return Promise.reject(error);
     }
   );
+
 
 
   return (
@@ -163,12 +164,10 @@ const App:React.FC = () =>  {
               <Routes>
               <Route path="" element={<Properties />} />
               <Route path=":propertyId" element={<Property />} />
-              <Route path=":propertyId/bill" element={<ApartmentBill />} />
+              <Route path=":propertyId/apartments/:apartment" element={<ApartmentBill />} />
               </Routes>
             
               </PropertiesLayout>} />
-  
-                  <Route path="create-bill" element={<CreateApartmentBill />} />
                   <Route path="billing-customer-all" element={<AllCustomers />} />
                   <Route path="billing-customer-details" element={<Customer />} />
                   <Route path="reports" element={<Reports />} />

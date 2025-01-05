@@ -34,7 +34,7 @@ const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
 
 
 
-  if(loading){
+  if(!children){
     return <Loader  />
   }
 
@@ -54,7 +54,7 @@ const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
         </div>
       </div>
 
-      <div className="bg-lightBackground py-5 rounded-3xl shadow-2xl my-4">
+      <div className="py-5 rounded-3xl my-4">
             {children}
       </div>
         <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />

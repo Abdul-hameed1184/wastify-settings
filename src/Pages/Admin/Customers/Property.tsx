@@ -13,7 +13,7 @@ import { ButtonsPrimaryBlack } from "../../../Component/Buttons";
 import { IApartment } from "../../../models/apartment.interface";
 import CreateApartmentModal from "../../../Component/Modal/CreateApartmentModal";
 import { IProperty } from "../../../models/property.interface";
-import { Paragraph2Xl } from "../../../Component/Paragraph";
+import Loader from "../../../Component/Loader";
 
 
 const Property:React.FC = () => {
@@ -32,20 +32,25 @@ const Property:React.FC = () => {
       console.log(data.data.data)
 
     })()
+
+
   },[])
   const [apartments, setApartments] = useState<IApartment[]>([]);
 
 
   return (
-    <div>
-    <div className="flex flex-column justify-between">
-<Paragraph2Xl content={"Property Details - " + property.propertyAddress} />
+    
+
+<div className="p-5 rounded-3xl shadow-2xl ">
+        <div>
+<div className="grid justify-items-end my-8">
 <div className="w-1/3">
 <ButtonsPrimaryBlack
     onClick={() => {
       setOpenCreateApartmentModal(true)
     } }
-    name={"Add Apartment"} type={undefined} loading={undefined}          />
+    name={"Add Apartment"} type={"button"} loading={undefined}          />
+    </div>
     </div>
     </div>
 
@@ -59,6 +64,9 @@ const Property:React.FC = () => {
       {/* <TableHeadCell>Total overdue Bills</TableHeadCell> */}
     </TableHead>
     <TableBody className="divide-y font-Poppins text-xl">
+      {
+        !apartments && <Loader color="black" />
+      }
       {apartments &&
         apartments.map((item:IApartment, index) => (
           <TableRow
@@ -72,7 +80,7 @@ const Property:React.FC = () => {
             <TableCell>{item.customerFullname} </TableCell>
             <TableCell>{item.apartmentTypeName} </TableCell>
             <TableCell>{item.customerPhone} </TableCell>
-            <TableCell><Link to={"bill"} state={{apartment: item}}><ButtonsPrimaryBlack name={"View Bill"} /></Link></TableCell>
+            <TableCell><Link to={`apartments/${item.id}`} state={{apartment: item}}><ButtonsPrimaryBlack name={"View Bill"} /></Link></TableCell>
           </TableRow>
         ))}
     </TableBody>

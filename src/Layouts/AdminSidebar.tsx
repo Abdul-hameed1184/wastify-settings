@@ -76,12 +76,12 @@ const AdminSidebar = () => {
          
             </NavLink>
 
-            <NavLink to="/dashboard/records"
-                className={` w-full p-4 ${isActive === "/dashboard/records" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
-                onClick={() => handleOptionClick("/dashboard/records")}
+            <NavLink to="/dashboard/properties"
+                className={` w-full p-4 ${isActive === "/dashboard/properties" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
+                onClick={() => handleOptionClick("/dashboard/properties")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
-                        <PiBookFill className={`text-center mt-1 ${isActive  === "/dashboard/records" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Property Records
+                        <PiBookFill className={`text-center mt-1 ${isActive  === "/dashboard/properties" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Properties
                     </p>
          
             </NavLink>

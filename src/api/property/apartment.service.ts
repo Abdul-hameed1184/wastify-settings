@@ -24,5 +24,5 @@ export const getApartmentBillings = (billingId: number) => {
 }
 
 export const getBillingsByApartmentId = (apartmentId: number) => {
-    return axios.get(`/apartmentBilling/billing-by-apartment/${apartmentId}`);
+    return axios.get(`/apartmentBilling/billing-by-apartment-id/${apartmentId}`);
 }
