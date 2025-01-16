@@ -106,7 +106,7 @@ const AdminSidebar = () => {
          
             </NavLink>
 
-            <NavLink to="/dashboard/customer"
+            {/* <NavLink to="/dashboard/customer"
                 className={` w-full p-4  ${isActive === "/dashboard/customer" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard/customer")}
             >
@@ -114,7 +114,7 @@ const AdminSidebar = () => {
                         <IoPersonAdd className={`text-center mt-1 ${isActive  === "/dashboard/customer" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Add new customer
                     </p>
          
-            </NavLink>
+            </NavLink> */}
 
             <NavLink to="/dashboard/settings"
                 className={` w-full p-4 ${isActive === "/dashboard/settings" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}

@@ -87,10 +87,11 @@ const CreateApartmentModal: React.FC<Props> = ({ openModal, setOpenModal, proper
       const newApartment = await createApartment({ propertyId: xapartment.propertyId, apartmentData: [{ customerId: selectedCustomer?.customerId, apartmentTypeId: xapartment.apartmentTypeId, description: "xxxx" }] })
       console.log(newApartment)
       toast.success("Apartment successfully created");
-      setShow
+      setOpenModal(!openModal)
     } catch (e: unknown) {
       toast.error("No apartment created!!!");
       setErrorMessage("No apartment created!!!")
+        setOpenModal(!openModal)
     }
   }
 
