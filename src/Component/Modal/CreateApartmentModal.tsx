@@ -1,150 +1,278 @@
 import { Modal } from "flowbite-react";
-import { Paragraph, Paragraph2Green, ParagraphError, ParagraphSmall2 } from "../Paragraph"
+import { Paragraph, Paragraph2Green, Paragraph2Xl, ParagraphError, ParagraphExtraSmallError, ParagraphSmall, ParagraphSmall2 } from "../Paragraph"
 import { IProperty } from "../../models/property.interface"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { getCustomers } from "../../api/customer/customer.service";
 import { createApartment, getApartmentType } from "../../api/property/apartment.service";
 import { ICustomer } from "../../models/customer.interface";
-import { AxiosResponse } from "axios";
 import { FormikValues, useFormik } from "formik";
 import { toast } from "react-toastify";
 import { IApartmentType } from "../../models/apartmentType.interface";
+import { ButtonsPrimary, ButtonsPrimaryBlack } from "../Buttons";
+import { InputFieldSecondaryGreen } from "../InputField";
+import { createCustomer } from "../../api/psp-operator/psp-operator.service";
+import { AxiosResponse } from "axios";
 
+
+
+const validate = (values) => {
+  const errors = {
+    firstname: "",
+    lastname: "",
+    email: "",
+    phone: ""
+
+
+
+  };
+
+  if (!values.firstname) {
+    errors.firstname = 'First Name is Required';
+  } else if (values.firstname.length > 30) {
+    errors.firstname = 'First name must be lesser than 30 characters';
+  }
+
+  if (!values.lastname) {
+    errors.lastname = 'Last Name is Required';
+  } else if (values.lastname.length > 30) {
+    errors.lastname = 'Last name must be lesser than 30 characters';
+  }
+
+  if (!values.email) {
+    errors.email = 'Email is Required';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Invalid email address';
+  }
+
+  if (!values.phone) {
+    errors.phone = 'Phone number is Required';
+  } else if (values.phone.length > 15) {
+    errors.phone = 'Invalid Phone number';
+  }
+
+
+  return errors;
+};
 type Props = {
-    openModal: boolean;
-    setOpenModal : (x:boolean)=>void;
-    property: IProperty
+  openModal: boolean;
+  setOpenModal: (x: boolean) => void;
+  property: IProperty
 }
-const CreateApartmentModal:React.FC<Props> = ({ openModal, setOpenModal, property}) =>{
+const CreateApartmentModal: React.FC<Props> = ({ openModal, setOpenModal, property }) => {
 
-  const [ apartmentTypes, setApartmentTypes ] = useState<IApartmentType[]>();
-  const [ customers, setCustomers ] = useState<ICustomer[]>([]);
+  const [apartmentTypes, setApartmentTypes] = useState<IApartmentType[]>();
+  const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
   const [apartmentTypeId, setApartmentTypeId] = useState<number>();
-  const [ errorMessage, setErrorMessage ] = useState<string>();
-
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [loading, setLoading] = useState<boolean>();
+  const [showCreateCustomer, setShowCreateCustomer] = useState<boolean>(false);
   useEffect(() => {
 
-    (async()=> {
+    (async () => {
       const apartments = await getApartmentType();
       setApartmentTypes(apartments.data.data)
-      const data:AxiosResponse = await getCustomers();
+      const data: AxiosResponse = await getCustomers();
       setCustomers(data.data.data);
     })();
-  },[])
-    
-  const handleSearchChange = (search:string) => { 
+  }, [])
+
+  const handleSearchChange = (search: string) => {
     const customer = customers.find((c) => c.phone === search);
     setSelectedCustomer(customer);
   }
 
-  const handleCreateApartment = async (xapartment:FormikValues) => {
-    try{
-      const newApartment = await createApartment({propertyId: xapartment.propertyId, apartmentData: [{ customerId: selectedCustomer?.customerId, apartmentTypeId: xapartment.apartmentTypeId, description: "xxxx"}]})
-      setOpenModal(!openModal)
-      toast.success("Apartment successfully created")
-    }catch(e:unknown){
+  const handleCreateApartment = async (xapartment: FormikValues) => {
+    try {
+      const newApartment = await createApartment({ propertyId: xapartment.propertyId, apartmentData: [{ customerId: selectedCustomer?.customerId, apartmentTypeId: xapartment.apartmentTypeId, description: "xxxx" }] })
+      console.log(newApartment)
+      toast.success("Apartment successfully created");
+      setShow
+    } catch (e: unknown) {
       toast.error("No apartment created!!!");
       setErrorMessage("No apartment created!!!")
     }
   }
-  const formik = useFormik<FormikValues>({
+
+  const handleCreateCustomer = async (dy: FormikValues) => {
+    try {
+      const dx = await createCustomer(dy);
+      console.log(dx)
+      handleSearchChange(dx.data.data.phone);
+      createApartmentFormik.setFieldValue("customerId", selectedCustomer?.customerId);
+      toast.success("Customer Created", { autoClose: 5000 });
+      setShowCreateCustomer(!showCreateCustomer)
+
+
+    } catch (e: unknown) {
+      toast.error("Error in creating customer", { autoClose: 5000 });
+      console.log(e)
+    }
+  }
+
+  const CreateCustomerFormik = useFormik<FormikValues>({
+    initialValues: {
+      firstname: '',
+      lastname: '',
+      email: '',
+      phone: ''
+    },
+    onSubmit: values => {
+      console.log(values)
+      setLoading(true);
+      handleCreateCustomer(values)
+    },
+  });
+  const createApartmentFormik = useFormik<FormikValues>({
     initialValues: {
       propertyId: null,
-        customerId: null,
-        apartmentTypeId: null,
-        description : "",
-        selectedCustomer: null
+      customerId: null,
+      apartmentTypeId: null,
+      description: "",
+      selectedCustomer: null
     },
     onSubmit: (values) => {
       handleCreateApartment(values);
+
     },
   });
-    return (
-        <Modal show={openModal} onClose={() => setOpenModal(false)} size={'md'} position={'top-right'}>
-                    <form onSubmit={formik.handleSubmit}>
-        <Modal.Header>Create Apartment </Modal.Header>
-        <Modal.Body>
-        { errorMessage && <ParagraphError content={errorMessage} />}
-            <div className="space-y-6">
-                {/* <Paragraph2 content={"Check if you want to bill or customers or selected customers"} /> */}
-                <div>
-                <div className="w-full lg:w-4/5">
-              <Paragraph content={property.ownerFullName +", " + property.propertyTypeName }/>
-             
-              </div>
-                <div className="w-full lg:w-4/5">
-              <Paragraph content={property.propertyAddress +", " + property.wardName + " , " + property.lgaName +", "+property.stateName}/>
-             
-              </div>
-                <div>
-                  <ParagraphSmall2 content={"Apartment Type"}/>
-                  <select 
+  
+  return (
+    <Modal show={openModal} onClose={() => setOpenModal(false)} size={'md'} position={'top-right'}>
+    
+        {
 
-                   className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
-                   onChange={(e) => {
+!showCreateCustomer &&
+<form onSubmit={createApartmentFormik.handleSubmit} className="z-0">
+<Modal.Header>Create Apartment </Modal.Header>
+        <Modal.Body>
+ <div className="space-y-6">
+            {errorMessage && <ParagraphError content={errorMessage} />}
+            <div>
+              <div className="w-full lg:w-4/5">
+                <Paragraph content={property.ownerFullName + ", " + property.propertyTypeName} />
+
+              </div>
+              <div className="w-full lg:w-4/5">
+                <Paragraph content={property.propertyAddress + ", " + property.wardName + " , " + property.lgaName + ", " + property.stateName} />
+
+              </div>
+              <div>
+                <ParagraphSmall2 content={"Apartment Type"} />
+                <select
+
+                  className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
+                  onChange={(e) => {
                     const id = parseInt(e.target.value, 10);
                     setApartmentTypeId(id)
-                    formik.setFieldValue("apartmentTypeId", id);
-                    formik.setFieldValue("propertyId", property.id);
-                  }} 
-                  >
+                    createApartmentFormik.setFieldValue("apartmentTypeId", id);
+                    createApartmentFormik.setFieldValue("propertyId", property.id);
+                  }}
+                >
                   <option value="Apartment Type" disabled selected></option>
                   {
-                      apartmentTypes && apartmentTypes.map((apartmentType:IApartmentType) => {
-                      return ( <option key={apartmentType.id} value={apartmentType.id}>
-                            {apartmentType.name}
-                        </option>
+                    apartmentTypes && apartmentTypes.map((apartmentType: IApartmentType) => {
+                      return (<option key={apartmentType.id} value={apartmentType.id}>
+                        {apartmentType.name}
+                      </option>
                       )
-                      })
+                    })
                   }
-                  </select>
+                </select>
 
-                </div>
-                <div>
-                  <ParagraphSmall2 content={"Customer Name"}/>
-                  <input list="customers"  
+              </div>
+              <div>
+                <ParagraphSmall2 content={"Customer Name"} />
+                <input list="customers"
                   onChange={(e) => {
                     handleSearchChange(e.target.value);
-                    formik.setFieldValue("customerId", selectedCustomer?.customerId);
+                    createApartmentFormik.setFieldValue("customerId", selectedCustomer?.customerId);
                   }}
                   className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
-                  />
-                  <datalist id="customers">
-                                  {    
-                                    customers && customers.map((customer) => {
+                />
+                <datalist id="customers">
+                  {
+                    customers && customers.map((customer) => {
 
-                                     return  (
-                                      <option key={customer.customerId} value={customer.phone}>
-                        {customer.phone}
-                      </option>)
-                                    })
-                                    
+                      return (
+                        <option key={customer.customerId} value={customer.phone}>
+                          {customer.phone}
+                        </option>)
+                    })
+
 
                   }
 
-                    </datalist>
-                    {selectedCustomer && <Paragraph2Green content={ selectedCustomer.firstname.toUpperCase() + " " + selectedCustomer.lastname.toUpperCase()} />}
+                </datalist>
+                {selectedCustomer && <Paragraph2Green content={selectedCustomer.firstname.toUpperCase() + " " + selectedCustomer.lastname.toUpperCase()} />}
 
 
-                </div>
-                </div>
-
-
+              </div>
+              <div className="mt-2">
+                <ButtonsPrimary disabled={selectedCustomer !== undefined} name={"Create New Customer"} onClick={() => setShowCreateCustomer(!showCreateCustomer)} type={"button"} />
+              </div>
             </div>
-       
+
+
+          </div>
+     
+
         </Modal.Body>
+
         <Modal.Footer>
-            <div className=" w-full">
-                <button
-                  type="submit"
-              className={`text-white bg-green  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border 'bg-green'`}
->Create Apartment</button>
-            </div>
+          <div className=" w-full">
+            <ButtonsPrimary
+              type="submit"
+              name={"Create Apartment"} disabled={showCreateCustomer} />
+          </div>
         </Modal.Footer>
         </form>
+        }
+
+{ showCreateCustomer &&
+          <form onSubmit={CreateCustomerFormik.handleSubmit} >
+          <Modal.Header>Create Apartment </Modal.Header>
+        <Modal.Body>
+        <div className="mt-2 md:mt-2 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
+            <div className="mt-4 md:mt-2 ">
+              <Paragraph2Xl content={"Create New Customer Account"} />
+              <ParagraphSmall content={"Fill in Customer details to create an account"} />
+            </div>
+            <div className="mx-4 mt-8 md:mt-4">
+ 
+                <div className="mt-4">
+                  <InputFieldSecondaryGreen placeholder={"First Name"} type={"text"} name={"firstname"} onChange={CreateCustomerFormik.handleChange} value={CreateCustomerFormik.values.firstname} />
+
+                  {CreateCustomerFormik.errors.firstname ? <ParagraphExtraSmallError content={CreateCustomerFormik.errors.firstname[0]} /> : null}
+                </div>
+                <div className="mt-4">
+                  <InputFieldSecondaryGreen placeholder={"Last Name"} type={"text"} name={"lastname"} onChange={CreateCustomerFormik.handleChange} value={CreateCustomerFormik.values.lastname} />
+
+                  {CreateCustomerFormik.errors.lastname ? <ParagraphExtraSmallError content={CreateCustomerFormik.errors.lastname[0]} /> : null}
+                </div>
+                <div className="mt-4">
+                  <InputFieldSecondaryGreen placeholder={"Email"} type={"email"} name={"email"} onChange={CreateCustomerFormik.handleChange} value={CreateCustomerFormik.values.email} />
+                  {CreateCustomerFormik.errors.email ? <ParagraphExtraSmallError content={CreateCustomerFormik.errors.email[0]} /> : null}
+                </div>
+                <div className="mt-4">
+                  <InputFieldSecondaryGreen placeholder={"Phone number"} type={"text"} name={"phone"} onChange={CreateCustomerFormik.handleChange} value={CreateCustomerFormik.values.phone} />
+
+                  {CreateCustomerFormik.errors.phone ? <ParagraphExtraSmallError content={CreateCustomerFormik.errors.phone[0]} /> : null}
+                </div>
+              </div>
+              </div>
+        </Modal.Body>
+                <Modal.Footer>
+                <div className="my-6 gap-4 flex flex-col w-full">
+                  <ButtonsPrimary name={"Create Customer"} type="submit" />
+                  <ButtonsPrimaryBlack name={"Cancel"} type={"button"} onClick={() => setShowCreateCustomer(!showCreateCustomer)} />
+                </div>
+                </Modal.Footer>
+              </form>
+}
+   
     </Modal>
-    )
+  )
 }
 
 export default CreateApartmentModal;

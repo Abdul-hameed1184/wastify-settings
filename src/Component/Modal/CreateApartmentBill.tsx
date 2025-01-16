@@ -1,115 +1,171 @@
 import { Modal } from "flowbite-react";
-import { ButtonsPrimary } from "../Buttons";
+import { ButtonsPrimary, ButtonsPrimaryBlack } from "../Buttons";
 import React, { useState } from "react";
-import { createApartmentBill } from "../../api/psp-operator/psp-operator.service";
 import { ICreateApartmentBill } from "../../models/createApartmentBill.interface";
 import { IApartment } from "../../models/apartment.interface";
 import { IOperator } from "../../models/operator.interface";
 import { toast } from "react-toastify";
+import { createApartmentBill } from "../../api/psp-operator/psp-operator.service";
 
-type Props = {openModal: boolean, setOpenModal:(x) => void, apartmentBill: number, apartment: IApartment }
-const CreateApartmentBill:React.FC<Props> = ({openModal, setOpenModal, apartmentBill,apartment }) => {
-    const operator: IOperator = JSON.parse(
-        sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
-      );
-      const months = [
-        {id: "01", name: "January"},
-        {id:"02", name: "February"},
-        {id:"03",name: "March"},
-        {id:"04",name: "April"},
-        {id:"05",name: "May"},
-        {id:"06",name: "June"},
-        {id:"07",name: "July"},
-        {id:"08",name: "August"},
-        {id:"09",name: "September"},
-        {id:"10",name: "October"},
-        {id:"11",name: "November"},
-        {id:"12",name: "December"},
-      ];
-      const y = new Date().getMonth().toString()
-      const getMonth:string  = y.length < 2 ? "0"+y : y 
-    const [ discount, setDiscount ] = useState<number>();
-    const [startMonth, setStartMonth] = useState<{id:string, name:string}>(getMonthById(getMonth));
-    const [startYear, setStartYear] = useState((new Date().getFullYear()).toString());
-    const [endMonth, setEndMonth] = useState<{id:string, name:string}>(getMonthById(getMonth));
-    const [endYear, setEndYear] = useState((new Date().getFullYear()).toString());
+type Props = { openModal: boolean, setOpenModal: (x) => void, apartmentBill: number, apartment: IApartment }
+const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartmentBill, apartment }) => {
+  const operator: IOperator = JSON.parse(
+    sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
+  );
+  const months = [
+    { id: "01", name: "January" },
+    { id: "02", name: "February" },
+    { id: "03", name: "March" },
+    { id: "04", name: "April" },
+    { id: "05", name: "May" },
+    { id: "06", name: "June" },
+    { id: "07", name: "July" },
+    { id: "08", name: "August" },
+    { id: "09", name: "September" },
+    { id: "10", name: "October" },
+    { id: "11", name: "November" },
+    { id: "12", name: "December" },
+  ];
+  const y = new Date().getMonth().toString()
+  const getMonth: string = y.length < 2 ? "0" + y : y
+  const [discount, setDiscount] = useState<number>(0);
+  const [startMonth, setStartMonth] = useState<{ id: string, name: string }>(getMonthById(getMonth));
+  const [startYear, setStartYear] = useState((new Date().getFullYear()).toString());
+  const [endMonth, setEndMonth] = useState<{ id: string, name: string }>(getMonthById(getMonth));
+  const [endYear, setEndYear] = useState((new Date().getFullYear()).toString());
+  const [ month, setMonth] = useState<{ id: string, name: string }>(getMonthById(getMonth));
+  const [ year, setYear] = useState<string>((new Date().getFullYear()).toString())
+  
+
+
+  function getMonthById(id: string): { id: string, name: string } {
+    const month = months.find((month) => month.id === id);
+    return month ? month : months[0];
+  }
+
+  let Naira = new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+});
+
+  
+
+  const years = Array.from(
+    { length: 2 },
+    (_, i) => (new Date().getFullYear() - 1 + i).toString()
+  );
+
+  const handleMonthlyBill = (e:{target: {value:string}}) => {
+    const dx = getMonthById(e.target.value)
+    setMonth(dx);
     
+  }
 
-      function getMonthById(id:string):{id:string, name:string} {
-        console.log(id)
-        const month = months.find((month) => month.id === id);
-        return month ? month : months[0];
-      }
+  // const handleEndMonth = (x) => {
+  //   const dx = getMonthById(x)
+  //   setEndMonth(dx);
+  //   console.log(startMonth);
+  //   console.log(endMonth);
+  //   if (startYear > endYear || (startYear == endYear && parseInt(startMonth.id) > parseInt(endMonth.id))) {
+  //     toast.error("Start date should not be negative");
+  //   } else {
+  //     const yearDifference = Number(startYear) - Number(endYear);
+  //     let monthDifference = 0;
+  //     const billPeriods: string[] = [];
+  //     if (yearDifference == 0) {
+  //       monthDifference = parseInt(endMonth?.id) - parseInt(startMonth?.id)
+  //     } else {
+  //       monthDifference = 12 - parseInt(startMonth?.id);
+  //       monthDifference += parseInt(endMonth?.id) - parseInt(startMonth?.id)
+  //     }
+  //     billPeriods.push(startMonth.id + "-" + startYear)
+  //     let dy = parseInt(startMonth?.id);
+  //     for (let i = 1; i <= monthDifference; i++) {
+  //       let month = (dy + i).toString().length >= 2 ? (dy + i).toString() : "0" + (dy + i).toString()
+
+  //       billPeriods.push(month + "-" + startYear)
+
+  //     }
+  //     console.log(billPeriods)
+  //   }
+  // }
+
+
+  // const handleStartMonth = (x) => {
+  //   const dx = getMonthById(x)
+  //   setStartMonth(dx);
+  //   console.log(startMonth);
+  //   console.log(endMonth);
+  //   if (startYear > endYear || (startYear == endYear && parseInt(startMonth.id) > parseInt(endMonth.id))) {
+  //     toast.error("Start date should not be negative");
+  //   } else {
+  //     const yearDifference = parseInt(startYear) - parseInt(endYear);
+  //     let monthDifference = 0;
+  //     const billPeriods: string[] = [];
+  //     if (yearDifference == 0) {
+  //       monthDifference = parseInt(endMonth?.id) - parseInt(startMonth?.id)
+  //     } else {
+  //       monthDifference = 12 - parseInt(startMonth?.id);
+  //       monthDifference += parseInt(endMonth?.id) - parseInt(startMonth?.id)
+  //     }
+  //     billPeriods.push(startMonth.id + "-" + startYear);
+  //     let dy = parseInt(startMonth?.id);
+  //     for (let i = 1; i <= monthDifference; i++) {
+  //       let month = (dy + i).toString().length >= 2 ? (dy + i).toString() : "0" + (dy + i).toString()
+
+  //       billPeriods.push(month + "-" + startYear)
+
+  //     }
+  //     console.log(billPeriods)
+  //   }
+  // }
+
+  const createBill = async () => {
     
-      const years = Array.from(
-        { length: 4 },
-        (_, i) => (new Date().getFullYear() - 3 + i).toString()
-      );
-
-     const handleBillData = () => {
-        if(startYear > endYear){
-            toast.error("Start date should not be negative");
-        }else{
-            const yearDifference = Number(startYear) - Number(endYear);
-            let monthDifference = 0;
-           const billPeriods:string[] = [];
-            if(yearDifference == 0){
-                monthDifference =  Number(endMonth?.id) - Number(startMonth?.id)
-               }else{
-                monthDifference =  12 - Number(startMonth?.id);
-                monthDifference+= Number(endMonth?.id) - Number(startMonth?.id)
-               }
-               billPeriods.push(startMonth.id+"-"+startYear)
-               for (let i = 1; i <= monthDifference; i++) {
-                let dx = startMonth?.id;
-                let month = (Number(dx)+1).toString().length > 2 ?  (Number(dx)+1).toString() : "0"+(Number(dx)+1).toString()
-                
-                billPeriods.push(month+"-"+startYear)
-           
-              }
-              console.log(billPeriods)
+    if(0 <= discount && discount <= 100){
+    const dx: ICreateApartmentBill = {
+      pspOperatorId: operator.id,
+      billPeriod: `${month.id}-${year}`,
+      billingData: [
+      {
+        apartmentId: apartment.id,
+        billAmount: apartmentBill,
+        discountPercentage: discount,
+        discountAmount: discount * apartmentBill/100 ,
+        totalAmount: apartmentBill - (discount * apartmentBill/100)
         }
-      }
+    ]}
+
     
-    const createBill = async () => {
+    const createdBill = await createApartmentBill(dx)
+    console.log(createdBill)
 
-        const dx:ICreateApartmentBill = {
-          pspOperatorId: operator.id,
-          billPeriod: "04-2025",
-          billingData: [
-            {
-              apartmentId: apartment.id,
-              billAmount: apartmentBill,
-              discountPercentage: 0,
-              discountAmount: 0,
-              totalAmount: apartmentBill
-            }
-          ]
-        
-        }
-        const createdBill = await createApartmentBill(dx)
-        console.log(createdBill)
-      };
+    toast.success(`${month.name}, ${year} bill was created successfully`)
 
-    return (
-        <Modal show={openModal} onClose={() => setOpenModal(false)} size={"5xl"}>
-        <Modal.Header><h2 className="text-blue">Create Bill</h2></Modal.Header>
-        <Modal.Body>
+  }else{
+    toast.error("Check the discount percentage")
+  }
+  };
 
-              
-          <h2 className="text-lg font-semibold text-gray-700">
-            Pick Month & Year Range
-          </h2>
+  const handleDiscount = (e:{target: {value:string}}) => { 
+    const dx = parseInt(e.target.value)
+    setDiscount(dx)
+  
+  }
 
-          <div className="flex gap-4 w-full">
-            {/* Start Date */}
-            <div>
-              <h3 className="text-gray-600 font-medium mb-2">Start Date</h3>
+  return (
+    <Modal show={openModal} onClose={() => setOpenModal(false)} size={"2xl"}>
+      <Modal.Header  className="text-gray-600 text-3xl font-medium mb-2">Create Monthly Bill</Modal.Header>
+      <Modal.Body>
+        <div className="flex gap-4 w-full">
+          {/* Start Date */}
+          {/* <div>
+              <h3 className="text-gray-600 font-medium mb-2">Month Bill</h3>
               <div className="flex gap-4">
                 <select
                   onChange={(e) => {
-                    setStartMonth(getMonthById(e.target.value));
-                    handleBillData();
+
+                    handleStartMonth(e.target.value);
                   }}
                   className="p-2 border rounded-md text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
@@ -131,16 +187,15 @@ const CreateApartmentBill:React.FC<Props> = ({openModal, setOpenModal, apartment
                   ))}
                 </select>
               </div>
-            </div>
+            </div> */}
 
-            {/* End Date */}
-            <div>
+          {/* End Date */}
+          {/* <div>
               <h3 className="text-gray-600 font-medium mb-2">End Date</h3>
               <div className="flex gap-4">
                 <select
                   onChange={(e) =>{
-                    setEndMonth(getMonthById(e.target.value));
-                    handleBillData()
+                    handleEndMonth(e.target.value)
                   }}
                   className="p-2 border rounded-md text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
@@ -162,44 +217,94 @@ const CreateApartmentBill:React.FC<Props> = ({openModal, setOpenModal, apartment
                   ))}
                 </select>
               </div>
-            </div>
-          </div>
+            </div> */}
+        </div>
 
-          {/* Selected Range */}
-          <div className="mt-4 text-center">
+        {/* Selected Range */}
+        {/* <div className="mt-4 text-center">
             <p className="text-gray-600">
               Selected Range:{" "}
               <span className="font-bold text-gray-800">
                 {startMonth && startMonth?.name} {startYear} - {endMonth && endMonth?.name} {endYear}
               </span>
             </p>
+          </div> */}
+
+        <div>
+
+          <div className="flex flex-col ">
+          <p className="m-0 p-0 font-bold">Month</p>
+            <select
+              onChange={handleMonthlyBill}
+              className="p-2 border text-xl mb-4 rounded-md p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {months.map((month, index) => (
+                <option key={index} value={month.id}>
+                  {month.name}
+                </option>
+              ))}
+            </select>
+
+            <p className="m-0 p-0 font-bold">Year</p>
+            <select
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className="p-2 border text-xl rounded-md  mb-4 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+
+            <p className="m-0 p-0 font-bold">Discount(Percentage)</p>
+            <input 
+                type="number"
+                value={discount} 
+               id="quantity"
+               min="1"
+               max="100"
+               step="1"
+               className="w-full text-xl border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+               placeholder="Enter a discount in percentage"onChange={handleDiscount} />
           </div>
+          <div>
 
-          
+       
+          </div>
+        </div>
+        {
 
-        </Modal.Body>
-        {/* <Modal.Header>Property Details - {customerDetails[0]?.propertyAddress}</Modal.Header> */}
-        <Modal.Footer  className="flex justify-between items-center p-4">
-                  
+          <div className="mt-4">
+          <p className="text-xl font-semibold">Apartment Bill: {Naira.format(apartmentBill)}</p>
+          <p  className="text-xl font-semibold">Discount Amount: { Naira.format(discount * apartmentBill/100) }</p>
+          <p className="text-xl font-semibold">Bill : {Naira.format(apartmentBill - (discount * apartmentBill/100)) }</p>
+        </div>}
+      </Modal.Body>
+      {/* <Modal.Header>Property Details - {customerDetails[0]?.propertyAddress}</Modal.Header> */}
+      <Modal.Footer className="flex justify-between items-center p-4">
+
         <div className="w-1/3">
-            <ButtonsPrimary
-              onClick={() => {
-                setOpenModal(false);
-              } }
-              name={"Done"} type={undefined} loading={undefined}          />
-   
-  </div>
-  <div className="w-1/3">
-  <ButtonsPrimary
-              onClick={() => {
-                setOpenModal(false);
-                createBill();
-              } }
-              name={"Create Bill"} type={undefined} loading={undefined}          />
-              </div>
-        </Modal.Footer>
-      </Modal>
-    )
+          <ButtonsPrimaryBlack
+            onClick={() => {
+              setOpenModal(false);
+            }}
+            name={"Cancel"} type={undefined} loading={undefined} />
+
+        </div>
+        <div className="w-1/3">
+          <ButtonsPrimaryBlack
+            onClick={() => {
+              setOpenModal(false);
+              createBill();
+            }}
+            name={"Create Bill"} type={undefined} loading={undefined} />
+        </div>
+
+      </Modal.Footer>
+    </Modal>
+  )
 }
 
 export default CreateApartmentBill

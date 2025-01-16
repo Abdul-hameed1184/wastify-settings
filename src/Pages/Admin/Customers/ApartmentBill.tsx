@@ -9,6 +9,7 @@ import { getBillingsByApartmentId } from "../../../api/property/apartment.servic
 import { IBillData } from "../../../models/billdata.interface";
 import Loader from "../../../Component/Loader";
 import CreateApartmentBill from "../../../Component/Modal/CreateApartmentBill";
+import { toast } from "react-toastify";
 
 const ApartmentBill: React.FC = () => {
   const [bills, setBills] = useState<IBills[]>([]);
@@ -24,29 +25,82 @@ const ApartmentBill: React.FC = () => {
   console.log(apartment);
 
   const [apartmentBill, setApartmentBill] = useState<number>(0);
-
+  const [ loader, setLoader ] = useState<boolean>(true);
+  const [refreshKey, setRefreshKey] = useState<number>(0);
+  const months = [
+    { id: "01", name: "January" },
+    { id: "02", name: "February" },
+    { id: "03", name: "March" },
+    { id: "04", name: "April" },
+    { id: "05", name: "May" },
+    { id: "06", name: "June" },
+    { id: "07", name: "July" },
+    { id: "08", name: "August" },
+    { id: "09", name: "September" },
+    { id: "10", name: "October" },
+    { id: "11", name: "November" },
+    { id: "12", name: "December" },
+  ];
 
   useEffect(() => {
     (async () => {
+      try{
       const data = await getPspOperatorBill(operator.id);
       setBills(data.data.data.data);
       const dx = await getBillingsByApartmentId(apartment.id);
       console.log(dx.data.data.data);
       setBillHistory(dx.data.data.data);
-      const dy: IBills[] = bills.filter((dx) => dx.apartmentTypeId);
-      setApartmentBill(parseInt(dy[0].amount));
+      console.log(data.data.data.data)
+      const dy:IBills|undefined = data.data.data.data.find((dx) => dx.apartmentTypeId == apartment.apartmentTypeId);
+      console.log(bills)
+      if (dy) {
+        setApartmentBill(parseInt(dy.amount));
+      } else {
+        toast.error("No matching bill found for the specified apartment type.");
+        // Optionally set a default value or handle the error
+        setApartmentBill(0); // Default value if no match is found
+      }
+      setLoader(false);
+    }catch(e){
+      console.log(e)
+      toast.error("Internal Server Error")
+    }
     })();
+    console.log(apartmentBill)
   }, []);
+
+
+
+  let Naira = new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+});
+
+
+  function formatDate(dx:string): string {
+    const splitted = dx.split("-");
+    return getMonthById(splitted[0]).name+", "+splitted[1];
+  }
+
+  function getMonthById(id: string): { id: string, name: string } {
+    const month = months.find((month) => month.id === id);
+    return month ? month : months[0];
+  }
+
+  if(loader){
+    return <Loader color="black"/>
+  }
 
   return (
     <main className="mb-10">
+      {<div>
       <div className="w-full h-full shadow-2xl py-8 rounded-lg">
         <div className="px-4">
           {/* <img src="/Images/billing-user" alt="user" /> */}
-          <h2>Apartment Details</h2>
+          <h2 className="text-3xl font-bold">Apartment Details</h2>
         </div>
-        <div className="w-full flex md:flex-column md:justify-between p-4">
-          <div className="lg:w-2/5">
+        <div className="flex lg:flex-row md:justify-between p-4 flex-wrap">
+          <div className="lg:w-2/5 m-4 w-full">
             <fieldset className="border border-2 border-gray rounded-md p-4">
               <legend className="text-2xl font-semibold text-gray px-2">
                 Apartment
@@ -77,7 +131,7 @@ const ApartmentBill: React.FC = () => {
       </div> */}
             </fieldset>
           </div>
-          <div className="lg:w-2/5">
+          <div className="lg:w-2/5 m-4 w-full">
             <fieldset className="border border-2 border-gray rounded-md p-4">
               <legend className="text-2xl font-semibold text-gray px-2">
                 Occupant Information
@@ -116,24 +170,28 @@ const ApartmentBill: React.FC = () => {
       <div className="w-full h-full mt-16 shadow-2xl border-black">
         {billHistory ? (
           <table className="table-auto p-4 w-full text-sm">
-            <caption className=" text-left text-2xl font-bold p-4">
-              Bill History
+            <caption>
+            <h3 className="text-gray-600 text-3xl font-medium mb-2">Bill History</h3>
             </caption>
 
             <thead>
               <tr className="text-white bg-black  rounded-t-xl ">
-                <td className="px-4 py-2 text-left font-semibold text-white">
-                  Date & Time
+                <td className="px-4 py-2 text-left text-xl font-semibold text-white">
+                  Date
                 </td>
-                <td className=" px-4 py-2 text-left font-semibold text-white">
+                <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                  Bill
+                </td>
+                <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                  Discount Percent
+                </td>
+                <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                  Discount Amount
+                </td>
+                <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
                   Amount
                 </td>
-                <td className=" px-4 py-2 text-left font-semibold text-white">
-                  Mode Of Payment
-                </td>
-                <td className=" px-4 py-2 text-left font-semibold text-white">
-                  Status
-                </td>
+
               </tr>
             </thead>
             {billHistory &&
@@ -141,18 +199,22 @@ const ApartmentBill: React.FC = () => {
                 return (
                   <tbody className="" key={index}>
                     <tr>
-                      <td className="px-4 py-2 text-xl text-black">
-                        {x.billPeriod}
+                      <td className="px-4 py-2 text-2xl text-black">
+                        {formatDate(x.billPeriod)}
                       </td>
-                      <td className="px-4 py-2 text-xl text-black">
-                        {x.billAmount}
+                      <td className="px-4 py-2 text-2xl text-black">
+                        {Naira.format(Number(x.billAmount))}
                       </td>
-                      <td className="px-4 py-2 text-xl text-black">
-                        {x.discountAmount}
+                      <td className="px-4 py-2 text-2xl text-black">
+                        {parseInt(x.discountPercentage)+"%"}
                       </td>
-                      <td className="px-4 py-2 text-xl text-black">
-                        {x.discountPercentage}
+                      <td className="px-4 py-2 text-2xl text-black">
+                        {Naira.format(Number(x.discountAmount))}
                       </td>
+                      <td className="px-4 py-2 text-2xl text-black">
+                        {Naira.format(Number(x.billAmount) - Number(x.discountAmount))}
+                      </td>
+
                     </tr>
                   </tbody>
                 );
@@ -160,9 +222,13 @@ const ApartmentBill: React.FC = () => {
           </table>
           
         ) : (
-          <Loader color="black" />
+          <div>
+              <h2  className="w-full text-3xl font-bold text-gray text-center">No Bill History</h2>
+          </div>
+
         )}
       </div>
+      </div>}
 
 
 

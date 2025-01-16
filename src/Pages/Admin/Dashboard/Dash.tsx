@@ -29,6 +29,12 @@ const Dash = () => {
   const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
 
 
+  let Naira = new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+});
+
+
 
   const updateDateTime = () => {
     const now = new Date();
@@ -51,24 +57,22 @@ const Dash = () => {
   };
 
   useEffect(() => {
-    try{
+
     (async() => {
+      console.log(operator)
       const data = await getPspOperatorDashboard(operator.id)
       console.log(data.data)
       setDash(data.data.data);
 
     updateDateTime(); // Initial call to set the date and time immediately
     const intervalId = setInterval(updateDateTime, 1000); // Update every second
-
     return () => clearInterval(intervalId);
     })();
-  }catch(e){
-    console.log(e)
-  }finally{
-    setLoading(false)
-  }
 
-  }, [operator.id]);
+    setLoading(false)
+  
+
+  }, []);
   
   if(loading){
     return <Loader />
@@ -113,7 +117,7 @@ const Dash = () => {
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Revenue"}
-            amount={`N${dash.totalRevenue}`}
+            amount={Naira.format(dash.totalRevenue)}
             icon={<RiBarChart2Fill className="text-green w-10 h-8" />}
           />
         </div>
@@ -127,7 +131,7 @@ const Dash = () => {
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Overdue Payments"}
-            amount={`N${dash.totalOverDuePayment}`}
+            amount={Naira.format(dash.totalOverDuePayment)}
             icon={<BiTransfer className="text-green w-10 h-7 mt-1" />}
           />
         </div>

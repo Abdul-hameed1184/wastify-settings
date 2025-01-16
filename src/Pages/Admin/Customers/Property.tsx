@@ -42,6 +42,29 @@ const Property:React.FC = () => {
     
 
 <div className="p-5 rounded-3xl shadow-2xl ">
+<div className="md:w-full lg:w-2/5">
+            <fieldset className="border border-2 border-gray rounded-md p-4">
+              <legend className="text-2xl font-semibold text-gray px-2">
+                Property Information
+              </legend>
+              <div>
+                <span className="block text-xl font-medium text-gray-700">
+                  Property Owner
+                </span>
+                <span className="block text-2xl">
+                  {property.ownerFullName||"Property Owner"}
+                </span>
+              </div>
+              <div>
+                <span className="block text-xl font-medium text-gray-700">
+                  Property Address
+                </span>
+                <span className="block text-2xl">
+                  {property.propertyAddress}
+                </span>
+              </div>
+            </fieldset>
+          </div>
         <div>
 <div className="grid justify-items-end my-8">
 <div className="w-1/3">

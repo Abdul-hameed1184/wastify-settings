@@ -23,21 +23,23 @@ const Properties:React.FC = () => {
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
   const [ page, setPage] = useState<number>(1);
   const [ properties, setProperties ] = useState<IPaginatedProperty>();
-    
+  const [ loading, setLoading] = useState<boolean>(true);
+     
 
   useEffect(() => {
-    try{
+    
       (async () => {
   
       const data = await getPropertyByOperator(operator.id, page);
       setProperties(data.data.data);
+      setLoading(false)
     
       })()
-    }catch(e){
-      console.log(e)
-    }
-  }, []);
+  }, [operator.id, page]);
 
+  if(loading){
+    return <Loader />
+  }
 
   return (
 
@@ -53,7 +55,7 @@ const Properties:React.FC = () => {
       </div>
           
         </div>
-        {!properties && <Loader />}
+
 {  properties &&      <div className="overflow-x-auto font-Poppins mt-3">
           <Table striped>
             <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">

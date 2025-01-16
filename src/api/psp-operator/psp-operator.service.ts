@@ -5,8 +5,8 @@ export const getPspOperatorDashboard = (id:number) => {
     return axios.get(`/dashboard/psp-operator/${id}`)
 }
 
-export const createCustomer = () => {
-    return axios.post(`/customer`,)
+export const createCustomer = (data) => {
+    return axios.post(`/customer`, data)
 }
 
 export const getPropertyByOperator = (operatorId: number, page: number = 1) => {

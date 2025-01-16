@@ -9,11 +9,11 @@ type Props = {
   icon?:ReactNode;
   disabled?: boolean;
 }
-export const ButtonsPrimary:React.FC<Props> = ({type, onClick, name, loading}) => {
+export const ButtonsPrimary:React.FC<Props> = ({type, onClick, name, loading, disabled}) => {
   return (
     <button type={type} onClick={onClick} 
     className={`text-white bg-green  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-xl lg:text-xl font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'} overflow-hidden whitespace-nowrap`}
-    disabled={loading}
+    disabled={loading || disabled}
 >
     { loading ? 
       <div role="status">
@@ -32,7 +32,7 @@ export const ButtonsPrimary:React.FC<Props> = ({type, onClick, name, loading}) =
 export const ButtonsPrimaryBlack:React.FC<Props> = ({type, onClick, name, loading}) => {
   return (
     <button type={type} onClick={onClick} 
-    className={`text-white bg-black  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-black'} overflow-hidden whitespace-nowrap`}
+    className={`text-white bg-black  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-xl md:text-xl font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-black'} overflow-hidden whitespace-nowrap`}
     disabled={loading}
 >
     { loading ? "Loading... " : name }
