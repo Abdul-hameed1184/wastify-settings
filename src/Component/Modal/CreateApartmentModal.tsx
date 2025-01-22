@@ -11,48 +11,10 @@ import { IApartmentType } from "../../models/apartmentType.interface";
 import { ButtonsPrimary, ButtonsPrimaryBlack } from "../Buttons";
 import { InputFieldSecondaryGreen } from "../InputField";
 import { createCustomer } from "../../api/psp-operator/psp-operator.service";
-import { AxiosResponse } from "axios";
 
 
 
-const validate = (values) => {
-  const errors = {
-    firstname: "",
-    lastname: "",
-    email: "",
-    phone: ""
 
-
-
-  };
-
-  if (!values.firstname) {
-    errors.firstname = 'First Name is Required';
-  } else if (values.firstname.length > 30) {
-    errors.firstname = 'First name must be lesser than 30 characters';
-  }
-
-  if (!values.lastname) {
-    errors.lastname = 'Last Name is Required';
-  } else if (values.lastname.length > 30) {
-    errors.lastname = 'Last name must be lesser than 30 characters';
-  }
-
-  if (!values.email) {
-    errors.email = 'Email is Required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address';
-  }
-
-  if (!values.phone) {
-    errors.phone = 'Phone number is Required';
-  } else if (values.phone.length > 15) {
-    errors.phone = 'Invalid Phone number';
-  }
-
-
-  return errors;
-};
 type Props = {
   openModal: boolean;
   setOpenModal: (x: boolean) => void;
@@ -99,7 +61,6 @@ const CreateApartmentModal: React.FC<Props> = ({ openModal, setOpenModal, proper
     try {
       const dx = await createCustomer(dy);
       console.log(dx)
-      handleSearchChange(dx.data.data.phone);
       createApartmentFormik.setFieldValue("customerId", selectedCustomer?.customerId);
       toast.success("Customer Created", { autoClose: 5000 });
       setShowCreateCustomer(!showCreateCustomer)
@@ -118,10 +79,14 @@ const CreateApartmentModal: React.FC<Props> = ({ openModal, setOpenModal, proper
       email: '',
       phone: ''
     },
-    onSubmit: values => {
-      console.log(values)
+    onSubmit: async values => {
       setLoading(true);
-      handleCreateCustomer(values)
+      const dy = await handleCreateCustomer(values)
+      const data = await getCustomers();
+      setCustomers(data.data.data);
+      console.log(customers)
+      handleSearchChange(dy.data.data.data.phone)
+      
     },
   });
   const createApartmentFormik = useFormik<FormikValues>({
@@ -210,7 +175,7 @@ const CreateApartmentModal: React.FC<Props> = ({ openModal, setOpenModal, proper
 
               </div>
               <div className="mt-2">
-                <ButtonsPrimary disabled={selectedCustomer !== undefined} name={"Create New Customer"} onClick={() => setShowCreateCustomer(!showCreateCustomer)} type={"button"} />
+            {!selectedCustomer &&    <ButtonsPrimary disabled={selectedCustomer !== undefined} name={"Create New Customer"} onClick={() => setShowCreateCustomer(!showCreateCustomer)} type={"button"} />}
               </div>
             </div>
 
@@ -265,7 +230,7 @@ const CreateApartmentModal: React.FC<Props> = ({ openModal, setOpenModal, proper
         </Modal.Body>
                 <Modal.Footer>
                 <div className="my-6 gap-4 flex flex-col w-full">
-                  <ButtonsPrimary name={"Create Customer"} type="submit" />
+                 <ButtonsPrimary name={"Create Customer"} type="submit" />
                   <ButtonsPrimaryBlack name={"Cancel"} type={"button"} onClick={() => setShowCreateCustomer(!showCreateCustomer)} />
                 </div>
                 </Modal.Footer>

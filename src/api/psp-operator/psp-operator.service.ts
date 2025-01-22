@@ -18,3 +18,7 @@ export const createApartmentBill = (bill:ICreateApartmentBill) => {
     return axios.post(`/apartmentBilling`, bill)
 }
 
+export const getCustomerReports =  () => {
+    return axios.get(`/property/customerReport`);
+}
+

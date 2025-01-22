@@ -18,6 +18,7 @@ import Loader from "../../../Component/Loader";
 import { Link } from "react-router-dom";
 import { FaPlusCircle } from "react-icons/fa";
 
+
 const Properties:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
@@ -41,14 +42,15 @@ const Properties:React.FC = () => {
     return <Loader />
   }
 
+
   return (
 
     <main>
-      <div className="p-5 rounded-3xl shadow-2xl ">
+      <div className="p-5">
         <ParagraphLargeGreen content={"Property Records"} />
         <div>
         <div className="grid justify-items-end my-8">
-          <div className="w-1/3">
+          <div className="md:w-1/3 w-full">
       <ButtonsPrimaryIcon icon={<FaPlusCircle />
 } type="button" name={"Add Property"} onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}/>
       </div>
@@ -57,6 +59,7 @@ const Properties:React.FC = () => {
         </div>
 
 {  properties &&      <div className="overflow-x-auto font-Poppins mt-3">
+
           <Table striped>
             <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
               {/* <TableHeadCell>Property ID</TableHeadCell> */}

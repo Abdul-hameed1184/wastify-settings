@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 
 import { ButtonsPrimary } from '../../../Component/Buttons'
 import baseURL from '../../../utils/apiConfig';
 import axios from 'axios';
+import { getCustomerReports } from '../../../api/psp-operator/psp-operator.service';
 
 const Reports = () => {
     const [isActive, setIsActive] = useState("all")
@@ -34,8 +35,14 @@ const Reports = () => {
     };
 
     useEffect(() => {
-        // HandleAllUserRecords()
-    }, [operator])
+(async() => {
+    HandleAllUserRecords();
+        const reports = await getCustomerReports();
+        console.log(reports)
+}
+    )()
+    }, [operator]);
+
     return (
         <main className='px-4'>
             <div className="w-full h-[400px]  shadow-2xl  bg-white rounded-lg my-6 px-6 xl:px-10 py-6 ">

@@ -26,7 +26,6 @@ const ApartmentBill: React.FC = () => {
 
   const [apartmentBill, setApartmentBill] = useState<number>(0);
   const [ loader, setLoader ] = useState<boolean>(true);
-  const [refreshKey, setRefreshKey] = useState<number>(0);
   const months = [
     { id: "01", name: "January" },
     { id: "02", name: "February" },
@@ -94,7 +93,7 @@ const ApartmentBill: React.FC = () => {
   return (
     <main className="mb-10">
       {<div>
-      <div className="w-full h-full shadow-2xl py-8 rounded-lg">
+      <div className="">
         <div className="px-4">
           {/* <img src="/Images/billing-user" alt="user" /> */}
           <h2 className="text-3xl font-bold">Apartment Details</h2>
@@ -167,7 +166,7 @@ const ApartmentBill: React.FC = () => {
         </div>
       </div>
 
-      <div className="w-full h-full mt-16 shadow-2xl border-black">
+      <div className="w-full h-full border-black">
         {billHistory ? (
           <table className="table-auto p-4 w-full text-sm">
             <caption>

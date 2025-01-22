@@ -41,8 +41,8 @@ const Property:React.FC = () => {
   return (
     
 
-<div className="p-5 rounded-3xl shadow-2xl ">
-<div className="md:w-full lg:w-2/5">
+<div className="p-4 ">
+<div className="">
             <fieldset className="border border-2 border-gray rounded-md p-4">
               <legend className="text-2xl font-semibold text-gray px-2">
                 Property Information
@@ -67,7 +67,7 @@ const Property:React.FC = () => {
           </div>
         <div>
 <div className="grid justify-items-end my-8">
-<div className="w-1/3">
+<div className="md:w-1/3 w-full">
 <ButtonsPrimaryBlack
     onClick={() => {
       setOpenCreateApartmentModal(true)
