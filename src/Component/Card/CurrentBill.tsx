@@ -10,7 +10,7 @@ const CurrentBill = () => {
         navigate("/payamount")
     };
     return (
-        <div className='my-4 mx-2'>
+        <div className='my-4 mx-2 shadow-lg rounded-lg p-4'>
             <div className="flex justify-between">
                 <ParagraphSmall2 content={"Property Code:"} />
                 <Paragraph2 content={"WBSR020423"} />

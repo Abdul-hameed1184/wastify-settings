@@ -59,31 +59,22 @@ const Login = () => {
           },
         })
         .then((res) => {
-          // console.log("resLogin", res);
+          console.log("resLogin", res);
           const message = res.data.message;
           const errorState = res.data?.errorState;
           if (!errorState) {
-            const user = {
-              id: res.data?.data?.properties?.id,
-              firstname: res.data?.data?.properties?.firstname,
-              phone: res.data?.data?.properties?.phone,
-              role: res.data?.data?.properties?.role,
-              lastname: res.data?.data?.properties?.lastname,
-              email: res.data?.data?.properties?.email,
-              totalOverdueBill: res.data?.data?.properties?.totalOverdueBill,
-              created_at: res.data?.data?.properties?.created_at,
-              updated_at: res.data?.data?.properties?.updated_at,
-            };
+            const user = res.data.data.CustomerDetails;
 
             // console.log("userInit", user);
             const token = res.data?.data?.authorisation.token;
             sessionStorage.setItem("SESSION_AUTH_TOKEN", token);
             sessionStorage.setItem("AUTH_USERDETAILS", JSON.stringify(user));
             dispatch(login(user));
+            console.log(user)
             toast.success(message, { autoClose: 5000 });
             setTimeout(() => {
               SetLoading(false);
-              navigate("/profile");
+              navigate("/profile", { state: { user : user}});
             }, 3000);
           } else {
             toast.success(message, { autoClose: 5000 });

@@ -48,37 +48,6 @@ const CreatePropertyModal: React.FC<Props> = ({
       console.log(customers.data.data);
       setCustomers(customers.data.data);
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-
-            setLocation({
-              latitude: latitude.toString(),
-              longitude: longitude.toString(),
-            });
-            console.log(location);
-          },
-          (error) => {
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                toast.error("User denied the request for Geolocation.");
-                break;
-              case error.POSITION_UNAVAILABLE:
-                toast.error("Location information is unavailable.");
-                break;
-              case error.TIMEOUT:
-                toast.error("The request to get user location timed out.");
-                break;
-              default:
-                toast.error("An unknown error occurred.");
-                break;
-            }
-          }
-        );
-      } else {
-        toast.error("Geolocation is not supported by this browser.");
-      }
     })();
   }, []);
 
@@ -124,21 +93,78 @@ const CreatePropertyModal: React.FC<Props> = ({
     },
   });
 
+  const [isOn, setIsOn] = useState(false);
+
+  const handleToggle = () => {
+    setIsOn(!isOn);
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+
+          setLocation({
+            latitude: latitude.toString(),
+            longitude: longitude.toString(),
+          });
+          console.log(location);
+        },
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              toast.error("User denied the request for Geolocation.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              toast.error("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              toast.error("The request to get user location timed out.");
+              break;
+            default:
+              toast.error("An unknown error occurred.");
+              break;
+          }
+        }
+      );
+    } else {
+      toast.error("Geolocation is not supported by this browser.");
+    }
+  };
+
   return (
     <Modal
       show={openModal}
       onClose={() => setOpenModal(false)}
-      size={"md"}
+      size={"lg"}
       position={"top-right"}
     >
       <Modal.Header>Create Property </Modal.Header>
 
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} className="bg-white">
         <Modal.Body>
           <div className="space-y-6">
             {/* <Paragraph2 content={"Check if you want to bill or customers or selected customers"} /> */}
             <div>
               <div className="">
+              <div className="flex items-center space-x-2 ">
+      <label className="flex items-center cursor-pointer">
+        <span className="mr-2 text-gray-600">{isOn ? 'Turn ON your location' : 'Turn off your location'}</span>
+        <div className="relative">
+          <input
+            type="checkbox"
+            checked={isOn}
+            onChange={handleToggle}
+            className="sr-only"
+          />
+          <div
+            className={`w-12 h-6 bg-gray-300 border border-2 border-green rounded-full ${isOn ? 'bg-green' : ''} transition-all duration-300`}
+          >
+            <div
+              className={`w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${isOn ? 'translate-x-6' : ''}`}
+            />
+          </div>
+        </div>
+      </label>
+    </div>
                 <ParagraphSmall2 content={"Property Address"} />
                 <InputField
                   type="text"
@@ -195,7 +221,7 @@ const CreatePropertyModal: React.FC<Props> = ({
                   className="border-2 px-2.5 py-3.5 pl-8  bg-white shadow-sm rounded-lg block font-Poppins w-full text-black text-base mt-1 ring-gray  placeholder:text-gray focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
                   placeholder="Property Description"
                 ></textarea>
-              </div>
+
 
               <div className="">
                 <ParagraphSmall2 content={"No of Apartments"} />
@@ -258,8 +284,11 @@ const CreatePropertyModal: React.FC<Props> = ({
             >
               Create Property
             </button>
+
+          </div>
           </div>
         </Modal.Body>
+
       </form>
     </Modal>
   );

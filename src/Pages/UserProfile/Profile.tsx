@@ -5,7 +5,7 @@ import { selectUser } from "../../Features/authSlice"
 import { RoundedLogo } from "../../Component/AlternateLogos";
 import ProfileCard from "../../Component/Card/ProfileCard";
 import ProfileSlider from "../../Component/Slider/ProfileSlider";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import baseURL from "../../utils/apiConfig";
 import useLogout from "../../utils/useLogout";
@@ -16,6 +16,8 @@ const Profile = () => {
   const user = useSelector(selectUser);
   const logout = useLogout();
   const [dash, setDash] = useState([]);
+  const location = useLocation();
+  const cust = location.state;
 
   const HandleLogOut = () => {
     const isLoggedOut = logout();
@@ -49,6 +51,9 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    console.log(cust)
+    console.log(customer);
+    console.log(user)
     FetchDash();
   }, []);
 
@@ -61,6 +66,7 @@ const Profile = () => {
         <div className="px-4 py-2">
           <ProfileCard dashBoard={dash} />
         </div>
+        <div className="flex">
         <div className="px-4 py-2">
           <Card className="max-w-sm border-transparent">
             <div className="flex justify-around flex-wrap">
@@ -117,6 +123,7 @@ const Profile = () => {
         </div>
         <div className="px-4 py-2">
           <ProfileSlider />
+        </div>
         </div>
       </div>
     </main>

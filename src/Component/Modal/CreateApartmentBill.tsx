@@ -1,6 +1,6 @@
 import { Modal } from "flowbite-react";
-import { ButtonsPrimary, ButtonsPrimaryBlack } from "../Buttons";
-import React, { useState } from "react";
+import {  ButtonsPrimaryBlack } from "../Buttons";
+import React, { useEffect, useState } from "react";
 import { ICreateApartmentBill } from "../../models/createApartmentBill.interface";
 import { IApartment } from "../../models/apartment.interface";
 import { IOperator } from "../../models/operator.interface";
@@ -12,6 +12,10 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
   );
+  useEffect(() => {
+    console.log(apartmentBill);
+
+  },[])
   const months = [
     { id: "01", name: "January" },
     { id: "02", name: "February" },
@@ -29,10 +33,6 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
   const y = new Date().getMonth().toString()
   const getMonth: string = y.length < 2 ? "0" + y : y
   const [discount, setDiscount] = useState<number>(0);
-  const [startMonth, setStartMonth] = useState<{ id: string, name: string }>(getMonthById(getMonth));
-  const [startYear, setStartYear] = useState((new Date().getFullYear()).toString());
-  const [endMonth, setEndMonth] = useState<{ id: string, name: string }>(getMonthById(getMonth));
-  const [endYear, setEndYear] = useState((new Date().getFullYear()).toString());
   const [ month, setMonth] = useState<{ id: string, name: string }>(getMonthById(getMonth));
   const [ year, setYear] = useState<string>((new Date().getFullYear()).toString())
   
@@ -61,64 +61,7 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
     
   }
 
-  // const handleEndMonth = (x) => {
-  //   const dx = getMonthById(x)
-  //   setEndMonth(dx);
-  //   console.log(startMonth);
-  //   console.log(endMonth);
-  //   if (startYear > endYear || (startYear == endYear && parseInt(startMonth.id) > parseInt(endMonth.id))) {
-  //     toast.error("Start date should not be negative");
-  //   } else {
-  //     const yearDifference = Number(startYear) - Number(endYear);
-  //     let monthDifference = 0;
-  //     const billPeriods: string[] = [];
-  //     if (yearDifference == 0) {
-  //       monthDifference = parseInt(endMonth?.id) - parseInt(startMonth?.id)
-  //     } else {
-  //       monthDifference = 12 - parseInt(startMonth?.id);
-  //       monthDifference += parseInt(endMonth?.id) - parseInt(startMonth?.id)
-  //     }
-  //     billPeriods.push(startMonth.id + "-" + startYear)
-  //     let dy = parseInt(startMonth?.id);
-  //     for (let i = 1; i <= monthDifference; i++) {
-  //       let month = (dy + i).toString().length >= 2 ? (dy + i).toString() : "0" + (dy + i).toString()
-
-  //       billPeriods.push(month + "-" + startYear)
-
-  //     }
-  //     console.log(billPeriods)
-  //   }
-  // }
-
-
-  // const handleStartMonth = (x) => {
-  //   const dx = getMonthById(x)
-  //   setStartMonth(dx);
-  //   console.log(startMonth);
-  //   console.log(endMonth);
-  //   if (startYear > endYear || (startYear == endYear && parseInt(startMonth.id) > parseInt(endMonth.id))) {
-  //     toast.error("Start date should not be negative");
-  //   } else {
-  //     const yearDifference = parseInt(startYear) - parseInt(endYear);
-  //     let monthDifference = 0;
-  //     const billPeriods: string[] = [];
-  //     if (yearDifference == 0) {
-  //       monthDifference = parseInt(endMonth?.id) - parseInt(startMonth?.id)
-  //     } else {
-  //       monthDifference = 12 - parseInt(startMonth?.id);
-  //       monthDifference += parseInt(endMonth?.id) - parseInt(startMonth?.id)
-  //     }
-  //     billPeriods.push(startMonth.id + "-" + startYear);
-  //     let dy = parseInt(startMonth?.id);
-  //     for (let i = 1; i <= monthDifference; i++) {
-  //       let month = (dy + i).toString().length >= 2 ? (dy + i).toString() : "0" + (dy + i).toString()
-
-  //       billPeriods.push(month + "-" + startYear)
-
-  //     }
-  //     console.log(billPeriods)
-  //   }
-  // }
+ 
 
   const createBill = async () => {
     

@@ -61,8 +61,8 @@ const ApartmentBill: React.FC = () => {
       }
       setLoader(false);
     }catch(e){
-      console.log(e)
-      toast.error("Internal Server Error")
+      console.log(e);
+      toast.error("No bill for this customer")
     }
     })();
     console.log(apartmentBill)
@@ -86,9 +86,7 @@ const ApartmentBill: React.FC = () => {
     return month ? month : months[0];
   }
 
-  if(loader){
-    return <Loader color="black"/>
-  }
+
 
   return (
     <main className="mb-10">

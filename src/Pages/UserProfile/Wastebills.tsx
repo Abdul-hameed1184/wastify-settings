@@ -44,7 +44,7 @@ const Wastebills = () => {
         <Link to="/profile">
           <IoChevronBack
             size={28}
-            className="bg-green text-white rounded-2xl"
+            className="bg-green text-white rounded-xl"
           />
         </Link>
       </div>
@@ -54,7 +54,7 @@ const Wastebills = () => {
             <Tab
               className={({ selected }) =>
                 classNames(
-                  "w-full py-2.5 text-2xl font-bold leading-5 font-Poppins",
+                  "w-full py-2.5 text-lg font-bold leading-5 font-Poppins",
                   "focus:outline-none focus:ring-0",
                   selected
                     ? "border-green border-b-2 text-green"
@@ -69,7 +69,7 @@ const Wastebills = () => {
             <Tab
               className={({ selected }) =>
                 classNames(
-                  "w-full py-2.5 text-2xl font-bold leading-5 font-Poppins",
+                  "w-full py-2.5 text-lg font-bold leading-5 font-Poppins",
                   "focus:outline-none focus:ring-0",
                   selected
                     ? "border-green border-b-2 text-green"
@@ -99,6 +99,39 @@ const Wastebills = () => {
           </Tab.Panels>
         </Tab.Group>
       </div>
+
+      <div className="overflow-x-auto">
+      <table className="min-w-full bg-white p-2 m-2 border rounded-lg">
+        <thead>
+          <tr className="bg-green text-white p-2 m-2">
+            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Bill Period</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Amount</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Status</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { name: "December 2023", amount: "68000", status: "Current" },
+            { name: "Jan 2024", amount: "45000", status: "Overdue" },
+            { name: "Feb 2024", amount: "34000", status: "Editor" },
+            { name: "December 2023", amount: "68000", status: "Current" },
+            { name: "Jan 2024", amount: "45000", status: "Overdue" },
+            { name: "Feb 2024", amount: "34000", status: "Editor" }
+          ].map((user, index) => (
+            <tr key={index} className="hover:bg-gray-50 p-2 m-2 shadow-lg">
+              <td className="px-6 py-4 text-sm text-gray-700">{user.name}</td>
+              <td className="px-6 py-4 text-sm text-gray-700">{user.amount}</td>
+              <td className="px-6 py-4 text-sm text-gray-700">{user.status}</td>
+              <td className="px-6 py-4 text-sm">
+                <button className="text-blue-500 hover:text-blue-700 mr-3">Edit</button>
+                <button className="text-red-500 hover:text-red-700">Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
     </main>
   );
 };
