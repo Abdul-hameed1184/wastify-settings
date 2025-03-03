@@ -28,14 +28,17 @@ const Properties:React.FC = () => {
      
 
   useEffect(() => {
-    
+    try{
       (async () => {
   
-      const data = await getPropertyByOperator(operator.id, page);
+      const data = await getPropertyByOperator(operator.id);
       setProperties(data.data.data);
       setLoading(false)
     
       })()
+    }catch (error) {
+      console.log(error)
+    }
   }, [operator.id, page]);
 
   if(loading){

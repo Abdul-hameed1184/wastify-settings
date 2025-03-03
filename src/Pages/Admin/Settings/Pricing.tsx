@@ -63,7 +63,6 @@ const Pricing: React.FC = () => {
     setPropertyType(prop.data.data);
     const pspBill = await getPspOperatorBill(operator.id);
     setApartmentTypeBill(pspBill.data.data.data);
-    console.log(pspBill.data.data.data)
   }
 
   const handleUpdateBill = async () => {
@@ -74,7 +73,6 @@ const Pricing: React.FC = () => {
           amount: selectpropertyAmount,
           apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
         });
-        console.log(data.data.data)
         toast.success(data.data.message);
         getAparmentTypeBill();
        
@@ -190,7 +188,7 @@ const Pricing: React.FC = () => {
                             onChange={handlePriceChange}
                             defaultValue={selectedApartmentTypeBill?.amount}
                           />
-                          <div className="w-1/5">
+                          <div className="w-2/5">
                             <ButtonsPrimary
                               name={"Update Bill"}
                               onClick={
