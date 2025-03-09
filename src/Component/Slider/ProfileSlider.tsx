@@ -18,7 +18,7 @@ const ProfileSlider = () => {
 
     };
     return (
-        <Card className="max-w-sm border-transparent">
+        <Card className="max-w-sm w-100 border-transparent">
             <Slider {...settings}>
                 <div className="">
                     <div className="flex ">

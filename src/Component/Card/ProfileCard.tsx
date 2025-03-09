@@ -1,13 +1,17 @@
-import { Card } from "flowbite-react";
-import { ParagraphLarge, ParagraphNoMargin } from "../Paragraph";
 
-const ProfileCard = ({ dashBoard }) => {
+import React from 'react';
+import { ParagraphLarge, ParagraphNoMargin } from "../Paragraph";
+import { ICustomerDashboard } from "../../models/customerdash.interface";
+type Props = {
+  dashBoard: ICustomerDashboard;
+}
+const ProfileCard:React.FC<Props> = ({ dashBoard }) => {
   // const user = useSelector(selectUser);
-  const user = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS"));
-  const { totalBills, customerFullname, totalProperty } = dashBoard;
+  console.log(dashBoard)
+  const { totalBills, customerFullname, totalApartment } = dashBoard;
   console.log("user", dashBoard);
   return (
-    <Card className="max-w-sm border-transparent text-center">
+    <div className="max-w-sm border-transparent text-center bg-white rounded-lg shadow-lg p-4 m-4">
       <div className="">
         <ParagraphNoMargin content={"Hello!"} />
         <ParagraphLarge
@@ -16,13 +20,13 @@ const ProfileCard = ({ dashBoard }) => {
       </div>
       <div className="">
         <ParagraphNoMargin content={"Total Bills"} />
-        <ParagraphLarge content={totalBills ? totalBills : "N 0"} />
+        <ParagraphLarge content={totalBills ? totalBills.toString() : "N0"} />
       </div>
       <div className="">
-        <ParagraphNoMargin content={"Total Property"} />
-        <ParagraphLarge content={totalProperty ? totalProperty : "0"} />
+        <ParagraphNoMargin content={"Total Apartment"} />
+        <ParagraphLarge content={totalApartment ? totalApartment.toString() : "0"} />
       </div>
-    </Card>
+    </div>
   );
 };
 

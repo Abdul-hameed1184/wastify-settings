@@ -1,9 +1,10 @@
 import axios from "../api.config";
 
-export const getCustomers = () => {
-    return axios.get(`/customer/list`);
+export const getCustomers = async () => {
+    return await axios.get(`/customer/list`);
 }
 
-export const customerDashboard = (customerKey:string) => {
-    return axios.get(`/customer/${customerKey}`);
+export const customerDashboard = async (customerKey:string) => {
+    return await axios.get(`/dashboard/customer/${customerKey}`);
 }
+
