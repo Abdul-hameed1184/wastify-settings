@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import React from "react";
 import Home from "./Pages/Home";
 import ScrolltoTop from "./Component/ScrolltoTop";

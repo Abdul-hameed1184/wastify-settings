@@ -3,6 +3,7 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode';
 import Loader from '../Component/Loader';
 import { IDecodeToken } from './models/decodedtoken.interface';
+import { UsernavBar } from '../Component/UsernavBar';
 
 
 const ProtectedRoutes:React.FC = () => {
@@ -90,7 +91,7 @@ const ProtectedRoutes:React.FC = () => {
   }
 
   return (
-    loggedIn ? <Outlet /> : <Navigate to='/login' />
+    loggedIn ?<div> <Outlet /> </div>: <Navigate to='/login' />
   )
 }
 

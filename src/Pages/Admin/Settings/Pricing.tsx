@@ -44,26 +44,21 @@ const Pricing: React.FC = () => {
   // Fetch property data
 
 
-  useEffect(() => {
-    (async () => {
-      try{
-   
-     getAparmentTypeBill();
-      }catch(e){
-        console.log(e)
-      }finally{
-        setLoading(false);
-      }
-    })();
-
-  }, []);
-
   const getAparmentTypeBill =async () => {
     const prop = await getPropertyTypes();
     setPropertyType(prop.data.data);
     const pspBill = await getPspOperatorBill(operator.id);
     setApartmentTypeBill(pspBill.data.data.data);
   }
+
+  useEffect(() => {
+    try{
+    (async () => getAparmentTypeBill())();
+    }catch(error){ console.log(error)}
+    finally{
+      setLoading(false)
+    }
+  }, []);
 
   const handleUpdateBill = async () => {
     try {

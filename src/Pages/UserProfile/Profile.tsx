@@ -13,9 +13,12 @@ import { BiSupport } from "react-icons/bi";
 import { MdOutlinePayments } from "react-icons/md";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { ICustomerDashboard } from "../../models/customerdash.interface";
+import { FiMenu, FiX } from "react-icons/fi";
+import { UsernavBar } from "../../Component/UsernavBar";
 
 
 const Profile:React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const logout = useLogout();
@@ -44,60 +47,8 @@ const Profile:React.FC = () => {
   }, []);
 
   return (
-    <main className="bg-green py-10 h-screen bg-no-repeat">
-      <div className="py-2 px-6 flex items-center gap-2">
-        <RoundedLogo />
-        <div className="border-transparent flex-1 pl-8">
-            <div className="flex justify-between items-center flex-wrap">
-              <div className="cursor-pointer">
-                <Link to="/wastebills" className="flex flex-col items-center gap-2">
-                <FaMoneyBillTrendUp />
-                  <p className="text-xs font-Poppins font-medium not-italic text-white leading-6">
-                    Waste bills
-                  </p>
-                </Link>
-              </div>
-              <div className="cursor-pointer">
-                <Link to="/payment-history"  className="flex flex-col items-center gap-2">
-                <MdOutlinePayments />
-
-                  <p className="text-xs font-Poppins font-medium not-italic text-white leading-6">
-                    Payment History
-                  </p>
-                </Link>
-              </div>
-              <div className="cursor-pointer">
-                <Link to="/view-history"  className="flex flex-col items-center gap-2">
-                <IoHomeOutline />
-                  <p className="text-xs font-Poppins font-medium not-italic text-white leading-6">
-                    View property
-                  </p>
-                </Link>
-              </div>
-              <div className="cursor-pointer">
-                <Link to="/support"  className="flex flex-col items-center gap-2">
-                <BiSupport />
-
-                  <p className="text-xs font-Poppins font-medium not-italic text-white leading-6">
-                    Help & Support
-                  </p>
-                </Link>
-              </div>
-              <div className="cursor-pointer">
-                <button onClick={HandleLogOut}  className="flex flex-col items-center gap-2">
-                <IoLogOutOutline />
-                  <p className="text-xs font-Poppins font-medium not-italic text-error leading-6 text-center">
-                    Log out
-                  </p>
-                </button>
-              </div>
-            </div>
-          </div>
-      </div>
-      
-                
-
-      
+    <main className="bg-green py-10 h-screen bg-no-repeat">  
+  
       <div className="flex md:items-center">
    
           <ProfileCard dashBoard={dash} />
