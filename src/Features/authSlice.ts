@@ -14,6 +14,8 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
+      sessionStorage.removeItem('SESSION_AUTH_TOKEN')
+    
     },
   },
 });

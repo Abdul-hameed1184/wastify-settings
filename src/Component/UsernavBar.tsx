@@ -14,8 +14,10 @@ export const UsernavBar = () => {
     
   const HandleLogOut = () => {
     const isLoggedOut = logout();
-
+    
     if (isLoggedOut) {
+      sessionStorage.removeItem('AUTH_USERDETAILS')
+      sessionStorage.removeItem('SESSION_AUTH_TOKEN')
       navigate("/login");
     }
   };

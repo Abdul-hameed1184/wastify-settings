@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../Layouts/Layout";
 import {
-  Paragraph,
   Paragraph2Xl,
   ParagraphBlack,
   ParagraphLarge,
@@ -10,17 +9,14 @@ import {
   ParagraphLargeMarginItalic,
   ParagraphLargeWhite,
   ParagraphLargeWhite4xl,
-  ParagraphSmall2White,
   ParagraphSmallBlack,
 } from "../Component/Paragraph";
 import {
-  InputField,
-  InputFieldGray,
   InputFieldGrayHome,
 } from "../Component/InputField";
 import { ButtonsPrimary } from "../Component/Buttons";
 
-const Home = () => {
+const Home:React.FC = () => {
   const navigate = useNavigate();
 
   const HandleQuick = () => {
@@ -57,7 +53,7 @@ const Home = () => {
             </div>
           </div>
           <div className="hidden md:block md:m-auto">
-            <img src="Images/oosls.jpg" alt="image" srcSet="" />
+            {/* <img src="Images/oosls.jpg" alt="image" srcSet="" /> */}
           </div>
         </div>
         <div className="mt-16 flex justify-center text-center md:mt-32">

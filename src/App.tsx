@@ -55,6 +55,7 @@ import Property from "./Pages/Admin/Customers/Property";
 import Properties from "./Pages/Admin/Customers/Properties";
 import PropertiesLayout from "./Layouts/PropertiesLayout";
 import ApartmentBill from "./Pages/Admin/Customers/ApartmentBill";
+import UserLayout from "./Layouts/UserLayout";
 
 
 const App:React.FC = () =>  {
@@ -126,6 +127,7 @@ const App:React.FC = () =>  {
         {/* Quick Pay routes end */}
 
         {/* User profile page start  */}
+        <Route element={<UserLayout />}>
         <Route element={<ProtectedRoutes />}>
           <Route path="profile" element={<Profile />} />
           <Route path="wastebills" element={<Wastebills />} />
@@ -133,6 +135,8 @@ const App:React.FC = () =>  {
           <Route path="view-history" element={<ViewProperty />} />
           <Route path="support" element={<Support />} />
         </Route>
+        </Route>
+
         {/* User profile page end  */}
 
         {/* Admin routes start */}
