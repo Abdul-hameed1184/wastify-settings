@@ -4,11 +4,11 @@ import { IoChevronBack } from "react-icons/io5";
 import { Paragraph2Xl } from '../../Component/Paragraph'
 import PaymentHistoryCard from '../../Component/Card/PaymentHistoryCard';
 
-const PaymentHistory = () => {
+const PaymentHistory:React.FC = () => {
     return (
         <main>
             <div className="flex justify-start mt-10 ml-6">
-                <Link to="/profile" smooth="true" duration={500}>
+                <Link to="/profile">
                     <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
                 </Link>
             </div>

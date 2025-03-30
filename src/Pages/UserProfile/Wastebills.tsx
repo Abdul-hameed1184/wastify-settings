@@ -10,7 +10,7 @@ function classNames(...classes:string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const Wastebills = () => {
+const Wastebills:React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("current");
 
   const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS")||"");

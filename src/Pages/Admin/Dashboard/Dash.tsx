@@ -20,7 +20,7 @@ import { ToastContainer, Zoom } from "react-toastify";
 import { getPspOperatorDashboard } from "../../../api/psp-operator/psp-operator.service";
 import { IPspOperatorDashboard } from "../../../models/psp-operator.dashboard.interface";
 import Loader from "../../../Component/Loader";
-import { getBillPayment } from "../../../api/bill/psp-operator-pricing";
+
 
 const Dash = () => {
   const [currentDate, setCurrentDate] = useState("");
@@ -64,8 +64,6 @@ const Dash = () => {
       const data = await getPspOperatorDashboard(operator.id)
       console.log(data.data)
       setDash(data.data.data);
-      const dx = await getBillPayment();
-      console.log(dx)
 
     updateDateTime(); // Initial call to set the date and time immediately
     const intervalId = setInterval(updateDateTime, 1000); // Update every second

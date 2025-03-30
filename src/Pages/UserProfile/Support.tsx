@@ -2,7 +2,7 @@ import React from 'react'
 import { IoChevronBack } from "react-icons/io5";
 import { Link } from 'react-router-dom';
 import { Paragraph2Xl, Paragraph2XlWhite } from '../../Component/Paragraph';
-const Support = () => {
+const Support:React.FC = () => {
     return (
         <main className='bg-green'>
             <div className="flex justify-start pt-10 ml-6">
