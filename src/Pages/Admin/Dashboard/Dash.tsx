@@ -20,6 +20,7 @@ import { ToastContainer, Zoom } from "react-toastify";
 import { getPspOperatorDashboard } from "../../../api/psp-operator/psp-operator.service";
 import { IPspOperatorDashboard } from "../../../models/psp-operator.dashboard.interface";
 import Loader from "../../../Component/Loader";
+import { Naira } from "../../../utils/format";
 
 
 const Dash = () => {
@@ -28,12 +29,6 @@ const Dash = () => {
   const [dash, setDash] = useState<IPspOperatorDashboard>();
   const [ loading, setLoading] = useState<boolean>(true);
   const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
-
-
-  let Naira = new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency: 'NGN',
-});
 
 
 

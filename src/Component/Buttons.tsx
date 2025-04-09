@@ -12,7 +12,7 @@ type Props = {
 export const ButtonsPrimary:React.FC<Props> = ({type, onClick, name, loading, disabled}) => {
   return (
     <button type={type} onClick={onClick} 
-    className={`text-white bg-green  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-xl lg:text-xl font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'} overflow-hidden whitespace-nowrap`}
+    className={`text-white bg-green  w-full   justify-center px-4 md:px-2 py-4 md:py-2 text-base font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'} overflow-hidden whitespace-nowrap`}
     disabled={loading || disabled}
 >
     { loading ? 

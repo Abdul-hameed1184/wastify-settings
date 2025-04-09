@@ -3,12 +3,19 @@ import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { Paragraph2, Paragraph2Xl, ParagraphLarge, ParagraphSmall, ParagraphSmall2 } from '../../Component/Paragraph';
 import { ButtonsPrimary } from '../../Component/Buttons';
+import axios from 'axios';
 
 const Confirmation = () => {
     const navigate = useNavigate();
 
-    const HandleProceedPay = () => {
-        navigate("/paymentmode")
+    const HandleProceedPay = async (data:{ email:  string, password: string}) => {
+        // navigate("/paymentmode")
+        const payment = await axios.post("https://api.paystack.co/transaction/initialize",data, { headers: {
+            "Authorization": "Bearer YOUR_SECRET_KEY",
+            "Content-Type": "application/json"
+        }});
+        console.log(payment)
+
     };
     return (
         <main className='mt-10 mx-4'>
