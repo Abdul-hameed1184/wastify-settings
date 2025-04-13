@@ -75,7 +75,8 @@ const Pricing: React.FC = () => {
   const handleUpdateBill = async () => {
     try {
       if (selectedApartmentTypeBill) {
-        const data = await updateBillSetup(selectedApartmentTypeBill.id, {
+        
+        const data = await updateBillSetup(selectedApartmentTypeBill?.id, {
           pspOperatorId: operator.id,
           amount: selectpropertyAmount,
           apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
@@ -120,6 +121,8 @@ const Pricing: React.FC = () => {
 
   const handlePriceChange = (e) => {
     setSelectedPropertyAmount(parseInt(e.target.value));
+    console.log(e.target.value);
+    console.log(selectedApartmentTypeBill)
   };
 
   if (loading) {
@@ -297,8 +300,8 @@ const Pricing: React.FC = () => {
                         />
                         <div className="mx-4 mb-3">
                           <ButtonsPrimary
-                            name={selectedApartmentTypeBill?.amount == "0" ? "Update Bill": "Create Bill"}
-                            onClick={selectedApartmentTypeBill?.amount == "0" ?handleUpdateBill: handleCreateBill}
+                            name={!selectedApartmentTypeBill ? "Create Bill" : "Update Bill" }
+                            onClick={!selectedApartmentTypeBill  ? handleCreateBill : handleUpdateBill}
                           />
                         </div>
                       </div>
