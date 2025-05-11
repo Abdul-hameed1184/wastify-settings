@@ -101,77 +101,7 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
       <Modal.Header  className="text-gray-600 text-3xl font-medium mb-2">Create Monthly Bill</Modal.Header>
       <Modal.Body>
         <div className="flex gap-4 w-full">
-          {/* Start Date */}
-          {/* <div>
-              <h3 className="text-gray-600 font-medium mb-2">Month Bill</h3>
-              <div className="flex gap-4">
-                <select
-                  onChange={(e) => {
-
-                    handleStartMonth(e.target.value);
-                  }}
-                  className="p-2 border rounded-md text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {months.map((month, index) => (
-                    <option key={index} value={month.id}>
-                      {month.name}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={startYear}
-                  onChange={(e) => setStartYear(e.target.value)}
-                  className="p-2 border rounded-md text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div> */}
-
-          {/* End Date */}
-          {/* <div>
-              <h3 className="text-gray-600 font-medium mb-2">End Date</h3>
-              <div className="flex gap-4">
-                <select
-                  onChange={(e) =>{
-                    handleEndMonth(e.target.value)
-                  }}
-                  className="p-2 border rounded-md text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {months.map((month, index) => (
-                    <option key={index} value={month.id}>
-                      {month.name}
-                    </option>
-                  ))}
-                </select>
-                <select
-                  value={endYear}
-                  onChange={(e) => setEndYear(e.target.value)}
-                  className="p-2 border rounded-md text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div> */}
         </div>
-
-        {/* Selected Range */}
-        {/* <div className="mt-4 text-center">
-            <p className="text-gray-600">
-              Selected Range:{" "}
-              <span className="font-bold text-gray-800">
-                {startMonth && startMonth?.name} {startYear} - {endMonth && endMonth?.name} {endYear}
-              </span>
-            </p>
-          </div> */}
 
         <div>
 

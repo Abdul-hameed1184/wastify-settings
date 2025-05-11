@@ -20,7 +20,7 @@ const RevenueIndex = () => {
                 </div>
             </div>
             <div className="my-5">
-                <AdminCard heading={"Total Current Revenue"} amount={"N100,000,000.00"} />
+                <AdminCard heading={"Total Current Revenue"} amount={"N100,000,000.00"} icon={undefined} />
             </div>
             <div className="my-5 flex flex-col lg:flex-row justify-between">
                 <div className="w-full lg:w-[65%]">

@@ -11,7 +11,7 @@ import { getCustomerReports } from '../../../api/psp-operator/psp-operator.servi
 const Reports = () => {
     const [isActive, setIsActive] = useState("all")
     const [AllUsers, setAllUsers] = useState([])
-    const operator = JSON.parse(sessionStorage.getItem('AUTH_ADMIN_DETAILS'));
+    const operator = JSON.parse(sessionStorage.getItem('AUTH_ADMIN_DETAILS')||"");
     // console.log(operator);
     const handleOptionClick = (option) => {
         setIsActive(option);
@@ -45,12 +45,12 @@ const Reports = () => {
 
     return (
         <main className='px-4'>
-            <div className="w-full h-[400px]  shadow-2xl  bg-white rounded-lg my-6 px-6 xl:px-10 py-6 ">
+            {/* <div className="w-full h-[400px]  shadow-2xl  bg-white rounded-lg my-6 px-6 xl:px-10 py-6 ">
                 <div className="w-full h-full">
                     <textarea name="messages" id='messages' rows="7" className='w-full border-black border resize-none my-5 px-6 py-6 outline-none focus:border-black focus:border focus:ring-transparent' placeholder='Leave a message...'></textarea>
                     <ButtonsPrimary name={"Send"} />
                 </div>
-            </div>
+            </div> */}
             <div className="w-full h-full bg-white shadow-2xl rounded-lg my-20 ">
                 <div className='w-full h-32'>
                     <div className="w-full pt-10 flex flex-col lg:flex-row items-center justify-between font-semibold px-4">

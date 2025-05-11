@@ -1,43 +1,89 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { IoChevronBack } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { Tab } from "@headlessui/react";
 import CurrentBill from "../../Component/Card/CurrentBill";
-import axios from "axios";
-import baseURL from "../../utils/apiConfig";
+import { customerDetails } from "../../api/customer/customer.service";
+import { getBillingsByApartmentId } from "../../api/property/apartment.service";
+import { IPaginatedApartmentBills } from "../../models/paginatedApartmentBillsForCustomer";
+import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from "flowbite-react";
+import { ButtonsPrimary } from "../../Component/Buttons";
+import { Paragraph2Xl } from "../../Component/Paragraph";
+import { IBillData } from "../../models/billdata.interface";
+import { create_transaction, initializePayment, verifyPayment } from "../../api/paystack-payment/paystack-api";
+import PaystackPop from '@paystack/inline-js'
+import { ICustomer } from "../../models/customer.interface";
+import { toast } from "react-toastify";
 
 function classNames(...classes:string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const Wastebills:React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>("current");
+  const [ page, setPage ] = useState<number>(1);
+  const [ accessCode, setAccessCode ] = useState<string>("")
+  const [ apartmentBills, setApartmentBills ] = useState<IPaginatedApartmentBills>({} as IPaginatedApartmentBills)
 
-  const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS")||"");
-  console.log("customerWaste", customer);
+  const customer:ICustomer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS")||"");
+  const customerApartments = JSON.parse(sessionStorage.getItem("CUSTOMER_APARTMENT")||""); 
 
-  const FetchBills = () => {
-    axios
-      .get(baseURL + "billSetup/" + customer.id, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem(
-            "SESSION_AUTH_TOKEN"
-          )}`,
-        },
-      })
-      .then((res) => {
-        const responseData = res;
-        console.log("resD", responseData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const fetchBills = useCallback(() => {
+   customerApartments.map(async (dx) => {
+      const data = await getBillingsByApartmentId(dx.id)
+      console.log(data.data.data);
+      setApartmentBills(data.data.data);
+   })
+
+  },[customerApartments]);
+
+  const getCustomerDetails =  useCallback(() =>  {
+   customerDetails(customer.customerId)
+   .then(dx => console.log(dx))
+  },[customer.customerId])
 
   useEffect(() => {
-    FetchBills();
-  });
+    fetchBills();
+    getCustomerDetails();
+  },[]);
+
+      const handleBillPayment = async (x: IBillData) => {
+        try{
+          const data = await initializePayment(customer.email, Number(x.billAmount) );
+          console.log(data)
+          const{ access_code, reference }= data.data.data;
+          const popup = new PaystackPop();
+          
+          popup.resumeTransaction(access_code);
+          const dx = await verifyPayment(reference)
+          console.log(dx.data,data);
+          await createTransaction(x, dx.data.data);
+         
+      }catch(err){
+        console.log(err?.message)
+      }
+      };
+
+      const createTransaction = async (x:IBillData, dy) => {
+        try{
+          const billPaymentData = [
+            {
+                "apartmentBillingId": x.apartmentId,
+                "customerId":customer.customerId,
+                "transactionId": dy.id,
+                "amountPaid":dy.amount,
+                "paymentMode":"Bank Transfer", 
+                "paymentStatus":1      
+            }];
+            const transaction = await create_transaction(billPaymentData);
+            console.log(transaction)
+            toast.success("Payment Successfully Confirmed")
+
+
+        }catch(error){
+          console.log(error)
+        }
+      }
+
   return (
     <main>
       <div className="flex justify-start mt-10 ml-6">
@@ -48,7 +94,7 @@ const Wastebills:React.FC = () => {
           />
         </Link>
       </div>
-      <div className="m-4">
+      {/* <div className="m-4">
         <Tab.Group>
           <Tab.List className="flex space-x-1 bg-white">
             <Tab
@@ -98,40 +144,72 @@ const Wastebills:React.FC = () => {
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
-      </div>
-
-      <div className="overflow-x-auto">
-      <table className="min-w-full bg-white p-2 m-2 border rounded-lg">
-        <thead>
-          <tr className="bg-green text-white p-2 m-2">
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Bill Period</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Amount</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Status</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[
-            { name: "December 2023", amount: "68000", status: "Current" },
-            { name: "Jan 2024", amount: "45000", status: "Overdue" },
-            { name: "Feb 2024", amount: "34000", status: "Editor" },
-            { name: "December 2023", amount: "68000", status: "Current" },
-            { name: "Jan 2024", amount: "45000", status: "Overdue" },
-            { name: "Feb 2024", amount: "34000", status: "Editor" }
-          ].map((user, index) => (
-            <tr key={index} className="hover:bg-gray-50 p-2 m-2 shadow-lg">
-              <td className="px-6 py-4 text-sm text-gray-700">{user.name}</td>
-              <td className="px-6 py-4 text-sm text-gray-700">{user.amount}</td>
-              <td className="px-6 py-4 text-sm text-gray-700">{user.status}</td>
-              <td className="px-6 py-4 text-sm">
-                <button className="text-blue-500 hover:text-blue-700 mr-3">Edit</button>
-                <button className="text-red-500 hover:text-red-700">Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      </div> */}
+      <div>
+         { apartmentBills ?       
+                  <div className="overflow-x-auto font-Poppins mt-3 mx-4">
+                                <Table striped >
+                                    <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
+                                        <TableHeadCell>Period</TableHeadCell>
+                                        <TableHeadCell>Apartment Type</TableHeadCell>
+                                        <TableHeadCell>Status</TableHeadCell>
+                                        <TableHeadCell>Amount</TableHeadCell>
+                                        <TableHeadCell>Action</TableHeadCell>
+                                    </TableHead>
+                                    <TableBody className="divide-y font-Poppins ">
+                             
+                                    {apartmentBills.data && apartmentBills.data.map((item:IBillData, index) => (
+                                            <TableRow className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
+                                                <TableCell>{item.billPeriod}</TableCell>
+                                                <TableCell>{item.apartmentTypeName} </TableCell>
+                                                <TableCell>{item.paymentStatus}</TableCell>
+                                                <TableCell>{item.billAmount}</TableCell>
+                                                <TableCell><ButtonsPrimary name={"Pay"} onClick={()=>handleBillPayment(item)}/></TableCell>
+                                    
+                                            </TableRow>
+                                        ))}
+        
+                                    </TableBody>
+                                </Table>
+                                <div className="flex justify-center items-center h-20 my-10 w-full ">
+                    <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
+                      <button
+                        className={`text-green font-weight-bold`}
+                        onClick={() => setPage(page - 1)}
+                        disabled={page === 1}
+                      >
+                        Previous
+                      </button>
+                      <div className="mx-8 h-full">
+                        {
+                          Array.from({
+                            length: Math.ceil(
+                              (apartmentBills.total/apartmentBills.per_page)
+                            ),
+                          }).map((_, index) => (
+                            <button
+                              className={`w-8 h-full  ${
+                                page === index + 1 ? "bg-green text-white " : ""
+                              } mr-2`}
+                              key={index}
+                              onClick={() => setPage(page + 1)}
+                            >
+                              {index + 1}
+                            </button>
+                          ))}
+                      </div>
+                      <button
+                        className={`text-green font-weight-bold`}
+                        onClick={() => setPage(page + 1)}
+                        disabled={Math.ceil(apartmentBills.total/apartmentBills.per_page) <= page + 1}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                            </div> : <Paragraph2Xl content={"no Billing for Customers"} />
+        }
+      </div>        
     </main>
   );
 };

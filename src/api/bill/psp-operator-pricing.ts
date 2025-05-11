@@ -16,6 +16,6 @@ export const updateBillSetup = (id:number, bill: IUpdateBill) => {
     return axios.put(`/billSetup/${id}`, bill);
 }
 
-export const getBillingByOperator = (operatorId:number) => {
-    return axios.get(`/apartmentBilling/billing-by-psp-operator-id/${operatorId}`)
+export const getBillingByOperator = (operatorId:number, page: number = 1) => {
+    return axios.get(`/apartmentBilling/billing-by-psp-operator-id/${operatorId}?page=${page}`)
 }

@@ -8,6 +8,7 @@ type Props = {
   loading?: boolean;
   icon?:ReactNode;
   disabled?: boolean;
+  className?: string
 }
 export const ButtonsPrimary:React.FC<Props> = ({type, onClick, name, loading, disabled}) => {
   return (
@@ -32,7 +33,7 @@ export const ButtonsPrimary:React.FC<Props> = ({type, onClick, name, loading, di
 export const ButtonsPrimaryBlack:React.FC<Props> = ({type, onClick, name, loading}) => {
   return (
     <button type={type} onClick={onClick} 
-    className={`text-white bg-black  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-xl md:text-xl font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-black'} overflow-hidden whitespace-nowrap`}
+    className={`text-white bg-black  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-lg font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-black'} overflow-hidden whitespace-nowrap`}
     disabled={loading}
 >
     { loading ? "Loading... " : name }
@@ -59,10 +60,10 @@ export const ButtonsSecondary:React.FC<Props> = ({type, onClick, name, loading})
 </button>
   )
 }
-export const ButtonsSecondaryIcon:React.FC<Props> = ({type, onClick, name, icon,loading}) => {
+export const ButtonsSecondaryIcon:React.FC<Props> = ({type, className, onClick, name, icon,loading}) => {
   return (
     <button type={type} onClick={onClick} 
-    className={`text-white bg-gray  w-full h-14 inline-flex justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightgray' : 'bg-gray'} overflow-hidden whitespace-nowrap`}
+    className={`${className} text-white bg-gray  w-full h-14 inline-flex justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightgray' : 'bg-gray'} overflow-hidden whitespace-nowrap`}
     disabled={loading}
 >
     {name} 
@@ -74,7 +75,7 @@ export const ButtonsSecondaryIcon:React.FC<Props> = ({type, onClick, name, icon,
 export const ButtonsWhite:React.FC<Props> = ({type, onClick, name,loading}) => {
   return (
     <button type={type} onClick={onClick} 
-    className='text-gray bg-white  w-full h-14  justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border'
+    className='text-gray bg-white w-full h-14  justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border'
     disabled={loading}
 >
     {name}
@@ -83,13 +84,27 @@ export const ButtonsWhite:React.FC<Props> = ({type, onClick, name,loading}) => {
 }
 
 
-export const Button:React.FC<Props> = ({type, onClick, name,loading}) => {
+export const Button:React.FC<Props> = ({type, onClick, name,loading, className}) => {
   return (
     <button type={type} onClick={onClick} 
-    className={`text-white font-weight-bold bg-green my-4 w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'} overflow-hidden whitespace-nowrap`}
+    className={`${className} text-white px-2 font-weight-bold bg-green my-4 w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'} overflow-hidden whitespace-nowrap`}
     disabled={loading}
 >
     {name}
 </button>
   )
 }
+
+export const IconButton:React.FC<Props> = ({type, onClick, icon, name,loading, className}) => {
+  return (
+    <button type={type} onClick={onClick} 
+    className={`${className} text-white font-weight-bold text-center vertical-middle my-4 h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-red-300': 'bg-red-600'} overflow-hidden whitespace-nowrap`}
+    disabled={loading}
+>
+   <span className="flex">{icon }{name}</span>
+</button>
+  )
+}
+
+
+

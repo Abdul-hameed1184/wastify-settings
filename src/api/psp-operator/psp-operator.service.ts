@@ -17,7 +17,7 @@ export const createApartmentBill = async (bill:ICreateApartmentBill) => {
     return await axios.post(`/apartmentBilling`, bill)
 }
 
-export const getCustomerReports =  async () => {
-    return await axios.get(`/property/customerReport`);
+export const getCustomerReports =  async (operatorId:string) => {
+    return await axios.get(`/property/customerReport/${operatorId}`, );
 }
 

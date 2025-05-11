@@ -1,15 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { Paragraph2Xl } from '../../Component/Paragraph';
 import { InputField, InputFieldSecondary } from '../../Component/InputField';
 import { ButtonsPrimary } from '../../Component/Buttons';
+import { getPayStackSettings, initializePayment } from '../../api/paystack-payment/paystack-api';
+import PaystackPop from '@paystack/inline-js'
+import PaystackPayment from '../../Component/PaystackButton';
 
 const PayAmount = () => {
     const navigate = useNavigate();
+    const [settings, setSettings] = useState<any>(null);
+    const [ isOpen, setIsOpen] = useState(false);
 
-    const HandleContinue = () => {
-        navigate("/confirmation")
+
+    const HandleContinue = async () => {
+        const data = await initializePayment("jasolajohn@gmail.com", 120000);
+        console.log(data)
+        const access_code = data.data.data.access_code;
+        console.log(access_code);
+        const popup = new PaystackPop()
+        popup.resumeTransaction(access_code)
     };
     return (
         <main className='mt-10 mx-2'>
@@ -29,7 +40,9 @@ const PayAmount = () => {
             </div>
 
             <div className="mx-4 my-24">
-                <ButtonsPrimary name={"Continue"} onClick={HandleContinue} />
+                <ButtonsPrimary name={"Continue"} onClick={()=>HandleContinue()} />
+            
+            
             </div>
 
         </main>

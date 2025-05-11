@@ -1,9 +1,21 @@
 import React, { useEffect } from "react";
 import { InputFieldGreenWhite } from "../../../Component/InputField";
 import { ButtonsPrimaryBlack } from "../../../Component/Buttons";
+import { customerDetails } from "../../../api/customer/customer.service";
 
-const Customer:React.FC = ({customer}) => {
-  console.log(customer);
+const Customer:React.FC<{customerId: string}> = ({customerId}) => {
+
+
+  useEffect(()=> {
+  (async () => {
+    const dx = await customerDetails(customerId);
+    console.log(dx.data.data);
+    console.log(dx.data.data)
+
+  }
+    
+  )();
+  },[]);
 
   return (
     <main className="mb-10">

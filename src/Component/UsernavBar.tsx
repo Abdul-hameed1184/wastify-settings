@@ -7,6 +7,7 @@ import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { FiMenu, FiX } from "react-icons/fi";
 import { useState } from "react";
 import { logout } from "../Features/authSlice";
+import { TbReportSearch } from "react-icons/tb";
 
 export const UsernavBar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -65,6 +66,16 @@ export const UsernavBar = () => {
                             Help & Support
                           </p>
                   </Link>
+                  </li>
+                  <li>
+                  <Link to="/reports"  className="hover:text-gray-300 cursor-pointer flex flex-col items-center gap-2 cursor-pointer">
+                 
+                  <TbReportSearch />
+ 
+                   <p className="text-sm font-Poppins font-medium not-italic  leading-6">
+                     Reports
+                   </p>
+           </Link>
                   </li>
                   <li>
                   <div     className="hover:text-gray-300 cursor-pointer flex flex-col items-center gap-2">

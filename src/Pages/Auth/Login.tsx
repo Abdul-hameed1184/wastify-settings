@@ -16,8 +16,8 @@ import { InputFieldSecondaryGreen } from "../../Component/InputField";
 import { ButtonsPrimary } from "../../Component/Buttons";
 import baseURL from "../../utils/apiConfig";
 
-const validate = (values:FormikValues) => {
-  const errors:FormikValues = {};
+const validate = (values: FormikValues) => {
+  const errors: FormikValues = {};
 
   if (!values.phone) {
     errors.phone = "Phone Number is Required";
@@ -64,17 +64,22 @@ const Login = () => {
           const errorState = res.data?.errorState;
           if (!errorState) {
             const user = res.data.data.CustomerDetails;
+            const userApartment = res.data.data.customerApartments;
 
             // console.log("userInit", user);
             const token = res.data?.data?.authorisation.token;
             sessionStorage.setItem("SESSION_AUTH_TOKEN", token);
             sessionStorage.setItem("AUTH_USERDETAILS", JSON.stringify(user));
+            sessionStorage.setItem(
+              "CUSTOMER_APARTMENT",
+              JSON.stringify(userApartment)
+            );
             dispatch(login(user));
-            console.log(user)
+            console.log(user);
             toast.success(message, { autoClose: 5000 });
             setTimeout(() => {
               SetLoading(false);
-              navigate("/profile", { state: { user : user}});
+              navigate("/profile", { state: { user: user } });
             }, 3000);
           } else {
             toast.success(message, { autoClose: 5000 });
