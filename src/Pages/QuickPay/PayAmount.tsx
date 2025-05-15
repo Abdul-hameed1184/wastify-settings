@@ -5,7 +5,7 @@ import { Paragraph2Xl } from '../../Component/Paragraph';
 import { InputField, InputFieldSecondary } from '../../Component/InputField';
 import { ButtonsPrimary } from '../../Component/Buttons';
 import { getPayStackSettings, initializePayment } from '../../api/paystack-payment/paystack-api';
-import PaystackPop from '@paystack/inline-js'
+import Paystack from '@paystack/inline-js'
 import PaystackPayment from '../../Component/PaystackButton';
 
 const PayAmount = () => {
@@ -19,8 +19,9 @@ const PayAmount = () => {
         console.log(data)
         const access_code = data.data.data.access_code;
         console.log(access_code);
-        const popup = new PaystackPop()
-        popup.resumeTransaction(access_code)
+        const popup = new Paystack()
+        const bx = popup.resumeTransaction(access_code);
+        console.log(bx)
     };
     return (
         <main className='mt-10 mx-2'>

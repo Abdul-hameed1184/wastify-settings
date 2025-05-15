@@ -11,7 +11,7 @@ import { ButtonsPrimary } from "../../Component/Buttons";
 import { Paragraph2Xl } from "../../Component/Paragraph";
 import { IBillData } from "../../models/billdata.interface";
 import { create_transaction, initializePayment, verifyPayment } from "../../api/paystack-payment/paystack-api";
-import PaystackPop from '@paystack/inline-js'
+import Paystack from '@paystack/inline-js'
 import { ICustomer } from "../../models/customer.interface";
 import { toast } from "react-toastify";
 
@@ -51,11 +51,14 @@ const Wastebills:React.FC = () => {
           const data = await initializePayment(customer.email, Number(x.billAmount) );
           console.log(data)
           const{ access_code, reference }= data.data.data;
-          const popup = new PaystackPop();
+          console.log(access_code, reference)
+          const popup = new Paystack();
           
-          popup.resumeTransaction(access_code);
+          const y = await popup.resumeTransaction(access_code);
+          console.log(y)
           const dx = await verifyPayment(reference)
-          console.log(dx.data,data);
+          console.log(dx);
+          console.log(data)
           await createTransaction(x, dx.data.data);
          
       }catch(err){
