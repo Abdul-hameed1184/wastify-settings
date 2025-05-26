@@ -18,6 +18,6 @@ export const createApartmentBill = async (bill:ICreateApartmentBill) => {
 }
 
 export const getCustomerReports =  async (operatorId:string) => {
-    return await axios.get(`/property/customerReport/${operatorId}`, );
+    return await axios.get(`/customerReport/list-by-psp-operator-id/${operatorId}`);
 }
 

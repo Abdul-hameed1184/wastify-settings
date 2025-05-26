@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { getCustomerReportPaginatedByCustomer } from "../../api/customer/customer.service";
 import { IPaginatedCustomerReports } from "../../models/paginated.customerReports.interface";
 import { IReport } from "../../models/report.interface";
-import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from "flowbite-react";
+import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell, Modal, ModalHeader, ModalBody, ModalFooter } from "flowbite-react";
 import { FaReadme } from "react-icons/fa6";
 import { ButtonsPrimary, ButtonsWhite } from "../../Component/Buttons";
 import { Paragraph2Green, Paragraph2Xl } from "../../Component/Paragraph";
 import { IBillData } from "../../models/billdata.interface";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../Component/Loader";
+import InfoModal from "../../Component/Modal/InfoModal";
 
 type Props = {
   handleFormView : () => void;
@@ -22,6 +23,7 @@ const CustomerReports:React.FC<Props> = ({ handleFormView }) =>{
       const [ viewForm, setViewform] = useState<boolean>(false);
       const [ page, setPage ]= useState<number>(1)
       const [ report, setReport] = useState<IReport>({} as IReport);
+      const [ viewMessage, setViewMessage] = useState<boolean>(false);
 
       
       
@@ -35,9 +37,13 @@ const CustomerReports:React.FC<Props> = ({ handleFormView }) =>{
         setLoading(false)
       },[customer.customerId, setLoading])
 
-
+      const handleViewMessage = (x:IReport) => {
+          setReport(x);
+          setViewMessage(!viewMessage)
+      }
     return (
         <div>
+
         
          { reportsData ?       
                   <div className="overflow-x-auto font-Poppins mt-3 mx-4">
@@ -54,7 +60,7 @@ const CustomerReports:React.FC<Props> = ({ handleFormView }) =>{
                              
                                     {reportsData.data && reportsData.data.map((item:IReport, index) => (
                            
-                                            <TableRow className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
+                                            <TableRow  onClick={() => handleViewMessage(item)} className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
                                                 <TableCell>{item.dateSent}</TableCell>
                                                 <TableCell>{item.customerFullname} </TableCell>
                                                 <TableCell>{item.subject}</TableCell>
@@ -102,7 +108,7 @@ const CustomerReports:React.FC<Props> = ({ handleFormView }) =>{
                       </button>
                     </div>
                   </div>
-                            </div> : <Paragraph2Xl content={"no Billing for Customers"} />
+                            </div> : <Paragraph2Xl content={"no Reports from Customers"} />
         }
 
 

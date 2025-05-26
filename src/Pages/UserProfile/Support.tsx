@@ -10,11 +10,13 @@ import { getCustomerReportPaginatedByCustomer, sendMessage } from "../../api/cus
 import { Input } from "../../Component/InputField";
 import { customerReportSchema } from "../../utils/validators/CustomerReportSchema";
 import CustomerReports from "./CustomerReports";
+import { IApartment } from "../../models/apartment.interface";
 const Support: React.FC = () => {
   const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "");
+  const apartments:IApartment[] = JSON.parse(sessionStorage.getItem("CUSTOMER_APARTMENT")||"")||[];
   const [loading, setLoading] = useState<boolean>(false);
   const [ viewForm, setViewform] = useState<boolean>(false);
-
+  const [ apartmentId, setApartmentId ] = useState<number>(apartments[0].id)
   
   useEffect(() => {
     (async () => {
@@ -37,6 +39,7 @@ const Support: React.FC = () => {
   const formik = useFormik({
     initialValues: {
       customerId: customer.customerId,
+      apartmentId: apartmentId,
       subject: "",
       message: "",
     },
@@ -112,6 +115,16 @@ const Support: React.FC = () => {
                            {
                     formik.errors.message && <span className="text-white"><span className="text-2xl text-red-600">*</span>{formik.errors.message}</span>
                 }
+              </div>
+
+              <div>
+                <select className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
+                  onChange={(e) => {
+                    setApartmentId(parseInt(e.target.value,10))
+                  }} 
+>
+                  { apartments && apartments.map((x: IApartment) =>{ return (<option key={x.id} value={x.id}>{x.apartmentTypeName} - {x.propertyAddress}</option>)})}
+                </select>
               </div>
 
               {/* Submit Button */}

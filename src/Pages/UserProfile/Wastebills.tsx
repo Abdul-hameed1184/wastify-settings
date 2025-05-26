@@ -10,10 +10,11 @@ import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 
 import { ButtonsPrimary } from "../../Component/Buttons";
 import { Paragraph2Xl } from "../../Component/Paragraph";
 import { IBillData } from "../../models/billdata.interface";
-import { create_transaction, initializePayment, verifyPayment } from "../../api/paystack-payment/paystack-api";
+import { create_transaction, getPayStackSettings, initializePayment, verifyPayment } from "../../api/paystack-payment/paystack-api";
 import Paystack from '@paystack/inline-js'
 import { ICustomer } from "../../models/customer.interface";
 import { toast } from "react-toastify";
+import { PaystackButton } from "react-paystack";
 
 function classNames(...classes:string[]) {
   return classes.filter(Boolean).join(" ");
@@ -21,7 +22,7 @@ function classNames(...classes:string[]) {
 
 const Wastebills:React.FC = () => {
   const [ page, setPage ] = useState<number>(1);
-  const [ accessCode, setAccessCode ] = useState<string>("")
+  const [ pK, setPK ] = useState<string>("")
   const [ apartmentBills, setApartmentBills ] = useState<IPaginatedApartmentBills>({} as IPaginatedApartmentBills)
 
   const customer:ICustomer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS")||"");
@@ -44,7 +45,10 @@ const Wastebills:React.FC = () => {
   useEffect(() => {
     fetchBills();
     getCustomerDetails();
-  },[]);
+    getPayStackSettings().then(x => {
+      setPK(x.data.data.paystackPublicKey);
+    })
+  },[fetchBills, getCustomerDetails]);
 
       const handleBillPayment = async (x: IBillData) => {
         try{
@@ -52,14 +56,25 @@ const Wastebills:React.FC = () => {
           console.log(data)
           const{ access_code, reference }= data.data.data;
           console.log(access_code, reference)
-          const popup = new Paystack();
+          const pop = new Paystack();
           
-          const y = await popup.resumeTransaction(access_code);
-          console.log(y)
-          const dx = await verifyPayment(reference)
-          console.log(dx);
-          console.log(data)
-          await createTransaction(x, dx.data.data);
+          const dy = await pop
+          console.log(dy);
+          // verifyPayment(reference).then(async dx => {
+          //   console.log(dx)
+          //    console.log({billPaymentData : [
+          //   {
+          //   apartmentBillingId: x.apartmentId,
+          //   customerId: customer.customerId,
+          //   transactionId: dy.response.transaction,
+          //   amountPaid :x.billAmount,            
+          //   paymentMode: dy.paymentMode,
+          //   paymentStatus:1      
+          //   }
+          // ]});
+          // });
+          // console.log(data)
+         
          
       }catch(err){
         console.log(err?.message)
@@ -167,7 +182,10 @@ const Wastebills:React.FC = () => {
                                                 <TableCell>{item.apartmentTypeName} </TableCell>
                                                 <TableCell>{item.paymentStatus}</TableCell>
                                                 <TableCell>{item.billAmount}</TableCell>
-                                                <TableCell><ButtonsPrimary name={"Pay"} onClick={()=>handleBillPayment(item)}/></TableCell>
+                                                <TableCell>
+                                                <ButtonsPrimary name={"Pay"} onClick={()=>handleBillPayment(item)}/>
+                                                {/* <button><PaystackButton text={"Pay"} publicKey={pK} email={customer.email} amount={Number(item.billAmount) * 1000} /></button> */}
+                                                </TableCell>
                                     
                                             </TableRow>
                                         ))}
