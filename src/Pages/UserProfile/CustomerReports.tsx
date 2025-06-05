@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { getCustomerReportPaginatedByCustomer } from "../../api/customer/customer.service";
+import { getCustomerReportPaginatedByCustomer, updateMessageReadStatus } from "../../api/customer/customer.service";
 import { IPaginatedCustomerReports } from "../../models/paginated.customerReports.interface";
 import { IReport } from "../../models/report.interface";
-import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell, Modal, ModalHeader, ModalBody, ModalFooter } from "flowbite-react";
-import { FaReadme } from "react-icons/fa6";
-import { ButtonsPrimary, ButtonsWhite } from "../../Component/Buttons";
+import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from "flowbite-react";
+import { ButtonsWhite } from "../../Component/Buttons";
 import { Paragraph2Green, Paragraph2Xl } from "../../Component/Paragraph";
-import { IBillData } from "../../models/billdata.interface";
-import { useNavigate } from "react-router-dom";
-import Loader from "../../Component/Loader";
 import InfoModal from "../../Component/Modal/InfoModal";
 
 type Props = {
@@ -37,40 +33,81 @@ const CustomerReports:React.FC<Props> = ({ handleFormView }) =>{
         setLoading(false)
       },[customer.customerId, setLoading])
 
-      const handleViewMessage = (x:IReport) => {
+      const handleViewMessage = async (x:IReport) => {
           setReport(x);
           setViewMessage(!viewMessage)
+          await updateMessageReadStatus(x.id);
+      }
+
+      if(loading){
+        return <h2>Loading...</h2>
       }
     return (
         <div>
+                                { viewMessage && 
+                        <InfoModal
+              openModal={viewMessage}
+              setOpenModal={() => setViewMessage(!viewMessage)}
+              header={report.subject}
+              content={
+                <div className="space-y-2 text-gray-700 text-lg leading-relaxed">
+                  <div>
+                    <p className="font-semibold">Message:</p>
+                    <p>{report.message}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold">Sent At:</p>
+                    <p>{new Date(report.created_at).toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold">Sent By:</p>
+                    <p>{report.customerFullname} - {report.customerEmail}</p>
+                  </div>
+                        <div>
+                    <p className="font-semibold">Apartment:</p>
+                    <p>{report.apartmentTypeName} - {report.propertyAddress}</p>
+                  </div>
+                </div>
+              }
+              buttonName="Reply"
+              handleConfirm={() =>{
+                 setViewMessage(!viewMessage)
+                 setViewform(!viewForm)
+              }}
+            />}
 
         
-         { reportsData ?       
+         { reportsData.data ?       
                   <div className="overflow-x-auto font-Poppins mt-3 mx-4">
                    <div className="flex flex-column justify-between my-4"> <Paragraph2Green content="Customer Reports"/> <div><ButtonsWhite name={"Create Report"} onClick={handleFormView}/></div></div>
                                 <Table striped >
-                                    <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
-                                        <TableHeadCell>Date</TableHeadCell>
-                                        <TableHeadCell>Name</TableHeadCell>
-                                        <TableHeadCell>Subject</TableHeadCell>
-                                        <TableHeadCell>Status</TableHeadCell>
-                                        <TableHeadCell>Action</TableHeadCell>
-                                    </TableHead>
-                                    <TableBody className="divide-y font-Poppins ">
-                             
-                                    {reportsData.data && reportsData.data.map((item:IReport, index) => (
-                           
-                                            <TableRow  onClick={() => handleViewMessage(item)} className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
-                                                <TableCell>{item.dateSent}</TableCell>
-                                                <TableCell>{item.customerFullname} </TableCell>
-                                                <TableCell>{item.subject}</TableCell>
-                                                <TableCell>{item.readStatus}</TableCell>
-                                                <TableCell><FaReadme /></TableCell>
-                                            </TableRow>
-                                                                                 
-                                        ))}
-        
-                                    </TableBody>
+                <TableHead className="font-Poppins text-lg capitalize text-white bg-green dark:text-white">
+  <TableHeadCell className="w-32">Date</TableHeadCell> 
+  <TableHeadCell className="w-48">Name</TableHeadCell> 
+    <TableHeadCell className="flex-grow">Subject</TableHeadCell> 
+</TableHead>
+
+                                <TableBody className="divide-y font-Poppins text-lg capitalize text-black">
+  {reportsData.data.map((item: IReport, index) => {
+    const isEven = index % 2 === 0;
+    const baseRowClass = isEven
+      ? "odd:bg-tableBackground"
+      : "bg-white dark:border-gray-700 dark:bg-gray-800";
+    const readTextClass = item.readStatus !== 0 ? "text-gray-500" : "text-black font-semibold";
+
+    return (
+      <TableRow
+        key={index}
+        onClick={() => handleViewMessage(item)}
+        className={`${baseRowClass} table-responsive cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700`}
+      >
+        <TableCell className={readTextClass}>{item.dateSent}</TableCell>
+        <TableCell className={readTextClass}>{item.customerFullname}</TableCell>
+        <TableCell className={readTextClass}>{item.subject}</TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
                                 </Table>
                                 <div className="flex justify-center items-center h-20 my-10 w-full ">
                     <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
@@ -108,7 +145,7 @@ const CustomerReports:React.FC<Props> = ({ handleFormView }) =>{
                       </button>
                     </div>
                   </div>
-                            </div> : <Paragraph2Xl content={"no Reports from Customers"} />
+                            </div> : <div className="text-center text-2xl text-white"><Paragraph2Xl content={"no Reports from Customers"} /></div>
         }
 
 

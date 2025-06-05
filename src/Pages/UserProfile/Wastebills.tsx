@@ -56,10 +56,16 @@ const Wastebills:React.FC = () => {
           console.log(data)
           const{ access_code, reference }= data.data.data;
           console.log(access_code, reference)
-          const pop = new Paystack();
+          const pop = new Paystack()
           
-          const dy = await pop
-          console.log(dy);
+          const dy = await pop.resumeTransaction(access_code);
+          console.log(dy)
+          
+          // if (dy.response.status === "success") {
+          //   createTransaction(x, dy.response);
+          // } else {
+          //   toast.error("Payment Failed, Please try again later");
+          // }
           // verifyPayment(reference).then(async dx => {
           //   console.log(dx)
           //    console.log({billPaymentData : [

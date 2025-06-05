@@ -16,6 +16,7 @@ import { getBillingByOperator } from "../../../api/bill/psp-operator-pricing";
 import { IOperator } from "../../../models/operator.interface";
 import { IPaginatedApartmentBills } from "../../../models/paginatedApartmentBillsForCustomer";
 import { Link } from "react-router-dom";
+import { ButtonsPrimary } from "../../../Component/Buttons";
 
 const Transaction = () => {
   const operator: IOperator = JSON.parse(
@@ -33,12 +34,22 @@ const Transaction = () => {
   useEffect(() => {
     getBillings(page); 
   }, [operator.id]);
+  const handleAutoBilling = () => {
+    // Logic for auto billing can be implemented here
+    console.log("Auto Billing Clicked");
+  }
+
 
   return (
     <main className="px-4 ">
       <div className="my-10">
         <div className="py-5">
+          <div className="flex justify-between items-center">
           <Paragraph2XlGreenMargin content={"Customer Billings"} />
+          <div>
+          <ButtonsPrimary name={"Auto Billing"}  onClick={handleAutoBilling}/>
+          </div>
+          </div>
           {billData ? (
             <div className="overflow-x-auto font-Poppins mt-3">
               <Table striped>

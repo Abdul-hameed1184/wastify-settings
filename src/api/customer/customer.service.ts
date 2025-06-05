@@ -24,3 +24,7 @@ export const getCustomerReportPaginatedByCustomer = async(customerId: string) =>
     return await axios.get(`/customerReport/list-by-customer-id/${customerId}`);
 }
 
+export const updateMessageReadStatus = async (reportId: number) => {
+    return await axios.put(`/customerReport/update_read_status/${reportId}`, {});
+}
+

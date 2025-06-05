@@ -8,6 +8,7 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { useState } from "react";
 import { logout } from "../Features/authSlice";
 import { TbReportSearch } from "react-icons/tb";
+import { IoMdCall } from "react-icons/io";
 
 export const UsernavBar = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -63,7 +64,7 @@ export const UsernavBar = () => {
                         <BiSupport />
         
                           <p className="text-sm font-Poppins font-medium not-italic  leading-6">
-                            Help & Support
+                            Support
                           </p>
                   </Link>
                   </li>
@@ -76,6 +77,17 @@ export const UsernavBar = () => {
                      Reports
                    </p>
            </Link>
+                  </li>
+                  <li>
+                    <Link to="/contactus"  className="hover:text-gray-300 cursor-pointer flex flex-col items-center gap-2 cursor-pointer">
+                 
+                  <IoMdCall />
+ 
+                   <p className="text-sm font-Poppins font-medium not-italic  leading-6">
+                     Contact us
+                   </p>
+           </Link>
+
                   </li>
                   <li>
                   <div     className="hover:text-gray-300 cursor-pointer flex flex-col items-center gap-2">

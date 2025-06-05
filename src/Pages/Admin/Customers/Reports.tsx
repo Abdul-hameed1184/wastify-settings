@@ -3,7 +3,7 @@ import { IoFilterSharp } from "react-icons/io5";
 import { BsFileEarmarkTextFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 'flowbite-react';
-import { ButtonsPrimary, ButtonsWhite } from '../../../Component/Buttons'
+import { ButtonsPrimary, ButtonsPrimaryBlack, ButtonsWhite } from '../../../Component/Buttons'
 import baseURL from '../../../utils/apiConfig';
 import axios from 'axios';
 import { getCustomerReports } from '../../../api/psp-operator/psp-operator.service';
@@ -12,6 +12,12 @@ import { IReport } from '../../../models/report.interface';
 import { IPaginatedCustomerReports } from '../../../models/paginated.customerReports.interface';
 import { FaReadme } from 'react-icons/fa';
 import InfoModal from '../../../Component/Modal/InfoModal';
+import Loader from '../../../Component/Loader';
+import { useFormik } from 'formik';
+import { customerReportSchema } from '../../../utils/validators/CustomerReportSchema';
+import { toast } from 'react-toastify';
+import { getCustomers, sendMessage } from '../../../api/customer/customer.service';
+import { Input } from '../../../Component/InputField';
 
 const Reports = () => {
     const [isActive, setIsActive] = useState("all")
@@ -21,23 +27,70 @@ const Reports = () => {
     const [ viewMessage, setViewMessage ] = useState<boolean>(false);
     const [ report, setReport ] = useState<IReport>({} as IReport);
     const [ viewForm, setViewForm ] = useState<boolean>(false);
+    const [ loading, setLoading ] = useState<boolean>(false);
+    const [ apartmentId, setApartmentId ] = useState<number>(0);
     // console.log(operator);
 
 
     useEffect(() => {
 (async() => {
+  try{
 
         const reports = await getCustomerReports(operator.id);
-        setReports(reports.data.data)
+        setReports(reports.data.data);
+        // const customers = await getCustomers();
+        setLoading(true);
+  }catch(e){
+    console.error("Error fetching reports:", e);
+    setLoading(false);
+    // You can handle the error here, e.g., show a toast notification
+  }finally{
+    setLoading(false);
+  }
 }
     )()
     }, [operator.id]);
+
+    if(loading){
+      return <Loader />
+    }
+     const handleSendMessage = async (message) => {
+        try {
+          const res = await sendMessage(message);
+          console.log(res);
+              toast.success(`Report Sent`);
+          setViewForm(!viewForm)
+        } catch (error) {
+          console.log(error)
+          toast.error("Error sending report");
+        }
+      };
 
           
       const handleViewMessage = (x:IReport) => {
               setReport(x);
               setViewMessage(!viewMessage)
           }
+
+          const handleFormView = () => {
+              setViewForm(!viewForm);
+          }
+        const formik = useFormik({
+          initialValues: {
+            customerId: 6,
+            apartmentId: apartmentId,
+            subject: "",
+            message: "",
+          },
+          validationSchema: customerReportSchema,                             
+          onSubmit: async (values, { resetForm}) => {
+            setLoading(true);
+            await handleSendMessage(values);
+            setLoading(false);
+            resetForm();
+            
+          },
+        });
 
         
 
@@ -50,7 +103,7 @@ const Reports = () => {
               setOpenModal={() => setViewMessage(!viewMessage)}
               header={report.subject}
               content={
-                <div className="space-y-2 text-gray-700 text-sm leading-relaxed">
+                <div className="space-y-2 text-gray-700 text-lg leading-relaxed">
                   <div>
                     <p className="font-semibold">Message:</p>
                     <p>{report.message}</p>
@@ -78,41 +131,121 @@ const Reports = () => {
             
                       
                       }
-            {/* <div className="w-full h-[400px]  shadow-2xl  bg-white rounded-lg my-6 px-6 xl:px-10 py-6 ">
-                <div className="w-full h-full">
-                    <textarea name="messages" id='messages' rows="7" className='w-full border-black border resize-none my-5 px-6 py-6 outline-none focus:border-black focus:border focus:ring-transparent' placeholder='Leave a message...'></textarea>
-                    <ButtonsPrimary name={"Send"} />
-                </div>
-            </div> */}
-            <div className="w-full h-full bg-white rounded-lg my-20 ">
-        
-         { reports ?       
+
+                      { viewForm &&  <form 
+                      //onSubmit={formik.handleSubmit} 
+                      className="px-4 py-6">
+                                
+                                  
+                                  <div className="max-w-xl w-100 mx-auto">              
+                                  <div className="flex justify-between">
+                                    <p className="text-2xl font-bold text-white">Send us a message</p>
+                      
+                                  </div>
+                                    {/* Subject Input */}
+                                    <div>
+                                      <label
+                                        htmlFor="subject"
+                                        className="block text-white text-lg mb-3"
+                                      >
+                                        Subject
+                                      </label>
+                                      <Input
+                                        type="text"
+                                        name="subject"
+                                        value={formik.values.subject}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        className="w-full rounded-lg text-xl border border-gray-300 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                                        placeholder="Enter your subject"
+                                      />
+                                      {
+                                          formik.errors.subject && <span className="text-white"><span className="text-2xl text-red-600">*</span>{formik.errors.subject}</span>
+                                      }
+                                    </div>
+                      
+                                    {/* Message Textarea */}
+                                    <div className="mb-3">
+                                      <label
+                                        htmlFor="message"
+                                        className="block text-white text-lg mb-1"
+                                      >
+                                        Message
+                                      </label>
+                                      <textarea
+                                        id="message"
+                                        name="message"
+                                        rows={6}
+                                        value={formik.values.message}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        className="w-full rounded-lg  text-lg  px-2 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                                        placeholder="Type your message here..."
+                                      />
+                                                 {
+                                          formik.errors.message && <span className="text-white"><span className="text-2xl text-red-600">*</span>{formik.errors.message}</span>
+                                      }
+                                    </div>
+                      
+                                    <div>
+                                      <select className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
+                                        onChange={(e) => {
+                                          setApartmentId(parseInt(e.target.value,10))
+                                        }} 
+                      >
+                                        {/* { apartments && apartments.map((x: IApartment) =>{ return (<option key={x.id} value={x.id}>{x.apartmentTypeName} - {x.propertyAddress}</option>)})} */}
+                                      </select>
+                                    </div>
+                      
+                                    {/* Submit Button */}
+                                    <div className="pt-4 md:w-full">
+                                      <ButtonsWhite
+                                        type="submit"
+                                        className="bg-white hover:bg-green-700 text-green font-semibold px-6 py-2 rounded-lg transition duration-200"
+                                        name={"Send Message"}
+                                      
+                                      />
+                                  
+                                    </div>
+                                       <div className="mt-2">                          <ButtonsPrimaryBlack onClick={() => setViewForm(!viewForm)} name={"Cancel"} /></div>
+                      
+                                  </div>
+                               
+                                </form>}
+
+        {  !viewForm &&       <div className="w-full h-full bg-white rounded-lg my-20 ">
+   
+         { reports.data && reports.data.length > 0 &&      
                   <div className="overflow-x-auto font-Poppins mt-3 mx-4">
-                   <div className="flex flex-column justify-between my-4"> 
-                    <Paragraph2Green content="Customer Reports"/> <div></div></div>
+                   <div className="flex flex-column justify-between my-4"> <Paragraph2Green content="Reports"/> <div><ButtonsWhite name={"Create Report"} onClick={handleFormView}/></div></div>
                                 <Table striped >
-                                    <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
-                                        <TableHeadCell>Date</TableHeadCell>
-                                        <TableHeadCell>Name</TableHeadCell>
-                                        <TableHeadCell>Subject</TableHeadCell>
-                                        <TableHeadCell>Status</TableHeadCell>
-                                        <TableHeadCell>Action</TableHeadCell>
-                                    </TableHead>
-                                    <TableBody className="divide-y font-Poppins ">
-                             
-                                    {reports.data && reports.data.map((item:IReport, index) => (
-                           
-                                            <TableRow onClick={() => handleViewMessage(item)}  className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
-                                                <TableCell>{item.dateSent}</TableCell>
-                                                <TableCell>{item.customerFullname} </TableCell>
-                                                <TableCell>{item.subject}</TableCell>
-                                                <TableCell>{item.readStatus}</TableCell>
-                                                <TableCell><FaReadme /></TableCell>
-                                            </TableRow>
-                                                                                 
-                                        ))}
-        
-                                    </TableBody>
+                <TableHead className="font-Poppins text-lg capitalize text-white bg-green dark:text-white">
+  <TableHeadCell className="w-32">Date</TableHeadCell> 
+  <TableHeadCell className="w-48">Name</TableHeadCell> 
+    <TableHeadCell className="flex-grow">Subject</TableHeadCell> 
+</TableHead>
+
+                                <TableBody className="divide-y font-Poppins text-lg capitalize text-black">
+  {reports.data.map((item: IReport, index) => {
+    const isEven = index % 2 === 0;
+    const baseRowClass = isEven
+      ? "odd:bg-tableBackground"
+      : "bg-white dark:border-gray-700 dark:bg-gray-800";
+    const readTextClass = item.readStatus !== 0 ? "text-gray-500" : "text-black font-semibold";
+
+    return (
+      <TableRow
+        key={index}
+        onClick={() => handleViewMessage(item)}
+        className={`${baseRowClass} table-responsive cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700`}
+      >
+        <TableCell className={readTextClass}>{item.dateSent}</TableCell>
+        <TableCell className={readTextClass}>{item.customerFullname}</TableCell>
+        <TableCell className={readTextClass}>{item.subject}</TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
                                 </Table>
                                 <div className="flex justify-center items-center h-20 my-10 w-full ">
                     <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
@@ -150,9 +283,17 @@ const Reports = () => {
                       </button>
                     </div>
                   </div>
-                            </div> : <Paragraph2Xl content={"no Reports from Customers"} />
-        }
-            </div>
+                          </div>}
+
+                            
+                            
+                            { reports.data && reports.data.length === 0 &&
+                              <div className="text-center text-2xl text-white"><Paragraph2Xl content={"no Reports from Customers"} /></div>
+                            }
+                            </div>}
+                            
+        
+           
 
         </main>
     )

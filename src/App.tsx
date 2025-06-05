@@ -57,6 +57,7 @@ import PropertiesLayout from "./Layouts/PropertiesLayout";
 import ApartmentBill from "./Pages/Admin/Customers/ApartmentBill";
 import UserLayout from "./Layouts/UserLayout";
 import CustomerReports from "./Pages/UserProfile/CustomerReports";
+import ContactUs from "./Pages/UserProfile/Contact";
 
 
 const App:React.FC = () =>  {
@@ -135,6 +136,7 @@ const App:React.FC = () =>  {
           <Route path="payment-history" element={<PaymentHistory />} />
           <Route path="view-history" element={<ViewProperty />} />
           <Route path="support" element={<Support />} />
+          <Route path="contactus" element={<ContactUs />} />
           {/* <Route path="reports" element={<CustomerReports />} /> */}
         </Route>
         </Route>
