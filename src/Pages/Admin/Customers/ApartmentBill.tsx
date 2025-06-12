@@ -12,6 +12,7 @@ import CreateApartmentBill from "../../../Component/Modal/CreateApartmentBill";
 import { toast } from "react-toastify";
 import { MdDeleteForever } from "react-icons/md";
 import InfoModal from "../../../Component/Modal/InfoModal";
+import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 
 const ApartmentBill: React.FC = () => {
   const [bills, setBills] = useState<IBills[]>([]);
@@ -73,7 +74,7 @@ const ApartmentBill: React.FC = () => {
       }
     })();
     console.log(apartmentBill);
-  }, []);
+  }, [apartment.apartmentTypeId, apartment.id, apartmentBill, bills, operator.id]);
 
   let Naira = new Intl.NumberFormat("en-NG", {
     style: "currency",
@@ -196,6 +197,9 @@ const ApartmentBill: React.FC = () => {
                     <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
                       Amount
                     </td>
+                                <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                      Status
+                    </td>
                     <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
                       Actions
                     </td>
@@ -225,6 +229,9 @@ const ApartmentBill: React.FC = () => {
                             {Naira.format(
                               Number(x.billAmount) - Number(x.discountAmount)
                             )}
+                          </td>
+                                    <td className="px-4 py-2 text-2xl text-black">
+                            <PaymentStatusBadge status={x.paymentStatus} />
                           </td>
                           <td className="px-4 py-2 text-2xl text-center">
                             <span

@@ -29,3 +29,36 @@ enum PaymentStatus {
     "Failed" = 2,
     "Pending" = 3
 }
+
+
+export interface IApartmentBillingTransaction {
+  id: number;
+  apartmentBillingId: number;
+  apartmentId: number;
+  propertyId: number;
+  propertyCode: string;
+  propertyAddress: string;
+  apartmentTypeId: number;
+  apartmentType: any; // You can replace 'any' with a more specific type if available
+  pspOperatorId: number;
+  OperatorName: string;
+  billPeriod: string;
+  billAmount: string;
+  discountPercentage: string;
+  discountAmount: string;
+  totalAmount: string;
+  customerId: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  totalOverdueBill: string;
+  paidDateTime: string;
+  receiptNo: string;
+  transactionId: string;
+  amountPaid: string;
+  paymentMode: string;
+  paymentStatus: number;
+  paymentStatusLabel: string;
+  created_at: string;
+  updated_at: string;
+}

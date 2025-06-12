@@ -11,10 +11,12 @@ import { ButtonsPrimary } from "../../Component/Buttons";
 import { Paragraph2Xl } from "../../Component/Paragraph";
 import { IBillData } from "../../models/billdata.interface";
 import { create_transaction, getPayStackSettings, initializePayment, verifyPayment } from "../../api/paystack-payment/paystack-api";
-import Paystack from '@paystack/inline-js'
+import PaystackPop from '@paystack/inline-js'
 import { ICustomer } from "../../models/customer.interface";
 import { toast } from "react-toastify";
-import { PaystackButton } from "react-paystack";
+import { paystackPublicKey } from "../../utils/apiConfig";
+import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
+
 
 function classNames(...classes:string[]) {
   return classes.filter(Boolean).join(" ");
@@ -22,65 +24,55 @@ function classNames(...classes:string[]) {
 
 const Wastebills:React.FC = () => {
   const [ page, setPage ] = useState<number>(1);
-  const [ pK, setPK ] = useState<string>("")
   const [ apartmentBills, setApartmentBills ] = useState<IPaginatedApartmentBills>({} as IPaginatedApartmentBills)
 
   const customer:ICustomer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS")||"");
   const customerApartments = JSON.parse(sessionStorage.getItem("CUSTOMER_APARTMENT")||""); 
 
-  const fetchBills = useCallback(() => {
-   customerApartments.map(async (dx) => {
-      const data = await getBillingsByApartmentId(dx.id)
-      console.log(data.data.data);
-      setApartmentBills(data.data.data);
-   })
 
-  },[customerApartments]);
 
-  const getCustomerDetails =  useCallback(() =>  {
-   customerDetails(customer.customerId)
-   .then(dx => console.log(dx))
-  },[customer.customerId])
+  // const getCustomerDetails =  useCallback(() =>  {
+  //  customerDetails(customer.customerId)
+  //  .then(dx => console.log(dx))
+  // },[customer.customerId])
 
   useEffect(() => {
-    fetchBills();
-    getCustomerDetails();
-    getPayStackSettings().then(x => {
-      setPK(x.data.data.paystackPublicKey);
-    })
-  },[fetchBills, getCustomerDetails]);
+ ( async() => {
+      const data = await getBillingsByApartmentId(customerApartments[0].id);
+      console.log(data);
+      setApartmentBills(data.data.data);
+  })()
+   
+  },[customerApartments[0].id, page]);
 
       const handleBillPayment = async (x: IBillData) => {
         try{
-          const data = await initializePayment(customer.email, Number(x.billAmount) );
-          console.log(data)
-          const{ access_code, reference }= data.data.data;
-          console.log(access_code, reference)
-          const pop = new Paystack()
+          const pop = new PaystackPop()
+          pop.newTransaction({
+            key: paystackPublicKey,
+            email: customer.email,
+            amount: parseFloat(x.billAmount) * 100,
+            onSuccess: async(transaction) =>     {
+              console.log("Payment Successful", transaction);
+              const data = await createTransaction(x, transaction);
+              console.log("Transaction Data: ", data);
+              toast.success("Payment Successful");
+              //createTransaction(x, transaction);
+            },
+            onLoad: async (response) => {
+              const data = await verifyPayment(response.reference);
+              console.log("Payment Verification Response: ", data);
+    console.log("onLoad: ", response);
+
+  },
+  onCancel: () => {
+    console.log("onCancel");
+  },
+  onError: (error) => {
+    console.log("Error: ", error.message);
+  }
+          })
           
-          const dy = await pop.resumeTransaction(access_code);
-          console.log(dy)
-          
-          // if (dy.response.status === "success") {
-          //   createTransaction(x, dy.response);
-          // } else {
-          //   toast.error("Payment Failed, Please try again later");
-          // }
-          // verifyPayment(reference).then(async dx => {
-          //   console.log(dx)
-          //    console.log({billPaymentData : [
-          //   {
-          //   apartmentBillingId: x.apartmentId,
-          //   customerId: customer.customerId,
-          //   transactionId: dy.response.transaction,
-          //   amountPaid :x.billAmount,            
-          //   paymentMode: dy.paymentMode,
-          //   paymentStatus:1      
-          //   }
-          // ]});
-          // });
-          // console.log(data)
-         
          
       }catch(err){
         console.log(err?.message)
@@ -91,14 +83,14 @@ const Wastebills:React.FC = () => {
         try{
           const billPaymentData = [
             {
-                "apartmentBillingId": x.apartmentId,
+                "apartmentBillingId": x.id,
                 "customerId":customer.customerId,
-                "transactionId": dy.id,
-                "amountPaid":dy.amount,
-                "paymentMode":"Bank Transfer", 
+                "transactionId": "TXN"+dy.transaction,
+                "amountPaid":parseFloat(parseFloat(x.billAmount).toFixed(2)) *100,
+                "paymentMode":"PayStack Payment", 
                 "paymentStatus":1      
             }];
-            const transaction = await create_transaction(billPaymentData);
+            const transaction = await create_transaction({billPaymentData});
             console.log(transaction)
             toast.success("Payment Successfully Confirmed")
 
@@ -186,12 +178,11 @@ const Wastebills:React.FC = () => {
                                             <TableRow className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
                                                 <TableCell>{item.billPeriod}</TableCell>
                                                 <TableCell>{item.apartmentTypeName} </TableCell>
-                                                <TableCell>{item.paymentStatus}</TableCell>
+                                                <TableCell><PaymentStatusBadge status={item.paymentStatus} /></TableCell>
                                                 <TableCell>{item.billAmount}</TableCell>
                                                 <TableCell>
                                                 <ButtonsPrimary name={"Pay"} onClick={()=>handleBillPayment(item)}/>
-                                                {/* <button><PaystackButton text={"Pay"} publicKey={pK} email={customer.email} amount={Number(item.billAmount) * 1000} /></button> */}
-                                                </TableCell>
+                                                </TableCell>                   
                                     
                                             </TableRow>
                                         ))}
