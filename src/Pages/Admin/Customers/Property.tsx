@@ -45,7 +45,7 @@ const Property: React.FC = () => {
   return (
     <div className="p-4 ">
       <div className="">
-        <fieldset className="border border-2 border-gray rounded-md p-4">
+        {property && <fieldset className="border border-2 border-gray rounded-md p-4">
           <legend className="text-2xl font-semibold text-gray px-2">
             Property Information
           </legend>
@@ -54,7 +54,7 @@ const Property: React.FC = () => {
               Property Owner
             </span>
             <span className="block text-2xl">
-              {property.ownerFullName || "Property Owner"}
+              {property.ownerFullname.toUpperCase()}
             </span>
           </div>
           <div>
@@ -63,7 +63,7 @@ const Property: React.FC = () => {
             </span>
             <span className="block text-2xl">{property.propertyAddress}</span>
           </div>
-        </fieldset>
+        </fieldset>}
       </div>
       <div>
         <div className="grid justify-items-end my-8">

@@ -1,26 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { IoFilterSharp } from "react-icons/io5";
-import { BsFileEarmarkTextFill } from "react-icons/bs";
-import { MdDelete } from "react-icons/md";
+import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 'flowbite-react';
-import { ButtonsPrimary, ButtonsPrimaryBlack, ButtonsWhite } from '../../../Component/Buttons'
-import baseURL from '../../../utils/apiConfig';
-import axios from 'axios';
 import { getCustomerReports } from '../../../api/psp-operator/psp-operator.service';
-import { Paragraph2Green, Paragraph2Xl } from '../../../Component/Paragraph';
+import { Paragraph2Xl } from '../../../Component/Paragraph';
 import { IReport } from '../../../models/report.interface';
 import { IPaginatedCustomerReports } from '../../../models/paginated.customerReports.interface';
-import { FaReadme } from 'react-icons/fa';
 import InfoModal from '../../../Component/Modal/InfoModal';
 import Loader from '../../../Component/Loader';
 import { useFormik } from 'formik';
 import { customerReportSchema } from '../../../utils/validators/CustomerReportSchema';
 import { toast } from 'react-toastify';
-import { getCustomers, sendMessage } from '../../../api/customer/customer.service';
-import { Input } from '../../../Component/InputField';
+import { sendMessage } from '../../../api/customer/customer.service';
 
 const Reports = () => {
-    const [isActive, setIsActive] = useState("all")
+
     const [ reports, setReports ] = useState<IPaginatedCustomerReports>({} as IPaginatedCustomerReports)
     const operator = JSON.parse(sessionStorage.getItem('AUTH_ADMIN_DETAILS')||"");
     const [ page, setPage ] = useState<number>(1);
@@ -35,7 +27,7 @@ const Reports = () => {
     useEffect(() => {
 (async() => {
   try{
-
+console.log("Hi")
         const reports = await getCustomerReports(operator.id);
         setReports(reports.data.data);
         // const customers = await getCustomers();
@@ -132,92 +124,13 @@ const Reports = () => {
                       
                       }
 
-                      { viewForm &&  <form 
-                      //onSubmit={formik.handleSubmit} 
-                      className="px-4 py-6">
-                                
-                                  
-                                  <div className="max-w-xl w-100 mx-auto">              
-                                  <div className="flex justify-between">
-                                    <p className="text-2xl font-bold text-white">Send us a message</p>
-                      
-                                  </div>
-                                    {/* Subject Input */}
-                                    <div>
-                                      <label
-                                        htmlFor="subject"
-                                        className="block text-white text-lg mb-3"
-                                      >
-                                        Subject
-                                      </label>
-                                      <Input
-                                        type="text"
-                                        name="subject"
-                                        value={formik.values.subject}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        className="w-full rounded-lg text-xl border border-gray-300 px-2 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
-                                        placeholder="Enter your subject"
-                                      />
-                                      {
-                                          formik.errors.subject && <span className="text-white"><span className="text-2xl text-red-600">*</span>{formik.errors.subject}</span>
-                                      }
-                                    </div>
-                      
-                                    {/* Message Textarea */}
-                                    <div className="mb-3">
-                                      <label
-                                        htmlFor="message"
-                                        className="block text-white text-lg mb-1"
-                                      >
-                                        Message
-                                      </label>
-                                      <textarea
-                                        id="message"
-                                        name="message"
-                                        rows={6}
-                                        value={formik.values.message}
-                                        onChange={formik.handleChange}
-                                        onBlur={formik.handleBlur}
-                                        className="w-full rounded-lg  text-lg  px-2 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
-                                        placeholder="Type your message here..."
-                                      />
-                                                 {
-                                          formik.errors.message && <span className="text-white"><span className="text-2xl text-red-600">*</span>{formik.errors.message}</span>
-                                      }
-                                    </div>
-                      
-                                    <div>
-                                      <select className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
-                                        onChange={(e) => {
-                                          setApartmentId(parseInt(e.target.value,10))
-                                        }} 
-                      >
-                                        {/* { apartments && apartments.map((x: IApartment) =>{ return (<option key={x.id} value={x.id}>{x.apartmentTypeName} - {x.propertyAddress}</option>)})} */}
-                                      </select>
-                                    </div>
-                      
-                                    {/* Submit Button */}
-                                    <div className="pt-4 md:w-full">
-                                      <ButtonsWhite
-                                        type="submit"
-                                        className="bg-white hover:bg-green-700 text-green font-semibold px-6 py-2 rounded-lg transition duration-200"
-                                        name={"Send Message"}
-                                      
-                                      />
-                                  
-                                    </div>
-                                       <div className="mt-2">                          <ButtonsPrimaryBlack onClick={() => setViewForm(!viewForm)} name={"Cancel"} /></div>
-                      
-                                  </div>
-                               
-                                </form>}
 
         {  !viewForm &&       <div className="w-full h-full bg-white rounded-lg my-20 ">
    
          { reports.data && reports.data.length > 0 &&      
                   <div className="overflow-x-auto font-Poppins mt-3 mx-4">
-                   <div className="flex flex-column justify-between my-4"> <Paragraph2Green content="Reports"/> <div><ButtonsWhite name={"Create Report"} onClick={handleFormView}/></div></div>
+                   <div className="flex flex-column justify-between my-4"> <Paragraph2Xl content="Reports"/> 
+                   </div>
                                 <Table striped >
                 <TableHead className="font-Poppins text-lg capitalize text-white bg-green dark:text-white">
   <TableHeadCell className="w-32">Date</TableHeadCell> 

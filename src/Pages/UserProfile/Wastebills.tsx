@@ -1,16 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoChevronBack } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import { Tab } from "@headlessui/react";
-import CurrentBill from "../../Component/Card/CurrentBill";
-import { customerDetails } from "../../api/customer/customer.service";
 import { getBillingsByApartmentId } from "../../api/property/apartment.service";
 import { IPaginatedApartmentBills } from "../../models/paginatedApartmentBillsForCustomer";
 import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from "flowbite-react";
 import { ButtonsPrimary } from "../../Component/Buttons";
 import { Paragraph2Xl } from "../../Component/Paragraph";
 import { IBillData } from "../../models/billdata.interface";
-import { create_transaction, getPayStackSettings, initializePayment, verifyPayment } from "../../api/paystack-payment/paystack-api";
+import { create_transaction, verifyPayment } from "../../api/paystack-payment/paystack-api";
 import PaystackPop from '@paystack/inline-js'
 import { ICustomer } from "../../models/customer.interface";
 import { toast } from "react-toastify";
@@ -18,9 +15,6 @@ import { paystackPublicKey } from "../../utils/apiConfig";
 import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
 
 
-function classNames(...classes:string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 const Wastebills:React.FC = () => {
   const [ page, setPage ] = useState<number>(1);
@@ -39,11 +33,10 @@ const Wastebills:React.FC = () => {
   useEffect(() => {
  ( async() => {
       const data = await getBillingsByApartmentId(customerApartments[0].id);
-      console.log(data);
       setApartmentBills(data.data.data);
   })()
    
-  },[customerApartments[0].id, page]);
+  },[customerApartments, page]);
 
       const handleBillPayment = async (x: IBillData) => {
         try{
@@ -75,7 +68,8 @@ const Wastebills:React.FC = () => {
           
          
       }catch(err){
-        console.log(err?.message)
+        console.log(err)
+        toast.error("Error during payments")
       }
       };
 
@@ -174,7 +168,7 @@ const Wastebills:React.FC = () => {
                                     </TableHead>
                                     <TableBody className="divide-y font-Poppins ">
                              
-                                    {apartmentBills.data && apartmentBills.data.map((item:IBillData, index) => (
+                                    {apartmentBills.data && apartmentBills.data.filter(x => x.paymentStatus !== 1).map((item:IBillData, index) => (
                                             <TableRow className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
                                                 <TableCell>{item.billPeriod}</TableCell>
                                                 <TableCell>{item.apartmentTypeName} </TableCell>

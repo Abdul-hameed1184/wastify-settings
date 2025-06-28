@@ -6,7 +6,7 @@ export interface IProperty {
     propertyCode: string;
     noOfDistinctApartment: number;
     propertyTypeName: string;
-    ownerFullName: string;
+    ownerFullname: string;
     ownerId:string;
     stateName: string;
     pspOperatorId: number;

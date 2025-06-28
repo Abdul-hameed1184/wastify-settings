@@ -68,7 +68,7 @@ export const UsernavBar = () => {
                           </p>
                   </Link>
                   </li>
-                  <li>
+                  {/* <li>
                   <Link to="/reports"  className="hover:text-gray-300 cursor-pointer flex flex-col items-center gap-2 cursor-pointer">
                  
                   <TbReportSearch />
@@ -77,7 +77,7 @@ export const UsernavBar = () => {
                      Reports
                    </p>
            </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link to="/contactus"  className="hover:text-gray-300 cursor-pointer flex flex-col items-center gap-2 cursor-pointer">
                  

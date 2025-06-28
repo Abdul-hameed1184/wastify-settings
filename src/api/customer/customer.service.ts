@@ -4,6 +4,16 @@ export const getCustomers = async () => {
     return await axios.get(`/customer/list`);
 }
 
+export const createCustomer = async (data: {phone:string, lastname:string, firstname:string, email:string}) => {
+    return await axios.post('/customer', data)
+}
+
+export const getPaginatedCustomers = async (page= 1) => {
+    return await axios.get(`/customer?page=${page}`);
+}
+
+
+
 export const customerDashboard = async (customerKey:string) => {
     return await axios.get(`/dashboard/customer/${customerKey}`);
 }

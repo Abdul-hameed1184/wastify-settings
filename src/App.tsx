@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import React from "react";
 import Home from "./Pages/Home";
 import ScrolltoTop from "./Component/ScrolltoTop";
@@ -44,8 +44,7 @@ import ResetPasswordVerify from "./Pages/Auth/ResetPasswordVerify";
 import Customer from "./Pages/Admin/Billing/Customer";
 import AllCustomers from "./Pages/Admin/Billing/AllCustomers";
 import { ToastContainer, Zoom } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import CreateCustomer from "./Pages/Admin/AddCustomer/CreateCustomer";
+import "react-toastify/dist/ReactToastify.css";
 import UserAccess from "./Pages/Admin/Settings/UserAccess";
 import Security from "./Pages/Admin/Settings/Security";
 import CompanyProfile from "./Pages/Admin/Settings/CompanyProfile";
@@ -56,48 +55,44 @@ import Properties from "./Pages/Admin/Customers/Properties";
 import PropertiesLayout from "./Layouts/PropertiesLayout";
 import ApartmentBill from "./Pages/Admin/Customers/ApartmentBill";
 import UserLayout from "./Layouts/UserLayout";
-import CustomerReports from "./Pages/UserProfile/CustomerReports";
 import ContactUs from "./Pages/UserProfile/Contact";
+import Customers from "./Pages/Admin/Customers/Customers";
 
-
-const App:React.FC = () =>  {
-  const navigate = useNavigate();
+const App: React.FC = () => {
   axios.interceptors.request.use(function (config) {
-    const token = sessionStorage.getItem('SESSION_AUTH_TOKEN');
+    const token = sessionStorage.getItem("SESSION_AUTH_TOKEN");
     config.headers.Authorization = token ? `Bearer ${token}` : "";
     return config;
   });
 
-  axios.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response.status === 401) {
-        sessionStorage.removeItem('SESSION_AUTH_TOKEN')
-        navigate('/login');
+  // axios.interceptors.response.use(
+  //   (response) => response,
+  //   (error) => {
+  //     if (error.response.status === 401) {
+  //       sessionStorage.removeItem('SESSION_AUTH_TOKEN')
+  //       navigate('/login');
 
-      }
-      return Promise.reject(error);
-    }
-  );
-
-
+  //     }
+  //     return Promise.reject(error);
+  //   }
+  // );
 
   return (
     <>
       {/* UseNavigate in reaxct pass static parameters needed for the next route through it  */}
       <ScrolltoTop />
-      <ToastContainer 
-       position="top-center"
-       autoClose={5000}
-       hideProgressBar
-       newestOnTop={false}
-       closeOnClick
-       rtl={false}
-       pauseOnFocusLoss
-       draggable
-       pauseOnHover
-       theme="light"
-       transition={Zoom}
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Zoom}
       />
 
       <Routes>
@@ -108,7 +103,10 @@ const App:React.FC = () =>  {
           <Route path="login" element={<Login />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="forget-password" element={<SendRestLink />} />
-          <Route path="forget-password-verify" element={<ResetPasswordVerify />} />
+          <Route
+            path="forget-password-verify"
+            element={<ResetPasswordVerify />}
+          />
           <Route path="verifyotp" element={<VerifyOtp />} />
           <Route path="createaccount" element={<CreateAccount />} />
           <Route path="propertyunit" element={<PropertyUnit />} />
@@ -117,7 +115,6 @@ const App:React.FC = () =>  {
           <Route path="completed" element={<SignUpComplete />} />
         </Route>
         {/* Auth routes end  */}
-
 
         {/* Quick Pay routes start */}
         <Route path="currentbills" element={<BillList />} />
@@ -130,15 +127,15 @@ const App:React.FC = () =>  {
 
         {/* User profile page start  */}
         <Route element={<UserLayout />}>
-        <Route element={<ProtectedRoutes />}>
-          <Route path="profile" element={<Profile />} />
-          <Route path="wastebills" element={<Wastebills />} />
-          <Route path="payment-history" element={<PaymentHistory />} />
-          <Route path="view-history" element={<ViewProperty />} />
-          <Route path="support" element={<Support />} />
-          <Route path="contactus" element={<ContactUs />} />
-          {/* <Route path="reports" element={<CustomerReports />} /> */}
-        </Route>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="profile" element={<Profile />} />
+            <Route path="wastebills" element={<Wastebills />} />
+            <Route path="payment-history" element={<PaymentHistory />} />
+            <Route path="view-history" element={<ViewProperty />} />
+            <Route path="support" element={<Support />} />
+            <Route path="contactus" element={<ContactUs />} />
+            {/* <Route path="reports" element={<CustomerReports />} /> */}
+          </Route>
         </Route>
 
         {/* User profile page end  */}
@@ -147,55 +144,71 @@ const App:React.FC = () =>  {
         <Route element={<AdminLoginProtect />}>
           <Route path="admin-login" element={<AdminLogin />} />
           <Route path="admin-register" element={<AdminReg />} />
-          <Route path="admin-forgot-password" element={<AdminForgotPassword />} />
-          <Route path="admin-reset-password/:userId/:token" element={<AdminResetPassword />} />
+          <Route
+            path="admin-forgot-password"
+            element={<AdminForgotPassword />}
+          />
+          <Route
+            path="admin-reset-password/:userId/:token"
+            element={<AdminResetPassword />}
+          />
           <Route path="admin-overview" element={<Overview />} />
-
-
         </Route>
 
         <Route element={<ProtectedRoutes />}>
           <Route
-            path='/dashboard/*'
+            path="/dashboard/*"
             element={
               <AdminLayout>
                 <Routes>
                   <Route path="" element={<Dash />} />
                   <Route path="revenue" element={<RevenueIndex />} />
-                  <Route path="customer" element={<CreateCustomer />} />
+                  <Route path="customers" element={<Customers />} />
                   <Route path="records" element={<Records />} />
                   <Route path="billing" element={<Transaction />} />
-          <Route
-            path='/properties/*'
-            element={
-            <PropertiesLayout>
-              <Routes>
-              <Route path="" element={<Properties />} />
-              <Route path=":propertyId" element={<Property />} />
-              <Route path=":propertyId/apartments/:apartment" element={<ApartmentBill />} />
-              </Routes>
-            
-              </PropertiesLayout>} />
-                  <Route path="billing-customer-all" element={<AllCustomers />} />
-                  <Route path="billing-customer-details" element={<Customer />} />
+                  <Route
+                    path="/properties/*"
+                    element={
+                      <PropertiesLayout>
+                        <Routes>
+                          <Route path="" element={<Properties />} />
+                          <Route path=":propertyId" element={<Property />} />
+                          <Route
+                            path=":propertyId/apartments/:apartment"
+                            element={<ApartmentBill />}
+                          />
+                        </Routes>
+                      </PropertiesLayout>
+                    }
+                  />
+                  <Route
+                    path="billing-customer-all"
+                    element={<AllCustomers />}
+                  />
+                  {/* <Route
+                    path="billing-customer-details"
+                    element={<Customer />}
+                  /> */}
                   <Route path="reports" element={<Reports />} />
                   <Route path="settings" element={<All />} />
                   <Route path="pricing" element={<Pricing />} />
                   <Route path="user-access" element={<UserAccess />} />
                   <Route path="security" element={<Security />} />
                   <Route path="company-settings" element={<CompanyProfile />} />
-                  <Route path="notification-settings" element={<NotificationSettings />} />
+                  <Route
+                    path="notification-settings"
+                    element={<NotificationSettings />}
+                  />
                   <Route path="app-settings" element={<AppSettings />} />
                 </Routes>
               </AdminLayout>
             }
           />
-
         </Route>
         {/* Admin routes end */}
       </Routes>
     </>
   );
-}
+};
 
 export default App;

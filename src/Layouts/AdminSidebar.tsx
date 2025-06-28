@@ -106,15 +106,15 @@ const AdminSidebar = () => {
          
             </NavLink>
 
-            {/* <NavLink to="/dashboard/customer"
+            <NavLink to="/dashboard/customers"
                 className={` w-full p-4  ${isActive === "/dashboard/customer" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard/customer")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
-                        <IoPersonAdd className={`text-center mt-1 ${isActive  === "/dashboard/customer" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Add new customer
+                        <IoPersonAdd className={`text-center mt-1 ${isActive  === "/dashboard/customer" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Customers
                     </p>
          
-            </NavLink> */}
+            </NavLink>
 
             <NavLink to="/dashboard/settings"
                 className={` w-full p-4 ${isActive === "/dashboard/settings" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
