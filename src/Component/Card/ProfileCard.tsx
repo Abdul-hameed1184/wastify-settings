@@ -1,32 +1,42 @@
-
 import React from 'react';
 import { ParagraphLarge, ParagraphNoMargin } from "../Paragraph";
 import { ICustomerDashboard } from "../../models/customerdash.interface";
+import { Naira } from '../../utils/format';
+
 type Props = {
   dashBoard: ICustomerDashboard;
-}
-const ProfileCard:React.FC<Props> = ({ dashBoard }) => {
-  // const user = useSelector(selectUser);
-  console.log(dashBoard)
-  const { totalBills, customerFullname, totalApartment } = dashBoard;
-  console.log("user", dashBoard);
+};
+
+const ProfileCard: React.FC<Props> = ({ dashBoard }) => {
+  const {
+    customerFullname = "Customer",
+    totalBills = 0,
+    totalApartment = 0,
+  } = dashBoard;
+
   return (
-    <div className="max-w-sm border-transparent text-center bg-white rounded-lg shadow-lg p-4 m-4">
-      <div className="">
-        <ParagraphNoMargin content={"Hello!"} />
-        <ParagraphLarge
-          content={customerFullname ? customerFullname : "Customer"}
-        />
+    <section
+      className="w-full max-w-sm bg-white rounded-2xl shadow-lg p-6 border border-gray-100 text-center transition-all hover:shadow-xl"
+      aria-label="Customer profile summary"
+    >
+      {/* Greeting Section */}
+      <header className="mb-6">
+        <ParagraphNoMargin content="Hello!" />
+        <ParagraphLarge content={customerFullname} />
+      </header>
+
+      {/* Total Bills */}
+      <div className="mb-4">
+        <ParagraphNoMargin content="Total Bills" />
+        <ParagraphLarge content={Naira.format(Number(totalBills))} />
       </div>
-      <div className="">
-        <ParagraphNoMargin content={"Total Bills"} />
-        <ParagraphLarge content={totalBills ? totalBills.toString() : "N0"} />
+
+      {/* Total Apartments */}
+      <div>
+        <ParagraphNoMargin content="Total Apartments" />
+        <ParagraphLarge content={totalApartment.toString()} />
       </div>
-      <div className="">
-        <ParagraphNoMargin content={"Total Apartment"} />
-        <ParagraphLarge content={totalApartment ? totalApartment.toString() : "0"} />
-      </div>
-    </div>
+    </section>
   );
 };
 

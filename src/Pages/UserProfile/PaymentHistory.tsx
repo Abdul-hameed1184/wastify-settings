@@ -7,12 +7,14 @@ import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 
 import PaymentStatusBadge from '../../utils/PaymentStatusBadge';
 import { GrOverview } from 'react-icons/gr';
 import InfoModal from '../../Component/Modal/InfoModal';
+import { Naira } from '../../utils/format';
 
 const PaymentHistory:React.FC = () => {
     const [billPayments, setBillPayments] = React.useState<IPaginatedBillPayment>({} as IPaginatedBillPayment);
     const [page, setPage] = React.useState<number>(1);
     const [ modalDetails, setModalDetails ] = useState<boolean>(false)
     const [ billpayment, setBillPayment ] = useState<IApartmentBillingTransaction>();
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
     useEffect(() => {
         // This effect can be used to fetch payment history data if needed
@@ -158,13 +160,22 @@ const PaymentHistory:React.FC = () => {
           </div>
         </div>} buttonName={'Close'} handleConfirm={() => setModalDetails(!modalDetails)}></InfoModal>
                     }
+                    <div className="mt-6 mx-4 flex justify-center">
+  <input
+    type="text"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    placeholder="Search by billing period or apartment type..."
+    className="w-full md:w-1/2 px-4 py-2 border border-gray-300 m-auto rounded-lg shadow-sm focus:outline-nonefocus:ring-green"
+  />
+</div>
 
                              { billPayments ?       
                                       <div className="overflow-x-auto font-Poppins mt-3 mx-4">
                                                     <Table striped >
                                                         <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
                                                             <TableHeadCell>Period</TableHeadCell>
-                                                            <TableHeadCell>Apartment Type</TableHeadCell>
+                                                            <TableHeadCell>Property Address</TableHeadCell>
                                                             <TableHeadCell>Bill Amount</TableHeadCell>
                                                             <TableHeadCell>Amount paid</TableHeadCell>
                                                             <TableHeadCell>Status</TableHeadCell>
@@ -175,11 +186,9 @@ const PaymentHistory:React.FC = () => {
                                                         {billPayments.data && billPayments.data.map((item:IApartmentBillingTransaction, index) => (
                                                                 <TableRow className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
                                                                     <TableCell>{item.billPeriod}</TableCell>
-                                                                    <TableCell>{item.apartmentType}</TableCell>
-                                                                              <TableCell>{item.billAmount}</TableCell>
-                                                                    <TableCell>{item.amountPaid} </TableCell>
-                                                            
-                                                          
+                                                                    <TableCell>{item.propertyAddress}</TableCell>
+                                                                              <TableCell>{Naira.format(Number(item.billAmount))}</TableCell>
+                                                                    <TableCell>{Naira.format(Number(item.amountPaid))}</TableCell>
                                                                             <TableCell><PaymentStatusBadge status={item.paymentStatus} /></TableCell>
                                                                             <TableCell onClick={() => viewExtraDetails(item)}><GrOverview /></TableCell>
                                                                               

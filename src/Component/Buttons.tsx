@@ -10,31 +10,56 @@ type Props = {
   disabled?: boolean;
   className?: string
 }
-export const ButtonsPrimary:React.FC<Props> = ({type, onClick, name, loading, disabled}) => {
+export const ButtonsPrimary: React.FC<Props> = ({
+  type = 'button',
+  onClick,
+  name,
+  loading = false,
+  disabled = false,
+}) => {
+  const baseClass =
+    'w-full flex items-center justify-center px-4 md:px-2 py-4 md:py-2 text-base font-medium rounded-lg shadow-sm border border-transparent font-poppins';
+  const enabledClass = 'bg-green text-white hover:bg-green-600';
+  const disabledClass = 'bg-lightGreen text-white cursor-not-allowed';
+
   return (
-    <button type={type} onClick={onClick} 
-    className={`text-white bg-green  w-full   justify-center px-4 md:px-2 py-4 md:py-2 text-base font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'} overflow-hidden whitespace-nowrap`}
-    disabled={loading || disabled}
->
-    { loading ? 
-      <div role="status">
-      <svg aria-hidden="true" className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-green-500" viewBox="0 0 100 101" fill="lightGreen" xmlns="http://www.w3.org/2000/svg">
-          <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-          <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-      </svg>
-
-      <span className="sr-only">Loading...</span>
-
-  </div> 
-    : name }
-</button>
-  )
-}
-export const ButtonsPrimaryBlack:React.FC<Props> = ({type, onClick, name, loading}) => {
+    <button
+      type={type}
+      onClick={onClick}
+      className={`${baseClass} ${loading || disabled ? disabledClass : enabledClass}`}
+      disabled={loading || disabled}
+    >
+      {loading ? (
+        <span className="flex items-center gap-2">
+          <svg
+            className="w-5 h-5 animate-spin text-white fill-green-500"
+            viewBox="0 0 100 101"
+            xmlns="http://www.w3.org/2000/svg"
+            role="status"
+            aria-hidden="true"
+          >
+            <path
+              d="M100 50.59c0 27.61-22.39 50-50 50S0 78.2 0 50.59 22.39 0.59 50 0.59 100 22.98 100 50.59zM9.08 50.59c0 22.6 18.32 40.92 40.92 40.92s40.92-18.32 40.92-40.92S72.6 9.67 50 9.67 9.08 27.99 9.08 50.59z"
+              fill="currentColor"
+            />
+            <path
+              d="M93.97 39.04c2.43-.64 3.9-3.13 3.05-5.49-1.71-4.73-4.13-9.18-7.19-13.2-3.97-5.23-8.93-9.63-14.6-12.94C69.54 4.1 63.28 1.94 56.77 1.05c-5-.68-10.07-.6-15.03.23-2.47.41-3.92 2.91-3.28 5.33.64 2.42 3.11 3.88 5.59 3.52 3.8-.56 7.67-.58 11.49-.05 5.32.73 10.45 2.5 15.09 5.21 4.64 2.72 8.72 6.31 11.97 10.61 2.34 3.07 4.22 6.46 5.61 10.04.89 2.34 3.35 3.79 5.76 3.14z"
+              fill="currentFill"
+            />
+          </svg>
+          <span className="sr-only">Loading...</span>
+        </span>
+      ) : (
+        name
+      )}
+    </button>
+  );
+};
+export const ButtonsPrimaryBlack:React.FC<Props> = ({type, onClick, name, disabled, loading}) => {
   return (
     <button type={type} onClick={onClick} 
     className={`text-white bg-black  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-lg font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-black'} overflow-hidden whitespace-nowrap`}
-    disabled={loading}
+    disabled={loading || disabled}
 >
     { loading ? "Loading... " : name }
 </button>

@@ -36,10 +36,12 @@ const Home:React.FC = () => {
             />
             <div className="w-full md:w-4/6">
               <div className="m-4">
-                <InputFieldGrayHome
-                  type={"number"}
-                  placeholder={"Phone number"}
-                />
+
+                 <input type={"tel"} name={"phoneNumber"} pattern="^\+?\d{7,14}$"
+                 maxLength={15}
+  placeholder="Phone e.g. +234 701 234 5678"
+  className={`border px-2.5 py-3.5 pl-5  bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-grayInput border-transparent placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-grayInput`} />
+
               </div>
               <div className="m-4">
                 <InputFieldGrayHome

@@ -41,7 +41,6 @@ import SendRestLink from "./Pages/Auth/SendRestLink";
 import AdminForgotPassword from "./Pages/Admin/Auth/AdminForgotPassword";
 import AdminResetPassword from "./Pages/Admin/Auth/AdminResetPassword";
 import ResetPasswordVerify from "./Pages/Auth/ResetPasswordVerify";
-import Customer from "./Pages/Admin/Billing/Customer";
 import AllCustomers from "./Pages/Admin/Billing/AllCustomers";
 import { ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -65,17 +64,6 @@ const App: React.FC = () => {
     return config;
   });
 
-  // axios.interceptors.response.use(
-  //   (response) => response,
-  //   (error) => {
-  //     if (error.response.status === 401) {
-  //       sessionStorage.removeItem('SESSION_AUTH_TOKEN')
-  //       navigate('/login');
-
-  //     }
-  //     return Promise.reject(error);
-  //   }
-  // );
 
   return (
     <>

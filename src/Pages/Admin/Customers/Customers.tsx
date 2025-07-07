@@ -20,6 +20,7 @@ import {
 import { IPaginatedCustomers } from "../../../models/paginatedcustomer.interface";
 import { ICustomerData } from "../../../models/customerdata.interface";
 import CreateCustomer from "../../../Component/Modal/CreateCustomer";
+import { Naira } from "../../../utils/format";
 
 const Customers: React.FC = () => {
   const operator: IOperator = JSON.parse(
@@ -102,7 +103,7 @@ const Customers: React.FC = () => {
                       {/* <TableCell>{item.lgaName} </TableCell> */}
                       <TableCell>{item.phone}</TableCell>
                       {/* <TableCell>{item.propertyCode}</TableCell> */}
-                      <TableCell>{item.totalOverdueBill}</TableCell>
+                      <TableCell>{Naira.format(Number(item.totalOverdueBill))}</TableCell>
                       {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
                       <TableCell>
                         <Link

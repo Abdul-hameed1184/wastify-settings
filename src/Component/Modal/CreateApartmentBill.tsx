@@ -172,6 +172,7 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
               setOpenModal(false);
               createBill();
             }}
+            disabled={apartmentBill <= 0 || discount < 0 || discount > 100}
             name={"Create Bill"} type={undefined} loading={undefined} />
         </div>
 

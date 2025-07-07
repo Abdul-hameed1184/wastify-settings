@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -17,6 +17,8 @@ import { IOperator } from "../../../models/operator.interface";
 import { IPaginatedApartmentBills } from "../../../models/paginatedApartmentBillsForCustomer";
 import { Link } from "react-router-dom";
 import { ButtonsPrimary } from "../../../Component/Buttons";
+import { Naira } from "../../../utils/format";
+import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 
 const Transaction = () => {
   const operator: IOperator = JSON.parse(
@@ -27,13 +29,13 @@ const Transaction = () => {
   );
   const [page, setPage] = useState<number>(1);
 
- const getBillings =  async (page: number) => {
+ const getBillings =  useCallback(async (page: number) => {
       const properties = await getBillingByOperator(operator.id, page);
       setBillData(properties.data.data);
- }
+ }  , [operator.id]);
   useEffect(() => {
     getBillings(page); 
-  }, [operator.id]);
+  }, [getBillings, page]);
   const handleAutoBilling = () => {
     // Logic for auto billing can be implemented here
     console.log("Auto Billing Clicked");
@@ -57,9 +59,10 @@ const Transaction = () => {
                   <TableHeadCell>Bill Period</TableHeadCell>
                   <TableHeadCell>Property address</TableHeadCell>
                   <TableHeadCell>Amount</TableHeadCell>
-                  <TableHeadCell>Ward</TableHeadCell>
-                  <TableHeadCell>Property Code</TableHeadCell>
-                  <TableHeadCell>Number of customers</TableHeadCell>
+                  <TableHeadCell>discounted</TableHeadCell>
+                  <TableHeadCell>Customer</TableHeadCell>
+                  <TableHeadCell>Customer Phone number</TableHeadCell>
+                            <TableHeadCell>Status</TableHeadCell>
                   <TableHeadCell>Action</TableHeadCell>
                 </TableHead>
                 <TableBody className="divide-y font-Poppins ">
@@ -75,10 +78,11 @@ const Transaction = () => {
                       >
                         <TableCell>{item.billPeriod}</TableCell>
                         <TableCell>{item.propertyAddress} </TableCell>
-                        <TableCell>{item.billAmount} </TableCell>
-                        <TableCell>{item.totalAmount}</TableCell>
+                        <TableCell>{Naira.format(Number(item.billAmount))} </TableCell>
+                        <TableCell>{Naira.format(Number(item.totalAmount))}   </TableCell>
                         <TableCell>{item.customerFullname}</TableCell>
                         <TableCell>{item.customerPhone}</TableCell>
+                              <TableCell><PaymentStatusBadge status={item.paymentStatus} /></TableCell>
                         <TableCell>
                           <Link
                             to={"/dashboard/billing-customer-all"}

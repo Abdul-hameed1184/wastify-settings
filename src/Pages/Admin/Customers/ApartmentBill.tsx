@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ButtonsPrimaryBlack } from "../../../Component/Buttons";
 import { IApartment } from "../../../models/apartment.interface";
 import { getPspOperatorBill } from "../../../api/bill/psp-operator-pricing";
@@ -13,10 +13,11 @@ import { toast } from "react-toastify";
 import { MdDeleteForever } from "react-icons/md";
 import InfoModal from "../../../Component/Modal/InfoModal";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
+import { Naira } from "../../../utils/format";
 
 const ApartmentBill: React.FC = () => {
   const [bills, setBills] = useState<IBills[]>([]);
-  const [billHistory, setBillHistory] = useState<IBillData[]>();
+  const [billHistory, setBillHistory] = useState<IBillData[]>([]);
   const [openCreateBillModal, setOpenCreateBillModal] =
     useState<boolean>(false);
   const operator: IOperator = JSON.parse(
@@ -25,9 +26,6 @@ const ApartmentBill: React.FC = () => {
   const location = useLocation();
   const { state } = location;
   const apartment: IApartment = state.apartment;
-  console.log(apartment);
-
-  const [apartmentBill, setApartmentBill] = useState<number>(0);
   const [loader, setLoader] = useState<boolean>(true);
   const [viewDelete, setViewDelete] = useState<boolean>(false);
   const months = [
@@ -45,41 +43,34 @@ const ApartmentBill: React.FC = () => {
     { id: "12", name: "December" },
   ];
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await getPspOperatorBill(operator.id);
-        setBills(data.data.data.data);
-        const dx = await getBillingsByApartmentId(apartment.id);
-        console.log(dx.data.data.data);
-        setBillHistory(dx.data.data.data);
-        console.log(data.data.data.data);
-        const dy: IBills | undefined = data.data.data.data.find(
-          (dx) => dx.apartmentTypeId == apartment.apartmentTypeId
-        );
-        console.log(bills);
-        if (dy) {
-          setApartmentBill(parseInt(dy.amount));
-        } else {
-          toast.error(
-            "No matching bill found for the specified apartment type."
-          );
-          // Optionally set a default value or handle the error
-          setApartmentBill(0); // Default value if no match is found
-        }
-        setLoader(false);
-      } catch (e) {
-        console.log(e);
-        toast.error("No bill for this customer");
-      }
-    })();
-    console.log(apartmentBill);
-  }, [apartment.apartmentTypeId, apartment.id, apartmentBill, bills, operator.id]);
+ useEffect(() => {
+  const fetchBills = async () => {
+    try {
+      setLoader(true);
+      const data = await getPspOperatorBill(operator.id);
+      const billData: IBills[] = data.data.data.data;
+      setBills(billData);
 
-  let Naira = new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-  });
+      const history = await getBillingsByApartmentId(apartment.id);
+      setBillHistory(history.data.data.data);
+
+
+    } catch (e) {
+      console.error(e);
+      toast.error("No bill for this customer");
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  fetchBills();
+}, [apartment.apartmentTypeId, apartment.id, operator.id]);
+
+
+const currentBill = useMemo(() => {
+  return bills.find((b) => b.apartmentTypeId === apartment.apartmentTypeId)?.amount || 0;
+}, [bills, apartment.apartmentTypeId]);
+
 
   function formatDate(dx: string): string {
     const splitted = dx.split("-");
@@ -159,8 +150,13 @@ const ApartmentBill: React.FC = () => {
                   </div>
                 </fieldset>
               </div>
-            </div>
 
+            </div>
+{!loader && billHistory?.length === 0 && (
+  <div className="text-center mt-4 text-xl text-gray-500">
+    <h2>No bills found</h2>
+  </div>
+)}
             <div className="flex justify-end mt-5">
               <div className="w-40 pr-4">
                 <ButtonsPrimaryBlack
@@ -172,8 +168,8 @@ const ApartmentBill: React.FC = () => {
           </div>
 
           <div className="w-full h-full border-black">
-            {billHistory ? (
-              <table className="table-auto p-4 w-full text-sm">
+            {billHistory && billHistory.length > 0 && !loader && (
+              <table className="table-auto p-4 w-full text-sm md:text-base">
                 <caption>
                   <h3 className="text-gray-600 text-3xl font-medium mb-2">
                     Bill History
@@ -249,12 +245,6 @@ const ApartmentBill: React.FC = () => {
                   })}
                   </tbody>
               </table>
-            ) : (
-              <div>
-                <h2 className="w-full text-3xl font-bold text-gray text-center">
-                  No Bill History
-                </h2>
-              </div>
             )}
           </div>
         </div>
@@ -271,7 +261,7 @@ const ApartmentBill: React.FC = () => {
       {openCreateBillModal && (
         <CreateApartmentBill
           apartment={apartment}
-          apartmentBill={apartmentBill}
+          apartmentBill={Number(currentBill)}
           openModal={openCreateBillModal}
           setOpenModal={setOpenCreateBillModal}
         />
