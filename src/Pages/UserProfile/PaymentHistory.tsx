@@ -86,8 +86,8 @@ const PaymentHistory:React.FC = () => {
                         Next
                       </button>
                     </div> */}
-                    {
-                      (billpayment && modalDetails) && <InfoModal openModal={modalDetails} setOpenModal={setModalDetails} header={"Bill Payment Details"} 
+                    {/* {
+                      (billpayment && modalDetails) &&<InfoModal openModal={modalDetails} setOpenModal={setModalDetails} header={"Bill Payment Details"} 
                       content={<div className="row g-3">
           <div className="col-md-6">
             <strong>Property:</strong> {billpayment.propertyCode} - {billpayment.propertyAddress}
@@ -159,7 +159,7 @@ const PaymentHistory:React.FC = () => {
             </span>
           </div>
         </div>} buttonName={'Close'} handleConfirm={() => setModalDetails(!modalDetails)}></InfoModal>
-                    }
+                    } */}
                     <div className="mt-6 mx-4 flex justify-center">
   <input
     type="text"
@@ -180,7 +180,7 @@ const PaymentHistory:React.FC = () => {
                                                             <TableHeadCell>Amount paid</TableHeadCell>
                                                             <TableHeadCell>Status</TableHeadCell>
                                                             <TableHeadCell>View Details</TableHeadCell>
-                                                        </TableHead>
+                                                        </TableHead> 
                                                         <TableBody className="divide-y font-Poppins ">
                                                  
                                                         {billPayments.data && billPayments.data.map((item:IApartmentBillingTransaction, index) => (

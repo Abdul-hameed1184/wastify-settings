@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ButtonsPrimaryBlack } from "../../../Component/Buttons";
 import { IApartment } from "../../../models/apartment.interface";
 import { getPspOperatorBill } from "../../../api/bill/psp-operator-pricing";
@@ -17,6 +17,7 @@ import { Naira } from "../../../utils/format";
 
 const ApartmentBill: React.FC = () => {
   const [bills, setBills] = useState<IBills[]>([]);
+  const [ refresh, setRefresh ] = useState<boolean>(false);
   const [billHistory, setBillHistory] = useState<IBillData[]>([]);
   const [openCreateBillModal, setOpenCreateBillModal] =
     useState<boolean>(false);
@@ -42,9 +43,7 @@ const ApartmentBill: React.FC = () => {
     { id: "11", name: "November" },
     { id: "12", name: "December" },
   ];
-
- useEffect(() => {
-  const fetchBills = async () => {
+const fetchBills = useCallback(async () => {
     try {
       setLoader(true);
       const data = await getPspOperatorBill(operator.id);
@@ -61,15 +60,20 @@ const ApartmentBill: React.FC = () => {
     } finally {
       setLoader(false);
     }
-  };
+  },[apartment.id, operator.id]);
+ useEffect(() => {
+  
 
   fetchBills();
-}, [apartment.apartmentTypeId, apartment.id, operator.id]);
-
+}, [fetchBills, refresh]);
 
 const currentBill = useMemo(() => {
   return bills.find((b) => b.apartmentTypeId === apartment.apartmentTypeId)?.amount || 0;
 }, [bills, apartment.apartmentTypeId]);
+
+if(loader){
+  return <Loader />;
+}
 
 
   function formatDate(dx: string): string {
@@ -137,7 +141,7 @@ const currentBill = useMemo(() => {
                       Customer Name
                     </span>
                     <span className="block text-2xl">
-                      {apartment.customerFullname}
+                      {apartment.customerFullname.toUpperCase()}
                     </span>
                   </div>
                   <div>
@@ -152,7 +156,7 @@ const currentBill = useMemo(() => {
               </div>
 
             </div>
-{!loader && billHistory?.length === 0 && (
+{billHistory?.length === 0 && (
   <div className="text-center mt-4 text-xl text-gray-500">
     <h2>No bills found</h2>
   </div>
@@ -264,6 +268,7 @@ const currentBill = useMemo(() => {
           apartmentBill={Number(currentBill)}
           openModal={openCreateBillModal}
           setOpenModal={setOpenCreateBillModal}
+          setRefresh={setRefresh}
         />
       )}
     </main>

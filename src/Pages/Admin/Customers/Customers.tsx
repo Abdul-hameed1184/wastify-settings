@@ -8,11 +8,11 @@ import {
   TableRow,
 } from "flowbite-react";
 import { ParagraphLargeGreen } from "../../../Component/Paragraph";
-import { ButtonsPrimary, ButtonsPrimaryIcon } from "../../../Component/Buttons";
+import { ButtonsPrimaryIcon } from "../../../Component/Buttons";
 import { IOperator } from "../../../models/operator.interface";
 import Loader from "../../../Component/Loader";
-import { Link } from "react-router-dom";
 import { FaPlusCircle } from "react-icons/fa";
+import { GrOverview } from "react-icons/gr";
 import {
   getPaginatedCustomers,
 } from "../../../api/customer/customer.service";
@@ -106,7 +106,7 @@ const Customers: React.FC = () => {
                       <TableCell>{Naira.format(Number(item.totalOverdueBill))}</TableCell>
                       {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
                       <TableCell>
-                        <Link
+                        {/* <Link
                           to={"" + item.customerId}
                           state={{ customer: item }}
                         >
@@ -115,7 +115,8 @@ const Customers: React.FC = () => {
                             type={"button"}
                             loading={undefined}
                           />
-                        </Link>
+                        </Link> */}
+                        <GrOverview />
                       </TableCell>
                       {/* <TableCell> ... </TableCell> */}
                     </TableRow>

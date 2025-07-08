@@ -116,8 +116,9 @@ const Wastebills: React.FC = () => {
             <TableHead className="bg-green text-white text-sm uppercase">
               <TableHeadCell>Period</TableHeadCell>
               <TableHeadCell>Apartment Type</TableHeadCell>
+              <TableHeadCell>Bill Amount</TableHeadCell>
+              <TableHeadCell>Discount Amount</TableHeadCell>
               <TableHeadCell>Status</TableHeadCell>
-              <TableHeadCell>Amount</TableHeadCell>
               <TableHeadCell>Action</TableHeadCell>
             </TableHead>
             <TableBody>
@@ -134,10 +135,12 @@ const Wastebills: React.FC = () => {
                   >
                     <TableCell>{item.billPeriod}</TableCell>
                     <TableCell>{item.apartmentTypeName}</TableCell>
-                    <TableCell>
+  
+                    <TableCell className="text-xl">{Naira.format(Number(item.billAmount))}</TableCell>
+                                <TableCell className="text-xl">{Naira.format(Number(item.discountAmount))}</TableCell>
+                                              <TableCell>
                       <PaymentStatusBadge status={item.paymentStatus} />
                     </TableCell>
-                    <TableCell className="text-xl">{Naira.format(Number(item.billAmount))}</TableCell>
                     <TableCell>
                       <ButtonsPrimary
                         name="Pay"

@@ -15,7 +15,7 @@ import { IoMdCall } from "react-icons/io";
 const navLinks = [
   { to: "/wastebills", label: "Waste bills", icon: <FaMoneyBillTrendUp /> },
   { to: "/payment-history", label: "Payment History", icon: <MdOutlinePayments /> },
-  { to: "/view-history", label: "View property", icon: <IoHomeOutline /> },
+  // { to: "/view-history", label: "View property", icon: <IoHomeOutline /> },
   { to: "/support", label: "Support", icon: <BiSupport /> },
   { to: "/contactus", label: "Contact us", icon: <IoMdCall /> },
 ];
@@ -45,18 +45,25 @@ export const UsernavBar = () => {
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-6 font-medium text-gray-800">
-          {navLinks.map((link) => (
-            <li key={link.to}>
-              <Link
-                to={link.to}
-                onClick={closeMenu}
-                className="hover:text-green-700 flex flex-col items-center gap-1"
-              >
-                {link.icon}
-                <span className="text-sm font-Poppins">{link.label}</span>
-              </Link>
-            </li>
-          ))}
+{navLinks.map((link) => {
+  const isActive = location.pathname === link.to;
+
+  return (
+    <li key={link.to}>
+      <Link
+        to={link.to}
+        onClick={closeMenu}
+        className={`flex flex-col items-center gap-1 font-Poppins text-sm ${
+          isActive ? "text-green font-semibold" : "text-gray-800 hover:text-green-700"
+        }`}
+      >
+        {link.icon}
+        <span>{link.label}</span>
+      </Link>
+    </li>
+  );
+})}
+
           <li>
             <button
               onClick={handleLogout}
@@ -82,18 +89,25 @@ export const UsernavBar = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <ul className="md:hidden mt-3 px-4 space-y-4 text-gray-700">
-          {navLinks.map((link) => (
-            <li key={link.to}>
-              <Link
-                to={link.to}
-                onClick={closeMenu}
-                className="flex items-center gap-3 py-2 hover:text-green-700"
-              >
-                {link.icon}
-                <span className="text-sm font-Poppins">{link.label}</span>
-              </Link>
-            </li>
-          ))}
+{navLinks.map((link) => {
+  const isActive = location.pathname === link.to;
+
+  return (
+    <li key={link.to}>
+      <Link
+        to={link.to}
+        onClick={closeMenu}
+        className={`flex items-center gap-3 py-2 font-Poppins text-sm ${
+          isActive ? "text-green-700 font-semibold" : "text-gray-700 hover:text-green-700"
+        }`}
+      >
+        {link.icon}
+        <span>{link.label}</span>
+      </Link>
+    </li>
+  );
+})}
+
           <li>
             <button
               onClick={() => {

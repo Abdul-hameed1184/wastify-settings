@@ -7,8 +7,8 @@ import { IOperator } from "../../models/operator.interface";
 import { toast } from "react-toastify";
 import { createApartmentBill } from "../../api/psp-operator/psp-operator.service";
 
-type Props = { openModal: boolean, setOpenModal: (x) => void, apartmentBill: number, apartment: IApartment }
-const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartmentBill, apartment }) => {
+type Props = { openModal: boolean, setOpenModal: (x) => void, apartmentBill: number, apartment: IApartment, setRefresh: () => void }
+const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartmentBill, apartment, setRefresh }) => {
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
   );
@@ -84,7 +84,7 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
     console.log(createdBill)
 
     toast.success(`${month.name}, ${year} bill was created successfully`)
-
+    setRefresh(true)
   }else{
     toast.error("Check the discount percentage")
   }
