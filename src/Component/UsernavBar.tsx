@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  IoHomeOutline,
   IoLogOutOutline
 } from "react-icons/io5";
 import { BiSupport } from "react-icons/bi";
@@ -11,8 +10,9 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { logout } from "../Features/authSlice";
 import { RoundedLogo } from "./AlternateLogos";
 import { IoMdCall } from "react-icons/io";
-
+import { CgProfile } from "react-icons/cg";
 const navLinks = [
+    { to: "/profile", label: "Profile", icon: <CgProfile /> },
   { to: "/wastebills", label: "Waste bills", icon: <FaMoneyBillTrendUp /> },
   { to: "/payment-history", label: "Payment History", icon: <MdOutlinePayments /> },
   // { to: "/view-history", label: "View property", icon: <IoHomeOutline /> },
@@ -53,8 +53,8 @@ export const UsernavBar = () => {
       <Link
         to={link.to}
         onClick={closeMenu}
-        className={`flex flex-col items-center gap-1 font-Poppins text-sm ${
-          isActive ? "text-green font-semibold" : "text-gray-800 hover:text-green-700"
+        className={`flex flex-col items-center gap-2  font-Poppins text-lg ${
+          isActive ? "text-green font-bold" : "text-gray-100 hover:text-green-700"
         }`}
       >
         {link.icon}
@@ -71,7 +71,7 @@ export const UsernavBar = () => {
               aria-label="Logout"
             >
               <IoLogOutOutline />
-              <span className="text-sm font-Poppins">Log out</span>
+              <span className="text-lg font-Poppins">Log out</span>
             </button>
           </li>
         </ul>
@@ -97,8 +97,8 @@ export const UsernavBar = () => {
       <Link
         to={link.to}
         onClick={closeMenu}
-        className={`flex items-center gap-3 py-2 font-Poppins text-sm ${
-          isActive ? "text-green-700 font-semibold" : "text-gray-700 hover:text-green-700"
+        className={`flex items-center gap-3 py-2 font-Poppins text-md ${
+          isActive ? "text-green-200 font-bold" : "text-gray-700 hover:text-green-200"
         }`}
       >
         {link.icon}
@@ -117,7 +117,7 @@ export const UsernavBar = () => {
               className="flex items-center gap-3 py-2 text-red-600 hover:text-red-800"
             >
               <IoLogOutOutline />
-              <span className="text-sm font-Poppins">Log out</span>
+              <span className="text-md font-Poppins">Log out</span>
             </button>
           </li>
         </ul>

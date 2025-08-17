@@ -9,8 +9,8 @@ export const createCustomer = async (data) => {
     return await axios.post(`/customer`, data)
 }
 
-export const getPropertyByOperator = async (operatorId: number, page: number = 1) => {
-    return await axios.get(`/property/${operatorId}/list-by-operator?page=${page}`);
+export const getPropertyByOperator = async (operatorId: number, params) => {
+    return await axios.get(`/property/${operatorId}/list-by-operator`, { params});
 }
 
 export const createApartmentBill = async (bill:ICreateApartmentBill) => {

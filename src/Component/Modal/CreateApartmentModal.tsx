@@ -125,11 +125,15 @@ const CreateApartmentModal: React.FC<Props> = ({
       show={openModal}
       onClose={() => setOpenModal(false)}
       size={"md"}
-      position={"top-right"}
+      position={"center"}
+      className="bg-gray-900/50 backdrop-blur-sm"
     >
       {!showCreateCustomer && (
-        <form onSubmit={createApartmentFormik.handleSubmit} className="z-0">
-          <Modal.Header>Create Apartment </Modal.Header>
+        <form onSubmit={createApartmentFormik.handleSubmit}  className="z-0 space-y-6">
+  
+          <Modal.Header className="text-2xl font-Poppins font-semibold">
+            Create Apartment for {property.ownerFullname}
+          </Modal.Header>
           <Modal.Body>
             <div className="space-y-6">
               {errorMessage && <ParagraphError content={errorMessage} />}
@@ -137,9 +141,9 @@ const CreateApartmentModal: React.FC<Props> = ({
                 <div className="w-full lg:w-4/5">
                   <Paragraph
                     content={
-                      property.ownerFullname.toUpperCase() +
+                      (property.ownerFullname.toUpperCase() || "No name" )+
                       ", " +
-                      property.propertyTypeName
+                     ( property.propertyTypeName || "No Type")
                     }
                   />
                 </div>
@@ -224,9 +228,9 @@ const CreateApartmentModal: React.FC<Props> = ({
                   {selectedCustomer && (
                     <Paragraph2Green
                       content={
-                        selectedCustomer.firstname.toUpperCase() +
+                        selectedCustomer.firstname +
                         " " +
-                        selectedCustomer.lastname.toUpperCase()
+                        selectedCustomer.lastname
                       }
                     />
                   )}

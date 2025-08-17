@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import { paystackPublicKey } from "../../utils/apiConfig";
 import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
 import { Naira } from "../../utils/format";
+import Loader from "../../Component/Loader";
 
 const Wastebills: React.FC = () => {
   const [page, setPage] = useState<number>(1);
@@ -95,12 +96,12 @@ const Wastebills: React.FC = () => {
   return (
     <main className="min-h-screen bg-gray-50 py-6 px-4 md:px-10">
       <div className="flex items-center mb-6">
-        <Link to="/profile">
+        {/* <Link to="/profile">
           <IoChevronBack size={28} className="bg-green text-white rounded-xl p-1" />
-        </Link>
+        </Link> */}
         <h1 className="text-xl font-semibold text-gray-700 ml-4">Waste Bills</h1>
       </div>
-      <div className="mt-6 mx-4 flex justify-center">
+      <div className=" m-6 flex justify-center">
   <input
     type="text"
     value={searchTerm}
@@ -111,9 +112,9 @@ const Wastebills: React.FC = () => {
 </div>
 
       {apartmentBills && apartmentBills.data ? (
-        <div className="overflow-x-auto bg-white rounded-xl shadow-md p-4">
+        <div className="overflow-x-auto bg-white rounded-xl shadow-md mt-4 p-0 w-full">
           <Table striped>
-            <TableHead className="bg-green text-white text-sm uppercase">
+            <TableHead className="bg-green text-white text-lg uppercase">
               <TableHeadCell>Period</TableHeadCell>
               <TableHeadCell>Apartment Type</TableHeadCell>
               <TableHeadCell>Bill Amount</TableHeadCell>
@@ -121,23 +122,24 @@ const Wastebills: React.FC = () => {
               <TableHeadCell>Status</TableHeadCell>
               <TableHeadCell>Action</TableHeadCell>
             </TableHead>
-            <TableBody>
+            <TableBody className="divide-y font-Poppins text-lg">
               {apartmentBills.data
                 .filter((x) => x.paymentStatus !== 1)
                 .map((item: IBillData, index) => (
                   <TableRow
                     className={
+                      
                       index % 2 === 0
-                        ? "bg-gray-50"
-                        : "bg-white dark:bg-gray-800"
+                        ? "bg-gray-50 text-lg"
+                        : "bg-white dark:bg-gray-800 text-lg"
                     }
                     key={index}
                   >
                     <TableCell>{item.billPeriod}</TableCell>
                     <TableCell>{item.apartmentTypeName}</TableCell>
   
-                    <TableCell className="text-xl">{Naira.format(Number(item.billAmount))}</TableCell>
-                                <TableCell className="text-xl">{Naira.format(Number(item.discountAmount))}</TableCell>
+                    <TableCell >{Naira.format(Number(item.billAmount))}</TableCell>
+                                <TableCell>{Naira.format(Number(item.discountAmount))}</TableCell>
                                               <TableCell>
                       <PaymentStatusBadge status={item.paymentStatus} />
                     </TableCell>
@@ -150,11 +152,13 @@ const Wastebills: React.FC = () => {
                     </TableCell>
                   </TableRow>
                 ))}
+
+        
             </TableBody>
           </Table>
 
           {/* Pagination */}
-          <div className="flex justify-between items-center mt-6">
+          <div className="flex justify-between items-center mt-6 p-4 w-100">
             <button
               className="text-green font-medium disabled:opacity-50"
               onClick={() => setPage(page - 1)}
@@ -191,9 +195,7 @@ const Wastebills: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="mt-10">
-          <Paragraph2Xl content="No billing record available." />
-        </div>
+        <Loader />
       )}
     </main>
   );

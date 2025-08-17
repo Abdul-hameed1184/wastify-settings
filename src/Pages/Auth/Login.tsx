@@ -76,7 +76,10 @@ const Login = () => {
             );
             dispatch(login(user));
             console.log(user);
-            toast.success(message, { autoClose: 5000 });
+            toast.success(message, { 
+              position:"top-center",
+              
+             });
             setTimeout(() => {
               SetLoading(false);
               navigate("/profile", { state: { user: user } });

@@ -11,7 +11,6 @@ export const getApartmentType = () => {
 }
 
 export const createApartment = ({propertyId, apartmentData }: {propertyId: number, apartmentData: {customerId?: string, apartmentTypeId: number, description: string}[]}) => {
-    console.log({propertyId, apartmentData})
     return axios.post(`/apartment`, {propertyId, apartmentData });
 }
 
@@ -33,4 +32,8 @@ export const getBillingsByApartmentId = (apartmentId: number) => {
 
 export const getBillPayments = () => {
     return axios.get(`/billPayment`);
+}
+
+export const getApartmentsByPspOperator = (page:number, id: number) => {
+    return axios.get(`/apartment/apartment-by-psp-operator-id/${id}?page=${page}`);
 }

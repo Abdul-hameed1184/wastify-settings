@@ -11,6 +11,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { getPropertyApartments } from "../../../api/property/apartment.service";
 import {
   ButtonsPrimaryBlack,
+  Buttonx,
   IconButton,
 } from "../../../Component/Buttons";
 import { IApartment } from "../../../models/apartment.interface";
@@ -19,6 +20,7 @@ import { IProperty } from "../../../models/property.interface";
 import Loader from "../../../Component/Loader";
 import { MdDeleteForever } from "react-icons/md";
 import InfoModal from "../../../Component/Modal/InfoModal";
+import { LuGlasses } from "react-icons/lu";
 
 const Property: React.FC = () => {
   const { propertyId } = useParams();
@@ -54,7 +56,7 @@ const Property: React.FC = () => {
               Property Owner
             </span>
             <span className="block text-2xl">
-              {property.ownerFullname.toUpperCase()}
+              {property?.ownerFullname?.toUpperCase() || "No Name"}
             </span>
           </div>
           <div>
@@ -82,7 +84,7 @@ const Property: React.FC = () => {
 
       <div className="space-y-6">
         <Table striped>
-          <TableHead className=" font-Poppins text-xl capitalize text-white bg-black dark:text-white">
+          <TableHead className=" font-Poppins text-xl capitalize text-white bg-slate-900 dark:text-white">
             <TableHeadCell>Name</TableHeadCell>
             <TableHeadCell>Apartment Type</TableHeadCell>
             <TableHeadCell>Phone number</TableHeadCell>
@@ -105,12 +107,11 @@ const Property: React.FC = () => {
                   <TableCell>{item.apartmentTypeName} </TableCell>
                   <TableCell>{item.customerPhone} </TableCell>
                   <TableCell>
-                    <Link
-                      to={`apartments/${item.id}`}
-                      state={{ apartment: item }}
-                    >
-                      <ButtonsPrimaryBlack name={"View Bill"} />
-                    </Link>
+          
+                                   <Link        to={`apartments/${item.id}`}
+                      state={{ apartment: item }}><LuGlasses className="text-green-100" /></Link>
+                      {/* <Buttonx name={"View Bill"} className="bg-slate-900" /> */}
+         
                   </TableCell>
                 </TableRow>
               ))}

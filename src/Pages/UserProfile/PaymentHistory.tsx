@@ -8,6 +8,7 @@ import PaymentStatusBadge from '../../utils/PaymentStatusBadge';
 import { GrOverview } from 'react-icons/gr';
 import InfoModal from '../../Component/Modal/InfoModal';
 import { Naira } from '../../utils/format';
+import Loader from '../../Component/Loader';
 
 const PaymentHistory:React.FC = () => {
     const [billPayments, setBillPayments] = React.useState<IPaginatedBillPayment>({} as IPaginatedBillPayment);
@@ -33,25 +34,12 @@ const PaymentHistory:React.FC = () => {
 
 
     return (
-        <main>
-            {/* <div className="flex justify-start mt-10 ml-6">
-                <Link to="/profile">
-                    <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
-                </Link>
-            </div>
-            <div className="mx-4">
-                <Paragraph2Xl content={"Payment History"} />
-            </div>
-            <div className="m-4">
-                {billPayments.data && billPayments.data.map((payment:IApartmentBillingTransaction) => (
-                    <PaymentHistoryCard key={payment.id} data={payment} />
-                ))}
-
-            </div> */}
+        <main className='min-h-screen bg-gray-50 py-6 px-4 md:px-10'>
+                <div className="flex items-center mb-6">
+                          <h1 className="text-xl font-semibold text-gray-700 ml-4">Payment History</h1>
+                 </div>
                                           
-                                            <div 
-                                            // className="flex justify-center items-center h-20 my-10 w-full "
-                                            >
+                              
                     {/* <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
                       <button
                         className={`text-green font-weight-bold`}
@@ -160,7 +148,7 @@ const PaymentHistory:React.FC = () => {
           </div>
         </div>} buttonName={'Close'} handleConfirm={() => setModalDetails(!modalDetails)}></InfoModal>
                     } */}
-                    <div className="mt-6 mx-4 flex justify-center">
+                    <div className="m-6 flex justify-center">
   <input
     type="text"
     value={searchTerm}
@@ -170,10 +158,11 @@ const PaymentHistory:React.FC = () => {
   />
 </div>
 
+
                              { billPayments ?       
-                                      <div className="overflow-x-auto font-Poppins mt-3 mx-4">
+                                      <div className="overflow-x-auto bg-white rounded-xl shadow-md font-Poppins mt-3 mx-4  mt-4">
                                                     <Table striped >
-                                                        <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
+                                                        <TableHead className=" font-Poppins text-lg capitalize text-white bg-green uppercase dark:text-white">
                                                             <TableHeadCell>Period</TableHeadCell>
                                                             <TableHeadCell>Property Address</TableHeadCell>
                                                             <TableHeadCell>Bill Amount</TableHeadCell>
@@ -181,7 +170,7 @@ const PaymentHistory:React.FC = () => {
                                                             <TableHeadCell>Status</TableHeadCell>
                                                             <TableHeadCell>View Details</TableHeadCell>
                                                         </TableHead> 
-                                                        <TableBody className="divide-y font-Poppins ">
+                                                        <TableBody className="divide-y font-Poppins text-lg ">
                                                  
                                                         {billPayments.data && billPayments.data.map((item:IApartmentBillingTransaction, index) => (
                                                                 <TableRow className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
@@ -198,8 +187,8 @@ const PaymentHistory:React.FC = () => {
                             
                                                         </TableBody>
                                                     </Table>
-                                                    <div className="flex justify-center items-center h-20 my-10 w-full ">
-                                        <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
+                  
+                                        <div className="flex justify-between items-center mt-6 p-4 w-100">
                                           <button
                                             className={`text-green font-weight-bold`}
                                             onClick={() => setPage(page - 1)}
@@ -234,9 +223,11 @@ const PaymentHistory:React.FC = () => {
                                           </button>
                                         </div>
                                       </div>
-                                                </div> : <Paragraph2Xl content={"no Billing for Customers"} />
+                                    
+                                     :<Loader />
+                                    
                             }
-                  </div>
+                          
         </main>
     )
 }

@@ -18,7 +18,7 @@ type Props = {
 export const InputField:React.FC<Props> = ({ type, name, value, placeholder, onChange, error, required=false, list="" }) => {
     return (
       <input type={type} list={list} name={name} value={value} placeholder={placeholder} onChange={onChange} required={required}  
-      className={`border px-2.5 py-3.5 pl-8  bg-lightGreen shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-lightGreen border-transparent placeholder:text-gray focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray  ${ error ? 'focus:ring-error' : 'focus:ring-gray'}`} />
+className={`border border-gray-300 px-2.5 py-3.5 pl-8 shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-lightGreen  placeholder:text-gray focus:outline-none focus:ring-2 focus:border-purple border-gray ring-gray  ${ error ? 'focus:ring-error' : 'focus:ring-gray'}`} />
     )
   }
 
@@ -41,7 +41,7 @@ export const InputFieldSecondary:React.FC<Props> = ({ type, name, value, placeho
 
 export const InputFieldSecondaryGreen:React.FC<Props> = ({ type, name, value, placeholder, onChange, error }) => {
     return (
-      <input type={type} name={name} value={value} placeholder={placeholder} onChange={onChange}  className={`border-2 px-2.5 py-3.5 pl-8  bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-gray  placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray  ${ error ? 'focus:ring-error' : 'focus:ring-gray'}`} />
+      <input type={type} name={name} value={value} placeholder={placeholder} onChange={onChange}  className={` border border-2 font-lg border-gray-200 px-2.5 py-4 pl-8  bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-gray  placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray  ${ error ? 'focus:ring-error' : 'focus:ring-gray'}`} />
     )
   }
 

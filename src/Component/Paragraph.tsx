@@ -37,7 +37,7 @@ export const ParagraphExtraSmall :React.FC<Props>= ({content}) => {
 
 export const ParagraphError :React.FC<Props>= ({content}) => {
   return (
-    <p className='text-lg font-Poppins font-thick not-italic text-error text-center leading-2 m-1'>{content}</p>
+    <p className='text-sm font-Poppins font-thick not-italic text-red-500  text-center leading-2 m-1'>{content}</p>
   )
 }
 

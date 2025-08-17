@@ -18,7 +18,7 @@ export const ButtonsPrimary: React.FC<Props> = ({
   disabled = false,
 }) => {
   const baseClass =
-    'w-full flex items-center justify-center px-4 md:px-2 py-4 md:py-2 text-base font-medium rounded-lg shadow-sm border border-transparent font-poppins';
+    'w-full flex items-center justify-center px-4 py-4 md:px-2 md:py-2 text-base font-medium rounded-lg shadow-sm border border-transparent font-poppins';
   const enabledClass = 'bg-green text-white hover:bg-green-600';
   const disabledClass = 'bg-lightGreen text-white cursor-not-allowed';
 
@@ -65,16 +65,46 @@ export const ButtonsPrimaryBlack:React.FC<Props> = ({type, onClick, name, disabl
 </button>
   )
 }
-export const ButtonsPrimaryIcon:React.FC<Props> = ({type, onClick, name, icon, loading}) => {
+
+export const Buttonx:React.FC<Props> = ({type, onClick, name, disabled, loading, className}) => {
   return (
     <button type={type} onClick={onClick} 
-    className={`text-white bg-green  w-full h-14 inline-flex justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'} overflow-hidden whitespace-nowrap`}
-    disabled={loading}
+    className={`text-white bg-black  w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-lg font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-black'}  ${className} overflow-hidden whitespace-nowrap`}
+    disabled={loading || disabled}
 >
-  { loading ? "Loading... " : name } {icon}
+    { loading ? "Loading... " : name }
 </button>
   )
 }
+
+
+
+export const ButtonsPrimaryIcon: React.FC<Props> = ({
+  type,
+  onClick,
+  name,
+  icon,
+  loading,
+}) => {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      className={`text-white w-full h-14 inline-flex justify-center items-center 
+        px-4 py-4 text-base font-normal shadow-sm border-transparent rounded-lg 
+        font-Poppins overflow-hidden whitespace-nowrap 
+        ${loading ? "bg-lightGreen" : "bg-green"}
+        focus:outline-none focus:ring-0`}
+      disabled={loading}
+    >
+      <span className="px-2">
+        {loading ? "Loading... " : name}
+      </span>
+      <span>{icon}</span>
+    </button>
+  );
+};
+
 export const ButtonsSecondary:React.FC<Props> = ({type, onClick, name, loading}) => {
   return (
     <button type={type} onClick={onClick} 

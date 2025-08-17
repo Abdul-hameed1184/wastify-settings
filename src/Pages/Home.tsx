@@ -11,9 +11,6 @@ import {
   ParagraphLargeWhite4xl,
   ParagraphSmallBlack,
 } from "../Component/Paragraph";
-import {
-  InputFieldGrayHome,
-} from "../Component/InputField";
 import { ButtonsPrimary } from "../Component/Buttons";
 
 const Home:React.FC = () => {
@@ -40,12 +37,13 @@ const Home:React.FC = () => {
                  <input type={"tel"} name={"phoneNumber"} pattern="^\+?\d{7,14}$"
                  maxLength={15}
   placeholder="Phone e.g. +234 701 234 5678"
-  className={`border px-2.5 py-3.5 pl-5  bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-grayInput border-transparent placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-grayInput`} />
+  className={`border px-2.5 py-3.5 pl-5  bg-grayInput shadow-sm rounded-lg block text-xl font-Poppins w-full h-14 text-black text-base mt-1 ring-grayInput border-transparent placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-grayInput`} />
 
               </div>
               <div className="m-4">
-                <InputFieldGrayHome
-                  type={"text"}
+                <input type={"text"}
+                  className="border px-2.5 py-3.5 pl-5 bg-grayInput text-xl shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-grayInput border-transparent placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-grayInput"
+                  name={"propertyCode"}
                   placeholder={"Property code"}
                 />
               </div>
@@ -61,8 +59,8 @@ const Home:React.FC = () => {
         <div className="mt-16 flex justify-center text-center md:mt-32">
           <div className="">
             <ParagraphLarge content={"Who We Are"} />
-            <div className="block md:flex md:justify-between md:flex-wrap">
-              <div className=" mx-6 my-14 md:mx-1 md:w-[30%]">
+            <div className="block md:flex md:justify-between md:flex-wrap p-4">
+              <div className=" mx-6 my-14 md:mx-1 md:w-[30%]   shadow-lg rounded-lg p-4 m-4">
                 <img
                   src="Images/easy.png"
                   className="w-20 h-20 m-auto "
@@ -78,7 +76,7 @@ const Home:React.FC = () => {
                   }
                 />
               </div>
-              <div className=" mx-6 my-14  md:mx-1 md:w-[30%]">
+              <div className=" mx-6 my-14  md:mx-1 md:w-[30%]   shadow-lg rounded-lg p-4 m-4">
                 <img
                   src="Images/pay.png"
                   className="w-20 h-20 m-auto "
@@ -94,7 +92,7 @@ const Home:React.FC = () => {
                   }
                 />
               </div>
-              <div className=" mx-6 my-14 md:mx-1 md:w-[30%]">
+              <div className=" mx-6 my-14 md:mx-1 md:w-[30%]   shadow-lg rounded-lg p-4 m-4">
                 <img
                   src="Images/not.png"
                   className="w-20 h-20 m-auto"
@@ -110,7 +108,7 @@ const Home:React.FC = () => {
                   }
                 />
               </div>
-              <div className=" mx-6 my-14 md:mx-1 md:w-[30%]">
+              <div className=" mx-6 my-14 md:mx-1 md:w-[30%]   shadow-lg rounded-lg p-4 m-4">
                 <img
                   src="Images/sup.png"
                   className="w-20 h-20 m-auto"
@@ -126,7 +124,7 @@ const Home:React.FC = () => {
                   }
                 />
               </div>
-              <div className=" mx-6 my-14 md:mx-1 md:w-[30%]">
+              <div className=" mx-6 my-14 md:mx-1 md:w-[30%]   shadow-lg rounded-lg p-4 m-4">
                 <img
                   src="Images/cardpay.png"
                   className="w-20 h-20 m-auto"
@@ -146,10 +144,10 @@ const Home:React.FC = () => {
           </div>
         </div>
         <div className="mt-18 flex justify-center text-center md:mt-32">
-          <div className="">
+          <div className="p-4 m-4">
             <ParagraphLarge content={"How It Works"} />
             <div className="block md:flex md:justify-between md:flex-wrap">
-              <div className=" mx-3 my-8 md:mx-1 md:w-[30%]">
+              <div className=" mx-3 my-8 md:mx-1 md:w-[30%]  shadow-lg rounded-lg p-4 m-4">
                 <Paragraph2Xl content={"Operator Onboarded"} />
                 <ParagraphBlack
                   content={
@@ -157,7 +155,7 @@ const Home:React.FC = () => {
                   }
                 />
               </div>
-              <div className=" mx-3 my-8  md:mx-1 md:w-[30%]">
+              <div className=" mx-3 my-8  md:mx-1 md:w-[30%]   shadow-lg rounded-lg p-4 m-4">
                 <Paragraph2Xl content={"Create Account"} />
                 <ParagraphBlack
                   content={
@@ -165,7 +163,7 @@ const Home:React.FC = () => {
                   }
                 />
               </div>
-              <div className=" mx-3 my-8 md:mx-1 md:w-[30%]">
+              <div className=" mx-3 my-8 md:mx-1 md:w-[30%] shadow-lg rounded-lg p-4 m-4">
                 <Paragraph2Xl content={"Receive Bills"} />
                 <ParagraphBlack
                   content={
@@ -173,7 +171,7 @@ const Home:React.FC = () => {
                   }
                 />
               </div>
-              <div className=" mx-3 my-8 md:mx-1 md:w-[30%]">
+              <div className=" mx-3 my-8 md:mx-1 md:w-[30%]   shadow-lg rounded-lg p-4 m-4">
                 <Paragraph2Xl content={"Make Payment "} />
                 <ParagraphBlack
                   content={
@@ -181,7 +179,7 @@ const Home:React.FC = () => {
                   }
                 />
               </div>
-              <div className=" mx-3 my-8 md:mx-1 md:w-[30%]">
+              <div className=" mx-3 my-8 md:mx-1 md:w-[30%]   shadow-lg rounded-lg p-4 m-4">
                 <Paragraph2Xl content={"Stay Updated"} />
                 <ParagraphBlack
                   content={

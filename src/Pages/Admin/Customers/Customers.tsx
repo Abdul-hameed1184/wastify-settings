@@ -9,7 +9,6 @@ import {
 } from "flowbite-react";
 import { ParagraphLargeGreen } from "../../../Component/Paragraph";
 import { ButtonsPrimaryIcon } from "../../../Component/Buttons";
-import { IOperator } from "../../../models/operator.interface";
 import Loader from "../../../Component/Loader";
 import { FaPlusCircle } from "react-icons/fa";
 import { GrOverview } from "react-icons/gr";
@@ -21,30 +20,42 @@ import { IPaginatedCustomers } from "../../../models/paginatedcustomer.interface
 import { ICustomerData } from "../../../models/customerdata.interface";
 import CreateCustomer from "../../../Component/Modal/CreateCustomer";
 import { Naira } from "../../../utils/format";
+import { getApartmentsByPspOperator } from "../../../api/property/apartment.service";
+import { useQuery } from "@tanstack/react-query";
+import { IApartment } from "../../../models/apartment.interface";
+import { all } from "axios";
+import { IOperator } from "../../../models/operator.interface";
 
 const Customers: React.FC = () => {
-  const operator: IOperator = JSON.parse(
-    sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
-  );
+    const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   const [openCreateCustomer, setOpenCreateCustomer] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [customers, setCustomers] = useState<IPaginatedCustomers>();
+  //const [loading, setLoading] = useState<boolean>(true);
+  // const [customers, setCustomers] = useState<IPaginatedCustomers>();
+  const { data: allapartments, isLoading, isError } = useQuery({
+          queryKey: [page, operator.id],
+          queryFn: () => {
+            const xy = getApartmentsByPspOperator(page, operator.id);
+            return xy;
+          }
+  })
 
-  useEffect(() => {
-    try {
-      (async () => {
-        const ty = await getPaginatedCustomers(page);
-        setCustomers(ty.data.data);
+  console.log(allapartments);
 
-        setLoading(false);
-      })();
-    } catch (error) {
-      console.log(error);
-    }
-  }, [ page]);
+  // useEffect(() => {
+  //   try {
+  //     (async () => {
+  //       const ty = await getPaginatedCustomers(page);
+  //       setCustomers(ty.data.data);
 
-  if (loading) {
+  //       setLoading(false);
+  //     })();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, [ page]);
+
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -68,7 +79,7 @@ const Customers: React.FC = () => {
           </div>
         </div>
 
-        {page && customers && (
+        {(page && allapartments) && (
           <div className="overflow-x-auto font-Poppins mt-3">
             <Table striped>
               <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
@@ -77,15 +88,15 @@ const Customers: React.FC = () => {
                 {/* <TableHeadCell>LGA</TableHeadCell> */}
                 <TableHeadCell>Phone Number</TableHeadCell>
                 {/* <TableHeadCell>Property code</TableHeadCell> */}
-                <TableHeadCell>Total Overdue Bill</TableHeadCell>{" "}
-                {/* <TableHeadCell>Add/View Apartment</TableHeadCell>{" "} */}
+                <TableHeadCell>Customer Address</TableHeadCell>{" "}
+                <TableHeadCell>Apartment Type</TableHeadCell>
                 {/*Number of Customers Changed*/}
-                {/* <TableHeadCell>Customer details</TableHeadCell> */}
+                <TableHeadCell>Apartment Description</TableHeadCell>
                 <TableHeadCell>Details</TableHeadCell>
               </TableHead>
-              <TableBody className="divide-y font-Poppins text-xl ">
+              <TableBody className=" font-Poppins text-xl ">
                 {page &&
-                  customers.data.map((item: ICustomerData, index) => (
+                  allapartments.data.data.data.map((item: IApartment, index) => (
                     <TableRow
                       className={
                         index % 2 === 0
@@ -96,16 +107,19 @@ const Customers: React.FC = () => {
                     >
                       {/* <TableCell>{item.id}</TableCell> */}
                       <TableCell>
-                        {item.lastname == null
-                          ? "No Name"
-                          : item.firstname + " " + item.lastname}{" "}
+                        {item.customerFullname}{" "}
                       </TableCell>
                       {/* <TableCell>{item.lgaName} </TableCell> */}
-                      <TableCell>{item.phone}</TableCell>
+                      <TableCell>{item.customerPhone}</TableCell>
                       {/* <TableCell>{item.propertyCode}</TableCell> */}
-                      <TableCell>{Naira.format(Number(item.totalOverdueBill))}</TableCell>
+                      <TableCell>{item.propertyAddress}</TableCell>
                       {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
+                                 <TableCell>{item.apartmentTypeName}</TableCell>
+                        <TableCell>{item.apartmentTypeDescription}</TableCell>
+                     
                       <TableCell>
+            
+                        
                         {/* <Link
                           to={"" + item.customerId}
                           state={{ customer: item }}
@@ -135,7 +149,7 @@ const Customers: React.FC = () => {
                 </button>
                 <div className="mx-8 h-full">
                   {Array.from({
-                    length: Math.ceil(customers.total / customers.per_page),
+                    length: Math.ceil(allapartments.data.total / allapartments.data.per_page),
                   }).map((_, index) => (
                     <button
                       className={`w-8 h-full  ${
@@ -152,7 +166,7 @@ const Customers: React.FC = () => {
                   className={`text-green font-weight-bold`}
                   onClick={() => setPage(page + 1)}
                   disabled={
-                    Math.ceil(customers.total / customers.per_page) <= page + 1
+                    Math.ceil(allapartments.data.total / allapartments.data.per_page) <= page + 1
                   }
                 >
                   Next

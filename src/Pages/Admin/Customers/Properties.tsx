@@ -15,8 +15,13 @@ import { IOperator } from "../../../models/operator.interface";
 import { getPropertyByOperator } from "../../../api/psp-operator/psp-operator.service";
 import { IPaginatedProperty } from "../../../models/paginatedPropertyByOperator.interface";
 import Loader from "../../../Component/Loader";
+import { LuGlasses } from "react-icons/lu";
+
+import { FaEye, FaPlusCircle } from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { FaPlusCircle } from "react-icons/fa";
 
 
 const Properties:React.FC = () => {
@@ -25,13 +30,27 @@ const Properties:React.FC = () => {
   const [ page, setPage] = useState<number>(1);
   const [ properties, setProperties ] = useState<IPaginatedProperty>();
   const [ loading, setLoading] = useState<boolean>(true);
+  const [ openMoreActions, setOpenMoreActions ] = useState<boolean>(false);
+  const params = {
+    page: page,
+    per_page: 10,
+  };
      
+
+  const { data: allProperties, isLoading, isError } = useQuery({
+        queryKey: ['properties', operator.id],
+        queryFn: () => {
+          getPropertyByOperator(operator.id,params);
+        }
+
+  })
+  console.log(allProperties);
 
   useEffect(() => {
     try{
       (async () => {
   
-      const data = await getPropertyByOperator(operator.id);
+      const data = await getPropertyByOperator(operator.id, params);
       setProperties(data.data.data);
       setLoading(false)
     
@@ -63,7 +82,7 @@ const Properties:React.FC = () => {
 
 {  properties &&      <div className="overflow-x-auto font-Poppins mt-3">
 
-          <Table striped>
+          <Table striped className="border-collapse rounded-lg  border-gray-900">
             <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
               {/* <TableHeadCell>Property ID</TableHeadCell> */}
               <TableHeadCell>Property address</TableHeadCell>
@@ -76,7 +95,7 @@ const Properties:React.FC = () => {
               {/* <TableHeadCell>Customer details</TableHeadCell> */}
               <TableHeadCell>Details</TableHeadCell>
             </TableHead>
-            <TableBody className="divide-y font-Poppins text-xl ">
+            <TableBody className="font-Poppins text-xl ">
               {properties.data.map((item:IProperty, index) => (
                 <TableRow
                   className={
@@ -94,11 +113,17 @@ const Properties:React.FC = () => {
                   <TableCell>{item.noOfDistinctApartment}</TableCell>
                   {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
                   <TableCell>
-                    <Link to={""+item.id} state={{property: item}}>
+                    {/* <Link to={""+item.id} state={{property: item}}>
                     <ButtonsPrimary
                       name={"View Details"}
                      type={"button"} loading={undefined} />
-                      </Link>
+                      </Link> */}
+                      <span className="flex items-center space-x-4">
+                    <Link to={""+item.id} state={{property: item}}><LuGlasses className="text-green-100" /></Link>
+
+                      <MdEdit className="text-blue-500" />
+                      <MdDeleteForever className="text-red-500" />
+                      </span>
                   </TableCell>
                   {/* <TableCell> ... </TableCell> */}
                 </TableRow>
@@ -145,6 +170,8 @@ const Properties:React.FC = () => {
             </div>
           </div>
         </div>}
+
+
       </div>              
   { 
   openCreateProperty &&   <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />

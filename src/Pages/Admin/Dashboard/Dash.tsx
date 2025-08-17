@@ -136,7 +136,7 @@ const Dash = () => {
       }
 
       {/* recent transaction  */}
-      <div className="bg-lightBackground py-5 rounded-3xl shadow-2xl">
+      <div className="py-5 rounded-3xl shadow-2xl">
         <Paragraph2XlGreenMargin content={"Recent Transactions"} />
         <div className="overflow-x-auto font-Poppins mt-3">
           <Table striped>
@@ -150,7 +150,7 @@ const Dash = () => {
               <TableHeadCell>Status</TableHeadCell>
               <TableHeadCell>Total Overdue Bills</TableHeadCell>
             </TableHead>
-            <TableBody className="divide-y font-Poppins ">
+            <TableBody className="font-Poppins ">
               <TableRow className="odd:bg-tableBackground">
                 <TableCell>Today,10:30PM</TableCell>
                 <TableCell>Olankunle_22</TableCell>
