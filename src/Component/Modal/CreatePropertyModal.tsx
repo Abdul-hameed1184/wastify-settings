@@ -198,7 +198,7 @@ const CreatePropertyModal: React.FC<Props> = ({ openModal, setOpenModal, operato
 
           {/* Owner */}
           <div>
-            <ParagraphSmall2 content="Property Owner" />
+            <ParagraphSmall2 content="Property Owner (Phone Number)" />
             <input
               list="owners"
               className="border px-3 py-2 bg-gray-50 rounded-lg w-full focus:outline-none focus:border-green-500"

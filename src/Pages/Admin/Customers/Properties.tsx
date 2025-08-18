@@ -28,9 +28,6 @@ const Properties:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
   const [ page, setPage] = useState<number>(1);
-  const [ properties, setProperties ] = useState<IPaginatedProperty>();
-  const [ loading, setLoading] = useState<boolean>(true);
-  const [ openMoreActions, setOpenMoreActions ] = useState<boolean>(false);
   const params = {
     page: page,
     per_page: 10,
@@ -40,27 +37,14 @@ const Properties:React.FC = () => {
   const { data: allProperties, isLoading, isError } = useQuery({
         queryKey: ['properties', operator.id],
         queryFn: () => {
-          getPropertyByOperator(operator.id,params);
+         const data =  getPropertyByOperator(operator.id,params);
+         return data;
         }
 
   })
   console.log(allProperties);
 
-  useEffect(() => {
-    try{
-      (async () => {
-  
-      const data = await getPropertyByOperator(operator.id, params);
-      setProperties(data.data.data);
-      setLoading(false)
-    
-      })()
-    }catch (error) {
-      console.log(error)
-    }
-  }, [operator.id, page]);
-
-  if(loading){
+  if(isLoading){
     return <Loader />
   }
 
@@ -80,7 +64,7 @@ const Properties:React.FC = () => {
           
         </div>
 
-{  properties &&      <div className="overflow-x-auto font-Poppins mt-3">
+{  allProperties?.data.data.data.length > 0 &&      <div className="overflow-x-auto font-Poppins mt-3">
 
           <Table striped className="border-collapse rounded-lg  border-gray-900">
             <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
@@ -96,7 +80,7 @@ const Properties:React.FC = () => {
               <TableHeadCell>Details</TableHeadCell>
             </TableHead>
             <TableBody className="font-Poppins text-xl ">
-              {properties.data.map((item:IProperty, index) => (
+              {allProperties?.data.data.data.map((item:IProperty, index) => (
                 <TableRow
                   className={
                     index % 2 === 0
@@ -146,7 +130,7 @@ const Properties:React.FC = () => {
                 {
                   Array.from({
                     length: Math.ceil(
-                      (properties.total/properties.per_page)
+                      (allProperties?.data.data.total/allProperties?.data.data.per_page)
                     ),
                   }).map((_, index) => (
                     <button
@@ -163,13 +147,25 @@ const Properties:React.FC = () => {
               <button
                 className={`text-green font-weight-bold`}
                 onClick={() => setPage(page + 1)}
-                disabled={Math.ceil(properties.total/properties.per_page) <= page + 1}
+                disabled={Math.ceil(allProperties?.data.data.total/allProperties?.data.data.per_page) <= page + 1}
               >
                 Next
               </button>
             </div>
           </div>
         </div>}
+        {
+        // allProperties?.data.data.data.length == 0 
+        isError
+        && (
+          <div className="flex justify-center items-center h-96 text-4xl font-semibold text-gray-500">
+            <h2> {"No properties found"} </h2>
+          </div>
+        )}
+
+        
+
+
 
 
       </div>              

@@ -1,21 +1,19 @@
 import { Modal } from "flowbite-react";
 import {  ButtonsPrimaryBlack } from "../Buttons";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ICreateApartmentBill } from "../../models/createApartmentBill.interface";
 import { IApartment } from "../../models/apartment.interface";
 import { IOperator } from "../../models/operator.interface";
 import { toast } from "react-toastify";
 import { createApartmentBill } from "../../api/psp-operator/psp-operator.service";
+import { useFormik } from "formik";
 
 type Props = { openModal: boolean, setOpenModal: (x) => void, apartmentBill: number, apartment: IApartment, setRefresh: () => void }
 const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartmentBill, apartment, setRefresh }) => {
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
   );
-  useEffect(() => {
-    console.log(apartmentBill);
 
-  },[])
   const months = [
     { id: "01", name: "January" },
     { id: "02", name: "February" },
@@ -30,11 +28,10 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
     { id: "11", name: "November" },
     { id: "12", name: "December" },
   ];
-  const y = new Date().getMonth().toString()
-  const getMonth: string = y.length < 2 ? "0" + y : y
-  const [discount, setDiscount] = useState<number>(0);
-  const [ month, setMonth] = useState<{ id: string, name: string }>(getMonthById(getMonth));
-  const [ year, setYear] = useState<string>((new Date().getFullYear()).toString())
+  // const [discount, setDiscount] = useState<number>(0);
+  // const [ month, setMonth] = useState<{ id: string, name: string }>({} as { id: string, name: string });
+  // const [ year, setYear] = useState<string>();
+
   
 
 
@@ -56,77 +53,100 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
   );
 
   const handleMonthlyBill = (e:{target: {value:string}}) => {
-    const dx = getMonthById(e.target.value)
-    setMonth(dx);
-    
+    const monthValue = e.target.value.padStart(2, '0'); // Ensure two digits
+    createFormikBill.setFieldValue("month", monthValue);
   }
 
- 
-
-  const createBill = async () => {
-    
-    if(0 <= discount && discount <= 100){
-    const dx: ICreateApartmentBill = {
-      pspOperatorId: operator.id,
-      billPeriod: `${month.id}-${year}`,
-      billingData: [
-      {
-        apartmentId: apartment.id,
-        billAmount: apartmentBill,
-        discountPercentage: discount,
-        discountAmount: discount * apartmentBill/100 ,
-        totalAmount: apartmentBill - (discount * apartmentBill/100)
-        }
-    ]}
-
-    
-    const createdBill = await createApartmentBill(dx)
-    console.log(createdBill)
-
-    toast.success(`${month.name}, ${year} bill was created successfully`)
-    setRefresh(true)
-  }else{
-    toast.error("Check the discount percentage")
-  }
-  };
 
   const handleDiscount = (e:{target: {value:string}}) => { 
     const dx = parseInt(e.target.value)
-    setDiscount(dx)
+    createFormikBill.setFieldValue("discount", dx);
   
   }
+  const createFormikBill = useFormik({
+    initialValues: {
+      month: (new Date().getMonth() + 1).toString().padStart(2, '0'),
+      year: new Date().getFullYear().toString(),
+      discount: 0
+    },
+   onSubmit: (values) => {
+      if (values.discount < 0 || values.discount > 100) {
+        toast.error("Discount must be between 0 and 100%");
+        return;
+      }
+      const billData: ICreateApartmentBill = {
+        pspOperatorId: operator.id,
+        billPeriod: `${values.month}-${values.year}`,
+        billingData: [
+          {
+            apartmentId: apartment.id,
+            billAmount: apartmentBill,
+            discountPercentage: values.discount,
+            discountAmount: (values.discount * apartmentBill) / 100,
+            totalAmount: apartmentBill - (values.discount * apartmentBill) / 100,
+          },
+        ],
+      };
+
+      createApartmentBill(billData)
+        .then(() => {
+          toast.success(
+            `${
+              months.find((m) => m.id === values.month)?.name
+            }, ${values.year} bill was created successfully`,
+            { autoClose: 3000 }
+          );
+          setRefresh();
+          setOpenModal(false);
+        })
+        .catch((error) => {
+          toast.error("Failed to create bill");
+          console.error(error);
+        });
+    },
+  });      
 
   return (
     <Modal show={openModal} onClose={() => setOpenModal(false)} size={"2xl"}>
       <Modal.Header  className="text-gray-600 text-3xl font-medium mb-2">Create Monthly Bill</Modal.Header>
+    <form onSubmit={createFormikBill.handleSubmit}>
       <Modal.Body>
         <div className="flex gap-4 w-full">
         </div>
 
         <div>
+<p className="text-xl font-semibold mb-2">Apartment: {apartment.apartmentTypeName}</p>
+        <p className="text-lg mb-2">Apartment Type: {apartment.customerFullname}</p>
 
           <div className="flex flex-col ">
           <p className="m-0 p-0 font-bold">Month</p>
             <select
               onChange={handleMonthlyBill}
+              name="month"
+              defaultValue={createFormikBill.values.month}
               className="p-2 border text-xl mb-4 rounded-md p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {months.map((month, index) => (
-                <option key={index} value={month.id}>
-                  {month.name}
+\
+
+              {months.map((z, index) => (
+                <option key={index} value={z.id}>
+                  {z.name}
                 </option>
               ))}
             </select>
 
             <p className="m-0 p-0 font-bold">Year</p>
             <select
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
+              name="year"
+              defaultValue={createFormikBill.values.year}
+              onChange={(e) =>{ 
+              createFormikBill.setFieldValue("year", e.target.value);
+              }}
               className="p-2 border text-xl rounded-md  mb-4 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
                 </option>
               ))}
             </select>
@@ -134,13 +154,14 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
             <p className="m-0 p-0 font-bold">Discount(Percentage)</p>
             <input 
                 type="number"
-                value={discount} 
+                defaultValue={0}
                id="quantity"
-               min="1"
+               min="0"
                max="100"
                step="1"
                className="w-full text-xl border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-               placeholder="Enter a discount in percentage"onChange={handleDiscount} />
+               placeholder="Enter a discount in percentage"
+               onChange={handleDiscount} />
           </div>
           <div>
 
@@ -151,9 +172,10 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
 
           <div className="mt-4">
           <p className="text-xl font-semibold">Apartment Bill: {Naira.format(apartmentBill)}</p>
-          <p  className="text-xl font-semibold">Discount Amount: { Naira.format(discount * apartmentBill/100) }</p>
-          <p className="text-xl font-semibold">Bill : {Naira.format(apartmentBill - (discount * apartmentBill/100)) }</p>
+        { createFormikBill.values.discount > 0 && <p  className="text-xl font-semibold">Discount Amount: { Naira.format(createFormikBill.values.discount * apartmentBill/100) }</p>}
+        { <p className="text-xl font-semibold">Bill : {Naira.format(apartmentBill - (createFormikBill.values.discount * apartmentBill/100)) }</p>}
         </div>}
+        
       </Modal.Body>
       {/* <Modal.Header>Property Details - {customerDetails[0]?.propertyAddress}</Modal.Header> */}
       <Modal.Footer className="flex justify-between items-center p-4">
@@ -168,15 +190,13 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
         </div>
         <div className="w-1/3">
           <ButtonsPrimaryBlack
-            onClick={() => {
-              setOpenModal(false);
-              createBill();
-            }}
-            disabled={apartmentBill <= 0 || discount < 0 || discount > 100}
-            name={"Create Bill"} type={undefined} loading={undefined} />
+          type="submit"
+           // disabled={apartmentBill <= 0 || discount <= 0 || discount > 100}
+            name={"Create Bill"} />
         </div>
-
+          
       </Modal.Footer>
+      </form>
     </Modal>
   )
 }

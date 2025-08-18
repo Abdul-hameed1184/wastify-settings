@@ -1,40 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaHouse } from "react-icons/fa6";
 import { getPropertyByOperator } from "../api/psp-operator/psp-operator.service";
 import AdminCard from "../Component/Card/AdminCard";
 import Loader from "../Component/Loader";
 import CreatePropertyModal from "../Component/Modal/CreatePropertyModal";
 import { IOperator } from "../models/operator.interface";
-import { IPaginatedProperty } from "../models/paginatedPropertyByOperator.interface";
+
+import { useQuery } from "@tanstack/react-query";
 
 const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
 
 
-  const [ properties, setProperties ] = useState<IPaginatedProperty>();
-  const [ loading, setLoading ] = useState<boolean>(true)
 
-  useEffect(() => {
-    try{
-    getProperties();
-    }catch(e){
-      console.log(e)
-    }
-    setLoading(false)
-  }, []);
-
-  
-  const getProperties = async () => {
-    const data = await getPropertyByOperator(operator.id);
-  setProperties(data.data.data);
-   console.log(data);
-
-  }
+  const params = {
+    page: 1,
+    per_page: 10,
+  };
+  const { data: allProperties, isLoading, isError } = useQuery({
+        queryKey: ['prop', operator.id],
+        queryFn: () => {
+         const data =  getPropertyByOperator(operator.id, params);
+         console.log(data);
+         return data;
+          }});
 
 
 
-  if(!children){
+  if(isLoading){
     return <Loader  />
   }
 
@@ -48,7 +42,7 @@ const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
         <div className="w-full mt-5 lg:mt-0 ">
           <AdminCard
             heading={"Total Property"}
-            amount={properties?.total}
+            amount={allProperties?.data.data.total || "0"}
             icon={<FaHouse className="text-green w-10 h-6 mt-1" />}
           />
         </div>

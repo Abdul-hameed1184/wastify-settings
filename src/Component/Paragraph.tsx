@@ -16,7 +16,7 @@ export const ParagraphSmallBlack :React.FC<Props>= ({content}) => {
 }
 export const ParagraphSmall2 :React.FC<Props>= ({content}) => {
   return (
-    <p className='text-sm m-2 font-Poppins font-light not-italic text-gray leading-6 '>{content}</p>
+    <p className='text-sm m-2 font-Poppins font-semibold not-italic text-black leading-6 '>{content}</p>
   )
 }
 export const ParagraphSmall2White :React.FC<Props>= ({content}) => {

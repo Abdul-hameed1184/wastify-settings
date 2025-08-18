@@ -79,7 +79,7 @@ const Records:React.FC = () => {
         <div className="w-full mt-5 lg:mt-0 ">
           <AdminCard
             heading={"Total Property"}
-            amount={properties?.total}
+            amount={properties?.total || "0"}
             icon={<FaHouse className="text-green w-10 h-6 mt-1" />}
           />
         </div>
