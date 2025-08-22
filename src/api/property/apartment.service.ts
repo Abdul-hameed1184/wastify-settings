@@ -35,5 +35,5 @@ export const getBillPayments = () => {
 }
 
 export const getApartmentsByPspOperator = (page:number, id: number) => {
-    return axios.get(`/apartment/apartment-by-psp-operator-id/${id}?page=${page}`);
+    return axios.get(`/apartment/apartment-by-psp-operator-id/${id}?page=${page}&perPage=${500}`);
 }

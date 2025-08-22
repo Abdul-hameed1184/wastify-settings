@@ -11,15 +11,11 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { getPropertyApartments } from "../../../api/property/apartment.service";
 import {
   ButtonsPrimaryBlack,
-  Buttonx,
-  IconButton,
 } from "../../../Component/Buttons";
 import { IApartment } from "../../../models/apartment.interface";
 import CreateApartmentModal from "../../../Component/Modal/CreateApartmentModal";
 import { IProperty } from "../../../models/property.interface";
 import Loader from "../../../Component/Loader";
-import { MdDeleteForever } from "react-icons/md";
-import InfoModal from "../../../Component/Modal/InfoModal";
 import { LuGlasses } from "react-icons/lu";
 
 const Property: React.FC = () => {
@@ -40,9 +36,8 @@ const Property: React.FC = () => {
     })();
   }, []);
 
-  const handleDelete = () => {};
+
   const [apartments, setApartments] = useState<IApartment[]>([]);
-  const [viewDelete, setViewDelete] = useState<boolean>(false);
 
   return (
     <div className="p-4 ">
@@ -103,7 +98,7 @@ const Property: React.FC = () => {
                   }
                   key={index}
                 >
-                  <TableCell>{item.customerFullname} </TableCell>
+                  <TableCell>{item.customerFullname.toUpperCase()} </TableCell>
                   <TableCell>{item.apartmentTypeName} </TableCell>
                   <TableCell>{item.customerPhone} </TableCell>
                   <TableCell>
@@ -117,25 +112,8 @@ const Property: React.FC = () => {
               ))}
           </TableBody>
         </Table>
-        <div>
-          <IconButton
-          onClick={()=>setViewDelete(!viewDelete)}
-            className="bg-red-600 text-white text-2xl"
-            icon={<MdDeleteForever className="text-2xl" />}
-            name={"Delete Property"}
-          />
-        </div>
       </div>
-      {viewDelete && (
-        <InfoModal
-          openModal={viewDelete}
-          setOpenModal={setViewDelete}
-          header={"Delete Property"}
-          content={"Do you really want to delete this property or apartment? Once deleted, it cannot be recovered."}
-          buttonName={"Delete Property"}
-          handleConfirm={handleDelete}
-        />
-      )}
+     
 
       {property && (
         <CreateApartmentModal

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -8,25 +8,25 @@ import {
   TableRow,
 } from "flowbite-react";
 import { ParagraphLargeGreen } from "../../../Component/Paragraph";
-import { ButtonsPrimary, ButtonsPrimaryIcon } from "../../../Component/Buttons";
+import { ButtonsPrimaryIcon } from "../../../Component/Buttons";
 import CreatePropertyModal from "../../../Component/Modal/CreatePropertyModal";
 import { IProperty } from "../../../models/property.interface";
 import { IOperator } from "../../../models/operator.interface";
 import { getPropertyByOperator } from "../../../api/psp-operator/psp-operator.service";
-import { IPaginatedProperty } from "../../../models/paginatedPropertyByOperator.interface";
 import Loader from "../../../Component/Loader";
 import { LuGlasses } from "react-icons/lu";
 
-import { FaEye, FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
+import InfoModal from "../../../Component/Modal/InfoModal";
 
 
 const Properties:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
+  const [ viewDelete, setViewDelete ] = useState<boolean>(false)
   const [ page, setPage] = useState<number>(1);
   const params = {
     page: page,
@@ -43,7 +43,9 @@ const Properties:React.FC = () => {
 
   })
   console.log(allProperties);
+  const handleDelete = () => {
 
+  };
   if(isLoading){
     return <Loader />
   }
@@ -106,7 +108,7 @@ const Properties:React.FC = () => {
                     <Link to={""+item.id} state={{property: item}}><LuGlasses className="text-green-100" /></Link>
 
                       <MdEdit className="text-blue-500" />
-                      <MdDeleteForever className="text-red-500" />
+                      <MdDeleteForever className="text-red-500" onClick={()=>setViewDelete(!viewDelete)} />
                       </span>
                   </TableCell>
                   {/* <TableCell> ... </TableCell> */}
@@ -171,7 +173,21 @@ const Properties:React.FC = () => {
       </div>              
   { 
   openCreateProperty &&   <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
-}     </main>
+}
+      {viewDelete && (
+        <InfoModal
+          openModal={viewDelete}
+          setOpenModal={setViewDelete}
+          header={"Delete Property"}
+          content={"Do you really want to delete this property? Once deleted, it cannot be recovered."}
+          buttonName={"Delete Property"}
+          handleConfirm={handleDelete}
+        />
+      )} 
+
+
+
+    </main>
 
   );
 };

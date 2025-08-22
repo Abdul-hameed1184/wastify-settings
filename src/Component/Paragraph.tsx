@@ -115,7 +115,7 @@ export const Paragraph2XlWhite :React.FC<Props>= ({content}) => {
 }
 export const Paragraph2XlGreen :React.FC<Props>= ({content}) => {
   return (
-    <p className='text-2xl font-Poppins font-semibold not-italic text-green leading-6'>{content}</p>
+    <p className='text-2xl font-Poppins font-bold not-italic leading-1.5 text-green leading-6'>{content}</p>
   )
 }
 export const Paragraph2XlGreenMargin :React.FC<Props>= ({content}) => {

@@ -21,6 +21,8 @@ import { getPspOperatorDashboard } from "../../../api/psp-operator/psp-operator.
 import { IPspOperatorDashboard } from "../../../models/psp-operator.dashboard.interface";
 import Loader from "../../../Component/Loader";
 import { Naira } from "../../../utils/format";
+import { IBillData } from "../../../models/billdata.interface";
+import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 
 
 const Dash = () => {
@@ -96,8 +98,8 @@ const Dash = () => {
           <Paragraph2XlGreen content={`Wasteefy Management System`} />
           <div className="">
             <p className="flex text-base font-inter font-medium not-italic text-green leading-6 mt-4">
-              Welcome,{"   "}
-              <span className="text-grayRounded font-bold text-2xl">
+              {"Welcome,    "}
+              <span className="text-black font-bold text-2xl">
                 {" "}
                 {operator ? operator.businessName : "Business Name"}.
               </span>{" "}
@@ -136,70 +138,39 @@ const Dash = () => {
       }
 
       {/* recent transaction  */}
-      <div className="py-5 rounded-3xl shadow-2xl">
+      <div className="py-5">
         <Paragraph2XlGreenMargin content={"Recent Transactions"} />
         <div className="overflow-x-auto font-Poppins mt-3">
           <Table striped>
-            <TableHead className=" font-Poppins text-xl capitalize text-white bg-green dark:text-white">
+            <TableHead className=" font-Poppins text-xl capitalize text-white bg-green ">
               <TableHeadCell>Date & Time</TableHeadCell>
-              <TableHeadCell>Username</TableHeadCell>
+              <TableHeadCell>Customer Name</TableHeadCell>
               <TableHeadCell>Address</TableHeadCell>
-              <TableHeadCell>Amount</TableHeadCell>
-              <TableHeadCell>Bill Type</TableHeadCell>
+              <TableHeadCell>Bill Amount</TableHeadCell>
+                            <TableHeadCell>Amount Paid</TableHeadCell>
+              <TableHeadCell>Bill Period</TableHeadCell>
               <TableHeadCell>Mode of Payment</TableHeadCell>
               <TableHeadCell>Status</TableHeadCell>
               <TableHeadCell>Total Overdue Bills</TableHeadCell>
             </TableHead>
-            <TableBody className="font-Poppins ">
-              <TableRow className="odd:bg-tableBackground">
-                <TableCell>Today,10:30PM</TableCell>
-                <TableCell>Olankunle_22</TableCell>
-                <TableCell>34 Sunrise Avenue, Agege...</TableCell>
-                <TableCell>N13,100.00</TableCell>
-                <TableCell>Current bill</TableCell>
-                <TableCell>debit card</TableCell>
-                <TableCell>
-                  <span className="text-success">Succesful</span>
-                </TableCell>
-                <TableCell>Cleared</TableCell>
-              </TableRow>
-              <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <TableCell>02, Mar 23,11:10PM</TableCell>
-                <TableCell>Segun_10</TableCell>
-                <TableCell>34 Sunrise Avenue, Agege...</TableCell>
-                <TableCell>N57,100.00</TableCell>
-                <TableCell>Current bill</TableCell>
-                <TableCell>bank transfer</TableCell>
-                <TableCell>
-                  <span className="text-pending">Pending</span>
-                </TableCell>
-                <TableCell>Cleared</TableCell>
-              </TableRow>
-
-              <TableRow className="odd:bg-tableBackground">
-                <TableCell>10, Mar 23, 04:10PM</TableCell>
-                <TableCell>Olankunle_22</TableCell>
-                <TableCell>34 Sunrise Avenue, Agege...</TableCell>
-                <TableCell>N100,100.00</TableCell>
-                <TableCell>Current bill</TableCell>
-                <TableCell>debit card</TableCell>
-                <TableCell>
-                  <span className="text-failed">Failed</span>
-                </TableCell>
-                <TableCell>N75,000.00</TableCell>
-              </TableRow>
-              <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <TableCell>02, Mar 23,11:10PM</TableCell>
-                <TableCell>Segun_10</TableCell>
-                <TableCell>34 Sunrise Avenue, Agege...</TableCell>
-                <TableCell>N57,100.00</TableCell>
-                <TableCell>Current bill</TableCell>
-                <TableCell>bank transfer</TableCell>
-                <TableCell>
-                  <span className="text-success">Succesful</span>
-                </TableCell>
-                <TableCell>Cleared</TableCell>
-              </TableRow>
+            <TableBody className="font-Poppins odd:bg-gray-300">
+        {  dash && dash.recentTransactions.map((x:IBillData,index) => 
+        <TableRow  className={
+                    index % 2 === 0
+                      ? "odd:bg-tableBackground"
+                      : "bg-white dark:border-gray-700 dark:bg-gray-800"
+                  }
+                  key={index}>
+                <TableCell>{x?.paidDateTime}</TableCell>
+                <TableCell>{x.customerName}</TableCell>
+                <TableCell>{x.propertyAddress}</TableCell>
+                <TableCell>{Naira.format(parseFloat(x.totalAmount))}</TableCell>
+                                <TableCell>{Naira.format(parseFloat(x.amountPaid))}</TableCell>
+                <TableCell>January, 2025</TableCell>
+                                <TableCell>{x.paymentMode}</TableCell>
+                                                <TableCell><PaymentStatusBadge status={x.paymentStatus} /></TableCell>
+                                                                <TableCell>{x.paymentStatusLabel}</TableCell>
+              </TableRow>)}
             </TableBody>
           </Table>
         </div>

@@ -6,7 +6,7 @@ type Props = {
     openModal: boolean;
     setOpenModal: (_x:boolean) => void;
     header: string;
-    content: string;
+    content: string | React.ReactNode;
     buttonName: string;
     handleConfirm: () => void;
 }

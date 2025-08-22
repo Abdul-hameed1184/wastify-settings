@@ -7,7 +7,7 @@ import {
   ParagraphXl,
 } from "../../../Component/Paragraph";
 
-import { ButtonsPrimary, ButtonsSecondary } from "../../../Component/Buttons";
+import { Button, ButtonsPrimary } from "../../../Component/Buttons";
 import { getPropertyTypes } from "../../../api/property/property.service";
 import { IPropertyType } from "../../../models/propertType.interface";
 import {
@@ -20,22 +20,25 @@ import { IApartmentTypeBill } from "../../../models/apartmentTypeBill.interface"
 
 import Loader from "../../../Component/Loader";
 import {
-  createApartmentType,
   getApartmentTypeList,
 } from "../../../api/property/apartment.service";
-import { Modal } from "flowbite-react";
 import { IApartmentType } from "../../../models/apartmentType.interface";
 import { Naira } from "../../../utils/format";
+import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
+import { IoIosMore } from "react-icons/io";
+import { Link } from "react-router-dom";
+import { MdDeleteForever, MdEdit } from "react-icons/md";
 
 const Pricing: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [propertyType, setPropertyType] = useState<IPropertyType[]>([]);
+  const [selectPropertyType, setSelectedPropertyType] = useState<IPropertyType>();
   const [selectpropertyAmount, setSelectedPropertyAmount] = useState(0);
   const [apartmentType, setApartmentType] = useState<IApartmentType[]>([]);
   const [apartmentTypeBill, setApartmentTypeBill] = useState<
     IApartmentTypeBill[]
   >([]);
-  const [selectedApartmentTyledId, setSelectedApartmentTypeId] =
+  const [selectedApartmentTypeId, setSelectedApartmentTypeId] =
     useState<number>(0);
   const [update, setUpdate] = useState<boolean>(false);
   const [selectedApartmentTypeBill, setSelectedApartmentTypeBill] =
@@ -50,13 +53,15 @@ const Pricing: React.FC = () => {
   const getAparmentTypeBill = async () => {
     try {
       const prop = await getPropertyTypes();
+      console.log(prop.data.data);
       setPropertyType(prop.data.data);
 
       const apartmentTypes = await getApartmentTypeList();
       setApartmentType(apartmentTypes.data.data);
       console.log(apartmentTypes.data.data);
       const pspBill = await getPspOperatorBill(operator.id);
-      setApartmentTypeBill(pspBill.data.data.data);
+      console.log(pspBill.data.data);
+      setApartmentTypeBill(pspBill.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -76,7 +81,8 @@ const Pricing: React.FC = () => {
     try {
       if (selectedApartmentTypeBill) {
         
-        const data = await updateBillSetup(selectedApartmentTypeBill?.id, {
+        const data = await updateBillSetup(selectedApartmentTypeBill.apartmentTypeId, {
+          propertyTypeId:selectedApartmentTypeBill?.propertyTypeId || 0,
           pspOperatorId: operator.id,
           amount: selectpropertyAmount,
           apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
@@ -97,6 +103,7 @@ const Pricing: React.FC = () => {
     try {
       if (selectedApartmentTypeBill) {
         const data = await createBillSetup({
+          propertyTypeId: selectPropertyType?.id || 0,
           pspOperatorId: operator.id,
           amount: selectpropertyAmount,
           apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
@@ -123,6 +130,16 @@ const Pricing: React.FC = () => {
     setSelectedPropertyAmount(parseInt(e.target.value));
     console.log(e.target.value);
     console.log(selectedApartmentTypeBill)
+  };
+
+  const handlePropertyTypeChange = (e: { target: { value: string } }) => {
+    const propertyTypeId = parseInt(e.target.value);
+    const selectedPropertyType = propertyType.find(
+      (x) => x.id === propertyTypeId
+    );
+    if (selectedPropertyType) {
+      setSelectedPropertyType(selectedPropertyType);
+    }
   };
 
   if (loading) {
@@ -156,6 +173,7 @@ const Pricing: React.FC = () => {
                 <select
                   className="form-select form-select-xl mb-3 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base mt-1 ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
                   aria-label=".form-select-lg example"
+                  onChange={handlePropertyTypeChange}
                 >
                   {propertyType &&
                     propertyType.map((x: IPropertyType, y: number) => {
@@ -180,6 +198,7 @@ const Pricing: React.FC = () => {
                         className="form-select form-select mb-3 w-3/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
                         aria-label=".form-select-lg example"
                         onChange={(e) => {
+                          console.log(apartmentType);
                           setSelectedApartmentTypeId(parseInt(e.target.value));
                           const data:IApartmentType|undefined = apartmentType.find(x => x.id === parseInt(e.target.value));
                           const selectedObject:IApartmentTypeBill|undefined = apartmentTypeBill.find(
@@ -199,6 +218,7 @@ const Pricing: React.FC = () => {
                                                             
                                     amount: "0.00",
                                     apartmentTypeId: data?.id||0,
+                                    propertyTypeId: selectPropertyType?.id || 0,
                                     apartmentTypeName: data?.name||"No Name", 
                                     pspOperatorBusinessname: operator.businessName,
                                     pspOperatorEmail: operator.email,
@@ -310,6 +330,48 @@ const Pricing: React.FC = () => {
                 </div>
               )}
             </div>
+
+            {
+              <div>
+              <div>
+                <h2 className="font-Poppins text-lg font-semibold">Billing Information</h2>
+               <div className="flex justify-between"> <div></div><Button onClick={handleCreateBill} name={"Create Bill"} /></div>
+              </div>
+                                  <div className="overflow-x-auto font-Poppins mt-3">
+                              {  apartmentTypeBill &&      <Table striped >
+                                          <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
+                                              <TableHeadCell>S/N</TableHeadCell>
+                                              <TableHeadCell>Property Type</TableHeadCell>
+                                              <TableHeadCell>Apartment Type</TableHeadCell>
+                                              <TableHeadCell>Amount</TableHeadCell>
+
+                                              <TableHeadCell> View More </TableHeadCell>
+                                          </TableHead>
+                                   <TableBody className="font-Poppins">
+  {apartmentTypeBill.map((x: IApartmentTypeBill, index: number) => {
+    return (
+      <TableRow
+        key={x.id} // always add a unique key
+        className="bg-white dark:border-gray-700 dark:bg-gray-800"
+      >
+        <TableCell>{index+1}</TableCell>
+        <TableCell>{x.propertyTypeName}</TableCell>
+        <TableCell>{x.apartmentTypeName}</TableCell>
+        <TableCell>{Naira.format(parseFloat(x.amount))}</TableCell>
+        <TableCell className="flex items-center space-x-4">
+                       <MdEdit className="text-blue-500" />
+                             <MdDeleteForever className="text-red-500" />
+        </TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
+
+                                      </Table>
+}
+                                  </div>
+                                  </div>
+            }
           </div>
         </div>
       </div>

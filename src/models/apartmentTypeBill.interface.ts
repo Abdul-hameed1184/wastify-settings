@@ -9,5 +9,7 @@ export interface IApartmentTypeBill {
   pspOperatorId: number;
   pspOperatorPhone: string;
   pspOperatorUserId: string;
+  propertyTypeId: number;
+  propertyTypeName: string;
   updated_at?: string; // ISO date string
 }

@@ -1,12 +1,13 @@
 import { Modal } from "flowbite-react";
 import {  ButtonsPrimaryBlack } from "../Buttons";
-import React from "react";
+import React, { useEffect } from "react";
 import { ICreateApartmentBill } from "../../models/createApartmentBill.interface";
 import { IApartment } from "../../models/apartment.interface";
 import { IOperator } from "../../models/operator.interface";
 import { toast } from "react-toastify";
 import { createApartmentBill } from "../../api/psp-operator/psp-operator.service";
 import { useFormik } from "formik";
+import { getPspOperatorBill } from "../../api/bill/psp-operator-pricing";
 
 type Props = { openModal: boolean, setOpenModal: (x) => void, apartmentBill: number, apartment: IApartment, setRefresh: () => void }
 const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartmentBill, apartment, setRefresh }) => {
@@ -32,7 +33,7 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
   // const [ month, setMonth] = useState<{ id: string, name: string }>({} as { id: string, name: string });
   // const [ year, setYear] = useState<string>();
 
-  
+
 
 
   function getMonthById(id: string): { id: string, name: string } {
@@ -126,7 +127,7 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
               defaultValue={createFormikBill.values.month}
               className="p-2 border text-xl mb-4 rounded-md p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-\
+
 
               {months.map((z, index) => (
                 <option key={index} value={z.id}>

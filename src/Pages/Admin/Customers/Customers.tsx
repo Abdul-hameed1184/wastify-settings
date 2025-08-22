@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
+  Modal,
+  ModalFooter,
   Table,
   TableBody,
   TableCell,
@@ -25,22 +28,108 @@ import { useQuery } from "@tanstack/react-query";
 import { IApartment } from "../../../models/apartment.interface";
 import { all } from "axios";
 import { IOperator } from "../../../models/operator.interface";
+import { IApartmentTypeBill } from "../../../models/apartmentTypeBill.interface";
+import { ICustomer } from "../../../models/customer.interface";
+import InfoModal from "../../../Component/Modal/InfoModal";
+
+
 
 const Customers: React.FC = () => {
-    const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
+  const operator: IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "");
   const [openCreateCustomer, setOpenCreateCustomer] = useState<boolean>(false);
+  const [customerApartments, setCustomerApartments] = useState<IApartment[]>();
+  const [ openViewCustomer, setOpenViewCustomer ] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   //const [loading, setLoading] = useState<boolean>(true);
   // const [customers, setCustomers] = useState<IPaginatedCustomers>();
   const { data: allapartments, isLoading, isError } = useQuery({
-          queryKey: [page, operator.id],
-          queryFn: () => {
-            const xy = getApartmentsByPspOperator(page, operator.id);
-            return xy;
-          }
-  })
+    queryKey: [page, operator.id],
+    queryFn: async () => {
+      const xy = await getApartmentsByPspOperator(page, operator.id);
+      console.log(xy);
+      return xy;
+    }
+  });
 
-  console.log(allapartments);
+  interface Customerx {
+    customerId: string;
+    customerFullname: string;
+    customerPhone: string;
+  }
+
+  function getUniqueCustomers(data: IApartment[]): Customerx[] {
+    const uniqueMap = new Map<string, Customerx>();
+
+    data.forEach(item => {
+      if (!uniqueMap.has(item.customerId)) {
+        uniqueMap.set(item.customerId, {
+          customerId: item.customerId,
+          customerFullname: item.customerFullname,
+          customerPhone: item.customerPhone
+        });
+      }
+    });
+
+    return Array.from(uniqueMap.values());
+  }
+
+  function getCustomerApartments(customerId: string): IApartmentTypeBill {
+    return allapartments?.data.data.data.filter(item => item.customerId === customerId);
+  }
+
+  const viewCustomer = (customerId: string) => {
+    const dy = allapartments?.data.data.data.filter(item => item.customerId === customerId);
+    setCustomerApartments(dy);
+    console.log(dy)
+    setOpenViewCustomer(true)
+  };
+
+  // useEffect(() => {
+  //   try {
+  //     (async () => {
+  //       const ty = await getPaginatedCustomers(page);
+  //       setCustomers(ty.data.data);
+
+  //       setLoading(false);
+  //     })();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, [ page]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+const comp = <div>
+              <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-bold">Customer Apartments</h3>
+            </div>
+            {isError && <p className="text-red-500">Error loading apartments</p>}
+            <Table striped>
+              <TableHead className="font-Poppins text-lg capitalize text-white bg-green dark:text-white">
+                <TableHeadCell>S/N</TableHeadCell>
+                <TableHeadCell>Apartment Type</TableHeadCell>
+                <TableHeadCell>Description</TableHeadCell>
+              </TableHead>
+              <TableBody className="font-Poppins text-xl">
+                {customerApartments && customerApartments.map((apartment:IApartment, index) => (
+                  <TableRow
+                    key={index}
+                    className={
+                      index % 2 === 0
+                        ? "odd:bg-tableBackground"
+                        : "bg-white dark:border-gray-700 dark:bg-gray-800"
+                    }
+                  >
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{apartment.apartmentTypeName}</TableCell>
+                    <TableCell>{apartment.propertyAddress}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table> 
+</div>
 
   // useEffect(() => {
   //   try {
@@ -88,15 +177,12 @@ const Customers: React.FC = () => {
                 {/* <TableHeadCell>LGA</TableHeadCell> */}
                 <TableHeadCell>Phone Number</TableHeadCell>
                 {/* <TableHeadCell>Property code</TableHeadCell> */}
-                <TableHeadCell>Customer Address</TableHeadCell>{" "}
-                <TableHeadCell>Apartment Type</TableHeadCell>
-                {/*Number of Customers Changed*/}
-                <TableHeadCell>Apartment Description</TableHeadCell>
+            
                 <TableHeadCell>Details</TableHeadCell>
               </TableHead>
               <TableBody className=" font-Poppins text-xl ">
                 {page &&
-                  allapartments.data.data.data.map((item: IApartment, index) => (
+                  getUniqueCustomers(allapartments.data.data.data).map((item: Customerx, index) => (
                     <TableRow
                       className={
                         index % 2 === 0
@@ -112,12 +198,9 @@ const Customers: React.FC = () => {
                       {/* <TableCell>{item.lgaName} </TableCell> */}
                       <TableCell>{item.customerPhone}</TableCell>
                       {/* <TableCell>{item.propertyCode}</TableCell> */}
-                      <TableCell>{item.propertyAddress}</TableCell>
-                      {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
-                                 <TableCell>{item.apartmentTypeName}</TableCell>
-                        <TableCell>{item.apartmentTypeDescription}</TableCell>
+    
                      
-                      <TableCell>
+                      <TableCell onClick={() => viewCustomer(item.customerId)}>
             
                         
                         {/* <Link
@@ -138,7 +221,7 @@ const Customers: React.FC = () => {
               </TableBody>
             </Table>
             {/* Pagination */}
-            <div className="flex justify-center items-center h-20 my-10 w-full ">
+            {/* <div className="flex justify-center items-center h-20 my-10 w-full ">
               <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
                 <button
                   className={`text-green font-weight-bold`}
@@ -172,7 +255,7 @@ const Customers: React.FC = () => {
                   Next
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
@@ -182,8 +265,18 @@ const Customers: React.FC = () => {
           setOpenModal={setOpenCreateCustomer}
         />
       )}{" "}
+
+      {
+     openViewCustomer &&  
+
+     <InfoModal 
+     openModal={openViewCustomer} setOpenModal={()=> setOpenViewCustomer(!openViewCustomer)} header={"Customer Apartments"} 
+     content={comp} buttonName={"Ok"} handleConfirm={()=>{}} />
+    
+      }
     </main>
   );
 };
+
 
 export default Customers;

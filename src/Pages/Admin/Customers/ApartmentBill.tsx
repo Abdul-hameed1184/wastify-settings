@@ -47,10 +47,13 @@ const fetchBills = useCallback(async () => {
     try {
       setLoader(true);
       const data = await getPspOperatorBill(operator.id);
+      console.log(data.data)
       const billData: IBills[] = data.data.data.data;
+      console.log(billData)
       setBills(billData);
 
       const history = await getBillingsByApartmentId(apartment.id);
+      console.log(history.data.data.data);
       setBillHistory(history.data.data.data);
 
 
@@ -67,9 +70,9 @@ const fetchBills = useCallback(async () => {
   fetchBills();
 }, [fetchBills, refresh]);
 
-const currentBill = useMemo(() => {
-  return bills.find((b) => b.apartmentTypeId === apartment.apartmentTypeId)?.amount || 0;
-}, [bills, apartment.apartmentTypeId]);
+// const currentBill = useMemo(() => {
+//   return bills.find((b) => b.apartmentTypeId === apartment.apartmentTypeId)?.amount || 0;
+// }, [bills, apartment.apartmentTypeId]);
 
 if(loader){
   return <Loader />;
@@ -265,10 +268,10 @@ if(loader){
       {openCreateBillModal && (
         <CreateApartmentBill
           apartment={apartment}
-          apartmentBill={Number(currentBill)}
+          apartmentBill={Number(0)}
           openModal={openCreateBillModal}
           setOpenModal={setOpenCreateBillModal}
-          setRefresh={setRefresh}
+          setRefresh={() => setRefresh((prev) => !prev)}
         />
       )}
     </main>

@@ -1,8 +1,15 @@
 import React from 'react'
 import { Paragraph2Green, ParagraphLargeGreen } from '../Paragraph'
-const AdminCard = ({ heading, amount, icon }) => {
+
+
+type AdminCardProps = {
+    heading: string,
+    amount: string,
+    icon: React.ReactNode
+}
+const AdminCard:React.FC<AdminCardProps> = ({ heading, amount, icon }) => {
     return (
-        <div className="border-green rounded-lg w-full border px-4 py-3 h-44">
+        <div className=" rounded-lg shadow-xl w-full px-4 py-3 h-44">
             <div className="flex justify-between">
                 <div className=" ">
                     <Paragraph2Green content={heading} />
