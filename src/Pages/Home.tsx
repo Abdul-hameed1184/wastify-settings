@@ -22,40 +22,48 @@ const Home:React.FC = () => {
   return (
     <Layout>
       <main className="w-full h-full pt-20 md:pt-10 font-Poppins">
-        <div className="mt-20 md:flex md:ml-8 md:my-32">
-          <div className="">
-            <ParagraphLargeHome
-              content={"Pay Your Waste bills Easily With "}
-              name={"Wasteefy"}
-            />
-            <ParagraphSmallBlack
-              content={"Enter your details and process your wastebill"}
-            />
-            <div className="w-full md:w-4/6">
-              <div className="m-4">
+   <div className="mt-4 w-full px-6 md:px-12 lg:px-20">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-screen items-center md:my-8">
 
-                 <input type={"tel"} name={"phoneNumber"} pattern="^\+?\d{7,14}$"
-                 maxLength={15}
-  placeholder="Phone e.g. +234 701 234 5678"
-  className={`border px-2.5 py-3.5 pl-5  bg-grayInput shadow-sm rounded-lg block text-xl font-Poppins w-full h-14 text-black text-base mt-1 ring-grayInput border-transparent placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-grayInput`} />
-
-              </div>
-              <div className="m-4">
-                <input type={"text"}
-                  className="border px-2.5 py-3.5 pl-5 bg-grayInput text-xl shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-grayInput border-transparent placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-grayInput"
-                  name={"propertyCode"}
-                  placeholder={"Property code"}
-                />
-              </div>
-              <div className="m-4">
-                <ButtonsPrimary name={"Quick Pay"} onClick={HandleQuick} />
-              </div>
-            </div>
-          </div>
-          <div className="hidden md:block md:m-auto">
-            {/* <img src="Images/oosls.jpg" alt="image" srcSet="" /> */}
-          </div>
+    <div className="text-center md:text-left mx-2 my-2">
+      <h2 className="flex flex-col font-semibold text-[3em] font-Poppins text-center"><span>Pay your waste bills easily with</span>
+      <span className="font-bold text-green lg:text-[2.5em]">Wasteefy</span></h2>
+    
+    </div>
+    <div className="mx-2 my-2">
+      <ParagraphBlack
+        content={"Enter your details and process your wastebill"}
+      />
+      <div className="w-full md:w-5/6">
+        <div className="m-4">
+          <input
+            type="tel"
+            name="phoneNumber"
+            pattern="^\+?\d{7,14}$"
+            maxLength={15}
+            placeholder="Phone e.g. +234 701 234 5678"
+            className="border px-2.5 py-3.5 pl-5 bg-grayInput shadow-sm rounded-lg block text-xl font-Poppins w-full h-14 text-black text-base mt-1 placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:ring-purple"
+          />
         </div>
+        <div className="m-4">
+          <input
+            type="text"
+            name="propertyCode"
+            placeholder="Property code"
+            className="border px-2.5 py-3.5 pl-5 bg-grayInput text-xl shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:ring-purple"
+          />
+        </div>
+        <div className="m-4">
+          <ButtonsPrimary name="Quick Pay" onClick={HandleQuick} />
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
         <div className="mt-16 flex justify-center text-center md:mt-32">
           <div className="">
             <ParagraphLarge content={"Who We Are"} />

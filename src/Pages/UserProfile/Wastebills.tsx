@@ -52,7 +52,7 @@ const Wastebills: React.FC = () => {
       pop.newTransaction({
         key: paystackPublicKey,
         email: customer.email,
-        amount: parseFloat(x.billAmount) * 100,
+        amount: parseFloat(x.totalAmount) * 100,
         onSuccess: async (transaction) => {
           await createTransaction(x, transaction);
           toast.success("Payment Successful");
@@ -81,7 +81,7 @@ const Wastebills: React.FC = () => {
           apartmentBillingId: x.id,
           customerId: customer.customerId,
           transactionId: "TXN" + transaction.transaction,
-          amountPaid: parseFloat(parseFloat(x.billAmount).toFixed(2)) * 100,
+          amountPaid: parseFloat(parseFloat(x.totalAmount).toFixed(2)) * 100,
           paymentMode: "PayStack Payment",
           paymentStatus: 1,
         },
