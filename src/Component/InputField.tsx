@@ -11,13 +11,14 @@ type Props = {
   error?: string | null;
   required?: boolean;
   list?: string;
+  defaultValue?: string
   disabled?: boolean;
   className?: string
 };
 
-export const InputField:React.FC<Props> = ({ type, name, value, placeholder, onChange, error, required=false, list="" }) => {
+export const InputField:React.FC<Props> = ({ type, name, value, placeholder, defaultValue, onChange, error, required=false, list="" }) => {
     return (
-      <input type={type} list={list} name={name} value={value} placeholder={placeholder} onChange={onChange} required={required}  
+      <input type={type} list={list} name={name} value={value} defaultValue={defaultValue} placeholder={placeholder} onChange={onChange} required={required}  
 className={`border border-gray-300 px-2.5 py-3.5 pl-8 shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-lightGreen  placeholder:text-gray focus:outline-none focus:ring-2 focus:border-purple border-gray ring-gray  ${ error ? 'focus:ring-error' : 'focus:ring-gray'}`} />
     )
   }

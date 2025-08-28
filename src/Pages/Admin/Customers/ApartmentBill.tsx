@@ -29,6 +29,7 @@ const ApartmentBill: React.FC = () => {
   const apartment: IApartment = state.apartment;
   const [loader, setLoader] = useState<boolean>(true);
   const [viewDelete, setViewDelete] = useState<boolean>(false);
+  const [ currentBill, setCurrentBill ] = useState<string>("0")
   const months = [
     { id: "01", name: "January" },
     { id: "02", name: "February" },
@@ -51,7 +52,8 @@ const fetchBills = useCallback(async () => {
       const billData: IBills[] = data.data.data.data;
       console.log(billData)
       setBills(billData);
-
+      const xy = bills.find((b) => b.apartmentTypeId === apartment.apartmentTypeId)?.amount || "0";
+      setCurrentBill(xy)
       const history = await getBillingsByApartmentId(apartment.id);
       console.log(history.data.data.data);
       setBillHistory(history.data.data.data);
@@ -70,9 +72,6 @@ const fetchBills = useCallback(async () => {
   fetchBills();
 }, [fetchBills, refresh]);
 
-// const currentBill = useMemo(() => {
-//   return bills.find((b) => b.apartmentTypeId === apartment.apartmentTypeId)?.amount || 0;
-// }, [bills, apartment.apartmentTypeId]);
 
 if(loader){
   return <Loader />;
@@ -268,7 +267,7 @@ if(loader){
       {openCreateBillModal && (
         <CreateApartmentBill
           apartment={apartment}
-          apartmentBill={Number(0)}
+          apartmentBill={currentBill}
           openModal={openCreateBillModal}
           setOpenModal={setOpenCreateBillModal}
           setRefresh={() => setRefresh((prev) => !prev)}

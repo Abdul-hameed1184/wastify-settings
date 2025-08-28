@@ -7,6 +7,7 @@ export interface IApartment {
     customerPhone: string;
     description: string;
     id: number;
+    status: number;
     noOfDistinctApartment: number;
     propertyAddress: string;
     propertyCode: string;

@@ -1,57 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, Zoom, toast } from "react-toastify";
-import {
-  Paragraph2XlGreen,
-  Paragraph2XlGreenMargin,
-  ParagraphTextSettings,
-  ParagraphXl,
-} from "../../../Component/Paragraph";
-
-import { Button, ButtonsPrimary } from "../../../Component/Buttons";
-import { getPropertyTypes } from "../../../api/property/property.service";
+import { Button } from "../../../Component/Buttons";
 import { IPropertyType } from "../../../models/propertType.interface";
-import {
-  createBillSetup,
-  getPspOperatorBill,
-  updateBillSetup,
-} from "../../../api/bill/psp-operator-pricing";
 import { IOperator } from "../../../models/operator.interface";
 import { IApartmentTypeBill } from "../../../models/apartmentTypeBill.interface";
-
-import Loader from "../../../Component/Loader";
-import {
-  getApartmentTypeList,
-} from "../../../api/property/apartment.service";
 import { IApartmentType } from "../../../models/apartmentType.interface";
+import Loader from "../../../Component/Loader";
 import { Naira } from "../../../utils/format";
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
-import { IoIosMore } from "react-icons/io";
-import { Link } from "react-router-dom";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
+import { CreatePricing } from "../../../Component/CreatePricing";
+import { InputField } from "../../../Component/InputField";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getPropertyTypes } from "../../../api/property/property.service";
+import { getApartmentTypeList } from "../../../api/property/apartment.service";
+import { getBillSetupByPspOperatorBill, updateBillSetup } from "../../../api/bill/psp-operator-pricing";
+import { IUpdateBill } from "../../../models/update.bill.interface";
 
 const Pricing: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [propertyType, setPropertyType] = useState<IPropertyType[]>([]);
-  const [selectPropertyType, setSelectedPropertyType] = useState<IPropertyType>();
-  const [selectpropertyAmount, setSelectedPropertyAmount] = useState(0);
-  const [apartmentType, setApartmentType] = useState<IApartmentType[]>([]);
-  const [apartmentTypeBill, setApartmentTypeBill] = useState<
-    IApartmentTypeBill[]
-  >([]);
-  const [selectedApartmentTypeId, setSelectedApartmentTypeId] =
-    useState<number>(0);
-  const [update, setUpdate] = useState<boolean>(false);
-  const [selectedApartmentTypeBill, setSelectedApartmentTypeBill] =
-    useState<IApartmentTypeBill>();
   const operator: IOperator = JSON.parse(
-    sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
+    sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "{}"
   );
-  const [editBill, setEditBill] = useState<boolean>(false);
-  // Fetch property data
+  const [propertyType, setPropertyType] = useState<IPropertyType[]>([]);
+  const [apartmentType, setApartmentType] = useState<IApartmentType[]>([]);
+  const [editingRowId, setEditingRowId] = useState<number | null>(null); // Track row being edited
+  const [amount, setAmount] = useState<number | null>(null); // Amount for the edited row
+  const [showCreatePricing, setShowCreatePricing] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const queryClient = useQueryClient();
 
+  // Fetch bill setup data using React Query
+ const { data: apartmentTypeBill , isLoading } = useQuery({
+    queryKey: [page, operator.id],
+    queryFn: async () => {
+      const pspBill = await getBillSetupByPspOperatorBill(page, operator.id);
+      return pspBill;
+    }
+  });
 
-  const getAparmentTypeBill = async () => {
-    try {
+  // Fetch property types and apartment types
+  const getApartmentTypeBill = async () => {
+try {
       const prop = await getPropertyTypes();
       console.log(prop.data.data);
       setPropertyType(prop.data.data);
@@ -59,394 +48,187 @@ const Pricing: React.FC = () => {
       const apartmentTypes = await getApartmentTypeList();
       setApartmentType(apartmentTypes.data.data);
       console.log(apartmentTypes.data.data);
-      const pspBill = await getPspOperatorBill(operator.id);
-      console.log(pspBill.data.data);
-      setApartmentTypeBill(pspBill.data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    try {
-      (async () => getAparmentTypeBill())();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    getApartmentTypeBill();
   }, []);
 
-  const handleUpdateBill = async () => {
+  // Handle update bill
+  const handleUpdateBill = async (x: IUpdateBill) => {
     try {
-      if (selectedApartmentTypeBill) {
-        
-        const data = await updateBillSetup(selectedApartmentTypeBill.apartmentTypeId, {
-          propertyTypeId:selectedApartmentTypeBill?.propertyTypeId || 0,
-          pspOperatorId: operator.id,
-          amount: selectpropertyAmount,
-          apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
-        });
-        toast.success(data.data.message);
-        getAparmentTypeBill();
-
-        setSelectedApartmentTypeBill(data.data.data);
-        setEditBill(!editBill);
-      }
-    } catch (e) {
-      toast.error("Unable to update bill");
-      console.log(e);
+      await updateBillSetup(x.apartmentTypeId, x);
+      toast.success("Bill updated successfully");
+      setEditingRowId(null);
+      setAmount(null); 
+      queryClient.invalidateQueries({ queryKey: ["apartmentTypeBill"] }); 
+    } catch (error) {
+      toast.error(error.response?.data?.error || "Unable to update bill");
+      console.error("Update error:", error);
     }
   };
 
-  const handleCreateBill = async () => {
-    try {
-      if (selectedApartmentTypeBill) {
-        const data = await createBillSetup({
-          propertyTypeId: selectPropertyType?.id || 0,
-          pspOperatorId: operator.id,
-          amount: selectpropertyAmount,
-          apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
-        });
-        console.log({
-          pspOperatorId: operator.id,
-          amount: selectpropertyAmount,
-          apartmentTypeId: selectedApartmentTypeBill?.apartmentTypeId,
-        })
-        toast.success(data.data.message);
-        getAparmentTypeBill();
 
-        setSelectedApartmentTypeBill(data.data.data);
-        setEditBill(!editBill);
-      }
-    } catch (e) {
-      toast.error("Unable to Create bill");
-      console.log(e);
-    }
-
-  }
-
-  const handlePriceChange = (e) => {
-    setSelectedPropertyAmount(parseInt(e.target.value));
-    console.log(e.target.value);
-    console.log(selectedApartmentTypeBill)
+  // Toggle create pricing modal
+  const handleOpenModal = () => {
+    setShowCreatePricing(!showCreatePricing);
+    queryClient.invalidateQueries({ queryKey: ["apartmentTypeBill"] });
   };
 
-  const handlePropertyTypeChange = (e: { target: { value: string } }) => {
-    const propertyTypeId = parseInt(e.target.value);
-    const selectedPropertyType = propertyType.find(
-      (x) => x.id === propertyTypeId
-    );
-    if (selectedPropertyType) {
-      setSelectedPropertyType(selectedPropertyType);
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return <Loader />;
   }
 
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Zoom}
+      />
+
       <div>
-        <ToastContainer
-          position="top-center"
-          autoClose={5000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-          transition={Zoom}
-        />
-
-        <div className="w-full vh-100 border border-transparent rounded-lg ring-2 ring-transparent shadow px-5 py-14">
-          <Paragraph2XlGreenMargin content={"Pricing"} />
-          <ParagraphTextSettings content={"Setup property price"} />
-          <div className="col-12 col-md-6 col-lg-4">
-            <div className="mt-8 mb-8">
-              <ParagraphXl content={"Property Type"} />
-              <div className="flex flex-row w-full items-center">
-                <select
-                  className="form-select form-select-xl mb-3 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base mt-1 ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-                  aria-label=".form-select-lg example"
-                  onChange={handlePropertyTypeChange}
-                >
-                  {propertyType &&
-                    propertyType.map((x: IPropertyType, y: number) => {
-                      return (
-                        <option key={y} value={x.id}>
-                          {" "}
-                          {x.name}{" "}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div>
+        <div>
+          <h2 className="font-Poppins text-2xl font-semibold">Pricing Bill Setup</h2>
+          <div className="flex justify-between mx-4">
+            <div></div>
+            <div className="w-2/5">
+              <Button
+                onClick={() => setShowCreatePricing(!showCreatePricing)}
+                name="Create Bill"
+              />
             </div>
-            <div>
-              {!update && (
-                <div>
-                  <ParagraphXl content={"Apartment Type"} />
-
-                  <div className=" flex flex-row">
-                    <div className="w-3/5">
-                      <select
-                        className="form-select form-select mb-3 w-3/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-                        aria-label=".form-select-lg example"
-                        onChange={(e) => {
-                          console.log(apartmentType);
-                          setSelectedApartmentTypeId(parseInt(e.target.value));
-                          const data:IApartmentType|undefined = apartmentType.find(x => x.id === parseInt(e.target.value));
-                          const selectedObject:IApartmentTypeBill|undefined = apartmentTypeBill.find(
-                            (x: IApartmentTypeBill) =>
-                              x.apartmentTypeId === parseInt(e.target.value)
-                          );
-                          console.log(selectedObject);
-                          console.log(data);
-                          console.log(apartmentTypeBill)
-                          
-                          
-                          if (selectedObject) {
-                            setSelectedApartmentTypeBill(selectedObject);
-                           }else{
-                            setSelectedApartmentTypeBill(
-                              {
-                                                            
-                                    amount: "0.00",
-                                    apartmentTypeId: data?.id||0,
-                                    propertyTypeId: selectPropertyType?.id || 0,
-                                    apartmentTypeName: data?.name||"No Name", 
-                                    pspOperatorBusinessname: operator.businessName,
-                                    pspOperatorEmail: operator.email,
-                                    pspOperatorId: operator.id,
-                                    pspOperatorPhone: operator.phone,
-                                    pspOperatorUserId: operator.userId
-                              })
-                            setEditBill(false);
+          </div>
+        </div>
+        <div className="overflow-x-auto font-Poppins mt-4 mx-4">
+          {apartmentTypeBill && (
+            <Table striped>
+              <TableHead className="font-Poppins text-lg capitalize text-white bg-green dark:text-white">
+                <TableHeadCell>S/N</TableHeadCell>
+                <TableHeadCell>Property Type</TableHeadCell>
+                <TableHeadCell>Apartment Type</TableHeadCell>
+                <TableHeadCell>Amount</TableHeadCell>
+                <TableHeadCell>View More</TableHeadCell>
+              </TableHead>
+              <TableBody className="font-Poppins">
+                {apartmentTypeBill.data.data.data.map((x: IApartmentTypeBill, index: number) => (
+                  <TableRow
+                    key={x.id} // Use x.id for unique key
+                    className="bg-white dark:border-gray-700 dark:bg-gray-800 text-lg"
+                  >
+                    <TableCell>{apartmentTypeBill.data.data.per_page * (page - 1) + index + 1}</TableCell>
+                    <TableCell>{x.propertyTypeName}</TableCell>
+                    <TableCell>{x.apartmentTypeName}</TableCell>
+                    <TableCell>
+                      {editingRowId === x.id ? (
+                        <input type="number"
+                      
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setAmount(parseFloat(e.target.value) || 0)
                           }
-                       
-                        }}
-                        defaultValue={"default"}
-                      >
-                        <option disabled value={"default"}>
-                          Select Apartment Type
-                        </option>
-                        {apartmentType.length &&
-                          apartmentType.map(
-                            (x: IApartmentType, index: number) => {
-                              return (
-                                <option key={index} value={x.id}>
-                                  {" "}
-                                  {x.name}{" "}
-                                </option>
-                              );
-                            }
-                          )}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* {selectedApartmentTypeBill && (
-                
-      
-                    <div className="mt-8 flex flex-row  align-items-center justify-content-center">
-                      {!editBill ? (
-                        <div className="flex flex-row">
-                          <p className="text-4xl m-2 font-inter font-bold not-italic text-green leading-6" >   <span className="font-bold">₦{selectedApartmentTypeBill.amount}</span></p>
-
-                          <div className="w-2/5 mx-4 mb-3">
-                            <ButtonsPrimary
-                              name={"Edit Bill"}
-                              onClick={() => setEditBill(true)}
-                            />
-                          </div>
-                        </div>
+                          defaultValue={x.amount}
+                          className="p-2 w-auto border border-2 border-gray-500"
+                        />
                       ) : (
-                        <div className="flex flex-row align-items-center  gap-4 justify-items-center">
-                          <input
-                            className="form-control form-control-xl w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-                            placeholder={"New Bill"}
-                            type={"number"}
-                            name={"amount"}
-                            onChange={handlePriceChange}
-                            defaultValue={selectedApartmentTypeBill?.amount}
-                          />
-                          <div className="w-2/5">
-                            <ButtonsPrimary
-                              name={"Update Bill"}
-                              onClick={
-                                handleUpdateBill
-                              }
-                            />
-                          </div>
-                        </div>
+                        Naira.format(parseFloat(x.amount))
                       )}
-    
-                  
-                </div>
-              )} */}
-
-              {selectedApartmentTypeBill && (
-                <div className="mt-8 flex flex-row  align-items-center justify-content-center">
-                  {!editBill ? (
-                    <div className="flex flex-row">
-                      <Paragraph2XlGreen
-                        content={Naira.format(
-                          parseFloat(selectedApartmentTypeBill.amount)
-                        )}
-                      />
-                      <div className="mx-4 mb-3">
-                        <ButtonsPrimary
-                          name={"Edit"}
-                          onClick={() => setEditBill(true)}
+                    </TableCell>
+                    <TableCell className="flex items-center space-x-4">
+                      {editingRowId === x.id ? (
+                        <Button
+                          name="Update"
+                          onClick={() =>
+                            handleUpdateBill({
+                              pspOperatorId: operator.id,
+                              propertyTypeId: x.propertyTypeId,
+                              apartmentTypeId: x.apartmentTypeId,
+                              amount: amount || parseFloat(x.amount),
+                            })
+                          }
                         />
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="flex flex-row">
-                        <input
-                          className="form-control form-control-xl mb-3 w-2/5 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-                          type={"number"}
-                          name={"amount"}
-                          onChange={handlePriceChange}
-                          defaultValue={selectedApartmentTypeBill?.amount}
-                        />
-                        <div className="mx-4 mb-3">
-                          <ButtonsPrimary
-                            name={!selectedApartmentTypeBill ? "Create Bill" : "Update Bill" }
-                            onClick={!selectedApartmentTypeBill  ? handleCreateBill : handleUpdateBill}
+                      ) : (
+                        <>
+                          <MdEdit
+                            className="text-blue-500 text-xl cursor-pointer"
+                            onClick={() => {
+                              setEditingRowId(x.id);
+                              setAmount(parseFloat(x.amount));
+                            }}
                           />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+                          <MdDeleteForever
+                            className="text-red-500 text-xl cursor-pointer"
 
-            {
-              <div>
-              <div>
-                <h2 className="font-Poppins text-lg font-semibold">Billing Information</h2>
-               <div className="flex justify-between"> <div></div><Button onClick={handleCreateBill} name={"Create Bill"} /></div>
+                          />
+                        </>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+          {/* Pagination */}
+          <div className="flex justify-center items-center h-20 my-10 w-full">
+            <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
+              <button
+                className={`text-green font-weight-bold ${page === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
+              >
+                Previous
+              </button>
+              <div className="mx-8 h-full">
+                {Array.from({
+                  length: Math.ceil(
+                    apartmentTypeBill?.data.data.total / apartmentTypeBill?.data.data.per_page
+                  ),
+                }).map((_, index) => (
+                  <button
+                    className={`w-8 h-full ${page === index + 1 ? "bg-green text-white" : ""} mr-2`}
+                    key={index}
+                    onClick={() => setPage(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
               </div>
-                                  <div className="overflow-x-auto font-Poppins mt-3">
-                              {  apartmentTypeBill &&      <Table striped >
-                                          <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
-                                              <TableHeadCell>S/N</TableHeadCell>
-                                              <TableHeadCell>Property Type</TableHeadCell>
-                                              <TableHeadCell>Apartment Type</TableHeadCell>
-                                              <TableHeadCell>Amount</TableHeadCell>
-
-                                              <TableHeadCell> View More </TableHeadCell>
-                                          </TableHead>
-                                   <TableBody className="font-Poppins">
-  {apartmentTypeBill.map((x: IApartmentTypeBill, index: number) => {
-    return (
-      <TableRow
-        key={x.id} // always add a unique key
-        className="bg-white dark:border-gray-700 dark:bg-gray-800"
-      >
-        <TableCell>{index+1}</TableCell>
-        <TableCell>{x.propertyTypeName}</TableCell>
-        <TableCell>{x.apartmentTypeName}</TableCell>
-        <TableCell>{Naira.format(parseFloat(x.amount))}</TableCell>
-        <TableCell className="flex items-center space-x-4">
-                       <MdEdit className="text-blue-500" />
-                             <MdDeleteForever className="text-red-500" />
-        </TableCell>
-      </TableRow>
-    );
-  })}
-</TableBody>
-
-                                      </Table>
-}
-                                  </div>
-                                  </div>
-            }
+              <button
+                className={`text-green font-weight-bold ${
+                  page >= Math.ceil(apartmentTypeBill?.data.data.total / apartmentTypeBill?.data.data.per_page)
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                onClick={() => setPage(page + 1)}
+                disabled={page >= Math.ceil(apartmentTypeBill?.data.data.total / apartmentTypeBill?.data.data.per_page)}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>
+
+      {showCreatePricing && (
+        <CreatePricing
+          openModal={showCreatePricing}
+          handleModal={handleOpenModal}
+          propertyType={propertyType}
+          apartmentType={apartmentType}
+        />
+      )}
     </>
   );
 };
 
 export default Pricing;
-
-// type CreateApartmentTypeProps = {
-//   setUpdate: React.Dispatch<React.SetStateAction<boolean>>;
-//   update: boolean;
-// };
-// export const CreateApartmentType:React.FC<CreateApartmentTypeProps> = ({ setUpdate, update }) => {
-//   const [description, setDescription] = useState<string>("");
-//   const [apartmentType, setApartmentType] = useState<string>("");
-
-//   const handleCreateBill = async () => {
-//     try {
-//       const data = await createApartmentType({
-//         name: apartmentType,
-//         description,
-//       });
-//       console.log(data);
-//       toast.success("Apartment Type created");
-//       setUpdate(!update);
-//     } catch (e) {
-//       console.log(e);
-//     }
-//   };
-
-//   return (
-
-//           <Modal show={update} onClose={() => setUpdate(update)} size={'md'} position={'top-right'}>
-//             <Modal.Header><Paragraph2XlGreen content="Create Apartment Type"/> </Modal.Header>
-//                <Modal.Body>
-//             <div className="w-full h-full flex flex-col">
-//       <div className="flex flex-row w-100">
-//         <input
-//           className="form-control form-control-xl mb-3 w-full border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-//           placeholder={"Apartment Type"}
-//           type={"text"}
-//           name={"apartmentType"}
-//           onChange={(e) => setApartmentType(e.target.value)}
-//         />
-//       </div>
-//       <div className="flex flex-col w-100">
-//         <div className="w-100">
-//           <textarea
-//             className="form-control form-control-xl mb-3 w-full border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-50 text-green text-base  ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
-//             placeholder={"Aparment type description"}
-//             onChange={(e) => setDescription(e.target.value)}
-//             name={"description"}
-//           />
-//         </div>
-
-//       </div>
-//       </div>
-//       </Modal.Body>
-//       <Modal.Footer>
-//         <div className="my-2 flex gap-2 justify-space-between md:flex-row flex-col">
-//           <div className="w-full">
-//             <ButtonsSecondary
-//               name={"Cancel"}
-//               onClick={() => setUpdate(!update)}
-//             />
-//           </div>
-//           <div className="w-full">
-//             <ButtonsPrimary
-//               name={"Create Bill"}
-//               onClick={() => handleCreateBill()}
-//             />
-//           </div>
-//         </div>
-//         </Modal.Footer>
-//         </Modal>
-//   );
-// };

@@ -17,6 +17,7 @@ import CreateApartmentModal from "../../../Component/Modal/CreateApartmentModal"
 import { IProperty } from "../../../models/property.interface";
 import Loader from "../../../Component/Loader";
 import { LuGlasses } from "react-icons/lu";
+import OccupancyStatusBadge from "../../../utils/OccupyStatusBadge";
 
 const Property: React.FC = () => {
   const { propertyId } = useParams();
@@ -83,6 +84,7 @@ const Property: React.FC = () => {
             <TableHeadCell>Name</TableHeadCell>
             <TableHeadCell>Apartment Type</TableHeadCell>
             <TableHeadCell>Phone number</TableHeadCell>
+                   <TableHeadCell>Status</TableHeadCell>
             <TableHeadCell>Bill</TableHeadCell>
             {/* <TableHeadCell>Total overdue Bills</TableHeadCell> */}
           </TableHead>
@@ -101,6 +103,7 @@ const Property: React.FC = () => {
                   <TableCell>{item.customerFullname.toUpperCase()} </TableCell>
                   <TableCell>{item.apartmentTypeName} </TableCell>
                   <TableCell>{item.customerPhone} </TableCell>
+                                    <TableCell><OccupancyStatusBadge status={item.status} /> </TableCell>
                   <TableCell>
           
                                    <Link        to={`apartments/${item.id}`}

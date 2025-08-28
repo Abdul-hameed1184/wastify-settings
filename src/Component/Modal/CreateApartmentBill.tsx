@@ -1,15 +1,14 @@
 import { Modal } from "flowbite-react";
 import {  ButtonsPrimaryBlack } from "../Buttons";
-import React, { useEffect } from "react";
+import React from "react";
 import { ICreateApartmentBill } from "../../models/createApartmentBill.interface";
 import { IApartment } from "../../models/apartment.interface";
 import { IOperator } from "../../models/operator.interface";
 import { toast } from "react-toastify";
 import { createApartmentBill } from "../../api/psp-operator/psp-operator.service";
 import { useFormik } from "formik";
-import { getPspOperatorBill } from "../../api/bill/psp-operator-pricing";
 
-type Props = { openModal: boolean, setOpenModal: (x) => void, apartmentBill: number, apartment: IApartment, setRefresh: () => void }
+type Props = { openModal: boolean, setOpenModal: (x) => void, apartmentBill: string, apartment: IApartment, setRefresh: () => void }
 const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartmentBill, apartment, setRefresh }) => {
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
