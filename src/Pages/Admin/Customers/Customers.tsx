@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  Button,
-  Modal,
-  ModalFooter,
   Table,
   TableBody,
   TableCell,
@@ -15,22 +12,13 @@ import { ButtonsPrimaryIcon } from "../../../Component/Buttons";
 import Loader from "../../../Component/Loader";
 import { FaPlusCircle } from "react-icons/fa";
 import { GrOverview } from "react-icons/gr";
-import {
-  getPaginatedCustomers,
-} from "../../../api/customer/customer.service";
 
-import { IPaginatedCustomers } from "../../../models/paginatedcustomer.interface";
-import { ICustomerData } from "../../../models/customerdata.interface";
 import CreateCustomer from "../../../Component/Modal/CreateCustomer";
-import { Naira } from "../../../utils/format";
-import { getApartmentsByPspOperator } from "../../../api/property/apartment.service";
 import { useQuery } from "@tanstack/react-query";
 import { IApartment } from "../../../models/apartment.interface";
-import { all } from "axios";
 import { IOperator } from "../../../models/operator.interface";
-import { IApartmentTypeBill } from "../../../models/apartmentTypeBill.interface";
-import { ICustomer } from "../../../models/customer.interface";
 import InfoModal from "../../../Component/Modal/InfoModal";
+import { getCustomers } from "../../../api/psp-operator/psp-operator.service";
 
 
 
@@ -42,14 +30,19 @@ const Customers: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   //const [loading, setLoading] = useState<boolean>(true);
   // const [customers, setCustomers] = useState<IPaginatedCustomers>();
+
   const { data: allapartments, isLoading, isError } = useQuery({
     queryKey: [page, operator.id],
     queryFn: async () => {
-      const xy = await getApartmentsByPspOperator(page, operator.id);
+      const xy = await getCustomers(page, operator.id);
       console.log(xy);
       return xy;
     }
   });
+
+
+
+
 
   interface Customerx {
     customerId: string;
@@ -73,9 +66,9 @@ const Customers: React.FC = () => {
     return Array.from(uniqueMap.values());
   }
 
-  function getCustomerApartments(customerId: string): IApartmentTypeBill {
-    return allapartments?.data.data.data.filter(item => item.customerId === customerId);
-  }
+  // function getCustomerApartments(customerId: string): IApartmentTypeBill {
+  //   return allapartments?.data.data.data.filter(item => item.customerId === customerId);
+  // }
 
   const viewCustomer = (customerId: string) => {
     const dy = allapartments?.data.data.data.filter(item => item.customerId === customerId);

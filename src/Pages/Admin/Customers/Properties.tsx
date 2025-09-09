@@ -21,6 +21,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
 import InfoModal from "../../../Component/Modal/InfoModal";
+import DropdownMenu from "../../../Component/DropdownMenu";
 
 
 const Properties:React.FC = () => {
@@ -74,12 +75,8 @@ const Properties:React.FC = () => {
               <TableHeadCell>Property address</TableHeadCell>
               {/* <TableHeadCell>LGA</TableHeadCell> */}
               <TableHeadCell>Ward</TableHeadCell>
-              {/* <TableHeadCell>Property code</TableHeadCell> */}
               <TableHeadCell>No of Apartments</TableHeadCell>{" "}
-              {/* <TableHeadCell>Add/View Apartment</TableHeadCell>{" "} */}
-              {/*Number of Customers Changed*/}
-              {/* <TableHeadCell>Customer details</TableHeadCell> */}
-              <TableHeadCell>Details</TableHeadCell>
+              <TableHeadCell>Action</TableHeadCell>
             </TableHead>
             <TableBody className="font-Poppins text-xl ">
               {allProperties?.data.data.data.map((item:IProperty, index) => (
@@ -104,12 +101,38 @@ const Properties:React.FC = () => {
                       name={"View Details"}
                      type={"button"} loading={undefined} />
                       </Link> */}
-                      <span className="flex items-center space-x-4">
-                    <Link to={""+item.id} state={{property: item}}><LuGlasses className="text-green-100" /></Link>
 
-                      <MdEdit className="text-blue-500" />
-                      <MdDeleteForever className="text-red-500" onClick={()=>setViewDelete(!viewDelete)} />
-                      </span>
+                      <DropdownMenu>
+<div className="flex flex-col  rounded-lg divide-y divide-gray-200 shadow-sm">
+      {/* View */}
+      <Link
+        to={`${item.id}`}
+        state={{ property: item }}
+        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+      >
+        <LuGlasses className="text-green-500" />
+        <span>View Property</span>
+      </Link>
+
+      {/* Edit */}
+      <span className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
+        <MdEdit className="text-blue-500" />
+        <span>Edit Property</span>
+      </span>
+
+      {/* Delete */}
+      <button
+        type="button"
+        onClick={() => setViewDelete(!viewDelete)}
+        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer w-full text-left"
+        aria-label="Delete Property"
+      >
+        <MdDeleteForever className="text-red-500" />
+        <span>Delete Property</span>
+      </button>
+    </div>
+
+                      </DropdownMenu>
                   </TableCell>
                   {/* <TableCell> ... </TableCell> */}
                 </TableRow>

@@ -21,3 +21,6 @@ export const getCustomerReports =  async (operatorId:string) => {
     return await axios.get(`/customerReport/list-by-psp-operator-id/${operatorId}`);
 }
 
+export const getCustomers = async (page:number, operatorId:number ) => {
+    return await axios.get(`/customer/psp-operator/${operatorId}?page=${page}`);
+}

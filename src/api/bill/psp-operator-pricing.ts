@@ -10,7 +10,7 @@ export const deletePspOperatorBill = (pspOperatorId) => {
     return axios.delete(`/billSetup/${pspOperatorId}`);
 }
 
-export const getBillSetupByPspOperatorBill = (page, pspOperatorId) => {
+export const getBillSetupByPspOperatorBill = (page=1, pspOperatorId) => {
     return axios.get(`/billSetup/bill-setup-by-psp-operator/${pspOperatorId}?page=${page}`);
 }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { ParagraphLarge, ParagraphNoMargin } from "../Paragraph";
 import { ICustomerDashboard } from "../../models/customerdash.interface";
 import { Naira } from '../../utils/format';
+import NewBillBadge from './NewBillBadge';
 
 type Props = {
   dashBoard: ICustomerDashboard;
@@ -35,6 +36,10 @@ const ProfileCard: React.FC<Props> = ({ dashBoard }) => {
       <div>
         <ParagraphNoMargin content="Total Apartments" />
         <ParagraphLarge content={totalApartment.toString()} />
+      </div>
+
+      <div>
+        <NewBillBadge amount={69000} />
       </div>
     </section>
   );

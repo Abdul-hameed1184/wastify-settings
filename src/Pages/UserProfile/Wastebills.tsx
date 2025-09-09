@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { IoChevronBack } from "react-icons/io5";
-import { Link } from "react-router-dom";
 import { getBillingsByApartmentId } from "../../api/property/apartment.service";
 import { IPaginatedApartmentBills } from "../../models/paginatedApartmentBillsForCustomer";
 import {
@@ -12,7 +10,6 @@ import {
   TableCell,
 } from "flowbite-react";
 import { ButtonsPrimary } from "../../Component/Buttons";
-import { Paragraph2Xl } from "../../Component/Paragraph";
 import { IBillData } from "../../models/billdata.interface";
 import {
   create_transaction,
@@ -24,13 +21,15 @@ import { toast } from "react-toastify";
 import { paystackPublicKey } from "../../utils/apiConfig";
 import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
 import { Naira } from "../../utils/format";
-import Loader from "../../Component/Loader";
 
 const Wastebills: React.FC = () => {
   const [page, setPage] = useState<number>(1);
-  const [apartmentBills, setApartmentBills] =
-    useState<IPaginatedApartmentBills>({} as IPaginatedApartmentBills);
-    const [searchTerm, setSearchTerm] = useState<string>("");
+  const [apartmentBills, setApartmentBills] = useState<IPaginatedApartmentBills>({
+    data: [],
+    total: 0,
+    per_page: 10
+  } as unknown as IPaginatedApartmentBills);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const customer: ICustomer = JSON.parse(
     sessionStorage.getItem("AUTH_USERDETAILS") || "{}"
@@ -43,6 +42,7 @@ const Wastebills: React.FC = () => {
     (async () => {
       const data = await getBillingsByApartmentId(customerApartments[0]?.id);
       setApartmentBills(data.data.data);
+      console.log(data.data.data);
     })();
   }, [customerApartments, page]);
 
@@ -111,7 +111,7 @@ const Wastebills: React.FC = () => {
   />
 </div>
 
-      {apartmentBills && apartmentBills.data ? (
+      {
         <div className="overflow-x-auto bg-white rounded-xl shadow-md mt-4 p-0 w-full">
           <Table striped>
             <TableHead className="bg-green text-white text-lg uppercase">
@@ -123,8 +123,9 @@ const Wastebills: React.FC = () => {
               <TableHeadCell>Action</TableHeadCell>
             </TableHead>
             <TableBody className="divide-y font-Poppins text-lg">
-              {apartmentBills.data
-                .filter((x) => x.paymentStatus !== 1)
+              {apartmentBills?.data?.length ? (
+  apartmentBills.data
+    .filter((x) => x.paymentStatus !== 1)
                 .map((item: IBillData, index) => (
                   <TableRow
                     className={
@@ -151,19 +152,25 @@ const Wastebills: React.FC = () => {
                       />
                     </TableCell>
                   </TableRow>
-                ))}
-
-        
+                  )))
+                : (
+                  <TableRow>
+                    <TableCell colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">
+                      <h2 className="text-xl font-semibold text-gray-100">No bills found.</h2>
+                    </TableCell>
+                  </TableRow>
+                )}
             </TableBody>
           </Table>
 
           {/* Pagination */}
-          <div className="flex justify-between items-center mt-6 p-4 w-100">
-            <button
-              className="text-green font-medium disabled:opacity-50"
-              onClick={() => setPage(page - 1)}
-              disabled={page === 1}
-            >
+          {apartmentBills.data.length > 0 && (
+            <div className="flex justify-between items-center mt-6 p-4 w-100">
+              <button
+                className="text-green font-medium disabled:opacity-50"
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
+              >
               Previous
             </button>
             <div className="flex space-x-2">
@@ -192,11 +199,9 @@ const Wastebills: React.FC = () => {
             >
               Next
             </button>
-          </div>
+          </div>)}
         </div>
-      ) : (
-        <Loader />
-      )}
+      }
     </main>
   );
 };

@@ -22,6 +22,7 @@ import { IPaginatedProperty } from "../../../models/paginatedPropertyByOperator.
 import Loader from "../../../Component/Loader";
 import { IApartment } from "../../../models/apartment.interface";
 import PropertyApartment from "./ApartmentBill";
+import { IoPeople } from "react-icons/io5";
 
 const Records:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");

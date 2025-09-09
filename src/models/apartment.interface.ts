@@ -3,6 +3,7 @@ export interface IApartment {
     apartmentTypeId: number;
     apartmentTypeName: string;
     customerFullname: string;
+    propertyTypeName: string;
     customerId: string;
     customerPhone: string;
     description: string;

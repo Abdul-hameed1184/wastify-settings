@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   IoLogOutOutline
 } from "react-icons/io5";
-import { BiSupport } from "react-icons/bi";
 import { MdOutlinePayments } from "react-icons/md";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { FiMenu, FiX } from "react-icons/fi";
@@ -16,7 +15,7 @@ const navLinks = [
   { to: "/wastebills", label: "Waste bills", icon: <FaMoneyBillTrendUp /> },
   { to: "/payment-history", label: "Payment History", icon: <MdOutlinePayments /> },
   // { to: "/view-history", label: "View property", icon: <IoHomeOutline /> },
-  { to: "/support", label: "Support", icon: <BiSupport /> },
+  // { to: "/support", label: "Support", icon: <BiSupport /> },
   { to: "/contactus", label: "Contact us", icon: <IoMdCall /> },
 ];
 

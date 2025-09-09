@@ -23,13 +23,13 @@ import Loader from "../../../Component/Loader";
 import { Naira } from "../../../utils/format";
 import { IBillData } from "../../../models/billdata.interface";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
+import { useQuery } from "@tanstack/react-query";
+import { IoPersonCircleOutline } from "react-icons/io5";
 
 
 const Dash = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
-  const [dash, setDash] = useState<IPspOperatorDashboard>();
-  const [ loading, setLoading] = useState<boolean>(true);
   const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
 
 
@@ -54,25 +54,44 @@ const Dash = () => {
     setCurrentTime(formattedTime);
   };
 
-  useEffect(() => {
+  const { data: dash, isLoading } = useQuery({
+    queryKey: ["pspOperatorDashboard", operator.id],
+    queryFn: async () => {
+      const data = await getPspOperatorDashboard(operator.id);
+      return data.data;
+    }
+  });
 
-    (async() => {
-      console.log(operator)
-      const data = await getPspOperatorDashboard(operator.id)
-      console.log(data.data)
-      setDash(data.data.data);
+//  const [dash, setDash] = useState<IPspOperatorDashboard | undefined>(undefined);
 
-    updateDateTime(); // Initial call to set the date and time immediately
-    const intervalId = setInterval(updateDateTime, 1000); // Update every second
-    return () => clearInterval(intervalId);
-    })();
+  // useEffect(() => {
+  //   if (dashData) {
+  //     setDash(dashData);
+  //     updateDateTime(); // Initial call to set the date and time immediately
+  //     const intervalId = setInterval(updateDateTime, 1000); // Update every second
+  //     return () => clearInterval(intervalId);
+  //   }
+  // }, [dashData]);
 
-    setLoading(false)
+  // useEffect(() => {
+
+  //   (async() => {
+  //     console.log(operator)
+  //     const data = await getPspOperatorDashboard(operator.id)
+  //     console.log(data.data)
+  //     setDash(data.data.data);
+
+  //   updateDateTime(); // Initial call to set the date and time immediately
+  //   const intervalId = setInterval(updateDateTime, 1000); // Update every second
+  //   return () => clearInterval(intervalId);
+  //   })();
+
+  //   setLoading(false)
   
 
-  }, []);
+  // }, []);
   
-  if(loading){
+  if(isLoading){
     return <Loader />
   }
 
@@ -115,21 +134,28 @@ const Dash = () => {
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Revenue"}
-            amount={Naira.format(dash.totalRevenue)}
+            amount={Naira.format(dash.data.totalRevenue)}
             icon={<RiBarChart2Fill className="text-green w-10 h-8" />}
           />
         </div>
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Property"}
-            amount={dash.totalProperties}
+            amount={dash.data.totalProperties}
             icon={<FaHouse className="text-green w-10 h-7 mt-1" />}
+          />
+        </div>
+             <div className="w-full lg:w-1/3">
+          <AdminCard
+            heading={"Total Customers"}
+            amount={dash.data.totalCustomers}
+            icon={<IoPersonCircleOutline className="text-green w-10 h-7 mt-1" />}
           />
         </div>
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Overdue Payments"}
-            amount={Naira.format(dash.totalOverDuePayment)}
+            amount={Naira.format(dash.data.totalOverDuePayment)}
             icon={<BiTransfer className="text-green w-10 h-7 mt-1" />}
           />
         </div>
@@ -154,7 +180,7 @@ const Dash = () => {
               <TableHeadCell>Total Overdue Bills</TableHeadCell>
             </TableHead>
             <TableBody className="font-Poppins odd:bg-gray-300">
-        {  dash && dash.recentTransactions.map((x:IBillData,index) => 
+        {  dash.recentTransactions > 0 ? (dash.recentTransactions.map((x:IBillData,index) => 
         <TableRow  className={
                     index % 2 === 0
                       ? "odd:bg-tableBackground"
@@ -170,7 +196,13 @@ const Dash = () => {
                                 <TableCell>{x.paymentMode}</TableCell>
                                                 <TableCell><PaymentStatusBadge status={x.paymentStatus} /></TableCell>
                                                                 <TableCell>{x.paymentStatusLabel}</TableCell>
-              </TableRow>)}
+              </TableRow>)) : (
+                <TableRow>
+                  <TableCell colSpan={9} className="px-6 py-4 text-center text-sm text-gray-500">
+                   <h2 className="text-xl font-semibold text-gray-100">No recent transactions found.</h2>
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>

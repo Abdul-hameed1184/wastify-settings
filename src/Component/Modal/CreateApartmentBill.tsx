@@ -10,6 +10,7 @@ import { useFormik } from "formik";
 
 type Props = { openModal: boolean, setOpenModal: (x) => void, apartmentBill: string, apartment: IApartment, setRefresh: () => void }
 const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartmentBill, apartment, setRefresh }) => {
+  console.log(apartmentBill)
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
   );

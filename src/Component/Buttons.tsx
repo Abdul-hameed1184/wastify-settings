@@ -139,16 +139,16 @@ export const ButtonsWhite:React.FC<Props> = ({type, onClick, name,loading}) => {
 }
 
 
-export const Button:React.FC<Props> = ({type, onClick, name,loading, className}) => {
-  return (
-    <button type={type} onClick={onClick} 
-    className={`${className} text-white px-2 font-weight-bold bg-green my-4 w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'} overflow-hidden whitespace-nowrap`}
-    disabled={loading}
->
-    {name}
-</button>
-  )
-}
+// export const Button:React.FC<Props> = ({type, onClick, name,loading, className}) => {
+//   return (
+//     <button type={type} onClick={onClick} 
+//     className={`${className} text-white px-2 font-weight-bold bg-green my-4 w-full h-14  justify-center px-4 md:px-2 py-4 md:py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border ${loading ? 'bg-lightGreen': 'bg-green'} overflow-hidden whitespace-nowrap`}
+//     disabled={loading}
+// >
+//     {name}
+// </button>
+//   )
+// }
 
 export const IconButton:React.FC<Props> = ({type, onClick, icon, name,loading, className}) => {
   return (

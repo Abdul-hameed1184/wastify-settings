@@ -1,44 +1,45 @@
-import React, { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeadCell,
-  TableRow,
-} from "flowbite-react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { getPropertyApartments } from "../../../api/property/apartment.service";
-import {
-  ButtonsPrimaryBlack,
-} from "../../../Component/Buttons";
-import { IApartment } from "../../../models/apartment.interface";
 import CreateApartmentModal from "../../../Component/Modal/CreateApartmentModal";
 import { IProperty } from "../../../models/property.interface";
 import Loader from "../../../Component/Loader";
-import { LuGlasses } from "react-icons/lu";
-import OccupancyStatusBadge from "../../../utils/OccupyStatusBadge";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import ApartmentList from "../../../Component/ApartmentList";
+import { Button } from "../../../Component/Button";
+
 
 const Property: React.FC = () => {
   const { propertyId } = useParams();
   const location = useLocation();
   const { state } = location;
-  console.log(state);
   const property: IProperty = state.property;
+  const [ page,setPage ] = useState<number>(1);
 
   const [openCreateApartmentModal, setOpenCreateApartmentModal] =
     useState<boolean>(false);
-  useEffect(() => {
-    (async () => {
-      const id = parseInt(propertyId || "");
+    const queryClient = useQueryClient();
+
+    const { data:apartments, isLoading, isError } = useQuery({
+      queryKey: ['properties', propertyId],
+      queryFn: async () => {
+             const id = parseInt(propertyId || "");
       const data = await getPropertyApartments(id);
-      setApartments(data.data.data.data);
-      console.log(data.data.data);
-    })();
-  }, []);
+       return data;
+      }
+    });
 
+    const handleCreateApartmentModal = () => {
+      setOpenCreateApartmentModal(!openCreateApartmentModal);
+     queryClient.invalidateQueries({
+    queryKey: ["properties", propertyId],
+  });
+    };
 
-  const [apartments, setApartments] = useState<IApartment[]>([]);
+  if (isLoading) {
+    return <Loader />;
+  }
+
 
   return (
     <div className="p-4 ">
@@ -63,35 +64,31 @@ const Property: React.FC = () => {
           </div>
         </fieldset>}
       </div>
-      <div>
-        <div className="grid justify-items-end my-8">
-          <div className="md:w-1/3 w-full">
-            <ButtonsPrimaryBlack
+      <div className="flex flex-row justify-between my-4">
+          <h2 className="text-2xl font-semibold">Apartments</h2>
+
+                    <Button
+            variant="black"
               onClick={() => {
                 setOpenCreateApartmentModal(true);
-              }}
-              name={"Add Apartment"}
-              type={"button"}
-              loading={undefined}
-            />
-          </div>
-        </div>
+              } }
+
+              type={"button"}>Add Apartment</Button>
       </div>
 
-      <div className="space-y-6">
+      {/* <div className="space-y-6">
         <Table striped>
           <TableHead className=" font-Poppins text-xl capitalize text-white bg-slate-900 dark:text-white">
+            <TableHeadCell>Property Code</TableHeadCell>
             <TableHeadCell>Name</TableHeadCell>
             <TableHeadCell>Apartment Type</TableHeadCell>
             <TableHeadCell>Phone number</TableHeadCell>
                    <TableHeadCell>Status</TableHeadCell>
-            <TableHeadCell>Bill</TableHeadCell>
-            {/* <TableHeadCell>Total overdue Bills</TableHeadCell> */}
+            <TableHeadCell>Actions</TableHeadCell>
           </TableHead>
           <TableBody className="divide-y font-Poppins text-xl">
-            {!apartments && <Loader color="black" />}
-            {apartments &&
-              apartments.map((item: IApartment, index) => (
+            {apartments?.data.data.data.length > 0 ?  
+              (apartments?.data.data.data.map((item: IApartment, index) => (
                 <TableRow
                   className={
                     index % 2 === 0
@@ -100,7 +97,8 @@ const Property: React.FC = () => {
                   }
                   key={index}
                 >
-                  <TableCell>{item.customerFullname.toUpperCase()} </TableCell>
+                  <TableCell>{item.propertyCode} </TableCell>
+                  <TableCell>{item?.customerFullname?.toUpperCase()} </TableCell>
                   <TableCell>{item.apartmentTypeName} </TableCell>
                   <TableCell>{item.customerPhone} </TableCell>
                                     <TableCell><OccupancyStatusBadge status={item.status} /> </TableCell>
@@ -108,20 +106,61 @@ const Property: React.FC = () => {
           
                                    <Link        to={`apartments/${item.id}`}
                       state={{ apartment: item }}><LuGlasses className="text-green-100" /></Link>
-                      {/* <Buttonx name={"View Bill"} className="bg-slate-900" /> */}
+
          
                   </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </div>
-     
+                </TableRow>))) : (
+                  <TableRow>
+                    <TableCell colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">
+                     <h2 className="text-lg font-semibold">No apartments found.</h2>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            <div className="flex justify-center items-center h-20 my-10 w-full ">
+              <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
+                <button
+                className={`text-green font-weight-bold`}
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
+              >
+                Previous
+              </button>
+              <div className="mx-8 h-full">
+                {
+                  Array.from({
+                    length: Math.ceil(
+                      (apartments?.data.data.total/apartments?.data.data.per_page)
+                    ),
+                  }).map((_, index) => (
+                    <button
+                      className={`w-8 h-full  ${
+                        page === index + 1 ? "bg-green text-white " : ""
+                      } mr-2`}
+                      key={index}
+                      onClick={() => setPage(page + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+              </div>
+              <button
+                className={`text-green font-weight-bold`}
+                onClick={() => setPage(page + 1)}
+                disabled={Math.ceil(apartments?.data.data.total/apartments?.data.data.per_page) <= page + 1}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+      </div> */}
+{     <ApartmentList apartments={apartments?.data} page={page} setPage={setPage} />}
 
       {property && (
         <CreateApartmentModal
           openModal={openCreateApartmentModal}
-          setOpenModal={setOpenCreateApartmentModal}
+          setOpenModal={handleCreateApartmentModal}
           property={property}
         />
       )}

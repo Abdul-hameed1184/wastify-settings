@@ -14,6 +14,9 @@ import { MdDeleteForever } from "react-icons/md";
 import InfoModal from "../../../Component/Modal/InfoModal";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 import { Naira } from "../../../utils/format";
+import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
+import { Button } from "../../../Component/Button";
+import OccupancyStatusBadge from "../../../utils/OccupyStatusBadge";
 
 const ApartmentBill: React.FC = () => {
   const [bills, setBills] = useState<IBills[]>([]);
@@ -47,13 +50,12 @@ const ApartmentBill: React.FC = () => {
 const fetchBills = useCallback(async () => {
     try {
       setLoader(true);
-      const data = await getPspOperatorBill(operator.id);
-      console.log(data.data)
+      const data = await getPspOperatorBill(apartment.apartmentTypeId);
+      console.log(data.data.data)
       const billData: IBills[] = data.data.data.data;
       console.log(billData)
-      setBills(billData);
-      const xy = bills.find((b) => b.apartmentTypeId === apartment.apartmentTypeId)?.amount || "0";
-      setCurrentBill(xy)
+      setBills(data.data.data[0]);
+      setCurrentBill(data.data.data[0].amount)
       const history = await getBillingsByApartmentId(apartment.id);
       console.log(history.data.data.data);
       setBillHistory(history.data.data.data);
@@ -88,9 +90,7 @@ if(loader){
     return month ? month : months[0];
   }
 
-  const handleDeleteApartment = () => {
 
-  }
 
   return (
     <main className="mb-10">
@@ -116,6 +116,14 @@ if(loader){
                     </span>
                   </div>
                   <div>
+                    <span className="block text-xl font-medium text-gray">
+                      Property Code
+                    </span>
+                    <span className="block text-2xl">
+                      {apartment.propertyCode}
+                    </span>
+                  </div>
+                   <div>
                     <span className="block text-xl font-medium text-gray">
                       Property Address
                     </span>
@@ -148,10 +156,18 @@ if(loader){
                   </div>
                   <div>
                     <span className="block text-xl font-medium text-gray-700">
-                      Customer Name
+                      Customer Phone number
                     </span>
                     <span className="block text-2xl">
                       {apartment.customerPhone}
+                    </span>
+                  </div>
+                                    <div>
+                    <span className="block text-xl font-medium text-gray-700">
+                      Customer Status
+                    </span>
+                    <span className="block text-2xl">
+                      {<OccupancyStatusBadge status={apartment.status} />}
                     </span>
                   </div>
                 </fieldset>
@@ -164,78 +180,77 @@ if(loader){
   </div>
 )}
             <div className="flex justify-end mt-5">
-              <div className="w-40 pr-4">
-                <ButtonsPrimaryBlack
-                  name="Create Bill"
+              <div className=" pr-4 my-4">
+                <Button
+                  variant="black"
                   onClick={() => setOpenCreateBillModal(true)}
-                />
+                >CreateBill</Button>
               </div>
             </div>
           </div>
 
           <div className="w-full h-full border-black">
-            {billHistory && billHistory.length > 0 && !loader && (
-              <table className="table-auto p-4 w-full text-sm md:text-base">
-                <caption>
-                  <h3 className="text-gray-600 text-3xl font-medium mb-2">
-                    Bill History
-                  </h3>
-                </caption>
+            {billHistory && billHistory.length > 0  && (
+                  <Table striped>
+                    <TableHead className="font-Poppins text-xl capitalize text-white bg-slate-900 dark:text-white">
 
-                <thead>
-                  <tr className="text-white bg-black  rounded-t-xl ">
-                    <td className="px-4 py-2 text-left text-xl font-semibold text-white">
+                  {/* <TableRow className="text-white bg-black  rounded-t-xl "> */}
+                    <TableHeadCell className="px-4 py-2 text-left text-xl font-semibold text-white">
                       Date
-                    </td>
-                    <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                    </TableHeadCell>
+                    <TableHeadCell className=" px-4 py-2 text-left text-xl font-semibold text-white">
                       Bill
-                    </td>
-                    <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                    </TableHeadCell>
+                    <TableHeadCell className=" px-4 py-2 text-left text-xl font-semibold text-white">
                       Discount Percent
-                    </td>
-                    <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                    </TableHeadCell>
+                    <TableHeadCell className=" px-4 py-2 text-left text-xl font-semibold text-white">
                       Discount Amount
-                    </td>
-                    <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                    </TableHeadCell>
+                    <TableHeadCell className=" px-4 py-2 text-left text-xl font-semibold text-white">
                       Amount
-                    </td>
-                                <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                    </TableHeadCell>
+                                <TableHeadCell className=" px-4 py-2 text-left text-xl font-semibold text-white">
                       Status
-                    </td>
-                    <td className=" px-4 py-2 text-left text-xl font-semibold text-white">
+                    </TableHeadCell>
+                    <TableHeadCell className=" px-4 py-2 text-left text-xl font-semibold text-white">
                       Actions
-                    </td>
-                  </tr>
-                </thead>
-                <tbody >
+                    </TableHeadCell>
+                  {/* </TableRow> */}
+                </TableHead>
+                <TableBody >
                 {billHistory &&
                 
                   billHistory.map((x: IBillData, index) => {
                     return (
                       <>
            
-                        <tr key={index}>
-                          <td className="px-4 py-2 text-2xl text-black">
+                        <TableRow key={index} className={
+                  index % 2 === 0
+                    ? "odd:bg-tableBackground"
+                    : "bg-white dark:border-gray-700 dark:bg-gray-800"
+                }>
+                          <TableCell className="px-4 py-2 text-2xl text-black">
                             {formatDate(x.billPeriod)}
-                          </td>
-                          <td className="px-4 py-2 text-2xl text-black">
+                          </TableCell>
+                          <TableCell className="px-4 py-2 text-2xl text-black">
                             {Naira.format(Number(x.billAmount))}
-                          </td>
-                          <td className="px-4 py-2 text-2xl text-black">
+                          </TableCell>
+                          <TableCell className="px-4 py-2 text-2xl text-black">
                             {parseInt(x.discountPercentage) + "%"}
-                          </td>
-                          <td className="px-4 py-2 text-2xl text-black">
+                          </TableCell>
+                          <TableCell className="px-4 py-2 text-2xl text-black">
                             {Naira.format(Number(x.discountAmount))}
-                          </td>
-                          <td className="px-4 py-2 text-2xl text-black">
+                          </TableCell>
+                          <TableCell className="px-4 py-2 text-2xl text-black">
                             {Naira.format(
                               Number(x.billAmount) - Number(x.discountAmount)
                             )}
-                          </td>
-                                    <td className="px-4 py-2 text-2xl text-black">
+                          </TableCell>
+                                    <TableCell className="px-4 py-2 text-2xl text-black">
                             <PaymentStatusBadge status={x.paymentStatus} />
-                          </td>
-                          <td className="px-4 py-2 text-2xl text-center">
+                          </TableCell>
+                          <TableCell className="px-4 py-2 text-2xl text-center">
                             <span
                            
                               className="text-red-600"
@@ -243,26 +258,26 @@ if(loader){
                             >
                               <MdDeleteForever    onClick={() => setViewDelete(!viewDelete)}/>
                             </span>
-                          </td>
-                        </tr>
+                          </TableCell>
+                        </TableRow>
                         </>
-                    );
+                    )
                   
                   })}
-                  </tbody>
-              </table>
+                  </TableBody>
+              </Table>
             )}
           </div>
         </div>
       }
 
-      {
+      {/* {
         viewDelete && <InfoModal openModal={viewDelete} 
         setOpenModal={setViewDelete} 
         header={"Delete Apartment"} 
         content={"Do you really want to delete this property or apartment? Once deleted, it cannot be recovered."} buttonName={"Delete Apartment"} handleConfirm={handleDeleteApartment} />
 
-      }
+      } */}
 
       {openCreateBillModal && (
         <CreateApartmentBill

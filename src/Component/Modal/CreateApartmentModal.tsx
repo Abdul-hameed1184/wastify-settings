@@ -141,9 +141,9 @@ const CreateApartmentModal: React.FC<Props> = ({
                 <div className="w-full lg:w-4/5">
                   <Paragraph
                     content={
-                      (property.ownerFullname.toUpperCase() || "No name" )+
+                      (property?.ownerFullname?.toUpperCase() || "No name" )+
                       ", " +
-                     ( property.propertyTypeName || "No Type")
+                     ( property?.propertyTypeName || "No Type")
                     }
                   />
                 </div>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, Zoom, toast } from "react-toastify";
-import { Button } from "../../../Component/Buttons";
 import { IPropertyType } from "../../../models/propertType.interface";
 import { IOperator } from "../../../models/operator.interface";
 import { IApartmentTypeBill } from "../../../models/apartmentTypeBill.interface";
@@ -16,6 +15,7 @@ import { getPropertyTypes } from "../../../api/property/property.service";
 import { getApartmentTypeList } from "../../../api/property/apartment.service";
 import { getBillSetupByPspOperatorBill, updateBillSetup } from "../../../api/bill/psp-operator-pricing";
 import { IUpdateBill } from "../../../models/update.bill.interface";
+import { Button } from "../../../Component/Button";
 
 const Pricing: React.FC = () => {
   const operator: IOperator = JSON.parse(
@@ -106,8 +106,9 @@ try {
             <div className="w-2/5">
               <Button
                 onClick={() => setShowCreatePricing(!showCreatePricing)}
-                name="Create Bill"
-              />
+              >
+                Create Bill
+              </Button>
             </div>
           </div>
         </div>

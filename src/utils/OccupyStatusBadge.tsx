@@ -1,8 +1,8 @@
 import React from 'react';
 
 const statusMap = {
-  0: { label: 'Vacant', className: 'bg-green-100 text-green-600' },
-  1: { label: 'Occupied', className: 'bg-red-100 text-red-600' },
+  0: { label: 'Vacant', className: 'bg-red-100 text-red-600' },
+  1: { label: 'Occupied', className: 'bg-black text-white' },
 };
 
 const OccupancyStatusBadge: React.FC<{ status: number }> = ({ status }) => {
