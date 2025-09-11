@@ -16,6 +16,7 @@ import { getApartmentTypeList } from "../../../api/property/apartment.service";
 import { getBillSetupByPspOperatorBill, updateBillSetup } from "../../../api/bill/psp-operator-pricing";
 import { IUpdateBill } from "../../../models/update.bill.interface";
 import { Button } from "../../../Component/Button";
+import DropdownMenu from "../../../Component/DropdownMenu";
 
 const Pricing: React.FC = () => {
   const operator: IOperator = JSON.parse(
@@ -31,7 +32,7 @@ const Pricing: React.FC = () => {
 
   // Fetch bill setup data using React Query
  const { data: apartmentTypeBill , isLoading } = useQuery({
-    queryKey: [page, operator.id],
+    queryKey: [ "billsetup"],
     queryFn: async () => {
       const pspBill = await getBillSetupByPspOperatorBill(page, operator.id);
       return pspBill;
@@ -58,13 +59,13 @@ try {
   }, []);
 
   // Handle update bill
-  const handleUpdateBill = async (x: IUpdateBill) => {
+  const handleUpdateBill = async ( x: IUpdateBill) => {
     try {
-      await updateBillSetup(x.apartmentTypeId, x);
+      await updateBillSetup(x.id, x);
       toast.success("Bill updated successfully");
       setEditingRowId(null);
       setAmount(null); 
-      queryClient.invalidateQueries({ queryKey: ["apartmentTypeBill"] }); 
+      queryClient.invalidateQueries({ queryKey: ["billsetup"] })
     } catch (error) {
       toast.error(error.response?.data?.error || "Unable to update bill");
       console.error("Update error:", error);
@@ -75,7 +76,7 @@ try {
   // Toggle create pricing modal
   const handleOpenModal = () => {
     setShowCreatePricing(!showCreatePricing);
-    queryClient.invalidateQueries({ queryKey: ["apartmentTypeBill"] });
+    queryClient.invalidateQueries({ queryKey: ["billsetup"] })
   };
 
   if (isLoading) {
@@ -98,20 +99,19 @@ try {
         transition={Zoom}
       />
 
-      <div>
-        <div>
-          <h2 className="font-Poppins text-2xl font-semibold">Pricing Bill Setup</h2>
-          <div className="flex justify-between mx-4">
-            <div></div>
-            <div className="w-2/5">
+      <div className="overflow-x-auto font-Poppins mt-4 mx-4">
+ 
+                <div className="flex justify-between mx-4">
+             <h2 className="font-Poppins text-2xl font-semibold">Pricing Bill Setup</h2>
+    
               <Button
                 onClick={() => setShowCreatePricing(!showCreatePricing)}
               >
                 Create Bill
               </Button>
-            </div>
-          </div>
+
         </div>
+
         <div className="overflow-x-auto font-Poppins mt-4 mx-4">
           {apartmentTypeBill && (
             <Table striped>
@@ -139,7 +139,7 @@ try {
                             setAmount(parseFloat(e.target.value) || 0)
                           }
                           defaultValue={x.amount}
-                          className="p-2 w-auto border border-2 border-gray-500"
+                          className="p-2 w-auto border border-2 border-gray-500 rounded-lg"
                         />
                       ) : (
                         Naira.format(parseFloat(x.amount))
@@ -148,29 +148,52 @@ try {
                     <TableCell className="flex items-center space-x-4">
                       {editingRowId === x.id ? (
                         <Button
-                          name="Update"
+                   
                           onClick={() =>
                             handleUpdateBill({
+                              id: x.id,
                               pspOperatorId: operator.id,
                               propertyTypeId: x.propertyTypeId,
                               apartmentTypeId: x.apartmentTypeId,
                               amount: amount || parseFloat(x.amount),
                             })
                           }
-                        />
+                        >Update</Button>
                       ) : (
                         <>
-                          <MdEdit
-                            className="text-blue-500 text-xl cursor-pointer"
+                        <DropdownMenu>
+                          <div className="flex flex-col  rounded-lg divide-y divide-gray-200 shadow-sm">
+                          <div   className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+                          >
+                          <button
+                            type="button"
                             onClick={() => {
-                              setEditingRowId(x.id);
+                              if (typeof x.id === "number") {
+                                setEditingRowId(x.id);
+                              } else {
+                                setEditingRowId(null);
+                              }
                               setAmount(parseFloat(x.amount));
                             }}
-                          />
+                            className="flex items-center gap-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+                            tabIndex={0}
+                            aria-label={`Edit bill for ${x.propertyTypeName} - ${x.apartmentTypeName}`}
+                          >
+                            <MdEdit
+                              className="text-blue-500 text-xl cursor-pointer"
+                            />
+                            Edit
+                          </button>
+                          </div>
+                          <span   className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
                           <MdDeleteForever
                             className="text-red-500 text-xl cursor-pointer"
 
-                          />
+                          /> Delete
+                          </span>
+                          </div>
+                        </DropdownMenu>
+                         
                         </>
                       )}
                     </TableCell>

@@ -194,6 +194,107 @@ const App: React.FC = () => {
           />
         </Route>
         {/* Admin routes end */}
+                <Route element={<ProtectedRoutes />}>
+          <Route
+            path="/dashboard/*"
+            element={
+              <AdminLayout>
+                <Routes>
+                  <Route path="" element={<Dash />} />
+                  <Route path="revenue" element={<RevenueIndex />} />
+                  <Route path="customers" element={<Customers />} />
+                  <Route path="records" element={<Records />} />
+                  <Route path="billing" element={<Transaction />} />
+                  <Route
+                    path="/properties/*"
+                    element={
+                      <PropertiesLayout>
+                        <Routes>
+                          <Route path="" element={<Properties />} />
+                          <Route path=":propertyId" element={<Property />} />
+                          <Route
+                            path=":propertyId/apartments/:apartment"
+                            element={<ApartmentBill />}
+                          />
+                        </Routes>
+                      </PropertiesLayout>
+                    }
+                  />
+                  <Route
+                    path="billing-customer-all"
+                    element={<AllCustomers />}
+                  />
+                  {/* <Route
+                    path="billing-customer-details"
+                    element={<Customer />}
+                  /> */}
+                  <Route path="reports" element={<Reports />} />
+                  <Route path="settings" element={<All />} />
+                  <Route path="pricing" element={<Pricing />} />
+                  <Route path="user-access" element={<UserAccess />} />
+                  <Route path="security" element={<Security />} />
+                  <Route path="company-settings" element={<CompanyProfile />} />
+                  <Route
+                    path="notification-settings"
+                    element={<NotificationSettings />}
+                  />
+                  <Route path="app-settings" element={<AppSettings />} />
+                </Routes>
+              </AdminLayout>
+            }
+          />
+
+                    <Route
+            path="/super-admin/dashboard/*"
+            element={
+              <AdminLayout>
+                <Routes>
+                  <Route path="" element={<Dash />} />
+                  <Route path="revenue" element={<RevenueIndex />} />
+                  <Route path="customers" element={<Customers />} />
+                  <Route path="records" element={<Records />} />
+                  <Route path="billing" element={<Transaction />} />
+                  <Route
+                    path="/properties/*"
+                    element={
+                      <PropertiesLayout>
+                        <Routes>
+                          <Route path="" element={<Properties />} />
+                          <Route path=":propertyId" element={<Property />} />
+                          <Route
+                            path=":propertyId/apartments/:apartment"
+                            element={<ApartmentBill />}
+                          />
+                        </Routes>
+                      </PropertiesLayout>
+                    }
+                  />
+                  <Route
+                    path="billing-customer-all"
+                    element={<AllCustomers />}
+                  />
+                  {/* <Route
+                    path="billing-customer-details"
+                    element={<Customer />}
+                  /> */}
+                  <Route path="reports" element={<Reports />} />
+                  <Route path="settings" element={<All />} />
+                  <Route path="pricing" element={<Pricing />} />
+                  <Route path="user-access" element={<UserAccess />} />
+                  <Route path="security" element={<Security />} />
+                  <Route path="company-settings" element={<CompanyProfile />} />
+                  <Route
+                    path="notification-settings"
+                    element={<NotificationSettings />}
+                  />
+                  <Route path="app-settings" element={<AppSettings />} />
+                </Routes>
+              </AdminLayout>
+            }
+          />
+
+
+        </Route>
       </Routes>
     </>
   );

@@ -11,7 +11,7 @@ import { getCustomers } from "../../api/customer/customer.service";
 import { toast } from "react-toastify";
 import { ICustomer } from "../../models/customer.interface";
 import { IProperty } from "../../models/property.interface";
-import { ButtonsPrimary } from "../Buttons";
+import { Button } from "../Button";
 
 type Props = {
   openModal: boolean;
@@ -64,7 +64,7 @@ const CreatePropertyModal: React.FC<Props> = ({ openModal, setOpenModal, operato
       wardId: operator.wardId,
       propertyTypeId: propertyTypeId,
       pspOperatorId: operator.id,
-      ownerId: selectedCustomer?.customerId,
+      ownerId: selectedCustomer?.customerId||null,
     },
     onSubmit: (values) => handleCreateProperty(values),
   });
@@ -99,11 +99,11 @@ const CreatePropertyModal: React.FC<Props> = ({ openModal, setOpenModal, operato
       show={openModal}
       onClose={() => setOpenModal(false)}
       size="lg"
-      className="bg-white shadow-lg rounded-xl overflow-hidden"
+      className="overflow-hidden"
       style={{ maxWidth: "600px", width: "100%" }}
     >
-      <Modal.Header className="text-lg font-semibold text-gray-800 border-b border-gray-200 bg-gray-50 px-5 py-3">
-        Create Property
+      <Modal.Header className="text-lg font-semibold text-red border-b border-gray-200 bg-gray-50 px-5 py-3">
+        <h2>Create Property</h2>
       </Modal.Header>
 
       <Modal.Body className="bg-white p-6">
@@ -115,7 +115,7 @@ const CreatePropertyModal: React.FC<Props> = ({ openModal, setOpenModal, operato
               <div className="relative">
                 <input type="checkbox" checked={isOn} onChange={handleToggle} className="sr-only" />
                 <div
-                  className={`w-12 h-6 rounded-full border border-green-500 transition-all duration-300 ${
+                  className={`w-12 h-6 rounded-full border bg-black border-green-500 transition-all duration-300 ${
                     isOn ? "bg-green-500" : "bg-gray-300"
                   }`}
                 >
@@ -223,7 +223,7 @@ const CreatePropertyModal: React.FC<Props> = ({ openModal, setOpenModal, operato
             Create Property
           </button> */}
 
-          <ButtonsPrimary type="submit" name="Create Property" />
+          <Button type="submit" variant="primary" className="w-full">Create Property</Button>
         </form>
       </Modal.Body>
     </Modal>

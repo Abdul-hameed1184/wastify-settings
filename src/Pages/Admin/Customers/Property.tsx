@@ -43,11 +43,13 @@ const Property: React.FC = () => {
 
   return (
     <div className="p-4 ">
-      <div className="">
+     
         {property && <fieldset className="border border-2 border-gray rounded-md p-4">
           <legend className="text-2xl font-semibold text-gray px-2">
             Property Information
           </legend>
+           <div className="flex md:flex-row justify-between">
+            <div className="flex flex-col justify-start">
           <div>
             <span className="block text-xl font-medium text-gray-700">
               Property Owner
@@ -62,8 +64,37 @@ const Property: React.FC = () => {
             </span>
             <span className="block text-2xl">{property.propertyAddress}</span>
           </div>
+                    <div>
+            <span className="block text-xl font-medium text-gray-700">
+              Property Ward
+            </span>
+            <span className="block text-2xl">{property.wardName}</span>
+          </div>
+          </div>
+
+                    <div className="flex flex-col">
+                    <div>
+            <span className="block text-xl font-medium text-gray-700">
+              Property Code
+            </span>
+            <span className="block text-2xl">{property.propertyCode}</span>
+          </div>
+                    <div>
+            <span className="block text-xl font-medium text-gray-700">
+              Property Apartments
+            </span>
+            <span className="block text-2xl">{property.noOfDistinctApartment}</span>
+          </div>
+                    <div>
+            <span className="block text-xl font-medium text-gray-700">
+              Property Registered
+            </span>
+            <span className="block text-2xl">{property?.created_at}</span>
+          </div>
+          </div>
+          </div>
         </fieldset>}
-      </div>
+  
       <div className="flex flex-row justify-between my-4">
           <h2 className="text-2xl font-semibold">Apartments</h2>
 

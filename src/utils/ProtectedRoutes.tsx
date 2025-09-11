@@ -3,7 +3,6 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode';
 import Loader from '../Component/Loader';
 import { IDecodeToken } from './models/decodedtoken.interface';
-import { UsernavBar } from '../Component/UsernavBar';
 
 
 const ProtectedRoutes:React.FC = () => {
@@ -52,6 +51,13 @@ const ProtectedRoutes:React.FC = () => {
           sessionStorage.removeItem('SESSION_AUTH_TOKEN')
           sessionStorage.removeItem('AUTH_ADMIN_DETAILS')
           navigate('/admin-login')
+
+        }
+
+                if (userDetails.role === 3) {
+          sessionStorage.removeItem('SESSION_AUTH_TOKEN')
+          sessionStorage.removeItem('AUTH_ADMIN_DETAILS')
+          navigate('')
 
         }
         setLoggedIn(false)

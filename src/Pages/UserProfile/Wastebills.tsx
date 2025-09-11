@@ -40,6 +40,7 @@ const Wastebills: React.FC = () => {
 
   useEffect(() => {
     (async () => {
+      console.log(customerApartments)
       const data = await getBillingsByApartmentId(customerApartments[0]?.id);
       setApartmentBills(data.data.data);
       console.log(data.data.data);

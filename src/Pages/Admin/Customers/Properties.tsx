@@ -22,11 +22,13 @@ import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
 import InfoModal from "../../../Component/Modal/InfoModal";
 import DropdownMenu from "../../../Component/DropdownMenu";
+import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";
 
 
 const Properties:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
+    const [ openUpdateProperty, setOpenUpdateProperty] = useState<boolean>(false);
   const [ viewDelete, setViewDelete ] = useState<boolean>(false)
   const [ page, setPage] = useState<number>(1);
   const params = {
@@ -34,7 +36,9 @@ const Properties:React.FC = () => {
     per_page: 10,
   };
      
-
+  const handleOpenUpdateProperty = () => {
+    setOpenUpdateProperty(!openUpdateProperty);
+  }
   const { data: allProperties, isLoading, isError } = useQuery({
         queryKey: ['properties', operator.id],
         queryFn: () => {
@@ -115,11 +119,20 @@ const Properties:React.FC = () => {
       </Link>
 
       {/* Edit */}
-      <span className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
-        <MdEdit className="text-blue-500" />
-        <span>Edit Property</span>
-      </span>
-
+      <div className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+        <button
+          type="button"
+          onClick={() => setOpenUpdateProperty(!openUpdateProperty)}
+          className="flex items-center gap-2 focus:outline-none"
+          aria-label="Edit Property"
+        >
+          <MdEdit className="text-blue-500" />
+          <span>Edit Property</span>
+        </button>
+      </div>
+  { 
+  openUpdateProperty &&   <UpdatePropertyModal openModal={openUpdateProperty} handleOpenModal={handleOpenUpdateProperty} operator={operator} property={item} />
+}
       {/* Delete */}
       <button
         type="button"
@@ -197,6 +210,8 @@ const Properties:React.FC = () => {
   { 
   openCreateProperty &&   <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
 }
+
+
       {viewDelete && (
         <InfoModal
           openModal={viewDelete}

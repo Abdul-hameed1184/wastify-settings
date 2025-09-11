@@ -112,6 +112,8 @@ const AdminLogin = () => {
             console.log("user", user);
 
             toast.success(message, { autoClose: 3000 });
+
+          if(pspOperatorData)
             setTimeout(() => {
               SetLoading(false);
               navigate("/dashboard");
