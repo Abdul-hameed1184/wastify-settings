@@ -21,9 +21,19 @@ import { toast } from "react-toastify";
 import { paystackPublicKey } from "../../utils/apiConfig";
 import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
 import { Naira } from "../../utils/format";
+import { IApartment } from "../../models/apartment.interface";
+import OccupancyStatusBadge from "../../utils/OccupyStatusBadge";
 
 const Wastebills: React.FC = () => {
+  const customer: ICustomer = JSON.parse(
+    sessionStorage.getItem("AUTH_USERDETAILS") || "{}"
+  );
+  const customerApartments:IApartment[] = JSON.parse(
+    sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]"
+  );
+
   const [page, setPage] = useState<number>(1);
+  const [ apartment, setApartment ] = useState<IApartment>(customerApartments[0])
   const [apartmentBills, setApartmentBills] = useState<IPaginatedApartmentBills>({
     data: [],
     total: 0,
@@ -31,21 +41,39 @@ const Wastebills: React.FC = () => {
   } as unknown as IPaginatedApartmentBills);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const customer: ICustomer = JSON.parse(
-    sessionStorage.getItem("AUTH_USERDETAILS") || "{}"
-  );
-  const customerApartments = JSON.parse(
-    sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]"
-  );
 
-  useEffect(() => {
-    (async () => {
-      console.log(customerApartments)
-      const data = await getBillingsByApartmentId(customerApartments[0]?.id);
-      setApartmentBills(data.data.data);
-      console.log(data.data.data);
-    })();
-  }, [customerApartments, page]);
+useEffect(() => {
+  (async () => {
+    try {
+      const response = await getBillingsByApartmentId(apartment.id);
+
+      // Ensure response matches IPaginatedApartmentBills
+      const bills: IPaginatedApartmentBills = response.data.data ?? {
+        data: [],
+        total: 0,
+        per_page: 10,
+      };
+
+      setApartmentBills(bills);
+    } catch (err) {
+      console.error("Error fetching bills:", err);
+      setApartmentBills({
+        data: [],
+        total: 0,
+        per_page: 10,
+        current_page: 1,
+        first_page_url: "",
+        from: 0,
+        last_page: 1,
+        last_page_url: "",
+        next_page_url: null,
+        path: "",
+        prev_page_url: null,
+        to: 0
+      });
+    }
+  })();
+}, [apartment, page]);
 
   const handleBillPayment = async (x: IBillData) => {
     try {
@@ -75,6 +103,12 @@ const Wastebills: React.FC = () => {
     }
   };
 
+  const handleSelectedApartment = (e) => {
+    const id = parseInt(e.target.value);
+    const apartment = customerApartments.find(x => x.id  == id)||{} as IApartment;
+    setApartment(apartment);
+  }
+
   const createTransaction = async (x: IBillData, transaction) => {
     try {
       const billPaymentData = [
@@ -82,7 +116,7 @@ const Wastebills: React.FC = () => {
           apartmentBillingId: x.id,
           customerId: customer.customerId,
           transactionId: "TXN" + transaction.transaction,
-          amountPaid: parseFloat(parseFloat(x.totalAmount).toFixed(2)) * 100,
+          amountPaid: parseFloat(parseFloat(x.totalAmount).toFixed(2)),
           paymentMode: "PayStack Payment",
           paymentStatus: 1,
         },
@@ -96,13 +130,40 @@ const Wastebills: React.FC = () => {
 
   return (
     <main className="min-h-screen bg-gray-50 py-6 px-4 md:px-10">
+      <div className="flex md:flex-row flex-col justify-between mb-2">
+<div className="">
+  <label
+    htmlFor="apartment"
+    className="block text-sm font-medium text-gray-700 mb-1"
+  >
+    Select Apartment
+  </label>
+
+  <select
+    id="apartment"
+    onChange={handleSelectedApartment}
+    defaultValue=""
+    className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
+  >
+    {customerApartments?.map((x: IApartment, index) => (
+      <option key={index} value={x.id}>
+        {x.propertyAddress} - {x.apartmentTypeName}
+      </option>
+    ))}
+  </select>
+</div>
+        <h3 className="text-center text-2xl mt-2 font-semibold"><OccupancyStatusBadge status={apartment.status} /> - {apartment.apartmentTypeName.toLocaleUpperCase()},{apartment.propertyAddress.toLocaleUpperCase()}</h3>
+
+
+      </div>
       <div className="flex items-center mb-6">
         {/* <Link to="/profile">
           <IoChevronBack size={28} className="bg-green text-white rounded-xl p-1" />
         </Link> */}
-        <h1 className="text-xl font-semibold text-gray-700 ml-4">Waste Bills</h1>
+        <h1 className="text-3xl font-semibold text-gray-700 ml-4">Waste Bills</h1>
       </div>
       <div className=" m-6 flex justify-center">
+
   <input
     type="text"
     value={searchTerm}
@@ -113,7 +174,8 @@ const Wastebills: React.FC = () => {
 </div>
 
       {
-        <div className="overflow-x-auto bg-white rounded-xl shadow-md mt-4 p-0 w-full">
+       <div className="overflow-x-auto bg-white rounded-xl shadow-md mt-4 p-0 w-full">
+
           <Table striped>
             <TableHead className="bg-green text-white text-lg uppercase">
               <TableHeadCell>Period</TableHeadCell>
@@ -165,7 +227,7 @@ const Wastebills: React.FC = () => {
           </Table>
 
           {/* Pagination */}
-          {apartmentBills.data.length > 0 && (
+          {apartment && apartmentBills.data.length > 0 && (
             <div className="flex justify-between items-center mt-6 p-4 w-100">
               <button
                 className="text-green font-medium disabled:opacity-50"

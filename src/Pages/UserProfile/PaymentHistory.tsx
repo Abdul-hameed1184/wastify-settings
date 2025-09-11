@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getBillPayments } from '../../api/property/apartment.service';
+import { getBillingsByApartmentId, getBillingsPaymentByApartmentId, getBillPayments } from '../../api/property/apartment.service';
 import { IPaginatedBillPayment } from '../../models/paginatedBillPayment';
 import { IApartmentBillingTransaction } from '../../models/billdata.interface';
 import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 'flowbite-react';
@@ -7,36 +7,101 @@ import PaymentStatusBadge from '../../utils/PaymentStatusBadge';
 import { GrOverview } from 'react-icons/gr';
 import { Naira } from '../../utils/format';
 import Loader from '../../Component/Loader';
+import { IApartment } from '../../models/apartment.interface';
+import { ICustomer } from '../../models/customer.interface';
+import { IPaginatedApartmentBills } from '../../models/paginatedApartmentBillsForCustomer';
+import OccupancyStatusBadge from '../../utils/OccupyStatusBadge';
 
 const PaymentHistory:React.FC = () => {
+    const customerApartments:IApartment[] = JSON.parse(
+      sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]"
+    );
     const [billPayments, setBillPayments] = React.useState<IPaginatedBillPayment>({
     data: [],
     total: 0,
     per_page: 10
   } as unknown as IPaginatedBillPayment);
+    const [ apartment, setApartment ] = useState<IApartment>(customerApartments[0])
     const [page, setPage] = React.useState<number>(1);
     const [ modalDetails, setModalDetails ] = useState<boolean>(false)
-    const [ billpayment, setBillPayment ] = useState<IApartmentBillingTransaction>();
+   // const [ billpayment, setBillPayment ] = useState<IApartmentBillingTransaction>();
     const [searchTerm, setSearchTerm] = useState<string>("");
 
-    useEffect(() => {
-        // This effect can be used to fetch payment history data if needed
-        // For now, it just runs once when the component mounts
-       (async () =>  {
-        const data = await getBillPayments();
-        setBillPayments(data.data.data);
-        console.log("Payment History Component Mounted", data);
-    })()
-    },[])
+useEffect(() => {
+  (async () => {
+    try {
+      const response = await getBillingsPaymentByApartmentId(apartment.id);
+
+      // normalize the response
+      const payments: IPaginatedBillPayment = response.data?.data ?? {
+        data: [],
+        total: 0,
+        per_page: 10,
+      };
+      console.log(payments)
+
+      setBillPayments(payments);
+      console.log("Payment History Fetched:", payments);
+    } catch (e) {
+      console.error("Error fetching payments:", e);
+      setBillPayments({
+        data: [],
+        total: 0,
+        per_page: 10,
+        current_page: 1,
+        first_page_url: "",
+        from: 0,
+        last_page: 1,
+        last_page_url: "",
+        next_page_url: null,
+        path: "",
+        prev_page_url: null,
+        to: 0
+      });
+    }
+  })();
+}, [apartment.id]); // optional: if you want it to refetch on pagination/apartment change
 
     const viewExtraDetails = (item) => {
-      setBillPayment(item);
+      setBillPayments(item);
       setModalDetails(!modalDetails)
     }
+
+      const handleSelectedApartment = (e) => {
+        const id = parseInt(e.target.value);
+        const apartment = customerApartments.find(x => x.id  == id)||{} as IApartment;
+        setApartment(apartment);
+      }
 
 
     return (
         <main className='min-h-screen bg-gray-50 py-6 px-4 md:px-10'>
+                <div className="flex md:flex-row flex-col justify-between mb-2">
+<div className="">
+  <label
+    htmlFor="apartment"
+    className="block text-sm font-medium text-gray-700 mb-1"
+  >
+    Select Apartment
+  </label>
+
+  <select
+    id="apartment"
+    onChange={handleSelectedApartment}
+    defaultValue=""
+    className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
+  >
+    {customerApartments?.map((x: IApartment, index) => (
+      <option key={index} value={x.id}>
+        {x.propertyAddress} - {x.apartmentTypeName}
+      </option>
+    ))}
+  </select>
+</div>
+        <h3 className="text-center text-2xl mt-2 font-semibold"><OccupancyStatusBadge status={apartment.status} /> - {apartment.apartmentTypeName.toLocaleUpperCase()},{apartment.propertyAddress.toLocaleUpperCase()}</h3>
+
+
+      </div>
                 <div className="flex items-center mb-6">
                           <h1 className="text-xl font-semibold text-gray-700 ml-4">Payment History</h1>
                  </div>
@@ -52,7 +117,7 @@ const PaymentHistory:React.FC = () => {
 </div>
 
 
-                             { billPayments ?       
+                             { apartment.id &&       
                                       <div className="overflow-x-auto bg-white rounded-xl shadow-md font-Poppins mt-3 mx-4  mt-4">
                                                     <Table striped >
                                                         <TableHead className=" font-Poppins text-lg capitalize text-white bg-green uppercase dark:text-white">
@@ -65,7 +130,7 @@ const PaymentHistory:React.FC = () => {
                                                         </TableHead> 
                                                         <TableBody className="divide-y font-Poppins text-lg ">
                                                  
-                                                        {billPayments.data.length > 0 ? billPayments.data.map((item:IApartmentBillingTransaction, index) => (
+                                                        {billPayments && billPayments.data.length > 0 ? billPayments.data.map((item:IApartmentBillingTransaction, index) => (
                                                                 <TableRow className={index % 2 === 0 ? "odd:bg-tableBackground" : "bg-white dark:border-gray-700 dark:bg-gray-800"} key={index}>
                                                                     <TableCell>{item.billPeriod}</TableCell>
                                                                     <TableCell>{item.propertyAddress}</TableCell>
@@ -86,7 +151,7 @@ const PaymentHistory:React.FC = () => {
                                                         </TableBody>
                                                     </Table>
                   
-                               {   billPayments.data.length > 0 && (
+                               {  billPayments.data.length > 0 && (
                                    <div className="flex justify-between items-center mt-6 p-4 w-100">
                                           <button
                                             className={`text-green font-weight-bold`}
@@ -123,7 +188,7 @@ const PaymentHistory:React.FC = () => {
                                         </div>)}
                                       </div>
                                     
-                                     :<Loader />
+                            
                                     
                             }
                           
