@@ -179,9 +179,9 @@ useEffect(() => {
           <Table striped>
             <TableHead className="bg-green text-white text-lg uppercase">
               <TableHeadCell>Period</TableHeadCell>
-              <TableHeadCell>Apartment Type</TableHeadCell>
               <TableHeadCell>Bill Amount</TableHeadCell>
               <TableHeadCell>Discount Amount</TableHeadCell>
+              <TableHeadCell>Amount to Pay</TableHeadCell>
               <TableHeadCell>Status</TableHeadCell>
               <TableHeadCell>Action</TableHeadCell>
             </TableHead>
@@ -200,11 +200,12 @@ useEffect(() => {
                     key={index}
                   >
                     <TableCell>{item.billPeriod}</TableCell>
-                    <TableCell>{item.apartmentTypeName}</TableCell>
+
   
                     <TableCell >{Naira.format(Number(item.billAmount))}</TableCell>
                                 <TableCell>{Naira.format(Number(item.discountAmount))}</TableCell>
-                                              <TableCell>
+                                     <TableCell className="font-semibold">{Naira.format(Number(item.totalAmount))}</TableCell>
+                      <TableCell>
                       <PaymentStatusBadge status={item.paymentStatus} />
                     </TableCell>
                     <TableCell>

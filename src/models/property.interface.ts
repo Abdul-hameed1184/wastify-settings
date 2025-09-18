@@ -10,6 +10,7 @@ export interface IProperty {
     ownerId:string;
     stateName: string;
     pspOperatorId: number;
-    propertyDescription: string
+    propertyDescription: string;
+    created_at: string
     
 }

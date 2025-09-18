@@ -7,6 +7,8 @@ import Loader from "../../../Component/Loader";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ApartmentList from "../../../Component/ApartmentList";
 import { Button } from "../../../Component/Button";
+import DataCard from "../../../Component/DataCard";
+import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";
 
 
 const Property: React.FC = () => {
@@ -15,7 +17,8 @@ const Property: React.FC = () => {
   const { state } = location;
   const property: IProperty = state.property;
   const [ page,setPage ] = useState<number>(1);
-
+  const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
+  const [ updateModal, setUpdateModal ] = useState<boolean>(false)
   const [openCreateApartmentModal, setOpenCreateApartmentModal] =
     useState<boolean>(false);
     const queryClient = useQueryClient();
@@ -36,15 +39,39 @@ const Property: React.FC = () => {
   });
     };
 
+
   if (isLoading) {
     return <Loader />;
   }
 
 
+  const propertyField = [
+    {
+      key: "ownerFullname",
+      label: 'Property Owner'
+    },
+    {
+      key: "propertyAddress",
+      label: "Property Address"
+    },
+    {
+      key:"wardName",
+      label:"Property Ward"
+    },
+    {
+      key:"propertyCode",
+      label:"Property Code"
+    },{
+      key: "noOfDistinctApartment",
+      label:"No. of Apartments"
+    }
+  ]
+
+
   return (
     <div className="p-4 ">
      
-        {property && <fieldset className="border border-2 border-gray rounded-md p-4">
+        {/* {property && <fieldset className="border border-2 border-gray rounded-md p-4">
           <legend className="text-2xl font-semibold text-gray px-2">
             Property Information
           </legend>
@@ -93,7 +120,17 @@ const Property: React.FC = () => {
           </div>
           </div>
           </div>
-        </fieldset>}
+        </fieldset>} */}
+        <div className="flex justify-between flex-row">
+          <DataCard title={"Property Information"} data={property} fields={propertyField}  />
+         
+            <div className="flex flex-col justify-between">
+              <Button variant="black" onClick={()=>setUpdateModal(!updateModal)}>Edit Property</Button>
+              <span className="">Registered: {property.created_at} </span>
+   
+          </div>
+      
+        </div>
   
       <div className="flex flex-row justify-between my-4">
           <h2 className="text-2xl font-semibold">Apartments</h2>
@@ -107,86 +144,15 @@ const Property: React.FC = () => {
               type={"button"}>Add Apartment</Button>
       </div>
 
-      {/* <div className="space-y-6">
-        <Table striped>
-          <TableHead className=" font-Poppins text-xl capitalize text-white bg-slate-900 dark:text-white">
-            <TableHeadCell>Property Code</TableHeadCell>
-            <TableHeadCell>Name</TableHeadCell>
-            <TableHeadCell>Apartment Type</TableHeadCell>
-            <TableHeadCell>Phone number</TableHeadCell>
-                   <TableHeadCell>Status</TableHeadCell>
-            <TableHeadCell>Actions</TableHeadCell>
-          </TableHead>
-          <TableBody className="divide-y font-Poppins text-xl">
-            {apartments?.data.data.data.length > 0 ?  
-              (apartments?.data.data.data.map((item: IApartment, index) => (
-                <TableRow
-                  className={
-                    index % 2 === 0
-                      ? "odd:bg-tableBackground"
-                      : "bg-white dark:border-gray-700 dark:bg-gray-800"
-                  }
-                  key={index}
-                >
-                  <TableCell>{item.propertyCode} </TableCell>
-                  <TableCell>{item?.customerFullname?.toUpperCase()} </TableCell>
-                  <TableCell>{item.apartmentTypeName} </TableCell>
-                  <TableCell>{item.customerPhone} </TableCell>
-                                    <TableCell><OccupancyStatusBadge status={item.status} /> </TableCell>
-                  <TableCell>
-          
-                                   <Link        to={`apartments/${item.id}`}
-                      state={{ apartment: item }}><LuGlasses className="text-green-100" /></Link>
-
-         
-                  </TableCell>
-                </TableRow>))) : (
-                  <TableRow>
-                    <TableCell colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">
-                     <h2 className="text-lg font-semibold">No apartments found.</h2>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-            <div className="flex justify-center items-center h-20 my-10 w-full ">
-              <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
-                <button
-                className={`text-green font-weight-bold`}
-                onClick={() => setPage(page - 1)}
-                disabled={page === 1}
-              >
-                Previous
-              </button>
-              <div className="mx-8 h-full">
-                {
-                  Array.from({
-                    length: Math.ceil(
-                      (apartments?.data.data.total/apartments?.data.data.per_page)
-                    ),
-                  }).map((_, index) => (
-                    <button
-                      className={`w-8 h-full  ${
-                        page === index + 1 ? "bg-green text-white " : ""
-                      } mr-2`}
-                      key={index}
-                      onClick={() => setPage(page + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-              </div>
-              <button
-                className={`text-green font-weight-bold`}
-                onClick={() => setPage(page + 1)}
-                disabled={Math.ceil(apartments?.data.data.total/apartments?.data.data.per_page) <= page + 1}
-              >
-                Next
-              </button>
-            </div>
-          </div>
-      </div> */}
 {     <ApartmentList apartments={apartments?.data} page={page} setPage={setPage} />}
+
+{
+  property && <UpdatePropertyModal 
+  openModal={updateModal} 
+  handleOpenModal={()=>setUpdateModal(!updateModal)} 
+        operator={operator} 
+        property={property} /> 
+}
 
       {property && (
         <CreateApartmentModal

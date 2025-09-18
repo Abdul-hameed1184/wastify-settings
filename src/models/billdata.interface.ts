@@ -1,10 +1,12 @@
 export interface IBillData {
     apartmentId: number;
+    amountPaid: number;
   apartmentTypeId: number;
   apartmentTypeName: string;
   billAmount: string;
   billPeriod: string;
   created_at: string;
+  customerName:string;
   customerFullname: string;
   customerId: string;
   customerPhone: string;

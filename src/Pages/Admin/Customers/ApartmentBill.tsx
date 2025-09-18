@@ -17,9 +17,12 @@ import { Naira } from "../../../utils/format";
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
 import { Button } from "../../../Component/Button";
 import OccupancyStatusBadge from "../../../utils/OccupyStatusBadge";
+import DataCard from "../../../Component/DataCard";
+import { UpdateApartmentModal } from "../../../Component/Modal/UpdateApartmentModal";
 
 const ApartmentBill: React.FC = () => {
   const [bills, setBills] = useState<IBills[]>([]);
+  const [ updateModal, setUpdateModal ] = useState<boolean>(false)
   const [ refresh, setRefresh ] = useState<boolean>(false);
   const [billHistory, setBillHistory] = useState<IBillData[]>([]);
   const [openCreateBillModal, setOpenCreateBillModal] =
@@ -79,6 +82,14 @@ if(loader){
   return <Loader />;
 }
 
+const apartmentField = [
+  { key: "apartmentTypeName", label: "Apartment Type"},
+  {key: "propertyAddress", label:"Property Address"},
+  { key: "propertyCode", label: "Property Code"},
+  { key:"customerFullname", label:"Customer Name"},
+  { key: "customerPhone", label: "Customer Phone"}
+]
+
 
   function formatDate(dx: string): string {
     const splitted = dx.split("-");
@@ -98,89 +109,30 @@ if(loader){
         <div>
           <div className="">
             <div className="px-4">
-              {/* <img src="/Images/billing-user" alt="user" /> */}
-              <h2 className="text-3xl font-bold">Apartment Details</h2>
+
+              <h2 className="text-3xl font-bold flex">Apartment Details        
+                 <span className="block text-2xl mx-4">
+                      {<OccupancyStatusBadge status={apartment.status} />}
+                    </span></h2>
             </div>
             <div className="flex lg:flex-row md:justify-between p-4 flex-wrap">
-              <div className="lg:w-2/5 m-4 w-full">
-                <fieldset className="border border-2 border-gray rounded-md p-4">
-                  <legend className="text-2xl font-semibold text-gray px-2">
-                    Apartment
-                  </legend>
-                  <div>
-                    <span className="block text-xl font-medium text-gray">
-                      Apartment Type
-                    </span>
-                    <span className="block text-2xl">
-                      {apartment.apartmentTypeName}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="block text-xl font-medium text-gray">
-                      Property Code
-                    </span>
-                    <span className="block text-2xl">
-                      {apartment.propertyCode}
-                    </span>
-                  </div>
-                   <div>
-                    <span className="block text-xl font-medium text-gray">
-                      Property Address
-                    </span>
-                    <span className="block text-2xl">
-                      {apartment.propertyAddress}
-                    </span>
-                  </div>
-                  {/* <div>
-        <span className="block text-sm font-medium text-gray-500">Property Apartments</span>
-        <span className="block text-lg">{apartment.noOfDistinctApartment}</span>
-      </div>
-      <div>
-        <span className="block text-sm font-medium text-gray-500">Property Code</span>
-        <span className="block text-lg">{apartment.propertyCode}</span>
-      </div> */}
-                </fieldset>
-              </div>
-              <div className="lg:w-2/5 m-4 w-full">
-                <fieldset className="border border-2 border-gray rounded-md p-4">
-                  <legend className="text-2xl font-semibold text-gray px-2">
-                    Occupant Information
-                  </legend>
-                  <div>
-                    <span className="block text-xl font-medium text-gray-700">
-                      Customer Name
-                    </span>
-                    <span className="block text-2xl">
-                      {apartment.customerFullname.toUpperCase()}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="block text-xl font-medium text-gray-700">
-                      Customer Phone number
-                    </span>
-                    <span className="block text-2xl">
-                      {apartment.customerPhone}
-                    </span>
-                  </div>
-                                    <div>
-                    <span className="block text-xl font-medium text-gray-700">
-                      Customer Status
-                    </span>
-                    <span className="block text-2xl">
-                      {<OccupancyStatusBadge status={apartment.status} />}
-                    </span>
-                  </div>
-                </fieldset>
-              </div>
 
+                                <DataCard title={"Apartment Details"} data={apartment} fields={apartmentField}  />
+                  <div className="flex flex-col justify-between">                 
+                     <Button variant="black" onClick={()=>setUpdateModal(!updateModal)}>Edit Apartment</Button>
+                    <span></span>
+                  </div>
+
+            
             </div>
 {billHistory?.length === 0 && (
   <div className="text-center mt-4 text-xl text-gray-500">
     <h2>No bills found</h2>
   </div>
 )}
-            <div className="flex justify-end mt-5">
-              <div className=" pr-4 my-4">
+            <div className="flex justify-between my-4 items-center ">
+              <h3 className="text-2xl font-bold text-slate-900">Apartment Bill</h3>
+              <div className=" pr-4">
                 <Button
                   variant="black"
                   onClick={() => setOpenCreateBillModal(true)}
@@ -288,6 +240,11 @@ if(loader){
           setRefresh={() => setRefresh((prev) => !prev)}
         />
       )}
+
+      {
+        updateModal && <UpdateApartmentModal apartment={apartment} openModal={updateModal} setUpdateModal={setUpdateModal} />
+      }
+      
     </main>
   );
 };

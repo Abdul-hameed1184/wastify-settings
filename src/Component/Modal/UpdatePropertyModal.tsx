@@ -157,7 +157,6 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
                 setPropertyTypeId(id);
                 formik.setFieldValue("propertyTypeId", id);
               }}
-              defaultValue=""
             >
               <option value="" disabled>
                 Select type
@@ -215,14 +214,6 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
               <Paragraph2Green content={`${selectedCustomer.firstname} ${selectedCustomer.lastname}`} />
             )}
           </div>
-
-          {/* Submit */}
-          {/* <button
-            type="submit"
-            className="w-full h-12 bg-red text-white font-medium rounded-lg shadow hover:bg-green-600 active:bg-green-700 transition-colors duration-200 focus:outline-none"
-          >
-            Create Property
-          </button> */}
 
           <Button type="submit" variant="primary" className="w-full">Create Property</Button>
         </form>

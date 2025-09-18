@@ -38,10 +38,11 @@ export function PaginatedTable<T>({
   const totalPages = Math.ceil(total / perPage);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-auto">
       {/* Table */}
       <Table striped={striped}>
         <TableHead className="font-Poppins text-xl capitalize text-white bg-slate-900 dark:text-white">
+          <TableHeadCell>S/N</TableHeadCell>
           {columns.map((col, idx) => (
             <TableHeadCell key={idx} className={col.className}>
               {col.header}
@@ -60,6 +61,7 @@ export function PaginatedTable<T>({
                     : "bg-white dark:border-gray-700 dark:bg-gray-800"
                 }
               >
+                <TableCell>{rowIndex+1}</TableCell>
                 {columns.map((col, colIndex) => {
                   const value =
                     typeof col.accessor === "function"

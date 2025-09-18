@@ -2,7 +2,7 @@ import React from 'react';
 
 const statusMap = {
   0: { label: 'Vacant', className: 'bg-red-100 text-red-600' },
-  1: { label: 'Occupied', className: 'bg-black text-white' },
+  1: { label: 'Occupied', className: 'bg-green text-white' },
 };
 
 const OccupancyStatusBadge: React.FC<{ status: number }> = ({ status }) => {

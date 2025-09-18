@@ -25,6 +25,7 @@ import { IBillData } from "../../../models/billdata.interface";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 import { useQuery } from "@tanstack/react-query";
 import { IoPersonCircleOutline } from "react-icons/io5";
+import { IRecentTransaction } from "../../../models/recentTransaction.interface";
 
 
 const Dash = () => {
@@ -62,35 +63,7 @@ const Dash = () => {
     }
   });
 
-//  const [dash, setDash] = useState<IPspOperatorDashboard | undefined>(undefined);
 
-  // useEffect(() => {
-  //   if (dashData) {
-  //     setDash(dashData);
-  //     updateDateTime(); // Initial call to set the date and time immediately
-  //     const intervalId = setInterval(updateDateTime, 1000); // Update every second
-  //     return () => clearInterval(intervalId);
-  //   }
-  // }, [dashData]);
-
-  // useEffect(() => {
-
-  //   (async() => {
-  //     console.log(operator)
-  //     const data = await getPspOperatorDashboard(operator.id)
-  //     console.log(data.data)
-  //     setDash(data.data.data);
-
-  //   updateDateTime(); // Initial call to set the date and time immediately
-  //   const intervalId = setInterval(updateDateTime, 1000); // Update every second
-  //   return () => clearInterval(intervalId);
-  //   })();
-
-  //   setLoading(false)
-  
-
-  // }, []);
-  
   if(isLoading){
     return <Loader />
   }
@@ -173,26 +146,26 @@ const Dash = () => {
               <TableHeadCell>Customer Name</TableHeadCell>
               <TableHeadCell>Address</TableHeadCell>
               <TableHeadCell>Bill Amount</TableHeadCell>
-                            <TableHeadCell>Amount Paid</TableHeadCell>
+              <TableHeadCell>Amount Paid</TableHeadCell>
               <TableHeadCell>Bill Period</TableHeadCell>
               <TableHeadCell>Mode of Payment</TableHeadCell>
               <TableHeadCell>Status</TableHeadCell>
               <TableHeadCell>Total Overdue Bills</TableHeadCell>
             </TableHead>
             <TableBody className="font-Poppins odd:bg-gray-300">
-        {  dash.recentTransactions > 0 ? (dash.recentTransactions.map((x:IBillData,index) => 
+        {  dash.data.recentTransactions && dash.data.recentTransactions.length > 0 ? (dash.data.recentTransactions.map((x:IRecentTransaction,index) => 
         <TableRow  className={
                     index % 2 === 0
                       ? "odd:bg-tableBackground"
                       : "bg-white dark:border-gray-700 dark:bg-gray-800"
                   }
                   key={index}>
-                <TableCell>{x?.paidDateTime}</TableCell>
-                <TableCell>{x.customerName}</TableCell>
+                <TableCell>{x?.updated_at}</TableCell>
+                <TableCell>{x?.customerName}</TableCell>
                 <TableCell>{x.propertyAddress}</TableCell>
                 <TableCell>{Naira.format(parseFloat(x.totalAmount))}</TableCell>
-                                <TableCell>{Naira.format(parseFloat(x.amountPaid))}</TableCell>
-                <TableCell>January, 2025</TableCell>
+                                <TableCell>{Naira.format(parseFloat(x.totalAmount))}</TableCell>
+                <TableCell>{x.billPeriod}</TableCell>
                                 <TableCell>{x.paymentMode}</TableCell>
                                                 <TableCell><PaymentStatusBadge status={x.paymentStatus} /></TableCell>
                                                                 <TableCell>{x.paymentStatusLabel}</TableCell>
