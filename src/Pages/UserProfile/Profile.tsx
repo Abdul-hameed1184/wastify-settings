@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-
+import { AiFillEdit } from "react-icons/ai";
 import {  useNavigate } from "react-router-dom";
 import useLogout from "../../utils/useLogout";
 import { customerDashboard } from "../../api/customer/customer.service";
 
-import ProfileCard from "../../Component/Card/ProfileCard";
-import ProfileSlider from "../../Component/Slider/ProfileSlider";
-
 import { ICustomerDashboard } from "../../models/customerdash.interface";
+import { ProfileForm } from "../../Component/ProfileForm";
+import { ICustomer } from "../../models/customer.interface";
+import { Naira } from "../../utils/format";
+import { Button } from "../../Component/Button";
+import { ChangePasswordModal } from "../../Component/Modal/ChangePasswordModal";
 
 const Profile: React.FC = () => {
+    const customer:ICustomer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "{}");
   const [dashboard, setDashboard] = useState<ICustomerDashboard>({} as ICustomerDashboard);
+  const [ showModalPassword, setShowModalPassword] = useState<boolean>(false)
   const navigate = useNavigate();
   const logout = useLogout();
 
@@ -42,96 +46,56 @@ const Profile: React.FC = () => {
     fetchDashboard();
   }, []);
 
+const [ edit, setEdit ] = useState<boolean>(false);
   return (
-    <main className="min-h-screen bg-green bg-no-repeat py-10">
-      <div className="flex flex-col md:flex-row items-center justify-center gap-8 px-4">
-        <ProfileCard dashBoard={dashboard} />
+    <main className="min-h-screen bg-green bg-no-repeat py-10 flex justify-center">
+        <div className="flex flex-col items-center h-full bg-white shadow-md rounded-xl p-6 max-w-xl w-full m-4">
+      {edit ? (
+        <ProfileForm onSubmit={handleSubmit} user={customer} handleEdit={()=>setEdit(!edit)} />
+      ) : (
+        <div className="w-full m-4">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-2xl text-gray-400 font-semibold">User Profile</h2>
+            <button
+              onClick={()=>setEdit(!edit)}
+              className="flex items-center gap-1 text-white bg-red-800 rounded-md px-4 py-2 hover:underline"
+            >
+              <AiFillEdit />
+              <span>Edit</span>
+            </button>
+          </div>
 
-        <div className="flex-1 w-full max-w-4xl">
-          <div className="p-4">
-            <ProfileSlider />
+          {/* User Info */}
+          <div className="space-y-4">
+            <ProfileItem label="First Name" value={customer.firstname} />
+            <ProfileItem label="Last Name" value={customer.lastname} />
+            <ProfileItem label="Email" value={customer.email || "—"} />
+            <ProfileItem label="Phone" value={customer.phone} />
+            <ProfileItem
+              label="Role"
+              value={customer.role === 1 ? "Operator" : "User"}
+            />
+            <ProfileItem label="Overdue Bill" value={Naira.format(parseFloat(customer.totalOverdueBill))} />
+          </div>
+          <div className="w-full mt-4">
+            <Button onClick={()=>setShowModalPassword(!showModalPassword)} variant="primary" className="w-full">Change Password</Button>
           </div>
         </div>
-      </div>
+      )}
+    </div>
+  
+        <ChangePasswordModal isOpen={showModalPassword} customer={customer} onClose={()=>setShowModalPassword(!showModalPassword)} />
+
     </main>
   );
 };
 
-// import React, { useEffect, useState } from "react";
-// import Swiper from "swiper";
-
-// import { Navigation, Pagination } from "swiper/modules";
-// import "swiper/css";
-// import "swiper/css/navigation";
-// import "swiper/css/pagination";
-// import { customerDashboard } from "../../api/customer/customer.service";
-// import { ICustomerDashboard } from "../../models/customerdash.interface";
-
-// const Profile: React.FC = () => {
-//   const [dash, setDash] = useState<ICustomerDashboard>({} as ICustomerDashboard);
-//   const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "{}");
-
-//   useEffect(() => {
-//     (async () => {
-//       const res = await customerDashboard(customer.customerId);
-//       setDash(res.data.data);
-//     })();
-//   }, []);
-
-//   return (
-//     <main className="min-h-screen bg-green py-8 px-4">
-//       <div className="max-w-6xl mx-auto">
-//         <div className="mb-8">
-//           <ProfileCard dashBoard={dash} />
-//         </div>
-
-//         <Swiper
-//           modules={[Navigation, Pagination]}
-//           spaceBetween={30}
-//           slidesPerView={1}
-//           navigation
-//           pagination={{ clickable: true }}
-//           className="rounded-xl shadow-lg"
-//         >
-//           <SwiperSlide>
-//             <div className="bg-white p-10 rounded-xl text-center">
-//               <h2 className="text-2xl font-bold mb-2 text-green-800">Your Waste Summary</h2>
-//               <p className="text-lg text-gray-700">
-//                 You’ve paid ₦{Number(dash.totalBills || 0).toLocaleString()} for waste in total.
-//               </p>
-//               <p className="mt-4 text-sm text-gray-500">Keep up the good work in maintaining your property clean.</p>
-//             </div>
-//           </SwiperSlide>
-
-//           <SwiperSlide>
-//             <div className="bg-white p-10 rounded-xl text-center">
-//               <h2 className="text-2xl font-bold mb-2 text-green-800">Apartments Overview</h2>
-//               <p className="text-lg text-gray-700">
-//                 You have {dash.totalApartment} registered apartment{dash.totalApartment === 1 ? "" : "s"}.
-//               </p>
-//               <p className="mt-4 text-sm text-gray-500">
-//                 View their individual history to ensure bills are up to date.
-//               </p>
-//             </div>
-//           </SwiperSlide>
-
-//           <SwiperSlide>
-//             <div className="bg-white p-10 rounded-xl text-center">
-//               <h2 className="text-2xl font-bold mb-2 text-green-800">Tips for Responsible Waste Management</h2>
-//               <ul className="list-disc list-inside text-left text-gray-700 mt-4 space-y-2">
-//                 <li>Separate recyclables from regular waste.</li>
-//                 <li>Ensure timely bill payments to avoid surcharges.</li>
-//                 <li>Use designated bags or bins for each apartment.</li>
-//               </ul>
-//             </div>
-//           </SwiperSlide>
-//         </Swiper>
-//       </div>
-//     </main>
-//   );
-// };
-
-// export default ProfileSlider;
-
+const ProfileItem: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <div className="flex justify-between  pb-2 text-2xl items-center">
+    <span className="text-gray font-semibold">{label}</span>
+    <span className="text-gray-900">{value}</span>
+  </div>
+);
 
 export default Profile;

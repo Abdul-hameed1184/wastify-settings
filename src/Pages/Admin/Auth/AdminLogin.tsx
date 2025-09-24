@@ -4,7 +4,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FormikValues, useFormik } from "formik";
 import { ToastContainer, Zoom, toast } from "react-toastify";
 import axios from "axios";
-import { useDispatch } from "react-redux";
 import {
   ParagraphExtraSmallError,
   ParagraphSmall2,
@@ -38,7 +37,6 @@ const validate = (values: {email: string, password: string}) => {
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [istoggle, setIstoggle] = useState(false);
   const [loading, SetLoading] = useState(false);
 
@@ -106,10 +104,6 @@ const AdminLogin = () => {
             const token = res.data?.data?.authorisation?.token;
             sessionStorage.setItem("SESSION_AUTH_TOKEN", token);
             sessionStorage.setItem("AUTH_ADMIN_DETAILS", JSON.stringify(user));
-
-            console.log("psp", pspOperatorData);
-
-            console.log("user", user);
 
             toast.success(message, { autoClose: 3000 });
 

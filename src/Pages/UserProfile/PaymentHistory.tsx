@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { getBillingsByApartmentId, getBillingsPaymentByApartmentId, getBillPayments } from '../../api/property/apartment.service';
+import { getBillingsPaymentByApartmentId } from '../../api/property/apartment.service';
 import { IPaginatedBillPayment } from '../../models/paginatedBillPayment';
 import { IApartmentBillingTransaction } from '../../models/billdata.interface';
 import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 'flowbite-react';
 import PaymentStatusBadge from '../../utils/PaymentStatusBadge';
-import { GrOverview } from 'react-icons/gr';
 import { Naira } from '../../utils/format';
-import Loader from '../../Component/Loader';
+
 import { IApartment } from '../../models/apartment.interface';
-import { ICustomer } from '../../models/customer.interface';
-import { IPaginatedApartmentBills } from '../../models/paginatedApartmentBillsForCustomer';
+
+
 import OccupancyStatusBadge from '../../utils/OccupyStatusBadge';
 
 const PaymentHistory:React.FC = () => {
@@ -53,7 +52,7 @@ useEffect(() => {
         from: 0,
         last_page: 1,
         last_page_url: "",
-        next_page_url: null,
+        next_page_url: "",
         path: "",
         prev_page_url: null,
         to: 0
@@ -62,10 +61,10 @@ useEffect(() => {
   })();
 }, [apartment.id]); // optional: if you want it to refetch on pagination/apartment change
 
-    const viewExtraDetails = (item) => {
-      setBillPayments(item);
-      setModalDetails(!modalDetails)
-    }
+    // const viewExtraDetails = (item) => {
+    //   setBillPayments(item);
+    //   setModalDetails(!modalDetails)
+    // }
 
       const handleSelectedApartment = (e) => {
         const id = parseInt(e.target.value);
@@ -126,7 +125,7 @@ useEffect(() => {
                                                             <TableHeadCell>Bill Amount</TableHeadCell>
                                                             <TableHeadCell>Amount paid</TableHeadCell>
                                                             <TableHeadCell>Status</TableHeadCell>
-                                                            <TableHeadCell>View Details</TableHeadCell>
+                                                            {/* <TableHeadCell>View Details</TableHeadCell> */}
                                                         </TableHead> 
                                                         <TableBody className="divide-y font-Poppins text-lg ">
                                                  
@@ -137,7 +136,7 @@ useEffect(() => {
                                                                               <TableCell>{Naira.format(Number(item.billAmount))}</TableCell>
                                                                     <TableCell>{Naira.format(Number(item.amountPaid))}</TableCell>
                                                                             <TableCell><PaymentStatusBadge status={item.paymentStatus} /></TableCell>
-                                                                            <TableCell onClick={() => viewExtraDetails(item)}><GrOverview /></TableCell>
+                                                                            {/* <TableCell onClick={() => viewExtraDetails(item)}><GrOverview /></TableCell> */}
                                                                               
                                                         
                                                                 </TableRow>

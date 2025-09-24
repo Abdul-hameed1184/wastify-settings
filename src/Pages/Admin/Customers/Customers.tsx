@@ -31,7 +31,7 @@ const Customers: React.FC = () => {
   //const [loading, setLoading] = useState<boolean>(true);
   // const [customers, setCustomers] = useState<IPaginatedCustomers>();
 
-  const { data: allapartments, isLoading, isError } = useQuery({
+  const { data: allcustomers, isLoading, isError } = useQuery({
     queryKey: [page, operator.id],
     queryFn: async () => {
       const xy = await getCustomers(page, operator.id);
@@ -50,28 +50,28 @@ const Customers: React.FC = () => {
     customerPhone: string;
   }
 
-  function getUniqueCustomers(data: IApartment[]): Customerx[] {
-    const uniqueMap = new Map<string, Customerx>();
+  // function getUniqueCustomers(data: IApartment[]): Customerx[] {
+  //   const uniqueMap = new Map<string, Customerx>();
 
-    data.forEach(item => {
-      if (!uniqueMap.has(item.customerId)) {
-        uniqueMap.set(item.customerId, {
-          customerId: item.customerId,
-          customerFullname: item.customerFullname,
-          customerPhone: item.customerPhone
-        });
-      }
-    });
+  //   data.forEach(item => {
+  //     if (!uniqueMap.has(item.customerId)) {
+  //       uniqueMap.set(item.customerId, {
+  //         customerId: item.customerId,
+  //         customerFullname: item.customerFullname,
+  //         customerPhone: item.customerPhone
+  //       });
+  //     }
+  //   });
 
-    return Array.from(uniqueMap.values());
-  }
+  //   return Array.from(uniqueMap.values());
+  // }
 
   // function getCustomerApartments(customerId: string): IApartmentTypeBill {
   //   return allapartments?.data.data.data.filter(item => item.customerId === customerId);
   // }
 
   const viewCustomer = (customerId: string) => {
-    const dy = allapartments?.data.data.data.filter(item => item.customerId === customerId);
+    const dy = allcustomers?.data.data.data.filter(item => item.customerId === customerId);
     setCustomerApartments(dy);
     console.log(dy)
     setOpenViewCustomer(true)
@@ -124,18 +124,7 @@ const comp = <div>
             </Table> 
 </div>
 
-  // useEffect(() => {
-  //   try {
-  //     (async () => {
-  //       const ty = await getPaginatedCustomers(page);
-  //       setCustomers(ty.data.data);
 
-  //       setLoading(false);
-  //     })();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, [ page]);
 
   if (isLoading) {
     return <Loader />;
@@ -161,7 +150,7 @@ const comp = <div>
           </div>
         </div>
 
-        {(page && allapartments) && (
+        {(page && allcustomers) && (
           <div className="overflow-x-auto font-Poppins mt-3">
             <Table striped>
               <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
@@ -175,7 +164,7 @@ const comp = <div>
               </TableHead>
               <TableBody className=" font-Poppins text-xl ">
                 {page &&
-                  getUniqueCustomers(allapartments.data.data.data).map((item: Customerx, index) => (
+                  allcustomers.data.data.data.map((item: Customerx, index) => (
                     <TableRow
                       className={
                         index % 2 === 0
@@ -214,7 +203,7 @@ const comp = <div>
               </TableBody>
             </Table>
             {/* Pagination */}
-            {/* <div className="flex justify-center items-center h-20 my-10 w-full ">
+            <div className="flex justify-center items-center h-20 my-10 w-full ">
               <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
                 <button
                   className={`text-green font-weight-bold`}
@@ -225,7 +214,7 @@ const comp = <div>
                 </button>
                 <div className="mx-8 h-full">
                   {Array.from({
-                    length: Math.ceil(allapartments.data.total / allapartments.data.per_page),
+                    length: Math.ceil(allcustomers.data.data.total / allcustomers.data.data.per_page),
                   }).map((_, index) => (
                     <button
                       className={`w-8 h-full  ${
@@ -242,13 +231,13 @@ const comp = <div>
                   className={`text-green font-weight-bold`}
                   onClick={() => setPage(page + 1)}
                   disabled={
-                    Math.ceil(allapartments.data.total / allapartments.data.per_page) <= page + 1
+                    Math.ceil(allcustomers.data.data.total / allcustomers.data.data.per_page) <= page + 1
                   }
                 >
                   Next
                 </button>
               </div>
-            </div> */}
+            </div>
           </div>
         )}
       </div>

@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 const LoginProtect:React.FC = () => {
     const loggedin  = sessionStorage.getItem('AUTH_USERDETAILS')
   return (
-    loggedin ?  <Navigate to='/profile' /> : <Outlet />
+    loggedin ?  <Navigate to='/dashboard' /> : <Outlet />
   )
 }
 

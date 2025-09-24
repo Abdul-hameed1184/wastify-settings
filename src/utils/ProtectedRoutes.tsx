@@ -11,24 +11,6 @@ const ProtectedRoutes:React.FC = () => {
   const navigate = useNavigate();
   const [ loading, setLoading ] = useState<boolean>(true)
 
-  // const checkAuthenticated = async () => {
-  //   try {
-  //     const response = await axios.post(baseURL + `auth/validate-token-expiration`, {
-  //       validateTokenExpiration: sessionStorage.getItem('SESSION_AUTH_TOKEN')
-  //     });
-  //     console.log('response from protected Route', response);
-  //     if (!response.data.errorState) {
-  //       console.log(response.data.data);
-  //     }
-  //   } catch (error) {
-  //     console.log('error from protected Route', error);
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   checkAuthenticated()
-  // }, []);
-
   useEffect(() => {
     const userDetails:IDecodeToken|null = decodeToken(token);
  

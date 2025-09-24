@@ -48,7 +48,8 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
       await createProperty({ ...xproperty, ownerId: selectedCustomer?.customerId } as IProperty);
       toast.success("Property successfully created");
       handleOpenModal();
-    } catch {
+    } catch(e) {
+      console.log(e)
       toast.error("Unable to Create Property");
     }
   };
@@ -215,7 +216,7 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
             )}
           </div>
 
-          <Button type="submit" variant="primary" className="w-full">Create Property</Button>
+          <Button type="submit" variant="primary" className="w-full">Update Property</Button>
         </form>
       </Modal.Body>
     </Modal>

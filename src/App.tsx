@@ -34,6 +34,7 @@ import ProtectedRoutes from "./utils/ProtectedRoutes";
 import axios from "axios";
 import LoginProtect from "./utils/LoginProtect";
 import AdminLoginProtect from "./utils/AdminLoginProtect";
+import SuperAdminLoginProtect from "./utils/SuperAdminLoginProtect";
 import All from "./Pages/Admin/Settings/All";
 import Pricing from "./Pages/Admin/Settings/Pricing";
 import ResetPassword from "./Pages/Auth/ResetPassword";
@@ -56,6 +57,8 @@ import ApartmentBill from "./Pages/Admin/Customers/ApartmentBill";
 import UserLayout from "./Layouts/UserLayout";
 import ContactUs from "./Pages/UserProfile/Contact";
 import Customers from "./Pages/Admin/Customers/Customers";
+import SuperAdminLayout from "./Layouts/SuperAdminLayout";
+import Dashboard from "./Pages/UserProfile/Dashboard";
 
 const App: React.FC = () => {
   axios.interceptors.request.use(function (config) {
@@ -72,7 +75,6 @@ const App: React.FC = () => {
       <ToastContainer
         position="top-center"
         autoClose={5000}
-        hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
         rtl={false}
@@ -116,6 +118,7 @@ const App: React.FC = () => {
         {/* User profile page start  */}
         <Route element={<UserLayout />}>
           <Route element={<ProtectedRoutes />}>
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="profile" element={<Profile />} />
             <Route path="wastebills" element={<Wastebills />} />
             <Route path="payment-history" element={<PaymentHistory />} />
@@ -145,7 +148,7 @@ const App: React.FC = () => {
 
         <Route element={<ProtectedRoutes />}>
           <Route
-            path="/dashboard/*"
+            path="operator/dashboard/*"
             element={
               <AdminLayout>
                 <Routes>
@@ -193,10 +196,27 @@ const App: React.FC = () => {
             }
           />
         </Route>
+
+        
         {/* Admin routes end */}
+        
+        {/* SuperAdmin routes start */}
+                <Route element={<SuperAdminLoginProtect />}>
+          <Route path="superadmin-login" element={<AdminLogin />} />
+          {/* <Route path="admin-register" element={<AdminReg />} /> */}
+          {/* <Route
+            path="admin-forgot-password"
+            element={<AdminForgotPassword />}
+          />
+          <Route
+            path="admin-reset-password/:userId/:token"
+            element={<AdminResetPassword />}
+          /> */}
+          {/* <Route path="admin-overview" element={<Overview />} /> */}
+        </Route>
                 <Route element={<ProtectedRoutes />}>
           <Route
-            path="/dashboard/*"
+            path="admin/dashboard/*"
             element={
               <AdminLayout>
                 <Routes>
@@ -247,7 +267,7 @@ const App: React.FC = () => {
                     <Route
             path="/super-admin/dashboard/*"
             element={
-              <AdminLayout>
+              <SuperAdminLayout>
                 <Routes>
                   <Route path="" element={<Dash />} />
                   <Route path="revenue" element={<RevenueIndex />} />
@@ -289,7 +309,7 @@ const App: React.FC = () => {
                   />
                   <Route path="app-settings" element={<AppSettings />} />
                 </Routes>
-              </AdminLayout>
+              </SuperAdminLayout>
             }
           />
 

@@ -100,11 +100,6 @@ const Properties:React.FC = () => {
                   <TableCell>{item.noOfDistinctApartment}</TableCell>
                   {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
                   <TableCell>
-                    {/* <Link to={""+item.id} state={{property: item}}>
-                    <ButtonsPrimary
-                      name={"View Details"}
-                     type={"button"} loading={undefined} />
-                      </Link> */}
 
                       <DropdownMenu>
 <div className="flex flex-col  rounded-lg divide-y divide-gray-200 shadow-sm">

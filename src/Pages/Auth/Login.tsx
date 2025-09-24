@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TiTimes } from "react-icons/ti";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { FormikValues, useFormik } from "formik";
+import { useFormik } from "formik";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -13,11 +13,13 @@ import {
   ParagraphLargeWhite,
 } from "../../Component/Paragraph";
 import { InputFieldSecondaryGreen } from "../../Component/InputField";
-import { ButtonsPrimary } from "../../Component/Buttons";
 import baseURL from "../../utils/apiConfig";
-
-const validate = (values: FormikValues) => {
-  const errors: FormikValues = {};
+import { Button } from "../../Component/Button";
+type Err = {
+  phone: string,
+  password: string
+}
+const validate = (values) => {  const errors: Err = {} as Err;
 
   if (!values.phone) {
     errors.phone = "Phone Number is Required";
@@ -34,7 +36,7 @@ const validate = (values: FormikValues) => {
   return errors;
 };
 
-const Login = () => {
+const Login:React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [istoggle, setIstoggle] = useState(false);
@@ -51,6 +53,7 @@ const Login = () => {
     },
     validate,
     onSubmit: (values) => {
+      console.log(values)
       SetLoading(true);
       axios
         .post(baseURL + "auth/customer/login", values, {
@@ -82,7 +85,7 @@ const Login = () => {
              });
             setTimeout(() => {
               SetLoading(false);
-              navigate("/profile", { state: { user: user } });
+              navigate("/dashboard", { state: { user: user } });
             }, 3000);
           } else {
             toast.success(message, { autoClose: 5000 });
@@ -157,11 +160,7 @@ const Login = () => {
                 </Link>
               </div>
               <div className="mx-4 my-8">
-                <ButtonsPrimary
-                  type={"submit"}
-                  name={"Login"}
-                  loading={loading}
-                />
+                <Button variant="primary" type="submit" className="w-full" loading={loading}>Submit</Button>
               </div>
             </form>
           </div>

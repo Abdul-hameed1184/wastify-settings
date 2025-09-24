@@ -1,6 +1,7 @@
 // components/Modal.tsx
 import React, { useEffect } from "react";
-import { X } from "lucide-react";
+import { MdCancel } from "react-icons/md";
+import { Button } from "../Button";
 
 type ModalProps = {
   isOpen: boolean;
@@ -53,17 +54,13 @@ export const Modal: React.FC<ModalProps> = ({
         {/* Header */}
         <div className="flex justify-between items-center border-b px-4 py-3">
           {title && (
-            <h2 id="modal-title" className="text-lg font-semibold">
+            <h2 id="modal-title" className="text-2xl font-bold">
               {title}
             </h2>
           )}
-          <button
-            onClick={onClose}
-            className="p-1 text-gray-500 hover:text-gray-700"
-            aria-label="Close modal"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          
+           <MdCancel onClick={onClose} className="text-2xl text-red-500" />
+        
         </div>
 
         {/* Body */}

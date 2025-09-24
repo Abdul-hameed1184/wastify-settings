@@ -9,13 +9,15 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { logout } from "../Features/authSlice";
 import { RoundedLogo } from "./AlternateLogos";
 import { IoMdCall } from "react-icons/io";
+import { TfiDashboard } from "react-icons/tfi";
 import { CgProfile } from "react-icons/cg";
 const navLinks = [
-    { to: "/profile", label: "Profile", icon: <CgProfile /> },
+    { to: "/dashboard", label: "Dashboard", icon: <TfiDashboard /> },
   { to: "/wastebills", label: "Waste bills", icon: <FaMoneyBillTrendUp /> },
   { to: "/payment-history", label: "Payment History", icon: <MdOutlinePayments /> },
   // { to: "/view-history", label: "View property", icon: <IoHomeOutline /> },
   // { to: "/support", label: "Support", icon: <BiSupport /> },
+      { to: "/profile", label: "Profile", icon: <CgProfile /> },
   { to: "/contactus", label: "Contact us", icon: <IoMdCall /> },
 ];
 

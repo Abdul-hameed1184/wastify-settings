@@ -10,11 +10,10 @@ const UserLayout:React.FC = () => {
 
     return (
         <div>
-            <UsernavBar />
-            <ToastContainer 
+     <UsernavBar />
+     <ToastContainer 
        position="top-center"
        autoClose={3000}
-       hideProgressBar
        newestOnTop={false}
        closeOnClick
        rtl={false}
