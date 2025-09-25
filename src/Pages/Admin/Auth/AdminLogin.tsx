@@ -12,6 +12,7 @@ import { InputFieldGray } from "../../../Component/InputField";
 import { ButtonsPrimary } from "../../../Component/Buttons";
 import { AdminLogo } from "../../../Component/AlternateLogos";
 import baseURL from "../../../utils/apiConfig";
+import { Button } from "../../../Component/Button";
 
 interface Errors {
   email: string;
@@ -110,7 +111,7 @@ const AdminLogin = () => {
           if(pspOperatorData)
             setTimeout(() => {
               SetLoading(false);
-              navigate("/dashboard");
+              navigate("/operator");
             }, 2000);
           } else {
             toast.error(message, { autoClose: 5000 });
@@ -154,7 +155,7 @@ const AdminLogin = () => {
        transition={Zoom}
       />
 
-            <div className="w-full lg:w-4/5">
+            <div className="w-full">
               <ParagraphSmall2 content={"Email"} />
               <InputFieldGray
                 type={"email"}
@@ -165,10 +166,10 @@ const AdminLogin = () => {
               />
 
               {formik.errors.email ? (
-                <ParagraphExtraSmallError content={formik.errors.email} />
+                           <p className="text-red-500 text-sm">{formik.errors.email}</p>
               ) : null}
             </div>
-            <div className="w-full lg:w-4/5 relative">
+            <div className="w-full relative">
               <ParagraphSmall2 content={"Password"} />
               <InputFieldGray
                 type={istoggle ? "text" : "password"}
@@ -184,6 +185,9 @@ const AdminLogin = () => {
               >
                 {istoggle ? <FaEye /> : <FaEyeSlash />}
               </button>
+                         {formik.errors.password ? (
+                <p className="text-red-500 text-sm">{formik.errors.password}</p>
+              ) : null}
               <div className="flex justify-end mt-2">
                 <Link
                   to={"/admin-forgot-password"}
@@ -193,12 +197,10 @@ const AdminLogin = () => {
                 </Link>
               </div>
 
-              {formik.errors.password ? (
-                <ParagraphExtraSmallError content={formik.errors.password} />
-              ) : null}
+   
             </div>
 
-            <div className="text-center w-full lg:w-4/5 my-8">
+            <div className="text-center w-full  my-8">
               <p>
                 New Psp Operator?{" "}
                 <span>
@@ -212,12 +214,13 @@ const AdminLogin = () => {
               </p>
             </div>
 
-            <div className="w-full lg:w-4/5">
-              <ButtonsPrimary
-                name={"Login"}
+            <div className="w-full">
+              <Button
                 type={"submit"}
+                variant="primary"
                 loading={loading}
-              />
+                className="w-full"
+              > Login </Button>
             </div>
           </form>
         </div>

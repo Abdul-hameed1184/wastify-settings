@@ -1,4 +1,4 @@
-import { Modal } from "flowbite-react";
+
 import {
   Paragraph,
   Paragraph2Green,
@@ -22,6 +22,8 @@ import { IApartmentType } from "../../models/apartmentType.interface";
 import { ButtonsPrimary, ButtonsPrimaryBlack } from "../Buttons";
 import { InputFieldSecondaryGreen } from "../InputField";
 import { createCustomer } from "../../api/psp-operator/psp-operator.service";
+import { Modal } from "./Modal";
+import { Button } from "../Button";
 
 type Props = {
   openModal: boolean;
@@ -122,19 +124,13 @@ const CreateApartmentModal: React.FC<Props> = ({
 
   return (
     <Modal
-      show={openModal}
+      isOpen={openModal}
       onClose={() => setOpenModal(false)}
       size={"md"}
-      position={"center"}
-      className="bg-gray-900/50 backdrop-blur-sm"
+      title={`Create Apartment`}
     >
       {!showCreateCustomer && (
-        <form onSubmit={createApartmentFormik.handleSubmit}  className="z-0 space-y-6">
-  
-          <Modal.Header className="text-2xl font-Poppins font-semibold">
-            Create Apartment for {property.ownerFullname}
-          </Modal.Header>
-          <Modal.Body>
+        <form onSubmit={createApartmentFormik.handleSubmit}  className="z-0 space-y-6 bg-gray-900/50 backdrop-blur-sm m-4">
             <div className="space-y-6">
               {errorMessage && <ParagraphError content={errorMessage} />}
               <div>
@@ -247,17 +243,16 @@ const CreateApartmentModal: React.FC<Props> = ({
                 </div>
               </div>
             </div>
-          </Modal.Body>
 
-          <Modal.Footer>
+
+
             <div className=" w-full">
-              <ButtonsPrimary
-                type="submit"
-                name={"Create Apartment"}
+              <Button
+                type="submit"  
                 disabled={showCreateCustomer}
-              />
+              >Create Apartment</Button>
             </div>
-          </Modal.Footer>
+
         </form>
       )}
 

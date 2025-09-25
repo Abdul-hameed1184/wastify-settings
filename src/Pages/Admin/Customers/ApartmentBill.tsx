@@ -175,14 +175,14 @@ const apartmentField = [
                 
                   billHistory.map((x: IBillData, index) => {
                     return (
-                      <>
+               
            
                         <TableRow key={index} className={
                   index % 2 === 0
                     ? "odd:bg-tableBackground"
                     : "bg-white dark:border-gray-700 dark:bg-gray-800"
                 }>
-                          <TableCell className="px-4 py-2 text-2xl text-black">
+                          <TableCell className="px-4 py-2 text-2xl text-black" key={index}>
                             {formatDate(x.billPeriod)}
                           </TableCell>
                           <TableCell className="px-4 py-2 text-2xl text-black">
@@ -212,7 +212,7 @@ const apartmentField = [
                             </span>
                           </TableCell>
                         </TableRow>
-                        </>
+         
                     )
                   
                   })}
@@ -242,7 +242,7 @@ const apartmentField = [
       )}
 
       {
-        updateModal && <UpdateApartmentModal apartment={apartment} openModal={updateModal} setUpdateModal={setUpdateModal} />
+        updateModal && <UpdateApartmentModal apartment={apartment} openModal={updateModal} handleUpdateModal={()=>setUpdateModal(!updateModal)} />
       }
       
     </main>

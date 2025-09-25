@@ -29,10 +29,10 @@ const NewBillBoard: React.FC<Props> = ({ amount, message }) => {
         <p className="text-3xl font-extrabold text-red-700">
           ₦{amount.toLocaleString()}
         </p>
-        {/* <p className="text-sm text-gray-600 mt-2">for the month of</p>
+        <p className="text-sm text-gray-600 mt-2">for the month of</p>
         <p className="text-lg font-semibold text-gray-800">
           {month} {year}
-        </p> */}
+        </p>
       </div>
     </div>
   );

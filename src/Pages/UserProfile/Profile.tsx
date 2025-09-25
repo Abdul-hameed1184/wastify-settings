@@ -51,7 +51,7 @@ const [ edit, setEdit ] = useState<boolean>(false);
     <main className="min-h-screen bg-green bg-no-repeat py-10 flex justify-center">
         <div className="flex flex-col items-center h-full bg-white shadow-md rounded-xl p-6 max-w-xl w-full m-4">
       {edit ? (
-        <ProfileForm onSubmit={handleSubmit} user={customer} handleEdit={()=>setEdit(!edit)} />
+        <ProfileForm onSubmit={()=>setEdit(!edit)} user={customer} handleEdit={()=>setEdit(!edit)} />
       ) : (
         <div className="w-full m-4">
           {/* Header */}

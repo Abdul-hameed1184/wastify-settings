@@ -44,7 +44,7 @@ const CreatePropertyModal: React.FC<Props> = ({ openModal, setOpenModal, operato
 
   const handleCreateProperty = async (xproperty: FormikValues) => {
     try {
-      await createProperty({ ...xproperty, ownerId: selectedCustomer?.customerId } as IProperty);
+      await createProperty({ ...xproperty, ownerId: selectedCustomer?.customerId || null } as IProperty);
       toast.success("Property successfully created");
       setOpenModal(false);
     } catch {

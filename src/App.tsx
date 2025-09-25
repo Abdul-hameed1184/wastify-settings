@@ -148,7 +148,7 @@ const App: React.FC = () => {
 
         <Route element={<ProtectedRoutes />}>
           <Route
-            path="operator/dashboard/*"
+            path="operator/*"
             element={
               <AdminLayout>
                 <Routes>
