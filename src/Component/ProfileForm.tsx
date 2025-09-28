@@ -5,12 +5,13 @@ import { Input } from "./InputField";
 import { ICustomer } from "../models/customer.interface";
 import { Button } from "./Button";
 import { MdCancel } from "react-icons/md";
+import { toast } from "react-toastify";
 
 // Initial profile data
 
 
 type ProfileFormProps = {
-  onSubmit: (x: Partial<ICustomer>) => void;
+  onSubmit: (data:Partial<ICustomer>) => void; 
   user: ICustomer
   handleEdit: ()=>void
 };
@@ -42,9 +43,14 @@ const validationSchema = Yup.object({
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting }) => {
+          try{
           onSubmit(values);
           setSubmitting(false);
+          }catch(e){
+            console.log(e)
+            toast.error("Error updating your profile")
+          }
         }}
       >
         {({ values, handleChange, handleBlur, errors, touched, isSubmitting }) => (

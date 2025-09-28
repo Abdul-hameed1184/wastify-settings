@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import {  useNavigate } from "react-router-dom";
 import useLogout from "../../utils/useLogout";
-import { customerDashboard } from "../../api/customer/customer.service";
+import { customerDashboard, updateCustomer } from "../../api/customer/customer.service";
 
 import { ICustomerDashboard } from "../../models/customerdash.interface";
 import { ProfileForm } from "../../Component/ProfileForm";
@@ -10,6 +10,7 @@ import { ICustomer } from "../../models/customer.interface";
 import { Naira } from "../../utils/format";
 import { Button } from "../../Component/Button";
 import { ChangePasswordModal } from "../../Component/Modal/ChangePasswordModal";
+import { toast } from "react-toastify";
 
 const Profile: React.FC = () => {
     const customer:ICustomer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "{}");
@@ -25,6 +26,8 @@ const Profile: React.FC = () => {
       navigate("/login");
     }
   };
+
+
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -45,13 +48,24 @@ const Profile: React.FC = () => {
 
     fetchDashboard();
   }, []);
-
+const handleUpdate = async (data: {phone: string, lastname: string, firstname:string, email: string}) => {
+  try{
+  console.log(data);
+  console.log(customer.customerId);
+  await updateCustomer(customer.customerId, data);
+  toast.success("Profile Updated successfully")
+  }catch(e){
+    console.log(e);
+    toast.error("Error updating profile")
+  }
+  
+  }
 const [ edit, setEdit ] = useState<boolean>(false);
   return (
     <main className="min-h-screen bg-green bg-no-repeat py-10 flex justify-center">
         <div className="flex flex-col items-center h-full bg-white shadow-md rounded-xl p-6 max-w-xl w-full m-4">
       {edit ? (
-        <ProfileForm onSubmit={()=>setEdit(!edit)} user={customer} handleEdit={()=>setEdit(!edit)} />
+        <ProfileForm onSubmit={handleUpdate} user={customer} handleEdit={()=>setEdit(!edit)} />
       ) : (
         <div className="w-full m-4">
           {/* Header */}
