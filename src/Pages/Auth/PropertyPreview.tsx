@@ -1,9 +1,8 @@
-import React, { useRef } from 'react'
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { PiCopySimple } from "react-icons/pi";
 import { ToastContainer, toast } from "react-toastify";
-import { Paragraph, Paragraph2, Paragraph2Xl, ParagraphExtraSmall, ParagraphLarge, ParagraphLargeWhite, ParagraphSmall, ParagraphSmall2 } from '../../Component/Paragraph';
+import { Paragraph2, Paragraph2Xl, ParagraphExtraSmall, ParagraphLarge, ParagraphLargeWhite, ParagraphSmall, ParagraphSmall2 } from '../../Component/Paragraph';
 import { ButtonsPrimary } from '../../Component/Buttons';
 
 const PropertyPreview = () => {
@@ -33,7 +32,7 @@ const PropertyPreview = () => {
                 <ToastContainer />
                 <div className="md:mt-1 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg md:mb-20">
                     <div className="flex justify-start mt-6 ml-4 md:mt-2">
-                        <Link to="/propertyunit" smooth="true" duration={500}>
+                        <Link to="/propertyunit">
                             <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
                         </Link>
                     </div>

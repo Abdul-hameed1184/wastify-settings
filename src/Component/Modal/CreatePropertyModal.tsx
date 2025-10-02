@@ -44,10 +44,17 @@ const CreatePropertyModal: React.FC<Props> = ({ openModal, setOpenModal, operato
 
   const handleCreateProperty = async (xproperty: FormikValues) => {
     try {
-      await createProperty({ ...xproperty, ownerId: selectedCustomer?.customerId || null } as IProperty);
-      toast.success("Property successfully created");
+      if(selectedCustomer?.customerId){
+          await createProperty({ ...xproperty, ownerId: selectedCustomer?.customerId } as IProperty);
+      }else{
+          await createProperty({ ...xproperty, ownerId: "02893112-ed73-44f1-82d4-3fa583bfa0ab" } as IProperty);
+
+      }
+          toast.success("Property successfully created");
       setOpenModal(false);
-    } catch {
+    } catch(e) {
+      console.log(e);
+      console.log(xproperty)
       toast.error("Unable to Create Property");
     }
   };
@@ -64,7 +71,8 @@ const CreatePropertyModal: React.FC<Props> = ({ openModal, setOpenModal, operato
       wardId: operator.wardId,
       propertyTypeId: propertyTypeId,
       pspOperatorId: operator.id,
-      ownerId: selectedCustomer?.customerId||null,
+      ownerId: selectedCustomer?.customerId||"02893112-ed73-44f1-82d4-3fa583bfa0ab"
+,
     },
     onSubmit: (values) => handleCreateProperty(values),
   });

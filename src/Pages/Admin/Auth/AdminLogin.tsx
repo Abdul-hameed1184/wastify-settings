@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React,{ useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { FormikValues, useFormik } from "formik";
+import {  useFormik } from "formik";
 import { ToastContainer, Zoom, toast } from "react-toastify";
 import axios from "axios";
-import {
-  ParagraphExtraSmallError,
-  ParagraphSmall2,
-} from "../../../Component/Paragraph";
-import { InputFieldGray } from "../../../Component/InputField";
-import { ButtonsPrimary } from "../../../Component/Buttons";
+import { Input } from "../../../Component/InputField";
 import { AdminLogo } from "../../../Component/AlternateLogos";
 import baseURL from "../../../utils/apiConfig";
 import { Button } from "../../../Component/Button";
 
-interface Errors {
-  email: string;
-  password:string;
+type Err  = {
+  email:string;
+  password: string;
 }
 const validate = (values: {email: string, password: string}) => {
-  const errors:FormikValues= {};
+  const errors= {} as Err;
 
   if (!values.email) {
     errors.email = "Email is Required";
@@ -36,7 +31,7 @@ const validate = (values: {email: string, password: string}) => {
   return errors;
 };
 
-const AdminLogin = () => {
+const AdminLogin:React.FC = () => {
   const navigate = useNavigate();
   const [istoggle, setIstoggle] = useState(false);
   const [loading, SetLoading] = useState(false);
@@ -155,9 +150,10 @@ const AdminLogin = () => {
        transition={Zoom}
       />
 
-            <div className="w-full">
-              <ParagraphSmall2 content={"Email"} />
-              <InputFieldGray
+            <div className="w-full flex flex-col justify-left my-4">
+              <label className="font-semibold text-gray text-left">{"Email"}</label>
+              <Input
+                id="email"
                 type={"email"}
                 name={"email"}
                 placeholder={"Email"}
@@ -169,9 +165,10 @@ const AdminLogin = () => {
                            <p className="text-red-500 text-sm">{formik.errors.email}</p>
               ) : null}
             </div>
-            <div className="w-full relative">
-              <ParagraphSmall2 content={"Password"} />
-              <InputFieldGray
+            <div className=" relative w-full flex flex-col justify-left">
+              <label htmlFor="password" className="font-semibold text-gray text-left">Password</label>
+              <Input
+                id="password"
                 type={istoggle ? "text" : "password"}
                 name={"password"}
                 placeholder={"Password"}
@@ -179,7 +176,7 @@ const AdminLogin = () => {
                 value={formik.values.password}
               />
               <button
-                className="absolute top-12 right-6"
+                className="absolute top-10 right-5"
                 onClick={toggle}
                 type="button"
               >
@@ -200,7 +197,18 @@ const AdminLogin = () => {
    
             </div>
 
-            <div className="text-center w-full  my-8">
+
+
+            <div className="w-full mt-6">
+              <Button
+                type={"submit"}
+                variant="primary"
+                loading={loading}
+                className="w-full"
+              > Login </Button>
+            </div>
+
+                        <div className="text-center w-full  my-8">
               <p>
                 New Psp Operator?{" "}
                 <span>
@@ -212,15 +220,6 @@ const AdminLogin = () => {
                   </Link>
                 </span>
               </p>
-            </div>
-
-            <div className="w-full">
-              <Button
-                type={"submit"}
-                variant="primary"
-                loading={loading}
-                className="w-full"
-              > Login </Button>
             </div>
           </form>
         </div>

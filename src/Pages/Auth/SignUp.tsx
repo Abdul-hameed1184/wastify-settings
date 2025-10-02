@@ -69,7 +69,7 @@ const SignUp = () => {
                 </div>
                 <div className="mt-10 md:mt-3 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
                     <div className="flex justify-end mr-8 md:mr-2">
-                        <Link to="/" smooth="true" duration={500}>
+                        <Link to="/">
                             <TiTimes size={24} className='bg-green text-white rounded-2xl' />
                         </Link>
                     </div>

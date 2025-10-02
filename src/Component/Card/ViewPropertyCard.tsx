@@ -25,8 +25,8 @@ const ViewPropertyCard = () => {
                     <Paragraph2 content={"Touch & Clean"} />
                 </div>
                 <div className="flex justify-between">
-                    <Link className='text-sm m-2 font-Poppins font-light not-italic text-error leading-6 underline'>Delete property</Link>
-                    <Link to="/propertyreview" smooth={true} duration={500} className='text-sm m-2 font-Poppins font-light not-italic text-success leading-6 underline'> View More</Link>
+                    <Link to="/" className='text-sm m-2 font-Poppins font-light not-italic text-error leading-6 underline'>Delete property</Link>
+                    <Link to="/propertyreview" className='text-sm m-2 font-Poppins font-light not-italic text-success leading-6 underline'> View More</Link>
                 </div>
             </div>
         </Card>

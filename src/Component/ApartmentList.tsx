@@ -1,3 +1,4 @@
+import React from "react"
 import { PaginatedTable } from "./PaginatedTable";
 
 import { LuGlasses } from "react-icons/lu";
@@ -6,13 +7,15 @@ import { IApartment } from "../models/apartment.interface";
 import OccupancyStatusBadge from "../utils/OccupyStatusBadge";
 import DropdownMenu from "./DropdownMenu";
 import { MdEdit } from "react-icons/md";
-import { UpdateApartmentModal } from "./Modal/UpdateApartmentModal";
 
 
-export default function ApartmentList({ apartments, page, setPage }: any) {
-  const handleEditApartmentModal = () => {
-    console.log("Free ss")
-  } 
+type Props = {
+  apartments: any,
+  page: number,
+  setPage: (p:number) => void
+}
+export const ApartmentList:React.FC<Props> = ({ apartments, page, setPage }) => {
+
   const columns = [
     { header: "Name", accessor: (a: IApartment) => a.customerFullname?.toUpperCase() },
     { header: "Apartment Type", accessor: "apartmentTypeName" },
@@ -34,10 +37,6 @@ export default function ApartmentList({ apartments, page, setPage }: any) {
               <div  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                 <MdEdit /><span>Edit Apartment</span>
               </div>
- 
-        <span>Change Customer</span>
-        <span>Suspend/Reinstate Apartment</span>
-        <span>View Billing</span>
         </DropdownMenu>
       ),
     },

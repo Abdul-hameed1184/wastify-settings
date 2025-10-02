@@ -26,7 +26,7 @@ const PayAmount = () => {
     return (
         <main className='mt-10 mx-2'>
             <div className="flex justify-start mt-6 ml-6">
-                <Link to="/currentbills" smooth="true" duration={500}>
+                <Link to="/currentbills">
                     <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
                 </Link>
             </div>

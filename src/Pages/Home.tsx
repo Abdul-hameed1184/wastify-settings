@@ -5,7 +5,6 @@ import {
   Paragraph2Xl,
   ParagraphBlack,
   ParagraphLarge,
-  ParagraphLargeHome,
   ParagraphLargeMarginItalic,
   ParagraphLargeWhite,
   ParagraphLargeWhite4xl,

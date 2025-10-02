@@ -5,7 +5,7 @@ import CreateApartmentModal from "../../../Component/Modal/CreateApartmentModal"
 import { IProperty } from "../../../models/property.interface";
 import Loader from "../../../Component/Loader";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import ApartmentList from "../../../Component/ApartmentList";
+import {ApartmentList} from "../../../Component/ApartmentList";
 import { Button } from "../../../Component/Button";
 import DataCard from "../../../Component/DataCard";
 import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";

@@ -2,6 +2,7 @@
 import React from 'react'
 
 type Props = {
+  id?:string;
   type?: string;
   name?: string;
   value?: string;
@@ -55,6 +56,7 @@ export const InputFieldSecondaryGreen:React.FC<Props> = ({ type, name, value, pl
 
   
 export const Input: React.FC<Props> = ({
+  id,
   type = "text",
   name,
   value,
@@ -67,6 +69,7 @@ export const Input: React.FC<Props> = ({
   return (
     <div className="w-full">
       <input
+      id={id}
         type={type}
         name={name}
         value={value}
@@ -74,13 +77,12 @@ export const Input: React.FC<Props> = ({
         onChange={onChange}
         onBlur={onBlur}
         className={`
+          border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
           block
           w-full
-          h-12
-          px-4
-          rounded-xl
+
           border
-          bg-gray-50
+          border-gray
           text-base
           text-gray-800
           placeholder:text-gray-400

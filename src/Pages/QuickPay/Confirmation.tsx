@@ -20,7 +20,7 @@ const Confirmation = () => {
     return (
         <main className='mt-10 mx-4'>
             <div className="flex justify-start mt-6 ml-6">
-                <Link to="/payamount" smooth="true" duration={500}>
+                <Link to="/payamount">
                     <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
                 </Link>
             </div>

@@ -9,3 +9,7 @@ export const createProperty = (property: IProperty) => {
     return axios.post(`/property`, property)
 }
 
+export const updateProperty = (property: IProperty, propertyId: number) => {
+    return axios.put(`/property/${propertyId}`, property)
+}
+

@@ -14,7 +14,7 @@ const Footer = () => {
   return (
     <main className=' md:p-14 bg-black px-8 py-5'>
 
-      <Link to="/" smooth={true} duration={500} >
+      <Link to="/"  >
         <div className="w-14 h-14">
           <LogoTrans />
         </div>

@@ -97,7 +97,7 @@ const PropertyUnit = () => {
         <div className="md:mt-1 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
           <form onSubmit={formik.handleSubmit}>
             <div className="flex justify-start mt-6 ml-6">
-              <Link to="/createaccount" smooth="true" duration={500}>
+              <Link to="/createaccount">
                 <IoChevronBack
                   size={28}
                   className="bg-green text-white rounded-2xl"

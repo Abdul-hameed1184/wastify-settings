@@ -645,7 +645,7 @@ const AdminReg = () => {
                 <div className="flex justify-center mt-2">
                   <p className="text-sm font-inter font-normal not-italic text-gray leading-4">
                     Already have an account yet?{" "}
-                    <Link to="/admin-login" className="text-green" smooth={true} >
+                    <Link to="/admin-login" className="text-green"  >
                       Login
                     </Link>
                   </p>

@@ -1,5 +1,8 @@
 import React from 'react';
-
+export enum OccupancyStatus  {
+  "Vacant" = 0,
+  "Occupied"= 1
+}
 const statusMap = {
   0: { label: 'Vacant', className: 'bg-red-100 text-red-600' },
   1: { label: 'Occupied', className: 'bg-green text-white' },

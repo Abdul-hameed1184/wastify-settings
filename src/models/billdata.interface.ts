@@ -26,7 +26,7 @@ export interface IBillData {
   updated_at: string;
 }
 
-enum PaymentStatus {
+export enum PaymentStatus {
     "Successful" = 1,
     "Failed" = 2,
     "Pending" = 3

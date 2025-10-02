@@ -105,7 +105,7 @@ const VerifyOtp = () => {
                 <div className=" md:mt-3 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
 
                     <div className="flex justify-start mt-10 ml-6 md:mt-3 md:ml-3">
-                        <Link to="/signup" smooth="true" duration={500}>
+                        <Link to="/signup">
                             <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
                         </Link>
                     </div>

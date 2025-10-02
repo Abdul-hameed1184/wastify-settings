@@ -13,6 +13,9 @@ export const getApartmentType = () => {
 export const createApartment = ({propertyId, apartmentData }: {propertyId: number, apartmentData: {customerId?: string, apartmentTypeId: number, description: string}[]}) => {
     return axios.post(`/apartment`, {propertyId, apartmentData });
 }
+export const updateApartment = (apartmentId:number, propertyId: number, apartmentData: {customerId?: string, apartmentTypeId: number, description: string}) => {
+    return axios.put(`/apartment/${apartmentId}`, {apartmentId, propertyId, apartmentData });
+}
 
 export const createApartmentType =(apartmentType: IApartmentType) => {
     return axios.post(`/apartmentType`, apartmentType);

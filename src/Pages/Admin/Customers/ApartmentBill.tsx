@@ -70,10 +70,10 @@ const fetchBills = useCallback(async () => {
     } finally {
       setLoader(false);
     }
-  },[apartment.id, operator.id]);
+  },[apartment.apartmentTypeId, apartment.id]);
  useEffect(() => {
   
-
+ console.log(apartment)
   fetchBills();
 }, [fetchBills, refresh]);
 

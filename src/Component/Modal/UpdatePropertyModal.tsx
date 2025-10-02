@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Modal } from "flowbite-react";
 import { Paragraph2Green, Paragraph2Xl, ParagraphSmall2 } from "../Paragraph";
 import { InputField } from "../InputField";
 import {  useFormik } from "formik";
 import { ILocation } from "../../models/location.interface";
-import { createProperty, getPropertyTypes } from "../../api/property/property.service";
+import {  getPropertyTypes, updateProperty } from "../../api/property/property.service";
 import { IOperator } from "../../models/operator.interface";
 import { IPropertyType } from "../../models/propertType.interface";
 import { getCustomers } from "../../api/customer/customer.service";
@@ -12,6 +11,7 @@ import { toast } from "react-toastify";
 import { ICustomer } from "../../models/customer.interface";
 import { IProperty } from "../../models/property.interface";
 import { Button } from "../Button";
+import { Modal } from "./Modal";
 
 type Props = {
   openModal: boolean;
@@ -22,7 +22,6 @@ type Props = {
 
 const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, operator, property }) => {
   const [propertyTypeList, setPropertyTypeList] = useState<IPropertyType[]>([]);
-  const [propertyTypeId, setPropertyTypeId] = useState<number>();
   const [location, setLocation] = useState<ILocation>();
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
@@ -35,22 +34,25 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
 
       const customersRes = await getCustomers();
       setCustomers(customersRes.data.data);
+      var customer = customersRes.data.data.find(x => x.customerId == property.ownerId)
+      setSelectedCustomer(customer)
     })();
   }, []);
 
   const handleSearchChange = (search: string) => {
     const customer = customers.find((c) => c.phone === search);
     setSelectedCustomer(customer);
+    formik.setFieldValue("customerId", customer?.customerId)
   };
 
-  const handleCreateProperty = async (xproperty) => {
+  const handleUpdateProperty = async (xproperty) => {
     try {
-      await createProperty({ ...xproperty, ownerId: selectedCustomer?.customerId } as IProperty);
-      toast.success("Property successfully created");
+      await updateProperty({ ...xproperty, ownerId: selectedCustomer?.customerId } as IProperty, property.id);
+      toast.success("Property successfully Updated");
       handleOpenModal();
     } catch(e) {
       console.log(e)
-      toast.error("Unable to Create Property");
+      toast.error("Unable to Update Property");
     }
   };
 
@@ -64,11 +66,11 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
       stateId: operator.stateId,
       lgaId: operator.lgaId,
       wardId: operator.wardId,
-      propertyTypeId: propertyTypeId,
+      propertyTypeId: property.propertyTypeId,
       pspOperatorId: operator.id,
       ownerId: property.ownerId,
     },
-    onSubmit: (values) => handleCreateProperty(values),
+    onSubmit: (values) => handleUpdateProperty(values),
   });
 
   const handleToggle = () => {
@@ -98,17 +100,12 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
 
   return (
     <Modal
-      show={openModal}
+      isOpen={openModal}
       onClose={handleOpenModal}
       size="lg"
-      className="overflow-hidden bg-black"
-      style={{ maxWidth: "600px", width: "100%" }}
+      title="Update Property"
     >
-      <Modal.Header className="text-lg font-semibold text-red border-b border-gray-200 bg-gray-50 px-5 py-3">
-        <h2>Update Property</h2>
-      </Modal.Header>
 
-      <Modal.Body className="bg-white p-6">
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           {/* Location Toggle */}
           <div className="flex items-center">
@@ -155,7 +152,6 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
               className="border px-3 py-2 bg-gray-50 rounded-lg w-full focus:outline-none focus:border-green-500"
               onChange={(e) => {
                 const id = parseInt(e.target.value, 10);
-                setPropertyTypeId(id);
                 formik.setFieldValue("propertyTypeId", id);
               }}
             >
@@ -163,7 +159,7 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
                 Select type
               </option>
               {propertyTypeList.map((type) => (
-                <option key={type.id} value={type.id}>
+                <option key={type.id} value={type.id} defaultValue={property.propertyTypeId}>
                   {type.name}
                 </option>
               ))}
@@ -204,7 +200,9 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
               list="owners"
               className="border px-3 py-2 bg-gray-50 rounded-lg w-full focus:outline-none focus:border-green-500"
               name="owner"
-              onChange={(e) => handleSearchChange(e.target.value)}
+              onChange={(e) =>{ 
+                 handleSearchChange(e.target.value);
+                }}
             />
             <datalist id="owners">
               {customers.map((c) => (
@@ -218,7 +216,6 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
 
           <Button type="submit" variant="primary" className="w-full">Update Property</Button>
         </form>
-      </Modal.Body>
     </Modal>
   );
 };

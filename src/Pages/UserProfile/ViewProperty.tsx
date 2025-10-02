@@ -8,7 +8,7 @@ const ViewProperty = () => {
     return (
         <main>
             <div className="flex justify-start mt-10 ml-6">
-                <Link to="/profile" smooth="true" duration={500}>
+                <Link to="/profile">
                     <IoChevronBack size={28} className='bg-green text-white rounded-2xl' />
                 </Link>
             </div>
