@@ -17,8 +17,8 @@ import CreateCustomer from "../../../Component/Modal/CreateCustomer";
 import { useQuery } from "@tanstack/react-query";
 import { IApartment } from "../../../models/apartment.interface";
 import { IOperator } from "../../../models/operator.interface";
-import InfoModal from "../../../Component/Modal/InfoModal";
 import { getCustomers } from "../../../api/psp-operator/psp-operator.service";
+import { Modal } from "../../../Component/Modal/Modal";
 
 
 
@@ -28,14 +28,12 @@ const Customers: React.FC = () => {
   const [customerApartments, setCustomerApartments] = useState<IApartment[]>();
   const [ openViewCustomer, setOpenViewCustomer ] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  //const [loading, setLoading] = useState<boolean>(true);
-  // const [customers, setCustomers] = useState<IPaginatedCustomers>();
+
 
   const { data: allcustomers, isLoading, isError } = useQuery({
     queryKey: [page, operator.id],
     queryFn: async () => {
       const xy = await getCustomers(page, operator.id);
-      console.log(xy);
       return xy;
     }
   });
@@ -96,7 +94,6 @@ const Customers: React.FC = () => {
 
 const comp = <div>
               <div className="flex justify-between items-center">
-              <h3 className="text-2xl font-bold">Customer Apartments</h3>
             </div>
             {isError && <p className="text-red-500">Error loading apartments</p>}
             <Table striped>
@@ -231,7 +228,7 @@ const comp = <div>
                   className={`text-green font-weight-bold`}
                   onClick={() => setPage(page + 1)}
                   disabled={
-                    Math.ceil(allcustomers.data.data.total / allcustomers.data.data.per_page) <= page + 1
+                    Math.ceil(allcustomers.data.data.total / allcustomers.data.data.per_page) <= page 
                   }
                 >
                   Next
@@ -251,9 +248,15 @@ const comp = <div>
       {
      openViewCustomer &&  
 
-     <InfoModal 
-     openModal={openViewCustomer} setOpenModal={()=> setOpenViewCustomer(!openViewCustomer)} header={"Customer Apartments"} 
-     content={comp} buttonName={"Ok"} handleConfirm={()=>{}} />
+    //  <InfoModal 
+    //  openModal={openViewCustomer} setOpenModal={()=> setOpenViewCustomer(!openViewCustomer)} header={"Customer Apartments"} 
+    //  content={comp} buttonName={"Ok"} handleConfirm={()=>{}} />
+    <Modal isOpen={openViewCustomer} onClose={()=> setOpenViewCustomer(!openViewCustomer)} title="Customer Apartments">
+            {comp}
+      
+    </Modal>
+
+
     
       }
     </main>
