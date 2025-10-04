@@ -39,7 +39,7 @@ const ProfileCard: React.FC<Props> = ({ dashBoard }) => {
       </div>
 
       <div>
-        <NewBillBadge amount={dashBoard.totalBills} />
+        <NewBillBadge amount={totalBills} />
       </div>
     </section>
   );

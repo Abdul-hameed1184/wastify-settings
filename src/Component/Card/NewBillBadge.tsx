@@ -22,16 +22,12 @@ const NewBillBoard: React.FC<Props> = ({ amount, message }) => {
         📢 New Bill Alert!
       </h2>
       <p className="text-gray-700 text-lg mb-4">
-        {message || "You have a new bill to settle."}
+        {message || `You have a new bill to settle for ${month} ${year}`}
       </p>
       <div className="bg-red-100 rounded-xl py-4">
         <p className="text-sm text-gray-600">Amount Due</p>
         <p className="text-3xl font-extrabold text-red-700">
           ₦{amount.toLocaleString()}
-        </p>
-        <p className="text-sm text-gray-600 mt-2">for the month of</p>
-        <p className="text-lg font-semibold text-gray-800">
-          {month} {year}
         </p>
       </div>
     </div>
