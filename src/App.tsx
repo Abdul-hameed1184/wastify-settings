@@ -20,45 +20,51 @@ import Profile from "./Pages/UserProfile/Profile";
 import Wastebills from "./Pages/UserProfile/Wastebills";
 import PaymentHistory from "./Pages/UserProfile/PaymentHistory";
 import ViewProperty from "./Pages/UserProfile/ViewProperty";
-import Support from "./Pages/UserProfile/Support";
-import AdminLogin from "./Pages/Admin/Auth/AdminLogin";
-import Overview from "./Pages/Admin/Overview";
-import AdminReg from "./Pages/Admin/Auth/AdminReg";
+import Supportx from "./Pages/UserProfile/Support";
+import Overview from "./Pages/Operator/Overview";
 import AdminLayout from "./Layouts/AdminLayout";
-import Dash from "./Pages/Admin/Dashboard/Dash";
-import RevenueIndex from "./Pages/Admin/Revenue/RevenueIndex";
-import Records from "./Pages/Admin/Customers/Records";
-import Transaction from "./Pages/Admin/Billing/Transaction";
-import Reports from "./Pages/Admin/Customers/Reports";
+import Dash from "./Pages/Operator/Dashboard/Dash";
+import RevenueIndex from "./Pages/Operator/Revenue/RevenueIndex";
+import Records from "./Pages/Operator/Customers/Records";
+import Transaction from "./Pages/Operator/Billing/Transaction";
+import Reports from "./Pages/Operator/Customers/Reports";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
 import axios from "axios";
 import LoginProtect from "./utils/LoginProtect";
 import AdminLoginProtect from "./utils/AdminLoginProtect";
 import SuperAdminLoginProtect from "./utils/SuperAdminLoginProtect";
-import All from "./Pages/Admin/Settings/All";
-import Pricing from "./Pages/Admin/Settings/Pricing";
+import All from "./Pages/Operator/Settings/All";
+import Pricing from "./Pages/Operator/Settings/Pricing";
 import ResetPassword from "./Pages/Auth/ResetPassword";
 import SendRestLink from "./Pages/Auth/SendRestLink";
-import AdminForgotPassword from "./Pages/Admin/Auth/AdminForgotPassword";
-import AdminResetPassword from "./Pages/Admin/Auth/AdminResetPassword";
 import ResetPasswordVerify from "./Pages/Auth/ResetPasswordVerify";
-import AllCustomers from "./Pages/Admin/Billing/AllCustomers";
+import AllCustomers from "./Pages/Operator/Billing/AllCustomers";
 import { ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import UserAccess from "./Pages/Admin/Settings/UserAccess";
-import Security from "./Pages/Admin/Settings/Security";
-import CompanyProfile from "./Pages/Admin/Settings/CompanyProfile";
-import NotificationSettings from "./Pages/Admin/Settings/NotificationSettings";
-import AppSettings from "./Pages/Admin/Settings/AppSettings";
-import Property from "./Pages/Admin/Customers/Property";
-import Properties from "./Pages/Admin/Customers/Properties";
+import UserAccess from "./Pages/Operator/Settings/UserAccess";
+import Security from "./Pages/Operator/Settings/Security";
+import CompanyProfile from "./Pages/Operator/Settings/CompanyProfile";
+import NotificationSettings from "./Pages/Operator/Settings/NotificationSettings";
+import AppSettings from "./Pages/Operator/Settings/AppSettings";
+import Property from "./Pages/Operator/Customers/Property";
+import Properties from "./Pages/Operator/Customers/Properties";
 import PropertiesLayout from "./Layouts/PropertiesLayout";
-import ApartmentBill from "./Pages/Admin/Customers/ApartmentBill";
+import ApartmentBill from "./Pages/Operator/Customers/ApartmentBill";
 import UserLayout from "./Layouts/UserLayout";
 import ContactUs from "./Pages/UserProfile/Contact";
-import Customers from "./Pages/Admin/Customers/Customers";
+import Customers from "./Pages/Operator/Customers/Customers";
 import SuperAdminLayout from "./Layouts/SuperAdminLayout";
 import Dashboard from "./Pages/UserProfile/Dashboard";
+import OperatorLayout from "./Layouts/OperatorLayout";
+import OperatorForgotPassword from "./Pages/Operator/Auth/OperatorForgotPassword";
+import OperatorLogin from "./Pages/Operator/Auth/OperatorLogin";
+import OperatorReg from "./Pages/Operator/Auth/OperatorReg";
+import OperatorResetPassword from "./Pages/Operator/Auth/OperatorResetPassword";
+import { QuickpayProperties } from "./Pages/QuickPay/QuickpayProperties";
+import SupportLogin from "./Pages/Support/Auth/SupportLogin";
+import { Tickets } from "./Pages/Support/Tickets/Ticket";
+import { SupportDashboard } from "./Pages/Support/Dashboard/SupportDashboard";
+import SupportLayout from "./Layouts/SupportLayout";
 
 const App: React.FC = () => {
   axios.interceptors.request.use(function (config) {
@@ -107,6 +113,7 @@ const App: React.FC = () => {
         {/* Auth routes end  */}
 
         {/* Quick Pay routes start */}
+        <Route path="quickpay/properties" element={<QuickpayProperties />} />
         <Route path="currentbills" element={<BillList />} />
         <Route path="payamount" element={<PayAmount />} />
         <Route path="confirmation" element={<Confirmation />} />
@@ -123,34 +130,71 @@ const App: React.FC = () => {
             <Route path="wastebills" element={<Wastebills />} />
             <Route path="payment-history" element={<PaymentHistory />} />
             <Route path="view-history" element={<ViewProperty />} />
-            <Route path="support" element={<Support />} />
+            <Route path="supportx" element={<Supportx />} />
             <Route path="contactus" element={<ContactUs />} />
             {/* <Route path="reports" element={<CustomerReports />} /> */}
           </Route>
         </Route>
 
         {/* User profile page end  */}
+        <Route element={<LoginProtect />} >
+          <Route path="support-login" element={<SupportLogin />} />
 
-        {/* Admin routes start */}
+        <Route element={<ProtectedRoutes />}>
+          <Route
+            path="support/*"
+            element={
+              <SupportLayout>
+                <Routes>
+                  <Route path="" element={<SupportDashboard />} />
+                  <Route path="tickets" element={<Tickets />} />
+                  <Route
+                    path="billing-customer-all"
+                    element={<AllCustomers />}
+                  />
+                  {/* <Route
+                    path="billing-customer-details"
+                    element={<Customer />}
+                  /> */}
+                  <Route path="reports" element={<Reports />} />
+                  <Route path="settings" element={<All />} />
+                  <Route path="pricing" element={<Pricing />} />
+                  <Route path="user-access" element={<UserAccess />} />
+                  <Route path="security" element={<Security />} />
+                  <Route path="company-settings" element={<CompanyProfile />} />
+                  <Route
+                    path="notification-settings"
+                    element={<NotificationSettings />}
+                  />
+                  <Route path="app-settings" element={<AppSettings />} />
+                </Routes>
+              </SupportLayout>
+            }
+          />
+        </Route>
+        
+        </Route>
+
+        {/* Operator routes start */}
         <Route element={<AdminLoginProtect />}>
-          <Route path="admin-login" element={<AdminLogin />} />
-          <Route path="admin-register" element={<AdminReg />} />
+          <Route path="operator-login" element={<OperatorLogin />} />
+          <Route path="operator-register" element={<OperatorReg />} />
           <Route
-            path="admin-forgot-password"
-            element={<AdminForgotPassword />}
+            path="operator-forgot-password"
+            element={<OperatorForgotPassword />}
           />
           <Route
-            path="admin-reset-password/:userId/:token"
-            element={<AdminResetPassword />}
+            path="operator-reset-password/:userId/:token"
+            element={<OperatorResetPassword />}
           />
-          <Route path="admin-overview" element={<Overview />} />
+          <Route path="operator-overview" element={<Overview />} />
         </Route>
 
         <Route element={<ProtectedRoutes />}>
           <Route
             path="operator/*"
             element={
-              <AdminLayout>
+              <OperatorLayout>
                 <Routes>
                   <Route path="" element={<Dash />} />
                   <Route path="revenue" element={<RevenueIndex />} />
@@ -192,17 +236,17 @@ const App: React.FC = () => {
                   />
                   <Route path="app-settings" element={<AppSettings />} />
                 </Routes>
-              </AdminLayout>
+              </OperatorLayout>
             }
           />
         </Route>
 
         
-        {/* Admin routes end */}
+        {/* Operator routes end */}
         
         {/* SuperAdmin routes start */}
                 <Route element={<SuperAdminLoginProtect />}>
-          <Route path="superadmin-login" element={<AdminLogin />} />
+          {/* <Route path="superadmin-login" element={<AdminLogin />} /> */}
           {/* <Route path="admin-register" element={<AdminReg />} /> */}
           {/* <Route
             path="admin-forgot-password"

@@ -5,6 +5,8 @@ type Props = {
   id?:string;
   type?: string;
   name?: string;
+  pattern?: string;
+  maxLength?: number;
   value?: string;
   placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -58,8 +60,10 @@ export const InputFieldSecondaryGreen:React.FC<Props> = ({ type, name, value, pl
 export const Input: React.FC<Props> = ({
   id,
   type = "text",
+  maxLength,
   name,
   value,
+  pattern,
   placeholder,
   onChange,
   onBlur,
@@ -71,7 +75,9 @@ export const Input: React.FC<Props> = ({
       <input
       id={id}
         type={type}
+        pattern={pattern}
         name={name}
+        maxLength={maxLength}
         value={value}
         placeholder={placeholder}
         onChange={onChange}

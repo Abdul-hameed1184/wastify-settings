@@ -8,8 +8,9 @@ import { Input } from "../../Component/InputField";
 import { customerReportSchema } from "../../utils/validators/CustomerReportSchema";
 import CustomerReports from "./CustomerReports";
 import { IApartment } from "../../models/apartment.interface";
-import { Button, ButtonsPrimaryBlack, ButtonsWhite } from "../../Component/Buttons";
-const Support: React.FC = () => {
+import { ButtonsPrimaryBlack, ButtonsWhite } from "../../Component/Buttons";
+import { Button } from "../../Component/Button";
+const Supportx: React.FC = () => {
   const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "");
   const apartments:IApartment[] = JSON.parse(sessionStorage.getItem("CUSTOMER_APARTMENT")||"")||[];
   const [loading, setLoading] = useState<boolean>(false);
@@ -54,7 +55,7 @@ const Support: React.FC = () => {
 
   return (
     <main className="bg-green h-screen">
-      <div className="flex justify-start pt-10 ml-6">
+      {/* <div className="flex justify-start pt-10 ml-6">
         <Link to="/profile">
           <IoChevronBack size={28} className="bg-gray text-white rounded-2xl" />
         </Link>
@@ -72,7 +73,7 @@ const Support: React.FC = () => {
               <p className="text-2xl font-bold text-white">Send us a message</p>
 
             </div>
-              {/* Subject Input */}
+
               <div>
                 <label
                   htmlFor="subject"
@@ -94,7 +95,7 @@ const Support: React.FC = () => {
                 }
               </div>
 
-              {/* Message Textarea */}
+
               <div className="mb-3">
                 <label
                   htmlFor="message"
@@ -127,7 +128,6 @@ const Support: React.FC = () => {
                 </select>
               </div>
 
-              {/* Submit Button */}
               <div className="pt-4 md:w-full">
                 <ButtonsWhite
                   type="submit"
@@ -149,9 +149,11 @@ const Support: React.FC = () => {
         </div>
 
 
-      </div>
+      </div> */}
+
+      <Button>Create Ticket</Button>
     </main>
   );
 };
 
-export default Support;
+export default Supportx;

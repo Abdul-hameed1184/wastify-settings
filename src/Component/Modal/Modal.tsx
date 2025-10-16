@@ -1,7 +1,6 @@
 // components/Modal.tsx
 import React, { useEffect } from "react";
 import { MdCancel } from "react-icons/md";
-import { Button } from "../Button";
 
 type ModalProps = {
   isOpen: boolean;

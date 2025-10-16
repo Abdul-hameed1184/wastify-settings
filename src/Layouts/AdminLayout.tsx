@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react'
-import AdminNavbar from './AdminNavbar'
-import AdminSidebar from './AdminSidebar'
+import AdminNavbar from './OperatorNavbar'
+import AdminSidebar from './OperatorSidebar'
 import { ToastContainer, Zoom } from 'react-toastify';
 
 

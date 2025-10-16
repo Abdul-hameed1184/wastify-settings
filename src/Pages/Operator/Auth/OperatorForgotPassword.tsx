@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { login } from "../../../Features/authSlice";
 import {
   ParagraphExtraSmallError,
   ParagraphSmall2,
@@ -12,11 +9,14 @@ import {
 import { InputFieldGray } from "../../../Component/InputField";
 import { ButtonsPrimary } from "../../../Component/Buttons";
 import { AdminLogo } from "../../../Component/AlternateLogos";
-import baseUrl from "../../../utils/"
+import baseUrl from "../../../utils/apiConfig";
 
-
+type Err = {
+  email: string;
+  email_confirmation: string;
+};
 const validate = (values) => {
-  const errors = {};
+  const errors = {} as Err;
 
   if (!values.email) {
     errors.email = "Email is Required";
@@ -34,8 +34,7 @@ const validate = (values) => {
 
   return errors;
 };
-const AdminForgotPassword:React.FC = () => {
-  const navigate = useNavigate();
+const OperatorForgotPassword:React.FC = () => {
   const [loading, SetLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
@@ -47,7 +46,7 @@ const AdminForgotPassword:React.FC = () => {
       SetLoading(true);
       // console.log(data);
       axios
-        .post(baseURL + "auth/admin/forgot-password", values, {
+        .post(baseUrl + "auth/operator/forgot-password", values, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -133,4 +132,4 @@ const AdminForgotPassword:React.FC = () => {
   );
 };
 
-export default AdminForgotPassword;
+export default OperatorForgotPassword;

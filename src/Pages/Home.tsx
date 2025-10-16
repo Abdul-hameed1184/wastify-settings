@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../Layouts/Layout";
+import * as Yup from "yup";
 import {
   Paragraph2Xl,
   ParagraphBlack,
@@ -10,14 +11,44 @@ import {
   ParagraphLargeWhite4xl,
   ParagraphSmallBlack,
 } from "../Component/Paragraph";
-import { ButtonsPrimary } from "../Component/Buttons";
+import { Input } from "../Component/InputField";
+import { Button } from "../Component/Button";
+import { useFormik } from "formik";
+import { getPropertyQuickPay } from "../api/quickpay/quickpay.service";
+import { toast } from "react-toastify";
 
 const Home:React.FC = () => {
   const navigate = useNavigate();
 
-  const HandleQuick = () => {
-    navigate("/currentbills");
-  };
+  const formik = useFormik({
+    initialValues: {
+      phoneNumber: "",
+      propertyCode: "",
+    },
+    validationSchema: Yup.object({
+      phoneNumber: Yup.string()
+        .matches(/^\+?\d{7,14}$/, "Invalid phone number")
+        .required("Phone number is required"),
+      propertyCode: Yup.string().required("Property code is required"),
+    }),
+    onSubmit: (values) => {
+      getPropertyQuickPay(values.phoneNumber, values.propertyCode)
+        .then((response) => {
+          // Handle successful response
+          console.log(response.data.data);
+          navigate("/currentbills", { state: { data: response.data.data } });
+        })
+        .catch((error) => {
+          // Handle error response
+          console.error("Error fetching quick pay data:", error);
+          toast.error("Failed to fetch quick pay data. Please check your details and try again.");
+          formik.setSubmitting(false); 
+        });
+
+
+    },
+  });
+
   return (
     <Layout>
       <main className="w-full h-full pt-20 md:pt-10 font-Poppins">
@@ -29,33 +60,39 @@ const Home:React.FC = () => {
       <span className="font-bold text-green lg:text-[2.5em]">Wasteefy</span></h2>
     
     </div>
-    <div className="mx-2 my-2">
+    <div className="mx-2 my-2 max-w-md">
+      <form onSubmit={formik.handleSubmit}>
       <ParagraphBlack
         content={"Enter your details and process your wastebill"}
       />
-      <div className="w-full md:w-5/6">
-        <div className="m-4">
-          <input
+      <div className="w-full">
+        <div className="mt-4">
+          <Input
             type="tel"
             name="phoneNumber"
             pattern="^\+?\d{7,14}$"
             maxLength={15}
+            onChange={formik.handleChange}
+            value={formik.values.phoneNumber}
             placeholder="Phone e.g. +234 701 234 5678"
             className="border px-2.5 py-3.5 pl-5 bg-grayInput shadow-sm rounded-lg block text-xl font-Poppins w-full h-14 text-black text-base mt-1 placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:ring-purple"
           />
         </div>
-        <div className="m-4">
-          <input
+        <div className="mt-4">
+          <Input
             type="text"
             name="propertyCode"
+            onChange={formik.handleChange}
+            value={formik.values.propertyCode}
             placeholder="Property code"
             className="border px-2.5 py-3.5 pl-5 bg-grayInput text-xl shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:ring-purple"
           />
         </div>
-        <div className="m-4">
-          <ButtonsPrimary name="Quick Pay" onClick={HandleQuick} />
+        <div className="w-full mt-4">
+          <Button type="submit" loading={formik.isSubmitting} className="w-full">Quick Pay</Button>
         </div>
       </div>
+      </form>
     </div>
 
 

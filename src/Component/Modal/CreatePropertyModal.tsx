@@ -50,8 +50,9 @@ const CreatePropertyModal: React.FC<Props> = ({ openModal, setOpenModal, operato
           await createProperty({ ...xproperty, ownerId: "02893112-ed73-44f1-82d4-3fa583bfa0ab" } as IProperty);
 
       }
-          toast.success("Property successfully created");
+
       setOpenModal(false);
+                toast.success("Property successfully created");
     } catch(e) {
       console.log(e);
       console.log(xproperty)

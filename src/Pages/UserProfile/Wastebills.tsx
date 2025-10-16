@@ -156,11 +156,12 @@ useEffect(() => {
 
 
       </div>
-      <div className="flex items-center mb-6">
+      <div className="flex flex-col items-center mb-6">
         {/* <Link to="/profile">
           <IoChevronBack size={28} className="bg-green text-white rounded-xl p-1" />
         </Link> */}
-        <h1 className="text-3xl font-semibold text-gray-700 ml-4">Waste Bills</h1>
+        <h1 className="text-3xl font-semibold text-gray-700 ml-4 text-center">Waste Bills</h1>
+        <p className="text-center font-semibold">Property Code - {apartment.propertyCode}</p>
       </div>
       <div className=" m-6 flex justify-center">
 

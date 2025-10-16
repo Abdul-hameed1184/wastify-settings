@@ -14,9 +14,17 @@ import { AdminLogo } from "../../../Component/AlternateLogos";
 import axios from "axios";
 import baseURL from "../../../utils/apiConfig";
 import { IState } from "../../../models/location.interface";
-
+type Erro = {
+  businessName: string;
+  phone: string;
+  state:string;
+  lga: string;
+  ward:string;
+  password: string;
+  password_confirmation:string;
+}
 const validate = (values) => {
-  const errors = {};
+  const errors = {} as Erro;
   if (!values.businessName) {
     errors.businessName = "Business Name is Required";
   }
@@ -93,10 +101,13 @@ const AdminReg = () => {
   const [selectedWard, setSelectedWard] = useState();
 
   const [loading, SetLoading] = useState(false);
-
+type Err = {
+  email: string;
+  email_confrim: string
+}
   //validating the email and confirm email form
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors = {} as Err;
 
     if (!formData.email.trim()) {
       newErrors.email = "Company Email is required";

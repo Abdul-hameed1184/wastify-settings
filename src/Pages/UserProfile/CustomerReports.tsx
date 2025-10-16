@@ -12,11 +12,13 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Button,
 } from "flowbite-react";
 import { ButtonsWhite } from "../../Component/Buttons";
 import { Paragraph2Green, Paragraph2Xl } from "../../Component/Paragraph";
 import InfoModal from "../../Component/Modal/InfoModal";
 import Loader from "../../Component/Loader";
+import TicketForm from "../../Component/TicketForm";
 
 type Props = {
   handleFormView: () => void;
@@ -30,6 +32,7 @@ const CustomerReports: React.FC<Props> = ({ handleFormView }) => {
   const [reportsData, setReportsData] = useState<IPaginatedCustomerReports>(
     {} as IPaginatedCustomerReports
   );
+    const [ viewFormTicket, setViewFormTicket ] = useState<boolean>(false)
   const [viewForm, setViewForm] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [report, setReport] = useState<IReport>({} as IReport);
@@ -56,6 +59,8 @@ const CustomerReports: React.FC<Props> = ({ handleFormView }) => {
   if (loading) {
     return <Loader />;
   }
+
+
 
   return (
     <div className="mx-4 mt-3 font-Poppins">
@@ -96,7 +101,10 @@ const CustomerReports: React.FC<Props> = ({ handleFormView }) => {
           }}
         />
       )}
-
+      <Button onClick={()=>setViewFormTicket(!viewFormTicket)}>Create Ticket</Button>
+{
+  <TicketForm isOpen={viewFormTicket} handleOpen={()=>setViewFormTicket(!viewFormTicket)}/>
+}
       {/* Reports Table */}
       {reportsData.data ? (
         <>

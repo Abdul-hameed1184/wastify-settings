@@ -31,7 +31,7 @@ const validate = (values: {email: string, password: string}) => {
   return errors;
 };
 
-const AdminLogin:React.FC = () => {
+const OperatorLogin:React.FC = () => {
   const navigate = useNavigate();
   const [istoggle, setIstoggle] = useState(false);
   const [loading, SetLoading] = useState(false);
@@ -187,7 +187,7 @@ const AdminLogin:React.FC = () => {
               ) : null}
               <div className="flex justify-end mt-2">
                 <Link
-                  to={"/admin-forgot-password"}
+                  to={"/operator-forgot-password"}
                   className="text-sm font-inter font-normal not-italic text-gray leading-4"
                 >
                   Forget Password?
@@ -213,7 +213,7 @@ const AdminLogin:React.FC = () => {
                 New Psp Operator?{" "}
                 <span>
                   <Link
-                    to={"/admin-register"}
+                    to={"/operator-register"}
                     className="font-inter font-normal not-italic text-gray leading-4"
                   >
                     Sign up
@@ -228,4 +228,4 @@ const AdminLogin:React.FC = () => {
   );
 };
 
-export default AdminLogin;
+export default OperatorLogin;

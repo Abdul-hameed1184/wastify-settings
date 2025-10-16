@@ -49,7 +49,7 @@ const CurrentBill:React.FC<Props> = ({bill, handlePayNow}) => {
             <span>Current Amount Due</span>
             <span className="font-bold text-red-600 text-4xl">{Naira.format(parseFloat(bill.totalAmount))}</span>
           </div>
-          <Button type="button" onClick={handlePayNow}>
+          <Button type="button" onClick={handlePayNow} disabled={parseFloat(bill.totalAmount)<=0}>
             Pay Now
           </Button>
         </div>
