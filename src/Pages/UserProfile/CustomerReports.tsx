@@ -12,13 +12,13 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Button,
 } from "flowbite-react";
 import { ButtonsWhite } from "../../Component/Buttons";
 import { Paragraph2Green, Paragraph2Xl } from "../../Component/Paragraph";
 import InfoModal from "../../Component/Modal/InfoModal";
 import Loader from "../../Component/Loader";
 import TicketForm from "../../Component/TicketForm";
+import { Button } from "../../Component/Button";
 
 type Props = {
   handleFormView: () => void;

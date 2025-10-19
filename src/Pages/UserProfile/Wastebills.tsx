@@ -23,6 +23,7 @@ import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
 import { Naira } from "../../utils/format";
 import { IApartment } from "../../models/apartment.interface";
 import OccupancyStatusBadge from "../../utils/OccupyStatusBadge";
+import { PayBillModal } from "../../Component/Modal/PayBillModal";
 
 const Wastebills: React.FC = () => {
   const customer: ICustomer = JSON.parse(
@@ -41,7 +42,8 @@ const Wastebills: React.FC = () => {
   } as unknown as IPaginatedApartmentBills);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-
+  const [ billData, setBillData ] = useState<IBillData>({} as IBillData);
+  const [ billModal, setBillModal ] = useState<boolean>(false)
 useEffect(() => {
   (async () => {
     try {
@@ -74,8 +76,12 @@ useEffect(() => {
     }
   })();
 }, [apartment, page]);
-
+  const handleBillModal = (x: IBillData) => {
+    setBillData(x);
+    setBillModal(!billModal);
+  }
   const handleBillPayment = async (x: IBillData) => {
+    setBillModal(!billModal)
     try {
       const pop = new PaystackPop();
       pop.newTransaction({
@@ -213,7 +219,7 @@ useEffect(() => {
                       <ButtonsPrimary
                         name="Pay"
                         disabled={Number(item.billAmount) <= 0}
-                        onClick={() => handleBillPayment(item)}
+                        onClick={() => handleBillModal(item)}
                       />
                     </TableCell>
                   </TableRow>
@@ -266,6 +272,9 @@ useEffect(() => {
             </button>
           </div>)}
         </div>
+      }
+      {
+        <PayBillModal handleBillPayment={()=>handleBillPayment(billData)} bill={billData} isOpen={billModal} handleOpen={()=>setBillModal(!billModal)} />
       }
     </main>
   );

@@ -1,23 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Input } from "./InputField";
 import { Button } from "./Button";
 import { Modal } from "./Modal/Modal";
+import { IApartment } from "../models/apartment.interface";
+import { ICustomer } from "../models/customer.interface";
+import { createTicket } from "../api/customer/ticket.service";
+import { toast } from "react-toastify";
 
 type Props = {
     handleOpen: ()=>void,
     isOpen: boolean
 }
 const TicketForm:React.FC<Props> = ({ handleOpen, isOpen}) => {
+      const customer: ICustomer = JSON.parse(
+      sessionStorage.getItem("AUTH_USERDETAILS") || "{}"
+    );
+    const customerApartments:IApartment[] = JSON.parse(
+      sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]"
+    );
+      const [ apartment, setApartment ] = useState<IApartment>(customerApartments[0])
   const initialValues = {
     subject: "",
     content: "",
-    propertyId: "",
-    customerId: "",
-    operatorId: "",
+    propertyId: apartment.propertyId,
+    customerId: customer.customerId,
+    operatorId: 6,
     priority: "",
   };
+
+
+
+  // const { data, isLoading } = useQuery<>
 
   const validationSchema = Yup.object({
     subject: Yup.string().required("Subject is required"),
@@ -30,16 +45,26 @@ const TicketForm:React.FC<Props> = ({ handleOpen, isOpen}) => {
       .required("Priority is required"),
   });
 
+    const handleSelectedApartment = (e) => {
+      const id = parseInt(e.target.value);
+      const apartment = customerApartments.find(x => x.id  == id)||{} as IApartment;
+      setApartment(apartment);
+    }
+
   const handleSubmit = async (values, { resetForm }) => {
-    console.log("Form Submitted:", values);
-    // Example API call
-    // await axios.post('/api/tickets', values);
+    try{
+   // console.log("Form Submitted:", values);
+    await createTicket(values)
+    toast.success("Ticket sent")
     resetForm();
+    }catch(e){
+      console.log(e);
+    }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleOpen} title="Create Ticket">
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-md mt-10">
+    <Modal isOpen={isOpen} onClose={handleOpen} title="Create Ticket" size="lg">
+    <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-md mt-2">
       {/* <h2 className="text-xl font-semibold mb-4"></h2> */}
       <Formik
         initialValues={initialValues}
@@ -47,7 +72,33 @@ const TicketForm:React.FC<Props> = ({ handleOpen, isOpen}) => {
         onSubmit={handleSubmit}
       >
         {({ values, setFieldValue, errors, touched }) => (
-          <Form className="space-y-4">
+          <Form className="space-y-2">
+            <div>
+              <label htmlFor="apartmentId">Apartment</label>
+              <select 
+                              onChange={handleSelectedApartment}
+              id="apartmentId" className=" border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
+          block
+          w-full
+
+          border
+          border-gray
+          text-base
+          text-gray-800
+          placeholder:text-gray-400
+          transition-all
+          duration-200
+          ease-in-out
+          focus:outline-none
+          focus:ring-2
+          focus:ring-offset-1">
+                {
+                  customerApartments && customerApartments.map((x:IApartment, index) => <option key={index} value={x.id}>
+        {x.propertyAddress} - {x.apartmentTypeName}
+      </option>)
+                }
+              </select>
+            </div>
             <div>
                           <label className="block mb-1 text-sm font-medium" htmlFor="subject">Subject</label>
             <Input

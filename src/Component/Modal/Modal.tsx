@@ -26,7 +26,7 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   footer,
   size = "md",
-  closeOnOverlay = true,
+  // closeOnOverlay = true,
 }) => {
   // Close on ESC
   useEffect(() => {
@@ -41,7 +41,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-8 py-4 shadow-lg"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-8 py-2 shadow-lg"
      //onClick={closeOnOverlay ? onClose : undefined}
     >
       <div
@@ -51,9 +51,9 @@ export const Modal: React.FC<ModalProps> = ({
         aria-labelledby={title ? "modal-title" : undefined}
       >
         {/* Header */}
-        <div className="flex justify-between items-center border-b px-4 py-3">
+        <div className="flex justify-between items-center border-b px-4">
           {title && (
-            <h2 id="modal-title" className="text-2xl font-bold">
+            <h2 id="modal-title" className="text-2xl font-bold m-2">
               {title}
             </h2>
           )}

@@ -9,10 +9,9 @@ import { useDispatch } from "react-redux";
 import { login } from "../../Features/authSlice";
 import {
   Paragraph2Xl,
-  ParagraphExtraSmallError,
   ParagraphLargeWhite,
 } from "../../Component/Paragraph";
-import { InputFieldSecondaryGreen } from "../../Component/InputField";
+import { Input } from "../../Component/InputField";
 import baseURL from "../../utils/apiConfig";
 import { Button } from "../../Component/Button";
 type Err = {
@@ -120,7 +119,7 @@ const Login:React.FC = () => {
                 <img src="Images/logo.png" alt="logo" srcSet="" />
               </div>
               <div className="m-4">
-                <InputFieldSecondaryGreen
+                <Input
                   placeholder={"Phone Number"}
                   type={"tel"}
                   name={"phone"}
@@ -129,11 +128,11 @@ const Login:React.FC = () => {
                 />
 
                 {formik.errors.phone ? (
-                  <ParagraphExtraSmallError content={formik.errors.phone} />
+                  <p className="text-red-900 text-sm">*{formik.errors.phone}</p>
                 ) : null}
               </div>
               <div className="m-4 relative">
-                <InputFieldSecondaryGreen
+                <Input
                   placeholder={"Password"}
                   type={istoggle ? "text" : "password"}
                   name={"password"}
@@ -148,7 +147,7 @@ const Login:React.FC = () => {
                   {istoggle ? <FaEye /> : <FaEyeSlash />}
                 </button>
                 {formik.errors.password ? (
-                  <ParagraphExtraSmallError content={formik.errors.password} />
+                  <p className="text-red-900 text-sm">*{formik.errors.password}</p>
                 ) : null}
               </div>
               <div className="flex justify-end mr-8">

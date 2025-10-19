@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TicketPaginatedTable } from "../../../Component/TicketPaginatedTable";
 import {  Checkbox } from "flowbite-react";
 import { useQuery } from "@tanstack/react-query";
-import { getAllTickets } from "../../../api/tickets/tickets.service";
+import { getAllTickets, getTicketsByOperator } from "../../../api/tickets/tickets.service";
 import { IoArrowBack, IoArrowForwardOutline } from "react-icons/io5";
 import StatusBadge from "../../../utils/StatusBadge";
 
@@ -57,12 +57,13 @@ const priorityColors = {
   Low: "text-green-400",
 };
 export const Tickets = () => {
+    const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
     const { data:tickets, isLoading } = useQuery({
         queryKey: ['tickets'],
-          queryFn: () => {
-         const data =  getAllTickets();
+          queryFn: async () => {
+         const data =  await getTicketsByOperator(operator.id);
          console.log(data)
-         return data;
+         return data.data.data;
           }
     })
     const [selected, setSelected] = useState([]);
@@ -81,8 +82,8 @@ export const Tickets = () => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-2xl font-semibold text-white">Tickets</h1>
-            <p className="text-gray-500 text-sm">
-              Manage tickets and track performance
+            <p className="text-slate font-semibold text-2xl">
+              Tickets
             </p>
           </div>
           {/* <div className="flex gap-2">
@@ -127,45 +128,38 @@ export const Tickets = () => {
               <table className="min-w-full text-lg ">
                 <thead className="border-b border-gray-800 text-gray-400 hover:text-white hover:bg-green">
                   <tr>
-                    <th className="py-2 px-2 text-left">
-                      <Checkbox
-                        checked={allSelected}
-                        // onCheckedChange={() =>
-                        //   setSelected(
-                        //     allSelected ? [] : ticketsData.map((t) => t.id)
-                        //   )
-                        // }
-                      />
-                    </th>
-                    <th className="py-2 px-2 text-left">Ticket ID</th>
-                    <th className="py-2 px-2 text-left">Subject</th>
-                    <th className="py-2 px-2 text-left">Assignee</th>
-                    <th className="py-2 px-2 text-left">Category</th>
+
+                    <th className="py-2 px-2 text-left">S/N</th>
+                                <th className="py-2 px-2 text-left">Subject</th>
+                    <th className="py-2 px-2 text-left">Customer Name</th>
+                    <th className="py-2 px-2 text-left">Customer Phone</th>
                     <th className="py-2 px-2 text-left">Priority</th>
                     <th className="py-2 px-2 text-left">Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {ticketsData.map((ticket) => (
+                  {tickets && tickets.data.map((ticket, index) => (
                     <tr
                       key={ticket.id}
                       className="rounded-md bg-white hover:bg-green hover:text-white shadow-md mt-4"
                     >
-                      <td className="py-2 px-2">
-                        <Checkbox
-                          checked={selected.includes(ticket.id)}
-                          //onCheckedChange={() => toggleSelect(ticket.id)}
-                        />
-                      </td>
-                      <td className="py-2 px-2 text-gray-300">{ticket.id}</td>
-                      <td className="py-2 px-2 text-gray-300">
+                      {/* <td className="py-2 px-2"> */}
+                        {/* <Checkbox
+                          checked={selected.includes(ticket.id)} */}
+                        {/* onCheckedChange={() => toggleSelect(ticket.id)}
+                        /> */}
+                      {/* </td> */}
+                      <td className="py-2 px-2 text-gray-300">{index+1}</td>
+                                 <td className="py-2 px-2 text-gray-300">
                         {ticket.subject}
                       </td>
-                      <td className="py-2 px-2 text-gray-300">
-                        {ticket.assignee}
+                               <td className="py-2 px-2 text-gray-300">
+                        {ticket.customerFullname}
                       </td>
-                      <td className="py-2 px-2 text-gray-300">
-                        {ticket.category}
+           
+             
+                                    <td className="py-2 px-2 text-gray-300">
+                        {ticket.customerPhone}
                       </td>
                       <td
                         className={`py-2 px-2 font-semibold ${
