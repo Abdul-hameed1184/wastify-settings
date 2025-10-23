@@ -8,8 +8,12 @@ import { create_transaction, verifyPayment } from '../../api/paystack-payment/pa
 import { paystackPublicKey } from "../../utils/apiConfig";
 import PaystackPop from "@paystack/inline-js";
 import { IBillData } from '../../models/billdata.interface'
+import { PayBillModal } from '../../Component/Modal/PayBillModal'
+import { useState } from 'react'
 const BillList = () => {
       const { data } = useLocation().state;
+        const [ billModal, setBillModal ] = useState<boolean>(false);
+          const [ billData, setBillData ] = useState<IBillData>({} as IBillData);
       const handleBillPayment = async (x: IBillData) => {
         try {
           const pop = new PaystackPop();
@@ -69,9 +73,16 @@ const BillList = () => {
                     <Paragraph2Xl content={"Current Bill"} />
                 </div>
                 <div className="m-4 flex flex-col w-full items-center">
-                    {data && data.map((x:IBillData) => <CurrentBill key={x.id} bill={x} handlePayNow={() => handleBillPayment(x)}/>)}
+                    {data && data.filter((x:IBillData) => parseFloat(x.totalAmount) != 0 ).map((x:IBillData) => <CurrentBill key={x.id} bill={x} handlePayNow={() =>{ 
+    setBillData(x);
+    setBillModal(!billModal);
+                    }
+                    }/>)}
                 </div>
             </div>
+                  {
+                    <PayBillModal handleBillPayment={()=>handleBillPayment(billData)} bill={billData} isOpen={billModal} handleOpen={()=>setBillModal(!billModal)} />
+                  }
         </main>
     )
 }

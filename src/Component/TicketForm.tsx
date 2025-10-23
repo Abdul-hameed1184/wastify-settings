@@ -26,7 +26,7 @@ const TicketForm:React.FC<Props> = ({ handleOpen, isOpen}) => {
     content: "",
     propertyId: apartment.propertyId,
     customerId: customer.customerId,
-    operatorId: 6,
+    operatorId: 7,
     priority: "",
   };
 

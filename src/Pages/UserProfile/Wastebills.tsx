@@ -196,6 +196,7 @@ useEffect(() => {
               {apartmentBills?.data?.length ? (
   apartmentBills.data
     .filter((x) => x.paymentStatus !== 1)
+                .filter((x:IBillData) => parseFloat(x.totalAmount) != 0 )
                 .map((item: IBillData, index) => (
                   <TableRow
                     className={

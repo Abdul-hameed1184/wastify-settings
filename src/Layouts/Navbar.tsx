@@ -109,12 +109,12 @@ const Navbar = () => {
                             </li>
                         </Link>
 
-                        <Link to="signup">
+                        {/* <Link to="signup">
                             <li className="text-gray leading-5 text-xl flex  font-Poppins mb-8">
-                                {/* <img src={person1} alt="account" className="cursor-pointer" /> */}
+                            <img src={person1} alt="account" className="cursor-pointer" />
                                 <p className=" cursor-pointer font-semibold">Register</p>
                             </li>
-                        </Link>
+                        </Link> */}
 
 
 
@@ -185,14 +185,14 @@ const Navbar = () => {
                             </Link>
                         </li>
 
-                        <li>
+                        {/* <li>
                             <Link to="/signup">
                                 <button className="bg-green p-2 rounded-md text-white">
                                     Sign Up
 
                                 </button>
                             </Link>
-                        </li>
+                        </li> */}
 
                     </div>
                 }

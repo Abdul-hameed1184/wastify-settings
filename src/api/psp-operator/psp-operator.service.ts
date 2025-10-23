@@ -24,3 +24,20 @@ export const getCustomerReports =  async (operatorId:string) => {
 export const getCustomers = async (page:number, operatorId:number ) => {
     return await axios.get(`/customer/psp-operator/${operatorId}?page=${page}`);
 }
+
+// export const getPropertyByOperator = async (operatorId: string, params: any) => {
+//   const { perPage, searchTerm, sortBy, sortOrder, page } = params;
+
+//   const res = await axios.get(`${BaseUrl}/propertyType`, {
+//     params: {
+//       operatorId,
+//       perPage,
+//       searchTerm,
+//       sortBy,
+//       sortOrder,
+//       page,
+//     },
+//   });
+
+//   return res.data;
+// };

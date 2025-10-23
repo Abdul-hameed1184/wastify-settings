@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import React from "react";
 import Home from "./Pages/Home";
 import ScrolltoTop from "./Component/ScrolltoTop";
-import SignUp from "./Pages/Auth/SignUp";
+// import SignUp from "./Pages/Auth/SignUp";
 import VerifyOtp from "./Pages/Auth/VerifyOtp";
 import CreateAccount from "./Pages/Auth/CreateAccount";
 import PropertyUnit from "./Pages/Auth/PropertyUnit";
@@ -95,7 +95,7 @@ const App: React.FC = () => {
         {/* Auth routes start */}
         <Route path="/" element={<Home />} />
         <Route element={<LoginProtect />}>
-          <Route path="signup" element={<SignUp />} />
+          {/* <Route path="signup" element={<SignUp />} /> */}
           <Route path="login" element={<Login />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="forget-password" element={<SendRestLink />} />
