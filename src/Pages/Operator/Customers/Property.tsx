@@ -93,8 +93,9 @@ const Property: React.FC = () => {
               type={"button"}>Add Apartment</Button>
       </div>
 
-{     <ApartmentList apartments={apartments?.data} page={page} setPage={setPage} />}
+{  apartments?.data &&   <ApartmentList apartments={apartments?.data} page={page} setPage={setPage} />}
 
+{  !apartments?.data &&   <h2 className="text-2xl text-center text-gray-600">No Apartments</h2>}
 {
   property && <UpdatePropertyModal 
   openModal={updateModal} 

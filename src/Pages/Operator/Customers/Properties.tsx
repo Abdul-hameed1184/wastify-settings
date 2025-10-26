@@ -33,20 +33,19 @@ const Properties:React.FC = () => {
   const [ page, setPage] = useState<number>(1);
   const params = {
     page: page,
-    per_page: 10,
+    perPage: 10,
   };
      
   const handleOpenUpdateProperty = () => {
     setOpenUpdateProperty(!openUpdateProperty);
   }
   const { data: allProperties, isLoading, isError } = useQuery({
-        queryKey: ['properties', operator.id],
-        queryFn: () => {
-         const data =  getPropertyByOperator(operator.id,params);
-         return data;
-        }
+        queryKey: ['properties', operator.id, page],
+        queryFn: async() =>  await  getPropertyByOperator(operator.id,params)
+  
 
   })
+
   console.log(allProperties);
   const handleDelete = () => {
 
@@ -126,7 +125,7 @@ const Properties:React.FC = () => {
         </button>
       </div>
   { 
-  openUpdateProperty &&   <UpdatePropertyModal openModal={openUpdateProperty} handleOpenModal={handleOpenUpdateProperty} operator={operator} property={item} />
+   openUpdateProperty &&   <UpdatePropertyModal openModal={openUpdateProperty} handleOpenModal={handleOpenUpdateProperty} operator={operator} property={item} />
 }
       {/* Delete */}
       <button
@@ -179,8 +178,10 @@ const Properties:React.FC = () => {
               </div>
               <button
                 className={`text-green font-weight-bold`}
-                onClick={() => setPage(page + 1)}
-                disabled={Math.ceil(allProperties?.data.data.total/allProperties?.data.data.per_page) <= page + 1}
+                onClick={() =>setPage(page+1)}
+                disabled={page >= Math.ceil(
+    allProperties?.data.data.total / allProperties?.data.data.per_page
+  )}
               >
                 Next
               </button>
@@ -188,8 +189,8 @@ const Properties:React.FC = () => {
           </div>
         </div>}
         {
-        // allProperties?.data.data.data.length == 0 
-        isError
+        allProperties?.data.data.data.length == 0 
+      
         && (
           <div className="flex justify-center items-center h-96 text-4xl font-semibold text-gray-500">
             <h2> {"No properties found"} </h2>

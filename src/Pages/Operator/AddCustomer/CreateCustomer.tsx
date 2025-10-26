@@ -99,7 +99,7 @@ const CreateCustomer:React.FC = () => {
                 .catch((err) => {
                     console.log(err);
                     SetLoading(false)
-                    const message = err.response.data?.message;
+                    const message = err.response.data?.message[0];
                     toast.error(message, { autoClose: 7000 });
                 });
 

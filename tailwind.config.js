@@ -31,10 +31,10 @@ export const tail = {
       },
       colors:{
         black: '#000000',
-        gray: '#4B4F5A',
-     lightGreen: '#96C63D', 
+        gray: '#555861',
+     lightGreen: '#77963cff', 
    //lightGreen:'#c7f76d',
-        green: '#719F1C',
+        green: '#486a00ff',
         Oldgreen: '#96C63D',
         navgreen: '#AAC27D',
         lightgray: "#15234980",

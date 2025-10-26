@@ -2,8 +2,8 @@ import { ICreateBill } from "../../models/createbill.interface";
 import { IUpdateBill } from "../../models/update.bill.interface";
 import axios from "../api.config";
 
-export const getPspOperatorBill = (pspOperatorId) => {
-    return axios.get(`/billSetup/${pspOperatorId}`);
+export const getPspOperatorBill = (pspOperatorId, params) => {
+    return axios.get(`/billSetup/${pspOperatorId}`, { params});
 }
 
 export const deletePspOperatorBill = (pspOperatorId) => {
@@ -22,6 +22,6 @@ export const updateBillSetup = (id?:number, bill?: IUpdateBill) => {
     return axios.put(`/billSetup/${id}`, bill);
 }
 
-export const getBillingByOperator = (operatorId:number, page: number = 1) => {
-    return axios.get(`/apartmentBilling/billing-by-psp-operator-id/${operatorId}?page=${page}`)
+export const getBillingByOperator = (operatorId:number, params) => {
+    return axios.get(`/apartmentBilling/billing-by-psp-operator-id/${operatorId}`,{params})
 }

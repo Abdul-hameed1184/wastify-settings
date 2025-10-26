@@ -17,11 +17,7 @@ const AllCustomers = () => {
         <main className='px-4 '>
             <div className="my-5 bg-white">
                 <div className=' w-full flex justify-end   '>
-                    {/* <div className=''>
-                        <select name="" id="" className='text-gray bg-white  w-full h-14  justify-center px-4 py-4 text-base font-normal shadow-sm ring-gray border-transparent rounded-lg ring-2 font-Poppins border'>
-                            <option value="">January</option>
-                        </select>
-                    </div> */}
+          
                 </div>
                 <div className="bg-lightBackground border py-5 rounded-3xl shadow-2xl mt-10">
                     <div className="p-2">

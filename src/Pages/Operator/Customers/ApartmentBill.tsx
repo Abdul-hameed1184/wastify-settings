@@ -19,6 +19,7 @@ import { Button } from "../../../Component/Button";
 import OccupancyStatusBadge from "../../../utils/OccupyStatusBadge";
 import DataCard from "../../../Component/DataCard";
 import { UpdateApartmentModal } from "../../../Component/Modal/UpdateApartmentModal";
+import { useQuery } from "@tanstack/react-query";
 
 const ApartmentBill: React.FC = () => {
   const [bills, setBills] = useState<IBills[]>([]);
@@ -32,6 +33,7 @@ const ApartmentBill: React.FC = () => {
   );
   const location = useLocation();
   const { state } = location;
+  const [ page, setPage ] = useState<number>(1)
   const apartment: IApartment = state.apartment;
   const [loader, setLoader] = useState<boolean>(true);
   const [viewDelete, setViewDelete] = useState<boolean>(false);
@@ -76,7 +78,19 @@ const fetchBills = useCallback(async () => {
  console.log(apartment)
   fetchBills();
 }, [fetchBills, refresh]);
+  const params = {
+    page: page,
+    perPage: 10,
+  };
+  const { data: billData, isLoading, isError } = useQuery({
+        queryKey: ['bills', operator.id, page],
+        queryFn: async() =>  await  getPspOperatorBill(operator.id,params)
+  })
 
+    const { data: billx } = useQuery({
+        queryKey: ['bills', operator.id, page],
+        queryFn: async() =>  await  getPspOperatorBill(operator.id,params)
+  })
 
 if(loader){
   return <Loader />;

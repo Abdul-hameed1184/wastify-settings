@@ -130,8 +130,8 @@ const OperatorLogin:React.FC = () => {
         <div className="hidden lg:block w-2/5">
           <img src="Images/admin.png" alt="icon" srcSet="" />
         </div>
-        <div className="text-center w-full lg:text-start lg:w-[45%]">
-          <form onSubmit={formik.handleSubmit}>
+        <div className="text-center w-full max-w-lg lg:text-start lg:w-[45%]">
+          <form onSubmit={formik.handleSubmit} >
             <p className="text-2xl font-Poppins font-semibold not-italic text-black leading-8 my-4">
               Login to{" "}
               <span className="text-green">Wasteefy Management System</span>
@@ -150,7 +150,7 @@ const OperatorLogin:React.FC = () => {
        transition={Zoom}
       />
 
-            <div className="w-full flex flex-col justify-left my-4">
+            <div className="w-full  flex flex-col justify-left my-4">
               <label className="font-semibold text-gray text-left">{"Email"}</label>
               <Input
                 id="email"

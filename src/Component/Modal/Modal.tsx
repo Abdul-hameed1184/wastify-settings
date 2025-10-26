@@ -45,13 +45,13 @@ export const Modal: React.FC<ModalProps> = ({
      //onClick={closeOnOverlay ? onClose : undefined}
     >
       <div
-        className={`relative w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-lg`}
+        className={`relative w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-lg p-8`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}
       >
         {/* Header */}
-        <div className="flex justify-between items-center border-b px-4">
+        <div className="flex justify-between items-center  px-4">
           {title && (
             <h2 id="modal-title" className="text-2xl font-bold m-2">
               {title}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -14,50 +14,36 @@ import {
 
 import { getBillingByOperator } from "../../../api/bill/psp-operator-pricing";
 import { IOperator } from "../../../models/operator.interface";
-import { IPaginatedApartmentBills } from "../../../models/paginatedApartmentBillsForCustomer";
-import { Link } from "react-router-dom";
 import { ButtonsPrimary } from "../../../Component/Buttons";
 import { Naira } from "../../../utils/format";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 import Loader from "../../../Component/Loader";
-import { toast } from "react-toastify";
 import { GrOverview } from "react-icons/gr";
 import { IBillData } from "../../../models/billdata.interface";
 import InfoModal from "../../../Component/Modal/InfoModal";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "../../../Component/Button";
+import { Modal } from "../../../Component/Modal/Modal";
 
 const Transaction = () => {
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
   );
-  const [billData, setBillData] = useState<IPaginatedApartmentBills>(
-    {} as IPaginatedApartmentBills
-  );
   const [page, setPage] = useState<number>(1);
-  const [loader, setLoader] = useState<boolean>(true);
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [billpayment, setBillPayment] = useState<IBillData>({} as IBillData);
+  const [ autoX, setAutoX ] = useState<boolean>(false)
 
- const getBillings =  useCallback(async (page: number) => {
-  try {
-      const properties = await getBillingByOperator(operator.id, page);
-      setBillData(properties.data.data);
-  }catch(error) {
-  toast.error("Error fetching billings", { position: "top-right" });
- setBillData({} as IPaginatedApartmentBills);
- console.log("Error fetching billings:", error);
-  }finally {
-      setLoader(false);
-  }
- }  , [operator.id]);
-  useEffect(() => {
-    getBillings(page); 
-  }, [getBillings, page]);
-  const handleAutoBilling = () => {
-    // Logic for auto billing can be implemented here
-    console.log("Auto Billing Clicked");
-  }
 
-  if(loader){
+    const params = {
+    page: page,
+    perPage: 10,
+  };
+  const { data: bills, isLoading } = useQuery({
+        queryKey: ['bills', operator.id, page],
+        queryFn: async() =>  await  getBillingByOperator(operator.id,params)
+  })
+  if(isLoading){
     return <Loader />;
   }
 
@@ -116,10 +102,10 @@ const Transaction = () => {
           <div className="flex justify-between items-center">
           <Paragraph2XlGreenMargin content={"Customer Billings"} />
           <div>
-          <ButtonsPrimary name={"Auto Billing"}  onClick={handleAutoBilling}/>
+          <Button className="px-4 py-2"  onClick={() => setAutoX(!autoX)}>Auto Billing </Button>
           </div>
           </div>
-          {billData ? (
+          {bills?.data.data.data ? (
             <div className="overflow-x-auto font-Poppins mt-3">
               <Table striped>
                 <TableHead className=" font-Poppins text-sm capitalize text-white bg-green dark:text-white">
@@ -134,8 +120,7 @@ const Transaction = () => {
                   <TableHeadCell>Action</TableHeadCell>
                 </TableHead>
                 <TableBody className="divide-y font-Poppins ">
-                  {billData.data &&
-                    billData.data.map((item, index) => (
+                  { bills?.data.data.data.map((item, index) => (
                       <TableRow
                         className={
                           index % 2 === 0
@@ -172,7 +157,7 @@ const Transaction = () => {
                     className={`text-green font-weight-bold`}
                     onClick={async () => {
                       setPage(page - 1);
-                      getBillings(page -1)               
+                          
                     }}
                     disabled={page === 1}
                   >
@@ -180,7 +165,7 @@ const Transaction = () => {
                   </button>
                   <div className="mx-8 h-full">
                     {Array.from({
-                      length: Math.ceil(billData.total / billData.per_page),
+                      length: Math.ceil(bills?.data.data.total / bills?.data.data.per_page),
                     }).map((_, index) => (
                       <button
                         className={`w-8 h-full  ${
@@ -189,7 +174,7 @@ const Transaction = () => {
                         key={index}
                         onClick={() =>{
                            setPage(index+1);
-                           getBillings(page);
+                     
                         }}
                       >
                         {index + 1}
@@ -200,10 +185,12 @@ const Transaction = () => {
                     className={`text-green font-weight-bold`}
                            onClick={async () => {
                       setPage(page + 1);
-                      getBillings(page + 1)               
+                               
                     }}
                     disabled={
-                      Math.ceil(billData.total / billData.per_page) < page + 1
+                     page >= Math.ceil(
+    bills?.data.data.total / bills?.data.data.per_page
+  )
                     }
                   >
                     Next
@@ -216,6 +203,16 @@ const Transaction = () => {
           )}
         </div>
       </div>
+      
+      {
+        <Modal isOpen={autoX} title="Auto Billing" onClose={() => setAutoX(!autoX)}>
+          <p className="text-2xl p-2">I hereby confirm that I want to start auto billing</p>
+          <div className="flex justify-between">
+            <span></span>
+            <Button type="button">Confirm</Button>
+          </div>
+  </Modal>
+      }
     </main>
   );
 };

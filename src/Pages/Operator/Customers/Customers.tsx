@@ -28,10 +28,11 @@ const Customers: React.FC = () => {
   const [customerApartments, setCustomerApartments] = useState<IApartment[]>();
   const [ openViewCustomer, setOpenViewCustomer ] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
+  const [ autoX, setAutoX ] = useState<boolean>(false)
 
 
   const { data: allcustomers, isLoading, isError } = useQuery({
-    queryKey: [page, operator.id],
+    queryKey: ['customers', page, operator.id],
     queryFn: async () => {
       const xy = await getCustomers(page, operator.id);
       return xy;
@@ -48,25 +49,6 @@ const Customers: React.FC = () => {
     customerPhone: string;
   }
 
-  // function getUniqueCustomers(data: IApartment[]): Customerx[] {
-  //   const uniqueMap = new Map<string, Customerx>();
-
-  //   data.forEach(item => {
-  //     if (!uniqueMap.has(item.customerId)) {
-  //       uniqueMap.set(item.customerId, {
-  //         customerId: item.customerId,
-  //         customerFullname: item.customerFullname,
-  //         customerPhone: item.customerPhone
-  //       });
-  //     }
-  //   });
-
-  //   return Array.from(uniqueMap.values());
-  // }
-
-  // function getCustomerApartments(customerId: string): IApartmentTypeBill {
-  //   return allapartments?.data.data.data.filter(item => item.customerId === customerId);
-  // }
 
   const viewCustomer = (customerId: string) => {
     const dy = allcustomers?.data.data.data.filter(item => item.customerId === customerId);
@@ -75,22 +57,9 @@ const Customers: React.FC = () => {
     setOpenViewCustomer(true)
   };
 
-  // useEffect(() => {
-  //   try {
-  //     (async () => {
-  //       const ty = await getPaginatedCustomers(page);
-  //       setCustomers(ty.data.data);
+  
 
-  //       setLoading(false);
-  //     })();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, [ page]);
-
-  if (isLoading) {
-    return <Loader />;
-  }
+ 
 
 const comp = <div>
               <div className="flex justify-between items-center">
@@ -160,7 +129,7 @@ const comp = <div>
                 <TableHeadCell>Details</TableHeadCell>
               </TableHead>
               <TableBody className=" font-Poppins text-xl ">
-                {page &&
+                {
                   allcustomers.data.data.data.map((item: Customerx, index) => (
                     <TableRow
                       className={
@@ -259,6 +228,7 @@ const comp = <div>
 
     
       }
+
     </main>
   );
 };
