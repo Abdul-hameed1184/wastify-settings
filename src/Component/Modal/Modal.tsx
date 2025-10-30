@@ -1,4 +1,3 @@
-// components/Modal.tsx
 import React, { useEffect } from "react";
 import { MdCancel } from "react-icons/md";
 
@@ -12,7 +11,7 @@ type ModalProps = {
   closeOnOverlay?: boolean;
 };
 
-const sizeClasses = {
+const sizeClasses: Record<NonNullable<ModalProps["size"]>, string> = {
   sm: "max-w-sm",
   md: "max-w-md",
   lg: "max-w-lg",
@@ -26,9 +25,17 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   footer,
   size = "md",
-  // closeOnOverlay = true,
+  closeOnOverlay = true,
 }) => {
-  // Close on ESC
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  // Close on ESC key
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -41,25 +48,33 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-8 py-2 shadow-lg"
-     //onClick={closeOnOverlay ? onClose : undefined}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-6 overflow-y-auto"
+      role="button"                 // 👈 tells screen readers this is clickable
+      tabIndex={0}                  // 👈 makes it focusable for keyboard users
+      onClick={closeOnOverlay ? onClose : undefined}
+      onKeyDown={(e) => e.key === "Enter" && closeOnOverlay && onClose()} // 👈 accessibility fix
     >
       <div
-        className={`relative w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-lg p-8`}
+        className={` m-2 relative w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-lg max-h-[90vh] overflow-y-auto`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}
+        onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
         {/* Header */}
-        <div className="flex justify-between items-center  px-4">
+        <div className="flex justify-between items-center px-4 pt-4">
           {title && (
             <h2 id="modal-title" className="text-2xl font-bold m-2">
               {title}
             </h2>
           )}
-          
-           <MdCancel onClick={onClose} className="text-2xl text-red-500" />
-        
+          <MdCancel
+            onClick={onClose}
+            className="text-2xl text-red-500 cursor-pointer"
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && onClose()}
+          />
         </div>
 
         {/* Body */}

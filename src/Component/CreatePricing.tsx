@@ -1,9 +1,8 @@
 import React from "react";
-import { Modal } from "flowbite-react"
 import { IApartmentType } from "../models/apartmentType.interface"
 import { IPropertyType } from "../models/propertType.interface"
 import {  useFormik } from "formik"
-import { ParagraphXl } from "./Paragraph";
+import { ParagraphSmall2, ParagraphXl } from "./Paragraph";
 import { ButtonsPrimary } from "./Buttons";
 import { IOperator } from "../models/operator.interface";
 import { InputField } from "./InputField";
@@ -11,6 +10,8 @@ import { toast } from "react-toastify";
 import { createBillSetup } from "../api/bill/psp-operator-pricing";
 import { ICreateBill } from "../models/createbill.interface";
 import { AxiosError } from "axios";
+import { Modal } from "./Modal/Modal";
+import { Button } from "./Button";
 
 
 type PricingProps = {
@@ -51,15 +52,14 @@ export const CreatePricing:React.FC<PricingProps> =  ({openModal, handleModal, p
     }) 
 
     return (
-    <Modal show={openModal} onClose={handleModal} size={"2xl"}>
-      <Modal.Header  className="text-gray-600 text-3xl font-medium mb-2">Create Monthly Bill</Modal.Header>
-      <Modal.Body>
+    <Modal isOpen={openModal} onClose={handleModal} size={"lg"} title="Create Price Setup">
+
             <form onSubmit={createPricingBill.handleSubmit}></form>
         <div className="flex gap-4 w-full">
         </div>
         <form onSubmit={createPricingBill.handleSubmit} >
             <div>
-                          <ParagraphXl content={"Property Type"} />
+                          <ParagraphSmall2 content={"Property Type"} />
                           <div className="flex flex-row w-full items-center">
                             <select
                               className="form-select form-select-xl w-full mb-3 border-2 px-2 py-3 pl-5 bg-white shadow-sm rounded-lg block font-Poppins h-14 text-green text-base mt-1 ring-gray placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray"
@@ -82,7 +82,7 @@ export const CreatePricing:React.FC<PricingProps> =  ({openModal, handleModal, p
                           </div>
             </div>
                 <div>
-                  <ParagraphXl content={"Apartment Type"} />
+                  <ParagraphSmall2 content={"Apartment Type"} />
 
                   <div className="flex flex-row w-full items-center">
 
@@ -121,15 +121,13 @@ export const CreatePricing:React.FC<PricingProps> =  ({openModal, handleModal, p
                     />
                 </div>
                                       <div className="mt-4">
-                                        <ButtonsPrimary
+                                        <Button
                                         type="submit"
-                                          name={"Create Bill"}
-                                        />
+                                        className="w-full"
+                                        >Create Bill </Button>
                                       </div>
         </form>
 
-        
-      </Modal.Body>
     </Modal>
     )
 } 

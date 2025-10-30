@@ -22,41 +22,37 @@ const Pricing: React.FC = () => {
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "{}"
   );
-  const [propertyType, setPropertyType] = useState<IPropertyType[]>([]);
-  const [apartmentType, setApartmentType] = useState<IApartmentType[]>([]);
   const [editingRowId, setEditingRowId] = useState<number | null>(null); // Track row being edited
   const [amount, setAmount] = useState<number | null>(null); // Amount for the edited row
   const [showCreatePricing, setShowCreatePricing] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const queryClient = useQueryClient();
 
-  // Fetch bill setup data using React Query
- const { data: apartmentTypeBill , isLoading } = useQuery({
-    queryKey: [ "billsetup"],
-    queryFn: async () => {
-      const pspBill = await getBillSetupByPspOperatorBill(page, operator.id);
-      return pspBill;
+ const { data: propertyType  } = useQuery({
+    queryKey: [ "propertyTypes"],
+    queryFn:  async () =>{ 
+      const x = await getPropertyTypes();
+      return x.data.data;
     }
   });
 
-  // Fetch property types and apartment types
-  const getApartmentTypeBill = async () => {
-try {
-      const prop = await getPropertyTypes();
-      console.log(prop.data.data);
-      setPropertyType(prop.data.data);
 
-      const apartmentTypes = await getApartmentTypeList();
-      setApartmentType(apartmentTypes.data.data);
-      console.log(apartmentTypes.data.data);
-    } catch (error) {
-      console.log(error);
+   const { data: apartmentType  } = useQuery({
+    queryKey: [ "apartmentTypes"],
+    queryFn: async () =>{
+    const x =   await getApartmentTypeList();
+    return x.data.data;
     }
-  };
+  });
 
-  useEffect(() => {
-    getApartmentTypeBill();
-  }, []);
+const { data: apartmentTypeBill , isLoading } = useQuery({
+  queryKey: ["billsetup", page, operator.id],
+  queryFn: async () => {
+    const pspBill = await getBillSetupByPspOperatorBill(page, operator.id);
+    return pspBill.data.data;
+  },
+});
+
 
   // Handle update bill
   const handleUpdateBill = async ( x: IUpdateBill) => {
@@ -123,12 +119,12 @@ try {
                 <TableHeadCell>View More</TableHeadCell>
               </TableHead>
               <TableBody className="font-Poppins">
-                {apartmentTypeBill.data.data.data.map((x: IApartmentTypeBill, index: number) => (
+                {apartmentTypeBill.data.map((x: IApartmentTypeBill, index: number) => (
                   <TableRow
                     key={x.id} // Use x.id for unique key
                     className="bg-white dark:border-gray-700 dark:bg-gray-800 text-lg"
                   >
-                    <TableCell>{apartmentTypeBill.data.data.per_page * (page - 1) + index + 1}</TableCell>
+                    <TableCell>{apartmentTypeBill.per_page * (page - 1) + index + 1}</TableCell>
                     <TableCell>{x.propertyTypeName}</TableCell>
                     <TableCell>{x.apartmentTypeName}</TableCell>
                     <TableCell>
@@ -147,7 +143,7 @@ try {
                     </TableCell>
                     <TableCell className="flex items-center space-x-4">
                       {editingRowId === x.id ? (
-                        <Button
+                        <button
                    
                           onClick={() =>
                             handleUpdateBill({
@@ -158,7 +154,7 @@ try {
                               amount: amount || parseFloat(x.amount),
                             })
                           }
-                        >Update</Button>
+                        >Update</button>
                       ) : (
                         <>
                         <DropdownMenu>
@@ -176,7 +172,7 @@ try {
                               setAmount(parseFloat(x.amount));
                             }}
                             className="flex items-center gap-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
-                            tabIndex={0}
+        
                             aria-label={`Edit bill for ${x.propertyTypeName} - ${x.apartmentTypeName}`}
                           >
                             <MdEdit
@@ -203,43 +199,44 @@ try {
             </Table>
           )}
           {/* Pagination */}
-          <div className="flex justify-center items-center h-20 my-10 w-full">
+
+          <div className="flex justify-center items-center h-20 my-10 w-full ">
             <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
               <button
-                className={`text-green font-weight-bold ${page === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`text-green font-weight-bold`}
                 onClick={() => setPage(page - 1)}
                 disabled={page === 1}
               >
                 Previous
               </button>
               <div className="mx-8 h-full">
-                {Array.from({
-                  length: Math.ceil(
-                    apartmentTypeBill?.data.data.total / apartmentTypeBill?.data.data.per_page
-                  ),
-                }).map((_, index) => (
-                  <button
-                    className={`w-8 h-full ${page === index + 1 ? "bg-green text-white" : ""} mr-2`}
-                    key={index}
-                    onClick={() => setPage(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
+    {Array.from({
+  length: Math.ceil(apartmentTypeBill.total / apartmentTypeBill?.per_page),
+}).map((_, index) => (
+  <button
+    key={index}
+    onClick={() => setPage(index + 1)} // ✅ correct
+    className={`w-8 h-full rounded ${
+      page === index + 1 ? "bg-green text-white" : "bg-gray-200"
+    } mr-2`}
+  >
+    {index + 1}
+  </button>
+))}
+
               </div>
               <button
-                className={`text-green font-weight-bold ${
-                  page >= Math.ceil(apartmentTypeBill?.data.data.total / apartmentTypeBill?.data.data.per_page)
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
-                onClick={() => setPage(page + 1)}
-                disabled={page >= Math.ceil(apartmentTypeBill?.data.data.total / apartmentTypeBill?.data.data.per_page)}
+                className={`text-green font-weight-bold`}
+                onClick={() =>setPage(page+1)}
+                disabled={page >= Math.ceil(
+    apartmentTypeBill.total / apartmentTypeBill.per_page
+  )}
               >
                 Next
               </button>
             </div>
           </div>
+
         </div>
       </div>
 

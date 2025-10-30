@@ -64,7 +64,7 @@ const TicketForm:React.FC<Props> = ({ handleOpen, isOpen}) => {
 
   return (
     <Modal isOpen={isOpen} onClose={handleOpen} title="Create Ticket" size="lg">
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-md mt-2">
+    <div className="max-w-2xl mx-auto bg-white p-4 mt-2">
       {/* <h2 className="text-xl font-semibold mb-4"></h2> */}
       <Formik
         initialValues={initialValues}

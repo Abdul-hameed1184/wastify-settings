@@ -11,10 +11,8 @@ import {
   Paragraph2Xl,
   Paragraph2XlGreenMargin,
 } from "../../../Component/Paragraph";
-
-import { getBillingByOperator } from "../../../api/bill/psp-operator-pricing";
+import { autoBillingByOperator, getBillingByOperator } from "../../../api/bill/psp-operator-pricing";
 import { IOperator } from "../../../models/operator.interface";
-import { ButtonsPrimary } from "../../../Component/Buttons";
 import { Naira } from "../../../utils/format";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 import Loader from "../../../Component/Loader";
@@ -24,6 +22,7 @@ import InfoModal from "../../../Component/Modal/InfoModal";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "../../../Component/Button";
 import { Modal } from "../../../Component/Modal/Modal";
+import { toast } from "react-toastify";
 
 const Transaction = () => {
   const operator: IOperator = JSON.parse(
@@ -50,6 +49,16 @@ const Transaction = () => {
   const handleViewDetails = (item) => {
     setBillPayment(item);
     setShowDetails(true);
+  }
+
+  const handleAutoBilling = async () => {
+    try{
+      await autoBillingByOperator(operator.id)
+      toast.success("Auto Bills Generated")
+    }catch(error){
+      console.log(error)
+      toast.error("Error generating Bills")
+    }
   }
 
 
@@ -209,7 +218,7 @@ const Transaction = () => {
           <p className="text-2xl p-2">I hereby confirm that I want to start auto billing</p>
           <div className="flex justify-between">
             <span></span>
-            <Button type="button">Confirm</Button>
+            <Button type="button" onClick={handleAutoBilling}>Confirm</Button>
           </div>
   </Modal>
       }

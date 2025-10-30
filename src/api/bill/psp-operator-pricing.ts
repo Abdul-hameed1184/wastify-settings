@@ -25,3 +25,11 @@ export const updateBillSetup = (id?:number, bill?: IUpdateBill) => {
 export const getBillingByOperator = (operatorId:number, params) => {
     return axios.get(`/apartmentBilling/billing-by-psp-operator-id/${operatorId}`,{params})
 }
+
+export const autoBillingByOperator = (operatorId: number) => {
+    return axios.post(`/apartmentBilling/auto-monthly-billing-by-psp-operator-id/${operatorId}`)
+}
+
+export const autoBillingByAdmin = () => {
+    return axios.post(`/apartmentBilling/auto-monthly-billing`)
+}

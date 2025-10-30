@@ -1,5 +1,4 @@
-import { Modal } from "flowbite-react";
-import {  ButtonsPrimaryBlack } from "../Buttons";
+
 import React from "react";
 import { ICreateApartmentBill } from "../../models/createApartmentBill.interface";
 import { IApartment } from "../../models/apartment.interface";
@@ -7,6 +6,9 @@ import { IOperator } from "../../models/operator.interface";
 import { toast } from "react-toastify";
 import { createApartmentBill } from "../../api/psp-operator/psp-operator.service";
 import { useFormik } from "formik";
+import { Modal } from "./Modal";
+import { Button } from "../Button";
+import { Input } from "../InputField";
 
 type Props = { openModal: boolean, setOpenModal: (x) => void, apartmentBill: string, apartment: IApartment, setRefresh: () => void }
 const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartmentBill, apartment, setRefresh }) => {
@@ -108,10 +110,10 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
   });      
 
   return (
-    <Modal show={openModal} onClose={() => setOpenModal(false)} size={"2xl"}>
-      <Modal.Header  className="text-gray-600 text-3xl font-medium mb-2">Create Monthly Bill</Modal.Header>
-    <form onSubmit={createFormikBill.handleSubmit}>
-      <Modal.Body>
+    <Modal isOpen={openModal} onClose={() => setOpenModal(false)} size={"lg"} title="Create Monthly Bill">
+
+    <form onSubmit={createFormikBill.handleSubmit}  className="p-4">
+
         <div className="flex gap-4 w-full">
         </div>
 
@@ -155,7 +157,7 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
             <p className="m-0 p-0 font-bold">Discount(Percentage)</p>
             <input 
                 type="number"
-                defaultValue={0}
+
                id="quantity"
                min="0"
                max="100"
@@ -172,31 +174,23 @@ const CreateApartmentBill: React.FC<Props> = ({ openModal, setOpenModal, apartme
         {
 
           <div className="mt-4">
-          <p className="text-xl font-semibold">Apartment Bill: {Naira.format(apartmentBill)}</p>
+          <p className="text-lg font-semibold">Apartment Bill: {Naira.format(apartmentBill)}</p>
         { createFormikBill.values.discount > 0 && <p  className="text-xl font-semibold">Discount Amount: { Naira.format(createFormikBill.values.discount * apartmentBill/100) }</p>}
-        { <p className="text-xl font-semibold">Bill : {Naira.format(apartmentBill - (createFormikBill.values.discount * apartmentBill/100)) }</p>}
+        { <p className="text-lg font-semibold">Bill : {Naira.format(apartmentBill - (createFormikBill.values.discount * apartmentBill/100)) }</p>}
         </div>}
         
-      </Modal.Body>
-      {/* <Modal.Header>Property Details - {customerDetails[0]?.propertyAddress}</Modal.Header> */}
-      <Modal.Footer className="flex justify-between items-center p-4">
 
-        <div className="w-1/3">
-          <ButtonsPrimaryBlack
-            onClick={() => {
-              setOpenModal(false);
-            }}
-            name={"Cancel"} type={undefined} loading={undefined} />
 
-        </div>
-        <div className="w-1/3">
-          <ButtonsPrimaryBlack
+        <div className="w-full flex justify-between mt-4">
+
+ 
+          <Button
           type="submit"
+          className="w-full"
            // disabled={apartmentBill <= 0 || discount <= 0 || discount > 100}
-            name={"Create Bill"} />
+         >Create Bill</Button>
         </div>
           
-      </Modal.Footer>
       </form>
     </Modal>
   )

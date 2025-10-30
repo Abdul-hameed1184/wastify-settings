@@ -88,7 +88,21 @@ useEffect(() => {
     id="apartment"
     onChange={handleSelectedApartment}
     defaultValue=""
-    className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
+    className=" border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
+          block
+          w-full
+
+          border
+          border-gray
+          text-base
+          text-gray-800
+          placeholder:text-gray-400
+          transition-all
+          duration-200
+          ease-in-out
+          focus:outline-none
+          focus:ring-2
+          focus:ring-offset-1"
   >
     {customerApartments?.map((x: IApartment, index) => (
       <option key={index} value={x.id}>
