@@ -64,6 +64,7 @@ const CreateApartmentModal: React.FC<Props> = ({
           {
             customerId: selectedCustomer?.customerId||property.ownerId,
             apartmentTypeId: xapartment.apartmentTypeId,
+            status: 1,
             description: "xxxx",
           },
         ],
@@ -233,12 +234,12 @@ const CreateApartmentModal: React.FC<Props> = ({
                 </div>
                 <div className="mt-2">
                   {!selectedCustomer && (
-                    <ButtonsPrimary
+                    <Button
                       disabled={selectedCustomer !== undefined}
-                      name={"Create New Customer"}
                       onClick={() => setShowCreateCustomer(!showCreateCustomer)}
                       type={"button"}
-                    />
+                      className="w-full"
+                    >Create New Customer</Button>
                   )}
                 </div>
               </div>
@@ -249,6 +250,7 @@ const CreateApartmentModal: React.FC<Props> = ({
             <div className=" w-full">
               <Button
                 type="submit"  
+                className="w-full"
                 disabled={showCreateCustomer}
               >Create Apartment</Button>
             </div>
@@ -258,8 +260,7 @@ const CreateApartmentModal: React.FC<Props> = ({
 
       {showCreateCustomer && (
         <form onSubmit={CreateCustomerFormik.handleSubmit}>
-          <Modal.Header>Create Apartment </Modal.Header>
-          <Modal.Body>
+
             <div className="mt-2 md:mt-2 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
               <div className="mt-4 md:mt-2 ">
                 <Paragraph2Xl content={"Create New Customer Account"} />
@@ -329,8 +330,6 @@ const CreateApartmentModal: React.FC<Props> = ({
                 </div>
               </div>
             </div>
-          </Modal.Body>
-          <Modal.Footer>
             <div className="my-6 gap-4 flex flex-col w-full">
               <ButtonsPrimary name={"Create Customer"} type="submit" />
               <ButtonsPrimaryBlack
@@ -339,7 +338,7 @@ const CreateApartmentModal: React.FC<Props> = ({
                 onClick={() => setShowCreateCustomer(!showCreateCustomer)}
               />
             </div>
-          </Modal.Footer>
+
         </form>
       )}
     </Modal>

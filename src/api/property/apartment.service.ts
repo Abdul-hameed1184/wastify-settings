@@ -10,7 +10,7 @@ export const getApartmentType = () => {
     return axios.get(`/apartmentType/list`);
 }
 
-export const createApartment = ({propertyId, apartmentData }: {propertyId: number, apartmentData: {customerId?: string, apartmentTypeId: number, description: string}[]}) => {
+export const createApartment = ({propertyId, apartmentData }: {propertyId: number, apartmentData: {customerId?: string, apartmentTypeId: number, description: string, status: number}[]}) => {
     return axios.post(`/apartment`, {propertyId, apartmentData });
 }
 export const updateApartment = (apartmentId:number, propertyId: number, apartmentData: {customerId?: string, apartmentTypeId: number, description: string}) => {

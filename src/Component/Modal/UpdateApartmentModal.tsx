@@ -4,7 +4,6 @@ import { Modal } from "./Modal";
 import { Button } from "../Button";
 import { useFormik } from "formik";
 import { getCustomers } from "../../api/customer/customer.service";
-import { IApartmentType } from "../../models/apartmentType.interface";
 import { ICustomer } from "../../models/customer.interface";
 import { getApartmentType, updateApartment } from "../../api/property/apartment.service";
 import { toast } from "react-toastify";
@@ -55,9 +54,10 @@ export const UpdateApartmentModal: React.FC<Props> = ({
 const handleUpdateApartment = async (values) => {
   try{
   console.log("Submitting values:", values);
-  await updateApartment(apartment.id, apartment.propertyId, values);
-  toast.success("Apartment updated");
+  const data = await updateApartment(apartment.id, apartment.propertyId, values);
+  console.log(data)
   handleUpdateModal();
+    toast.success(data.data.data);
   }catch(error){
     console.log(error)
     toast.error("Apartment update error")

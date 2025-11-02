@@ -24,21 +24,21 @@ const CurrentBill:React.FC<Props> = ({bill, handlePayNow}) => {
       <div className="px-6 py-4 space-y-4 text-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2  pb-2">
           <p className="font-medium">
-            Property Code: <span className="font-normal text-gray-500">WBSR020423</span>
+            Property Code: <span className="font-normal text-gray-500">{bill.propertyCode}</span>
           </p>
         </div>
 
         <div className="pb-2">
           <p className="font-medium">
             Psp Operator:{" "}
-            <span className="font-normal">BlackJohn Waste Services</span>
+            <span className="font-normal">{bill.pspOperatorBusinessname}</span>
           </p>
         </div>
 
         <div className=" pb-2">
           <p className="font-medium">
             Property Address:{" "}
-            <span className="font-normal">25 Ikorodu road</span>
+            <span className="font-normal">{bill.propertyAddress}</span>
           </p>
         </div>
 

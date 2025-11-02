@@ -22,10 +22,9 @@ import { UpdateApartmentModal } from "../../../Component/Modal/UpdateApartmentMo
 import { useQuery } from "@tanstack/react-query";
 
 const ApartmentBill: React.FC = () => {
-  const [bills, setBills] = useState<IBills[]>([]);
+
   const [ updateModal, setUpdateModal ] = useState<boolean>(false)
   const [ refresh, setRefresh ] = useState<boolean>(false);
-  const [billHistory, setBillHistory] = useState<IBillData[]>([]);
   const [openCreateBillModal, setOpenCreateBillModal] =
     useState<boolean>(false);
   const operator: IOperator = JSON.parse(
@@ -52,44 +51,25 @@ const ApartmentBill: React.FC = () => {
     { id: "11", name: "November" },
     { id: "12", name: "December" },
   ];
-const fetchBills = useCallback(async () => {
-    try {
-      setLoader(true);
-      const data = await getPspOperatorBill(apartment.apartmentTypeId);
-      console.log(data.data.data)
-      const billData: IBills[] = data.data.data.data;
-      console.log(billData)
-      setBills(data.data.data[0]);
-      setCurrentBill(data.data.data[0].amount)
-      const history = await getBillingsByApartmentId(apartment.id);
-      console.log(history.data.data.data);
-      setBillHistory(history.data.data.data);
 
-
-    } catch (e) {
-      console.error(e);
-      toast.error("No bill for this customer");
-    } finally {
-      setLoader(false);
-    }
-  },[apartment.apartmentTypeId, apartment.id]);
- useEffect(() => {
-  
- console.log(apartment)
-  fetchBills();
-}, [fetchBills, refresh]);
   const params = {
     page: page,
     perPage: 10,
   };
-  const { data: billData, isLoading, isError } = useQuery({
+  const { data : bills } = useQuery({
         queryKey: ['bills', operator.id, page],
-        queryFn: async() =>  await  getPspOperatorBill(operator.id,params)
+        queryFn: async() => {
+          const data =  await  getPspOperatorBill(operator.id,params)
+          return data.data.data.data;
+        }
   })
 
-    const { data: billx } = useQuery({
-        queryKey: ['bills', operator.id, page],
-        queryFn: async() =>  await  getPspOperatorBill(operator.id,params)
+    const { data: billHistory } = useQuery({
+        queryKey: ['billHistory', operator.id, page],
+        queryFn: async() =>{
+          const history =   await  getBillingsByApartmentId(operator.id);
+          return history.data.data.data;
+        }
   })
 
 if(loader){
@@ -237,13 +217,6 @@ const apartmentField = [
         </div>
       }
 
-      {/* {
-        viewDelete && <InfoModal openModal={viewDelete} 
-        setOpenModal={setViewDelete} 
-        header={"Delete Apartment"} 
-        content={"Do you really want to delete this property or apartment? Once deleted, it cannot be recovered."} buttonName={"Delete Apartment"} handleConfirm={handleDeleteApartment} />
-
-      } */}
 
       {openCreateBillModal && (
         <CreateApartmentBill

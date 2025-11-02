@@ -143,7 +143,7 @@ const { data: apartmentTypeBill , isLoading } = useQuery({
                     </TableCell>
                     <TableCell className="flex items-center space-x-4">
                       {editingRowId === x.id ? (
-                        <button
+                        <Button
                    
                           onClick={() =>
                             handleUpdateBill({
@@ -154,7 +154,7 @@ const { data: apartmentTypeBill , isLoading } = useQuery({
                               amount: amount || parseFloat(x.amount),
                             })
                           }
-                        >Update</button>
+                        >Update</Button>
                       ) : (
                         <>
                         <DropdownMenu>

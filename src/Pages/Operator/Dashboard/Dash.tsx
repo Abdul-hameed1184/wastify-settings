@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RiBarChart2Fill } from "react-icons/ri";
 import { FaHouse } from "react-icons/fa6";
 import { BiTransfer } from "react-icons/bi";
@@ -18,10 +18,8 @@ import {
 import AdminCard from "../../../Component/Card/AdminCard";
 import { ToastContainer, Zoom } from "react-toastify";
 import { getPspOperatorDashboard } from "../../../api/psp-operator/psp-operator.service";
-import { IPspOperatorDashboard } from "../../../models/psp-operator.dashboard.interface";
 import Loader from "../../../Component/Loader";
 import { Naira } from "../../../utils/format";
-import { IBillData } from "../../../models/billdata.interface";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 import { useQuery } from "@tanstack/react-query";
 import { IoPersonCircleOutline } from "react-icons/io5";
