@@ -30,8 +30,8 @@ export const getApartmentBillings = (billingId: number) => {
     return axios.get(`/apartmentBilling/${billingId}`);
 }
 
-export const getBillingsByApartmentId = (apartmentId: number) => {
-    return axios.get(`/apartmentBilling/billing-by-apartment-id/${apartmentId}`);
+export const getBillingsByApartmentId = (apartmentId: number, params) => {
+    return axios.get(`/apartmentBilling/billing-by-apartment-id/${apartmentId}?page=${params.page}&perPage=${params.perPage}`);
 }
 
 export const getBillingsPaymentByApartmentId = (apartmentId: number) => {

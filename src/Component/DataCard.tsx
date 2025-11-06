@@ -25,7 +25,7 @@ const DataCard: React.FC<DataCardProps> = ({ title, data, fields }) => {
               className="flex justify-between  pb-1 "
             >
               <span className="font-medium text-gray-700">{label}</span>
-               <span className="text-gray-600">{ data[key].toString() ? data[key].toString() : "-"}</span> 
+               <span className="text-gray-600">{ data[key]?.toString() ? data[key]?.toString() : "-"}</span> 
             </li>
           ))}
         </ul>

@@ -31,6 +31,7 @@ const ApartmentBill: React.FC = () => {
   const { state } = location;
   const [ page, setPage ] = useState<number>(1)
   const apartment: IApartment = state.apartment;
+  console.log(apartment)
 
   const [viewDelete, setViewDelete] = useState<boolean>(false);
   // const [ currentBill, setCurrentBill ] = useState<string>("0")
@@ -61,18 +62,24 @@ const ApartmentBill: React.FC = () => {
           return data.data.data.data;
         }
   })
-  console.log(apartment.id);
+  console.log(apartment);
   const currentBill = bills?.find((bill:IBillData) => bill.apartmentId === apartment.id)?.id || "0.00";
   console.log(currentBill);
 
-    const { data: billHistory, isLoading } = useQuery({
-        queryKey: ['billHistory', apartment.id, page],
-        queryFn: async() =>{
-          const history =   await  getBillingsByApartmentId(apartment.id);
-          console.log(history.data.data.data);
-          return history.data.data.data;
-        }
-  })
+const { data: billHistory, isLoading, isError } = useQuery({
+  queryKey: ['billHistory', apartment.id, page],
+  queryFn: async () => {
+    try {
+      const history = await getBillingsByApartmentId(apartment.id, params);
+      return history;
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        return { data: { data: { data: [] } } }; // empty array fallback
+      }
+      throw error;
+    }
+  },
+});
 
 if(isLoading){
   return <Loader />;
@@ -113,7 +120,7 @@ const apartmentField = [
             </div>
             <div className="flex lg:flex-row md:justify-between p-4 flex-wrap">
 
-                                <DataCard title={"Apartment Details"} data={apartment} fields={apartmentField}  />
+                            { apartment &&   <DataCard title={"Apartment Details"} data={apartment} fields={apartmentField}  />}
                   <div className="flex flex-col justify-between">                 
                      <Button variant="black" onClick={()=>setUpdateModal(!updateModal)}>Edit Apartment</Button>
                     <span></span>
@@ -121,11 +128,7 @@ const apartmentField = [
 
             
             </div>
-{billHistory?.length === 0 && (
-  <div className="text-center mt-4 text-xl text-gray-500">
-    <h2>No bills found</h2>
-  </div>
-)}
+
             <div className="flex justify-between my-4 items-center ">
               <h3 className="text-2xl font-bold text-slate-900">Apartment Bill</h3>
               <div className=" pr-4">
@@ -138,7 +141,8 @@ const apartmentField = [
           </div>
 
           <div className="w-full h-full border-black">
-            {billHistory && billHistory.length > 0  && (
+            {billHistory && billHistory.data.data.data.length > 0  ?
+              <>
                   <Table striped>
                     <TableHead className="font-Poppins text-xl capitalize text-white bg-slate-900 dark:text-white">
 
@@ -214,8 +218,56 @@ const apartmentField = [
                   })}
                   </TableBody>
               </Table>
-            )}
+                      {/* Pagination */}
+          <div className="flex justify-center items-center h-20 my-10 w-full ">
+            <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
+              <button
+                className={`text-green font-weight-bold`}
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
+              >
+                Previous
+              </button>
+              <div className="mx-8 h-full">
+                {
+                  Array.from({
+                    length: Math.ceil(
+                      (billHistory?.data.data.total/billHistory?.data.data.per_page)
+                    ),
+                  }).map((_, index) => (
+                    <button
+                      className={`w-8 h-full  ${
+                        page === index + 1 ? "bg-green text-white " : ""
+                      } mr-2`}
+                      key={index}
+                      onClick={() => setPage(page + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+              </div>
+              <button
+                className={`text-green font-weight-bold`}
+                onClick={() =>setPage(page+1)}
+                disabled={page >= Math.ceil(
+    billHistory?.data.data.total / billHistory?.data.data.per_page
+  )}
+              >
+                Next
+              </button>
+            </div>
           </div>
+              </>
+              : 
+              <>
+                  <div className="flex justify-center items-center h-96 text-4xl font-semibold text-gray-400">
+    <h2>No bill history found</h2>
+  </div>
+              </>
+            }
+           
+          </div>
+          
         </div>
       }
 
