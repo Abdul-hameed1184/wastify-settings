@@ -59,6 +59,7 @@ const AdminResetPassword:React.FC = () => {
     onSubmit: (values) => {
       SetLoading(true);
       // console.log(data);
+
       axios
         .put(`${baseURL}auth/admin/password-reset/${userId}/${token}`, values, {
           headers: {
@@ -73,9 +74,10 @@ const AdminResetPassword:React.FC = () => {
           if (!errorState) {
             toast.success(message, { autoClose: 5000 });
             setTimeout(() => {
-              navigate("/admin-login");
+              navigate("/operator-login");
             }, 3000);
           } else {
+            console.log(`${baseURL}auth/admin/password-reset/${userId}/${token}`)
             toast.error(message, { autoClose: 5000 });
           }
         })

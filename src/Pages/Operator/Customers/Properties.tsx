@@ -39,9 +39,13 @@ const Properties:React.FC = () => {
   const handleOpenUpdateProperty = () => {
     setOpenUpdateProperty(!openUpdateProperty);
   }
-  const { data: allProperties, isLoading, isError } = useQuery({
+  const { data: allProperties, isLoading } = useQuery({
         queryKey: ['properties', operator.id, page],
-        queryFn: async() =>  await  getPropertyByOperator(operator.id,params)
+        queryFn: async() => {
+          const res =  await  getPropertyByOperator(operator.id,params)
+          console.log(res)
+          return res;
+        }
   
 
   })
@@ -82,7 +86,7 @@ const Properties:React.FC = () => {
               <TableHeadCell>Action</TableHeadCell>
             </TableHead>
             <TableBody className="font-Poppins text-xl ">
-              {allProperties?.data.data.data.map((item:IProperty, index) => (
+              {allProperties && allProperties?.data.data.data.map((item:IProperty, index) => (
                 <TableRow
                   className={
                     index % 2 === 0
@@ -188,14 +192,12 @@ const Properties:React.FC = () => {
             </div>
           </div>
         </div>}
-        {
-        allProperties?.data.data.data.length == 0 
-      
-        && (
-          <div className="flex justify-center items-center h-96 text-4xl font-semibold text-gray-500">
-            <h2> {"No properties found"} </h2>
-          </div>
-        )}
+{ allProperties?.status === 404  && (
+  <div className="flex justify-center items-center h-96 text-4xl font-semibold text-gray-400">
+    <h2>No properties found</h2>
+  </div>
+) }
+
 
         
 

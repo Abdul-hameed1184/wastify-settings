@@ -46,7 +46,7 @@ const OperatorForgotPassword:React.FC = () => {
       SetLoading(true);
       // console.log(data);
       axios
-        .post(baseUrl + "auth/operator/forgot-password", values, {
+        .post(baseUrl + "auth/admin/forgot-password", values, {
           headers: {
             "Content-Type": "application/json",
           },

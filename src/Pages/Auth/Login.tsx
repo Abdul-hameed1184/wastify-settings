@@ -155,7 +155,7 @@ const Login:React.FC = () => {
                   to="/forget-password"
                   className=" text-green text-sm underline"
                 >
-                  Forgot password?
+                  Reset password?
                 </Link>
               </div>
               <div className="mx-4 my-8">

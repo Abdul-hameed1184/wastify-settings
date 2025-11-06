@@ -190,7 +190,7 @@ const OperatorLogin:React.FC = () => {
                   to={"/operator-forgot-password"}
                   className="text-sm font-inter font-normal not-italic text-gray leading-4"
                 >
-                  Forget Password?
+                  Reset Password?
                 </Link>
               </div>
 

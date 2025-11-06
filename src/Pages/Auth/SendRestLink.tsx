@@ -44,12 +44,14 @@ const SendRestLink = () => {
                     const message = res.data?.message;
                     const errorState = res.data?.errorState;
                     const data = res.data?.data;
+                    console.log(data)
                     if (!errorState) {
                         toast.success(message, { autoClose: 5000 });
                         setTimeout(() => {
                             navigate("/forget-password-verify", { state: { data: data } })
                         }, 3000)
                     } else {
+                    
                         toast.error(message, { autoClose: 5000 });
                     }
                 })

@@ -1,17 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ButtonsPrimaryBlack } from "../../../Component/Buttons";
+import React, { useState } from "react";
 import { IApartment } from "../../../models/apartment.interface";
-import { getPspOperatorBill } from "../../../api/bill/psp-operator-pricing";
 import { IOperator } from "../../../models/operator.interface";
 import { useLocation } from "react-router-dom";
-import { IBills } from "../../../models/bills.interface";
 import { getBillingsByApartmentId } from "../../../api/property/apartment.service";
 import { IBillData } from "../../../models/billdata.interface";
 import Loader from "../../../Component/Loader";
 import CreateApartmentBill from "../../../Component/Modal/CreateApartmentBill";
-import { toast } from "react-toastify";
 import { MdDeleteForever } from "react-icons/md";
-import InfoModal from "../../../Component/Modal/InfoModal";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 import { Naira } from "../../../utils/format";
 import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from "flowbite-react";
@@ -20,11 +15,13 @@ import OccupancyStatusBadge from "../../../utils/OccupyStatusBadge";
 import DataCard from "../../../Component/DataCard";
 import { UpdateApartmentModal } from "../../../Component/Modal/UpdateApartmentModal";
 import { useQuery } from "@tanstack/react-query";
+import { getPspOperatorBill } from "../../../api/bill/psp-operator-pricing";
+import { IBills } from "../../../models/bills.interface";
+import { CgChevronDoubleLeft } from "react-icons/cg";
 
 const ApartmentBill: React.FC = () => {
 
   const [ updateModal, setUpdateModal ] = useState<boolean>(false)
-  const [ refresh, setRefresh ] = useState<boolean>(false);
   const [openCreateBillModal, setOpenCreateBillModal] =
     useState<boolean>(false);
   const operator: IOperator = JSON.parse(
@@ -34,9 +31,9 @@ const ApartmentBill: React.FC = () => {
   const { state } = location;
   const [ page, setPage ] = useState<number>(1)
   const apartment: IApartment = state.apartment;
-  const [loader, setLoader] = useState<boolean>(true);
+
   const [viewDelete, setViewDelete] = useState<boolean>(false);
-  const [ currentBill, setCurrentBill ] = useState<string>("0")
+  // const [ currentBill, setCurrentBill ] = useState<string>("0")
   const months = [
     { id: "01", name: "January" },
     { id: "02", name: "February" },
@@ -59,20 +56,25 @@ const ApartmentBill: React.FC = () => {
   const { data : bills } = useQuery({
         queryKey: ['bills', operator.id, page],
         queryFn: async() => {
-          const data =  await  getPspOperatorBill(operator.id,params)
+          const data =  await  getPspOperatorBill(operator.id)
+          console.log(data);
           return data.data.data.data;
         }
   })
+  console.log(apartment.id);
+  const currentBill = bills?.find((bill:IBillData) => bill.apartmentId === apartment.id)?.id || "0.00";
+  console.log(currentBill);
 
-    const { data: billHistory } = useQuery({
-        queryKey: ['billHistory', operator.id, page],
+    const { data: billHistory, isLoading } = useQuery({
+        queryKey: ['billHistory', apartment.id, page],
         queryFn: async() =>{
-          const history =   await  getBillingsByApartmentId(operator.id);
+          const history =   await  getBillingsByApartmentId(apartment.id);
+          console.log(history.data.data.data);
           return history.data.data.data;
         }
   })
 
-if(loader){
+if(isLoading){
   return <Loader />;
 }
 
@@ -224,7 +226,7 @@ const apartmentField = [
           apartmentBill={currentBill}
           openModal={openCreateBillModal}
           setOpenModal={setOpenCreateBillModal}
-          setRefresh={() => setRefresh((prev) => !prev)}
+          setRefresh={() => setPage(1)}
         />
       )}
 

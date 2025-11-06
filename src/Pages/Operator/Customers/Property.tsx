@@ -23,11 +23,12 @@ const Property: React.FC = () => {
     useState<boolean>(false);
     const queryClient = useQueryClient();
 
-    const { data:apartments, isLoading, isError } = useQuery({
+    const { data:apartments, isLoading } = useQuery({
       queryKey: ['properties', propertyId],
       queryFn: async () => {
              const id = parseInt(propertyId || "");
       const data = await getPropertyApartments(id);
+      console.log(data);
        return data;
       }
     });

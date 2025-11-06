@@ -20,6 +20,10 @@ export const PayBillModal: React.FC<Props> = ({ bill, isOpen, handleOpen, handle
         <h2 className="text-xl font-semibold text-gray-700 mb-2">
           Confirm your billing details before proceeding
         </h2>
+                <p className="flex justify-between">
+          <span className="font-semibold text-gray-400">Customer name</span>
+          <span className="text-black font-bold uppercase">{bill.customerFullname}</span>
+        </p>
 
         <p className="flex justify-between">
           <span className="font-semibold text-gray-400">Property Code</span>
