@@ -24,6 +24,7 @@ import { InputFieldSecondaryGreen } from "../InputField";
 import { createCustomer } from "../../api/psp-operator/psp-operator.service";
 import { Modal } from "./Modal";
 import { Button } from "../Button";
+import { useQuery } from "@tanstack/react-query";
 
 type Props = {
   openModal: boolean;
@@ -35,21 +36,30 @@ const CreateApartmentModal: React.FC<Props> = ({
   setOpenModal,
   property,
 }) => {
-  const [apartmentTypes, setApartmentTypes] = useState<IApartmentType[]>();
-  const [customers, setCustomers] = useState<ICustomer[]>([]);
+
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
   const [apartmentTypeId, setApartmentTypeId] = useState<number>();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [loading, setLoading] = useState<boolean>();
   const [showCreateCustomer, setShowCreateCustomer] = useState<boolean>(false);
-  useEffect(() => {
-    (async () => {
-      const apartments = await getApartmentType();
-      setApartmentTypes(apartments.data.data);
+
+  const {data:apartmentTypes } = useQuery({
+      queryKey: ['apartments', property.id],
+      queryFn: async () => {
+        const apartments = await getApartmentType();
+        return apartments.data.data;
+      }
+  })
+
+
+const { data:customers } = useQuery({
+    queryKey: ['customers'],
+    queryFn: async () => {
       const data = await getCustomers();
-      setCustomers(data.data.data);
-    })();
-  }, []);
+      return data.data.data;
+    }
+})
+
 
   const handleSearchChange = (search: string) => {
     const customer = customers.find((c) => c.phone === search);

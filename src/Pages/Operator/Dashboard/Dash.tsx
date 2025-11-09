@@ -87,8 +87,8 @@ const Dash = () => {
         <div className="lg:w-[80%]">
           <Paragraph2XlGreen content={`Wasteefy Management System`} />
           <div className="">
-            <p className="flex text-base font-inter font-medium not-italic text-green leading-6 mt-4">
-              {"Welcome,    "}
+            <p className="flex text-base font-inter font-medium not-italic text-green leading-6 mt-4 items-center">
+              <span>{"Welcome ,"}</span>
               <span className="text-black font-bold text-2xl">
                 {" "}
                 {operator ? operator.businessName : "Business Name"}.

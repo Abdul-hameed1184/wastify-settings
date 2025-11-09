@@ -15,6 +15,7 @@ import { ICustomer } from "../../models/customer.interface";
 import { IProperty } from "../../models/property.interface";
 import { Button } from "../Button";
 import { Modal } from "./Modal";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   openModal: boolean;
@@ -33,7 +34,7 @@ const CreatePropertyModal: React.FC<Props> = ({
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
   const [isOn, setIsOn] = useState(false);
-
+ const queryClient = useQueryClient();
   useEffect(() => {
     (async () => {
       const propertyTypes = await getPropertyTypes();
@@ -65,6 +66,7 @@ const CreatePropertyModal: React.FC<Props> = ({
 
       setOpenModal(false);
       toast.success("Property successfully created");
+      queryClient.invalidateQueries({ queryKey: ['properties'] });
     } catch (e) {
       console.log(e);
       console.log(xproperty);

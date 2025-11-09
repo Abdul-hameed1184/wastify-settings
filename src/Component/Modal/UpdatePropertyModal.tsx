@@ -12,6 +12,7 @@ import { ICustomer } from "../../models/customer.interface";
 import { IProperty } from "../../models/property.interface";
 import { Button } from "../Button";
 import { Modal } from "./Modal";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   openModal: boolean;
@@ -26,7 +27,7 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
   const [customers, setCustomers] = useState<ICustomer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
   const [isOn, setIsOn] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     (async () => {
       const propertyTypes = await getPropertyTypes();
@@ -49,6 +50,7 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
     try {
       await updateProperty({ ...xproperty, ownerId: selectedCustomer?.customerId } as IProperty, property.id);
       toast.success("Property successfully Updated");
+      navigate(0);
       handleOpenModal();
     } catch(e) {
       console.log(e)

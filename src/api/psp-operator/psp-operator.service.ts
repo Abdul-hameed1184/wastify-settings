@@ -25,6 +25,14 @@ export const getCustomers = async (page:number, operatorId:number ) => {
     return await axios.get(`/customer/psp-operator/${operatorId}?page=${page}`);
 }
 
+export const getProfile = async (userId: string) => {
+    return await axios.get(`/pspOperator/${userId}`);
+}
+
+export const updateProfile = async (userId: string, data: any ) => {
+    return await axios.put(`/pspOperator/${userId}`, data);
+}
+
 // export const getPropertyByOperator = async (operatorId: string, params: any) => {
 //   const { perPage, searchTerm, sortBy, sortOrder, page } = params;
 

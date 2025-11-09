@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IApartment } from "../../../models/apartment.interface";
 import { IOperator } from "../../../models/operator.interface";
 import { useLocation } from "react-router-dom";
-import { getBillingsByApartmentId } from "../../../api/property/apartment.service";
+import { getApartmentType, getApartmentTypePrice, getBillingsByApartmentId } from "../../../api/property/apartment.service";
 import { IBillData } from "../../../models/billdata.interface";
 import Loader from "../../../Component/Loader";
 import CreateApartmentBill from "../../../Component/Modal/CreateApartmentBill";
@@ -16,8 +16,7 @@ import DataCard from "../../../Component/DataCard";
 import { UpdateApartmentModal } from "../../../Component/Modal/UpdateApartmentModal";
 import { useQuery } from "@tanstack/react-query";
 import { getPspOperatorBill } from "../../../api/bill/psp-operator-pricing";
-import { IBills } from "../../../models/bills.interface";
-import { CgChevronDoubleLeft } from "react-icons/cg";
+
 
 const ApartmentBill: React.FC = () => {
 
@@ -32,6 +31,8 @@ const ApartmentBill: React.FC = () => {
   const [ page, setPage ] = useState<number>(1)
   const apartment: IApartment = state.apartment;
   console.log(apartment)
+
+  
 
   const [viewDelete, setViewDelete] = useState<boolean>(false);
   // const [ currentBill, setCurrentBill ] = useState<string>("0")
@@ -57,14 +58,12 @@ const ApartmentBill: React.FC = () => {
   const { data : bills } = useQuery({
         queryKey: ['bills', operator.id, page],
         queryFn: async() => {
-          const data =  await  getPspOperatorBill(operator.id)
+          const data =  await  getApartmentTypePrice(apartment.apartmentTypeId, operator.id)
           console.log(data);
-          return data.data.data.data;
+          return data;
         }
   })
-  console.log(apartment);
-  const currentBill = bills?.find((bill:IBillData) => bill.apartmentId === apartment.id)?.id || "0.00";
-  console.log(currentBill);
+
 
 const { data: billHistory, isLoading, isError } = useQuery({
   queryKey: ['billHistory', apartment.id, page],
@@ -173,7 +172,7 @@ const apartmentField = [
                 <TableBody >
                 {billHistory &&
                 
-                  billHistory.map((x: IBillData, index) => {
+                  billHistory?.data.data.data.map((x: IBillData, index) => {
                     return (
                
            
@@ -272,7 +271,7 @@ const apartmentField = [
       }
 
 
-      {openCreateBillModal && (
+      {/* {openCreateBillModal && (
         <CreateApartmentBill
           apartment={apartment}
           apartmentBill={currentBill}
@@ -280,7 +279,7 @@ const apartmentField = [
           setOpenModal={setOpenCreateBillModal}
           setRefresh={() => setPage(1)}
         />
-      )}
+      )} */}
 
       {
         updateModal && <UpdateApartmentModal apartment={apartment} openModal={updateModal} handleUpdateModal={()=>setUpdateModal(!updateModal)} />

@@ -43,7 +43,7 @@ const Properties:React.FC = () => {
         queryKey: ['properties', operator.id, page],
         queryFn: async() => {
           const res =  await  getPropertyByOperator(operator.id,params)
-          console.log(res)
+          console.log(res);
           return res;
         }
   
