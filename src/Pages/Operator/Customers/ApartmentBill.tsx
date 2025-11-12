@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { IApartment } from "../../../models/apartment.interface";
 import { IOperator } from "../../../models/operator.interface";
-import { useLocation } from "react-router-dom";
-import { getApartmentType, getApartmentTypePrice, getBillingsByApartmentId } from "../../../api/property/apartment.service";
+import { useLocation, useParams } from "react-router-dom";
+import { getApartmentById, getApartmentTypePrice, getBillingsByApartmentId } from "../../../api/property/apartment.service";
 import { IBillData } from "../../../models/billdata.interface";
 import Loader from "../../../Component/Loader";
-import CreateApartmentBill from "../../../Component/Modal/CreateApartmentBill";
 import { MdDeleteForever } from "react-icons/md";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 import { Naira } from "../../../utils/format";
@@ -15,11 +13,11 @@ import OccupancyStatusBadge from "../../../utils/OccupyStatusBadge";
 import DataCard from "../../../Component/DataCard";
 import { UpdateApartmentModal } from "../../../Component/Modal/UpdateApartmentModal";
 import { useQuery } from "@tanstack/react-query";
-import { getPspOperatorBill } from "../../../api/bill/psp-operator-pricing";
+import CreateApartmentBill from "../../../Component/Modal/CreateApartmentBill";
 
 
 const ApartmentBill: React.FC = () => {
-
+    const { apartmentId } = useParams();
   const [ updateModal, setUpdateModal ] = useState<boolean>(false)
   const [openCreateBillModal, setOpenCreateBillModal] =
     useState<boolean>(false);
@@ -27,10 +25,19 @@ const ApartmentBill: React.FC = () => {
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
   );
   const location = useLocation();
-  const { state } = location;
-  const [ page, setPage ] = useState<number>(1)
-  const apartment: IApartment = state.apartment;
-  console.log(apartment)
+  const { state: { property} } = location;
+  const [ page, setPage ] = useState<number>(1);
+  console.log(property)
+
+
+  const { data:apartment } = useQuery({
+    queryKey: ['apartment'],
+    queryFn: async () => {
+      const data = await getApartmentById(apartmentId);
+      console.log(data);
+      return data.data.data;
+    }
+  })
 
   
 
@@ -55,21 +62,22 @@ const ApartmentBill: React.FC = () => {
     page: page,
     perPage: 10,
   };
-  const { data : bills } = useQuery({
-        queryKey: ['bills', operator.id, page],
+  const { data : bill } = useQuery({
+        queryKey: ['bill', property],
         queryFn: async() => {
-          const data =  await  getApartmentTypePrice(apartment.apartmentTypeId, operator.id)
+          const data =  await getApartmentTypePrice(apartment.apartmentTypeId, operator.id, property?.propertyTypeId)
           console.log(data);
-          return data;
+          return data.data.data[0];
         }
   })
 
 
 const { data: billHistory, isLoading, isError } = useQuery({
-  queryKey: ['billHistory', apartment.id, page],
+  queryKey: ['billHistory', apartmentId, page],
   queryFn: async () => {
     try {
       const history = await getBillingsByApartmentId(apartment.id, params);
+      console.log(history)
       return history;
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
@@ -114,7 +122,7 @@ const apartmentField = [
 
               <h2 className="text-3xl font-bold flex">Apartment Details        
                  <span className="block text-2xl mx-4">
-                      {<OccupancyStatusBadge status={apartment.status} />}
+                      {<OccupancyStatusBadge status={apartment?.status} />}
                     </span></h2>
             </div>
             <div className="flex lg:flex-row md:justify-between p-4 flex-wrap">
@@ -269,17 +277,12 @@ const apartmentField = [
           
         </div>
       }
+ 
+      {
+      
+        openCreateBillModal && <CreateApartmentBill openModal={openCreateBillModal} setOpenModal={setOpenCreateBillModal} apartmentBill={bill.amount||"0.00"} apartment={apartment} />
+      }
 
-
-      {/* {openCreateBillModal && (
-        <CreateApartmentBill
-          apartment={apartment}
-          apartmentBill={currentBill}
-          openModal={openCreateBillModal}
-          setOpenModal={setOpenCreateBillModal}
-          setRefresh={() => setPage(1)}
-        />
-      )} */}
 
       {
         updateModal && <UpdateApartmentModal apartment={apartment} openModal={updateModal} handleUpdateModal={()=>setUpdateModal(!updateModal)} />

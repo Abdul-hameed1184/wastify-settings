@@ -2,16 +2,15 @@ import React from "react";
 import { IApartmentType } from "../models/apartmentType.interface"
 import { IPropertyType } from "../models/propertType.interface"
 import {  useFormik } from "formik"
-import { ParagraphSmall2, ParagraphXl } from "./Paragraph";
-import { ButtonsPrimary } from "./Buttons";
+import { ParagraphSmall2 } from "./Paragraph";
 import { IOperator } from "../models/operator.interface";
-import { InputField } from "./InputField";
 import { toast } from "react-toastify";
 import { createBillSetup } from "../api/bill/psp-operator-pricing";
 import { ICreateBill } from "../models/createbill.interface";
 import { AxiosError } from "axios";
 import { Modal } from "./Modal/Modal";
 import { Button } from "./Button";
+import Input from "./InputField";
 
 
 type PricingProps = {
@@ -112,7 +111,7 @@ export const CreatePricing:React.FC<PricingProps> =  ({openModal, handleModal, p
                     </div>
                   </div>
                 <div className="flex flex-row w-full items-center">
-                    <InputField type="text" placeholder="Amount" name="amount" 
+                    <Input type="text" placeholder="Amount" name="amount" 
                            required
                   
                   onChange={(e) => {

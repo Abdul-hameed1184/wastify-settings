@@ -1,17 +1,15 @@
-import React, { useState } from 'react'
 import { IoChevronBack } from "react-icons/io5";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Paragraph2Xl } from '../../Component/Paragraph';
-import { InputField, InputFieldSecondary } from '../../Component/InputField';
+import Input from '../../Component/InputField';
 import { ButtonsPrimary } from '../../Component/Buttons';
-import { getPayStackSettings, initializePayment } from '../../api/paystack-payment/paystack-api';
+import { initializePayment } from '../../api/paystack-payment/paystack-api';
 import Paystack from '@paystack/inline-js'
-import PaystackPayment from '../../Component/PaystackButton';
 
 const PayAmount = () => {
-    const navigate = useNavigate();
-    const [settings, setSettings] = useState<any>(null);
-    const [ isOpen, setIsOpen] = useState(false);
+    // const navigate = useNavigate();
+    // const [settings, setSettings] = useState<any>(null);
+    // const [ isOpen, setIsOpen] = useState(false);
 
 
     const HandleContinue = async () => {

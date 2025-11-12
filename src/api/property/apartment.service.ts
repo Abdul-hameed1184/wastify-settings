@@ -46,7 +46,11 @@ export const getApartmentsByPspOperator = (page:number, id: number) => {
     return axios.get(`/apartment/apartment-by-psp-operator-id/${id}?page=${page}&perPage=${500}`);
 }
 
-export const getApartmentTypePrice = (apartmentTypeId: number, operatorId: number) => {
-    return axios.get(`/billSetup/get-bill-setup-by-apartment-operator/${apartmentTypeId}/${operatorId}`);
+export const getApartmentTypePrice = (apartmentTypeId: number, operatorId: number, propertyTypeId:number) => {
+    return axios.get(`/billSetup/get-bill-setup-by-apartment-operator-property-type/${apartmentTypeId}/${operatorId}/${propertyTypeId}`);
+}
+
+export const getApartmentById = (apartmentId: number) => {
+    return axios.get(`/apartment/${apartmentId}`);
 }
 

@@ -4,14 +4,14 @@ import { FaCircle } from "react-icons/fa";
 import { Paragraph2Green } from '../Paragraph';
 
 const data = [
-    { name: 'Overdue Bills', value: 150 },
-    { name: 'Current Bills', value: 350 },
+    { name: 'Total Bills', value: 150 },
+    { name: 'Paid Bills', value: 350 },
 ];
 const COLORS = ['#7ABC0080', '#7ABC00'];
 const FirstPieChart = () => {
     return (
         <div style={{ width: '100%' }} className='bg-lightBackground px-2 py-3'>
-            <p className=' font-Poppins text-green text-2xl leading-5 font-semibold m-4'>Monthly sales</p>
+    <p className=' font-Poppins text-green text-2xl leading-5 font-semibold my-8'>Monthly sales</p>
             <div className="flex w-full">
                 <PieChart width={300} height={400} >
                     <Pie

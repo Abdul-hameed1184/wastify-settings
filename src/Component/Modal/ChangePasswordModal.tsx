@@ -4,7 +4,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Modal } from "./Modal";
-import { Input } from "../InputField";
+import Input from "../InputField";
 import { Button } from "../Button";
 import { ICustomer } from "../../models/customer.interface";
 import { changeCustomerPassword } from "../../api/auth.service";

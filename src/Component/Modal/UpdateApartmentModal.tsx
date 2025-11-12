@@ -7,7 +7,9 @@ import { getCustomers } from "../../api/customer/customer.service";
 import { ICustomer } from "../../models/customer.interface";
 import { getApartmentType, updateApartment } from "../../api/property/apartment.service";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import Input  from "../InputField";
 
 type Props = {
   apartment: IApartment;
@@ -20,8 +22,8 @@ export const UpdateApartmentModal: React.FC<Props> = ({
   openModal,
   handleUpdateModal,
 }) => {
+const queryClient = useQueryClient();
 
-  const [loading, setLoading] = useState<boolean>(false);
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
   const { data: apartmentTypes } = useQuery({
     queryKey: ['apartmentTypes'],
@@ -31,7 +33,7 @@ export const UpdateApartmentModal: React.FC<Props> = ({
     }
   });
 
-    const { data: customers, isLoading } = useQuery({
+    const { data: customers } = useQuery({
     queryKey: ['customers'],
     queryFn: async () => {
             const x = await getCustomers();
@@ -62,6 +64,9 @@ const handleUpdateApartment = async (values) => {
     console.log(error)
     toast.error("Apartment update error")
   }
+       queryClient.invalidateQueries({
+    queryKey: ["apartment"],
+  });
 };
 
   const formik = useFormik({
@@ -99,7 +104,15 @@ const handleSearchChange = (search: string) => {
             {/* Apartment Type */}
             <h2>Apartment Type</h2>
             <select
-              className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
+              className="
+               border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
+          block w-full
+          border border-gray
+          text-base text-gray-800
+          placeholder:text-gray-400
+          transition-all duration-200 ease-in-out
+          focus:outline-none focus:ring-2 focus:ring-offset-1
+              "
               value={formik.values.apartmentTypeId}
               onChange={(e) => {
                 const id = parseInt(e.target.value, 10);
@@ -119,27 +132,22 @@ const handleSearchChange = (search: string) => {
 
             {/* Customer Phone */}
 {/* Customer Phone */}
-<p>Customer Phone Number</p>
-<input
-  list="customers"
-  name="customerPhone"
-  className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
-  value={
-    customers?.find(
-      (c) => c.customerId === formik.values.customerId
-    )?.phone || ""
-  }
-  onChange={(e) => handleSearchChange(e.target.value)}
-/>
+<p className="font-bold text-gray">Customer Phone Number</p>
+<Input
+              list="customers"
+              name="customerPhone"
+              className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
+              onChange={(e) => handleSearchChange(e.target.value)}  />
 
 <datalist id="customers">
   {customers &&
-    customers.map((customer) => (
-      <option key={customer.customerId} value={customer.phone}></option>
+    customers?.map((customer) => (
+        <option key={customer.customerId} value={customer.phone}>{customer.phone + " - " + customer.firstname + " " + customer.lastname}</option>
+
     ))}
 </datalist>
 {formik.values.customerId && (
-  <p>
+  <p className="text-green font-bold uppercase">
     {
       customers?.find(
         (c) => c.customerId === formik.values.customerId
@@ -156,9 +164,12 @@ const handleSearchChange = (search: string) => {
           </div>
         </div>
 
+
+        
+
         {/* Status */}
 <div className="flex flex-col">
-  <label htmlFor="status">Status</label>
+  <label htmlFor="status" className="font-bold text-gray">Status</label>
   <select
     id="status"
     value={formik.values.status}
@@ -172,7 +183,7 @@ const handleSearchChange = (search: string) => {
   </select>
 </div>
 
-        <Button type="submit" className="w-full" loading={loading}>
+        <Button type="submit" className="w-full" loading={formik.isSubmitting}>
           Update Apartment
         </Button>
       </form>

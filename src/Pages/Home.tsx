@@ -11,11 +11,10 @@ import {
   ParagraphLargeWhite4xl,
   ParagraphSmallBlack,
 } from "../Component/Paragraph";
-import { Input } from "../Component/InputField";
+import  Input  from "../Component/InputField";
 import { Button } from "../Component/Button";
 import { useFormik } from "formik";
-import { getPropertyQuickPay } from "../api/quickpay/quickpay.service";
-import { toast } from "react-toastify";
+
 
 const Home:React.FC = () => {
   const navigate = useNavigate();
@@ -32,20 +31,9 @@ const Home:React.FC = () => {
       propertyCode: Yup.string().required("Property code is required"),
     }),
     onSubmit: (values) => {
-      getPropertyQuickPay(values.phoneNumber, values.propertyCode)
-        .then((response) => {
-          // Handle successful response
-          console.log(response.data.data);
-          navigate("/currentbills", { state: { data: response.data.data } });
-        })
-        .catch((error) => {
-          // Handle error response
-          console.error("Error fetching quick pay data:", error);
-          toast.error("Failed to fetch quick pay data. Please check your details and try again.");
-          formik.setSubmitting(false); 
-        });
-
-
+      
+          navigate("/currentbills", { state: { data: values } });
+     
     },
   });
 

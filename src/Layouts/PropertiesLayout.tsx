@@ -18,7 +18,7 @@ const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
     page: 1,
     per_page: 10,
   };
-  const { data: allProperties, isLoading, isError } = useQuery({
+  const { data: allProperties, isLoading } = useQuery({
         queryKey: ['prop', operator.id],
         queryFn: () => {
          const data =  getPropertyByOperator(operator.id, params);

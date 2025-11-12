@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import {  useNavigate } from "react-router-dom";
 import useLogout from "../../utils/useLogout";
-import { customerDashboard, updateCustomer } from "../../api/customer/customer.service";
+import { customerDetails, updateCustomer } from "../../api/customer/customer.service";
 
-import { ICustomerDashboard } from "../../models/customerdash.interface";
 import { ProfileForm } from "../../Component/ProfileForm";
-import { ICustomer } from "../../models/customer.interface";
 import { Naira } from "../../utils/format";
 import { Button } from "../../Component/Button";
 import { ChangePasswordModal } from "../../Component/Modal/ChangePasswordModal";
@@ -14,9 +12,9 @@ import { toast } from "react-toastify";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Profile: React.FC = () => {
-    const customer:ICustomer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "{}");
-  const [dashboard, setDashboard] = useState<ICustomerDashboard>({} as ICustomerDashboard);
-  const [ showModalPassword, setShowModalPassword] = useState<boolean>(false)
+    const user = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "{}");
+  const [ showModalPassword, setShowModalPassword] = useState<boolean>(false);
+    const [imgError, setImgError] = useState(false);
   const navigate = useNavigate();
   const logout = useLogout();
   const queryClient = useQueryClient()
@@ -28,17 +26,23 @@ const Profile: React.FC = () => {
     }
   };
 
-  const { data: customerProfile, isLoading } = useQuery({
+
+  const { data: customer, isLoading } = useQuery({
       queryKey: ['profile'],
       queryFn: async () => {
-        const data =   await customerDashboard(customer.customerId);
+        const data =   await customerDetails(user.customerId);
+        console.log(data.data.data)
         return data.data.data;
       }
   })
 
+      const imageUrl = !imgError
+    ? customer?.imgUrl
+    : "https://via.placeholder.com/120x120.png?text=No+Image";
 
 
-const handleUpdate = async (data: {phone: string, lastname: string, firstname:string, email: string}) => {
+
+const handleUpdate = async (data:FormData) => {
   try{
   console.log(data);
   console.log(customer.customerId);
@@ -57,7 +61,7 @@ const [ edit, setEdit ] = useState<boolean>(false);
     <main className="min-h-screen bg-green bg-no-repeat py-10 flex justify-center">
         <div className="flex flex-col items-center h-full bg-white shadow-md rounded-xl p-6 max-w-xl w-full m-4">
       {edit ? (
-        <ProfileForm submitProfile={handleUpdate} user={customer} profileX={customerProfile} handleEdit={()=>setEdit(!edit)} />
+        <ProfileForm submitProfile={handleUpdate} user={customer}  handleEdit={()=>setEdit(!edit)} />
       ) : (
         <div className="w-full m-4">
           {/* Header */}
@@ -74,16 +78,26 @@ const [ edit, setEdit ] = useState<boolean>(false);
 
           {/* User Info */}
           <div className="space-y-4">
-       
-            <ProfileItem label="Full Name" value={customerProfile?.customerFullname} />
-            <ProfileItem label="Email" value={customer?.email || "—"} />
+<div className="flex flex-col items-center mb-6">
+          <div className="relative w-28 h-28 mb-3">
+            <img
+              src={imageUrl}
+              alt="Not Found"
+              onError={() => setImgError(true)}
+              className="w-28 h-28 rounded-full object-cover border-4 border-gray-200 shadow-sm"
+            />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-800">
+            {customer && <>{customer?.firstname + " " + customer?.lastname}</>}
+          </h2>
+          <p className="text-gray-500">{customer?.email}</p>
+        </div>
             <ProfileItem label="Phone" value={customer?.phone} />
-            <ProfileItem label="Apartments" value={customerProfile?.totalApartment?.toString()||""} />
             <ProfileItem
               label="Role"
-              value={customer.role === 1 ? "Operator" : "User"}
+              value={customer?.role === 1 ? "Operator" : "User"}
             />
-            <ProfileItem label="Overdue Bill" value={Naira.format(parseFloat(customerProfile?.totalBills))} />
+            <ProfileItem label="Overdue Bill" value={Naira.format(parseFloat(customer?.totalOverdueBill))} />
           </div>
           <div className="w-full mt-4">
             <Button onClick={()=>setShowModalPassword(!showModalPassword)} variant="primary" className="w-full">Change Password</Button>
@@ -92,7 +106,7 @@ const [ edit, setEdit ] = useState<boolean>(false);
       )}
     </div>
   
-        <ChangePasswordModal isOpen={showModalPassword} customer={customer} onClose={()=>setShowModalPassword(!showModalPassword)} />
+        {/* <ChangePasswordModal isOpen={showModalPassword} customer={customer} onClose={()=>setShowModalPassword(!showModalPassword)} /> */}
 
     </main>
   );

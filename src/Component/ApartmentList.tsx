@@ -11,10 +11,11 @@ import { MdEdit } from "react-icons/md";
 
 type Props = {
   apartments: any,
+  property: any,
   page: number,
   setPage: (p:number) => void
 }
-export const ApartmentList:React.FC<Props> = ({ apartments, page, setPage }) => {
+export const ApartmentList:React.FC<Props> = ({ property, apartments, page, setPage }) => {
 
   const columns = [
     { header: "Name", accessor: (a: IApartment) => a.customerFullname?.toUpperCase() },
@@ -30,7 +31,7 @@ export const ApartmentList:React.FC<Props> = ({ apartments, page, setPage }) => 
 
         <DropdownMenu>
                   <div className="flex flex-col  rounded-lg divide-y divide-gray-200 shadow-sm">
-        <Link to={`apartments/${a.id}`} state={{ apartment: a }}  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
+        <Link to={`apartments/${a.id}`} state={{ property: property }}  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
           <LuGlasses className="text-green-100" /><span>View Apartment</span>
         </Link>
         </div>

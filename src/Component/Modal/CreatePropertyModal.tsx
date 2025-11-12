@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Paragraph2Green, Paragraph2Xl, ParagraphSmall2 } from "../Paragraph";
-import { Input, InputField } from "../InputField";
-import { FormikValues, useFormik } from "formik";
+import { type FormikValues, useFormik } from "formik";
 import { ILocation } from "../../models/location.interface";
 import {
   createProperty,
@@ -16,6 +15,7 @@ import { IProperty } from "../../models/property.interface";
 import { Button } from "../Button";
 import { Modal } from "./Modal";
 import { useQueryClient } from "@tanstack/react-query";
+import Input from "../InputField";
 
 type Props = {
   openModal: boolean;

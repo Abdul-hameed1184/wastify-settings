@@ -33,6 +33,10 @@ export const updateProfile = async (userId: string, data: any ) => {
     return await axios.put(`/pspOperator/${userId}`, data);
 }
 
+export const getOperatorRevenue = async (operatorId: number) => {
+    return await axios.get(`/billPayment/monthly-summary-by-operator-id/${operatorId}`);
+}
+
 // export const getPropertyByOperator = async (operatorId: string, params: any) => {
 //   const { perPage, searchTerm, sortBy, sortOrder, page } = params;
 

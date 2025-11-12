@@ -6,7 +6,7 @@ import {
   ParagraphExtraSmallError,
   ParagraphSmall2,
 } from "../../../Component/Paragraph";
-import { InputFieldGray } from "../../../Component/InputField";
+import Input from "../../../Component/InputField";
 import { ButtonsPrimary } from "../../../Component/Buttons";
 import { AdminLogo } from "../../../Component/AlternateLogos";
 import baseUrl from "../../../utils/apiConfig";
@@ -92,7 +92,7 @@ const OperatorForgotPassword:React.FC = () => {
 
             <div className="w-full lg:w-4/5">
               <ParagraphSmall2 content={"Email"} />
-              <InputFieldGray
+              <Input
                 type={"email"}
                 name={"email"}
                 onChange={formik.handleChange}
@@ -105,7 +105,7 @@ const OperatorForgotPassword:React.FC = () => {
             </div>
             <div className="w-full lg:w-4/5 relative">
               <ParagraphSmall2 content={"Confirm Email"} />
-              <InputFieldGray
+              <Input
                 type={"email"}
                 name={"email_confirmation"}
                 onChange={formik.handleChange}

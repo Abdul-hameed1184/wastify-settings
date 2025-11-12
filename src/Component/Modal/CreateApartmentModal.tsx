@@ -1,7 +1,7 @@
 
 import {
   Paragraph,
-  Paragraph2Green,
+
   Paragraph2Xl,
   ParagraphError,
   ParagraphExtraSmallError,
@@ -9,22 +9,22 @@ import {
   ParagraphSmall2,
 } from "../Paragraph";
 import { IProperty } from "../../models/property.interface";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { getCustomers } from "../../api/customer/customer.service";
 import {
   createApartment,
   getApartmentType,
 } from "../../api/property/apartment.service";
 import { ICustomer } from "../../models/customer.interface";
-import { FormikValues, useFormik } from "formik";
+import { type FormikValues, useFormik } from "formik";
 import { toast } from "react-toastify";
 import { IApartmentType } from "../../models/apartmentType.interface";
 import { ButtonsPrimary, ButtonsPrimaryBlack } from "../Buttons";
-import { InputFieldSecondaryGreen } from "../InputField";
 import { createCustomer } from "../../api/psp-operator/psp-operator.service";
 import { Modal } from "./Modal";
 import { Button } from "../Button";
 import { useQuery } from "@tanstack/react-query";
+import Input from "../InputField";
 
 type Props = {
   openModal: boolean;
@@ -170,7 +170,13 @@ const { data:customers } = useQuery({
                 <div>
                   <ParagraphSmall2 content={"Apartment Type"} />
                   <select
-                    className="border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1"
+                    className="   border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
+          block w-full
+          border border-gray
+          text-base text-gray-800
+          placeholder:text-gray-400
+          transition-all duration-200 ease-in-out
+          focus:outline-none focus:ring-2 focus:ring-offset-1"
                     onChange={(e) => {
                       const id = parseInt(e.target.value, 10);
                       setApartmentTypeId(id);
@@ -227,19 +233,19 @@ const { data:customers } = useQuery({
                             key={customer.customerId}
                             value={customer.phone}
                           >
-                            {customer.phone}
+                            {customer.phone + " " + customer.firstname + " " + customer.lastname}
                           </option>
                         );
                       })}
                   </datalist>
                   {selectedCustomer && (
-                    <Paragraph2Green
-                      content={
+                    <p className="text-green uppercase font-bold">
+                      {
                         selectedCustomer.firstname +
                         " " +
                         selectedCustomer.lastname
                       }
-                    />
+                    </p>
                   )}
                 </div>
                 <div className="mt-2">
@@ -280,7 +286,7 @@ const { data:customers } = useQuery({
               </div>
               <div className="mx-4 mt-8 md:mt-4">
                 <div className="mt-4">
-                  <InputFieldSecondaryGreen
+                  <Input
                     placeholder={"First Name"}
                     type={"text"}
                     name={"firstname"}
@@ -295,7 +301,7 @@ const { data:customers } = useQuery({
                   ) : null}
                 </div>
                 <div className="mt-4">
-                  <InputFieldSecondaryGreen
+                  <Input
                     placeholder={"Last Name"}
                     type={"text"}
                     name={"lastname"}
@@ -310,7 +316,7 @@ const { data:customers } = useQuery({
                   ) : null}
                 </div>
                 <div className="mt-4">
-                  <InputFieldSecondaryGreen
+                  <Input
                     placeholder={"Email"}
                     type={"email"}
                     name={"email"}
@@ -324,7 +330,7 @@ const { data:customers } = useQuery({
                   ) : null}
                 </div>
                 <div className="mt-4">
-                  <InputFieldSecondaryGreen
+                  <Input
                     placeholder={"Phone number"}
                     type={"text"}
                     name={"phone"}

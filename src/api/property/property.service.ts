@@ -13,3 +13,7 @@ export const updateProperty = (property: IProperty, propertyId: number) => {
     return axios.put(`/property/${propertyId}`, property)
 }
 
+export const getPropertyById = (propertyId: number) => {
+    return axios.get(`/property/${propertyId}`);
+}
+

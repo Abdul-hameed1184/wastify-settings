@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import {  useFormik } from 'formik';
+import { type  FormikValues, useFormik } from 'formik';
 import { ToastContainer, toast } from "react-toastify";
 import axios from 'axios';
 import { Paragraph2Xl, ParagraphExtraSmallError, ParagraphLargeWhite, ParagraphSmall } from '../../Component/Paragraph';
-import { InputFieldSecondaryGreen } from '../../Component/InputField';
+import Input from '../../Component/InputField';
 import { ButtonsPrimary } from '../../Component/Buttons';
 import styles from './Checkbox.module.css';
 import baseURL from '../../utils/apiConfig';
@@ -139,17 +139,17 @@ const CreateAccount:React.FC = () => {
                     <div className="mx-4 mt-8 md:mt-4">
                         <form onSubmit={formik.handleSubmit}>
                             <div className="mt-4">
-                                <InputFieldSecondaryGreen placeholder={"First Name"} type={"text"} name={"firstname"} onChange={formik.handleChange} value={formik.values.firstname} />
+                                <Input placeholder={"First Name"} type={"text"} name={"firstname"} onChange={formik.handleChange} value={formik.values.firstname} />
 
                                 {formik.errors.firstname ? <ParagraphExtraSmallError content={formik.errors.firstname} /> : null}
                             </div>
                             <div className="mt-4">
-                                <InputFieldSecondaryGreen placeholder={"Last Name"} type={"text"} name={"lastname"} onChange={formik.handleChange} value={formik.values.lastname} />
+                                <Input placeholder={"Last Name"} type={"text"} name={"lastname"} onChange={formik.handleChange} value={formik.values.lastname} />
 
                                 {formik.errors.lastname ? <ParagraphExtraSmallError content={formik.errors.lastname} /> : null}
                             </div>
                             <div className="mt-4">
-                                <InputFieldSecondaryGreen placeholder={"Email"} type={"email"} name={"email"} onChange={formik.handleChange} value={formik.values.email} />
+                                <Input placeholder={"Email"} type={"email"} name={"email"} onChange={formik.handleChange} value={formik.values.email} />
                                 {formik.errors.email ? <ParagraphExtraSmallError content={formik.errors.email} /> : null}
                             </div>
                             <div className="mt-4 relative">

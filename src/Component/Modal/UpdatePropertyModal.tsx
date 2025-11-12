@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Paragraph2Green, Paragraph2Xl, ParagraphSmall2 } from "../Paragraph";
-import { InputField } from "../InputField";
+import { Paragraph2Xl, ParagraphSmall2 } from "../Paragraph";
+import Input from "../InputField";
 import {  useFormik } from "formik";
 import { ILocation } from "../../models/location.interface";
 import {  getPropertyTypes, updateProperty } from "../../api/property/property.service";
@@ -13,6 +13,7 @@ import { IProperty } from "../../models/property.interface";
 import { Button } from "../Button";
 import { Modal } from "./Modal";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   openModal: boolean;
@@ -28,6 +29,7 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
   const [selectedCustomer, setSelectedCustomer] = useState<ICustomer>();
   const [isOn, setIsOn] = useState(false);
   const navigate = useNavigate();
+      const queryClient = useQueryClient();
   useEffect(() => {
     (async () => {
       const propertyTypes = await getPropertyTypes();
@@ -56,6 +58,9 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
       console.log(e)
       toast.error("Unable to Update Property");
     }
+         queryClient.invalidateQueries({
+    queryKey: ["property"],
+  });
   };
 
   const formik = useFormik({
@@ -114,7 +119,7 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
             <label className="flex items-center cursor-pointer select-none">
               <span className="mr-3 text-gray-700">{isOn ? "Location ON" : "Location OFF"}</span>
               <div className="relative">
-                <input type="checkbox" checked={isOn} onChange={handleToggle} className="sr-only" />
+                <Input type="checkbox" checked={isOn} onChange={handleToggle} className="sr-only" />
                 <div
                   className={`w-12 h-6 rounded-full border bg-black border-green-500 transition-all duration-300 ${
                     isOn ? "bg-green-500" : "bg-gray-300"
@@ -133,7 +138,7 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
           {/* Property Address */}
           <div>
             <ParagraphSmall2 content="Property Address" />
-            <InputField
+            <Input
               type="text"
               placeholder="Enter property address"
               name="propertyAddress"
@@ -151,7 +156,13 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
             <ParagraphSmall2 content="Property Type" />
             <select
               id="propertyTypeId"
-              className="border px-3 py-2 bg-gray-50 rounded-lg w-full focus:outline-none focus:border-green-500"
+              className="          border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
+          block w-full
+          border border-gray
+          text-base text-gray-800
+          placeholder:text-gray-400
+          transition-all duration-200 ease-in-out
+          focus:outline-none focus:ring-2 focus:ring-offset-1"
               onChange={(e) => {
                 const id = parseInt(e.target.value, 10);
                 formik.setFieldValue("propertyTypeId", id);
@@ -177,14 +188,20 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
               value={formik.values.propertyDescription}
               onChange={formik.handleChange}
               placeholder="Describe the property..."
-              className="border px-3 py-2 bg-white rounded-lg w-full focus:outline-none focus:border-green-500"
+              className="          border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
+          block w-full
+          border border-gray
+          text-base text-gray-800
+          placeholder:text-gray-400
+          transition-all duration-200 ease-in-out
+          focus:outline-none focus:ring-2 focus:ring-offset-1"
             />
           </div>
 
           {/* No of Apartments */}
           <div>
             <ParagraphSmall2 content="Number of Apartments" />
-            <InputField
+            <Input
               type="number"
               name="noOfDistinctApartment"
               placeholder="0"
@@ -198,21 +215,34 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
           {/* Owner */}
           <div>
             <ParagraphSmall2 content="Property Owner (Phone Number)" />
-            <input
+            <Input
               list="owners"
-              className="border px-3 py-2 bg-gray-50 rounded-lg w-full focus:outline-none focus:border-green-500"
+              className="          
+              border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
+          block w-full
+          border border-gray
+          text-base text-gray-800
+          placeholder:text-gray-400
+          transition-all duration-200 ease-in-out
+          focus:outline-none focus:ring-2 focus:ring-offset-1"
               name="owner"
               onChange={(e) =>{ 
                  handleSearchChange(e.target.value);
                 }}
             />
             <datalist id="owners">
-              {customers.map((c) => (
-                <option key={c.customerId} value={c.phone} />
+              {customers.map((customer) => (
+                                    <option
+                            key={customer.customerId}
+                            value={customer.phone}
+                          >
+                            {customer.phone + " " + customer.firstname + " " + customer.lastname}
+                          </option>
               ))}
+        
             </datalist>
             {selectedCustomer && (
-              <Paragraph2Green content={`${selectedCustomer.firstname} ${selectedCustomer.lastname}`} />
+              <p className="text-lg font-bold uppercase text-green">{`${selectedCustomer.firstname} ${selectedCustomer.lastname}`}</p>
             )}
           </div>
 

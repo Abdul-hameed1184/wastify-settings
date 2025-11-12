@@ -34,12 +34,7 @@ const SuperAdminNavbar = () => {
                     </NavLink>
                 </div>
             </div>
-            {/* <div className="hidden lg:block w-2/5 ">
-                <div className="relative w-4/6">
-                    <InputFieldGreenWhite />
-                    <FaSearch className='text-green absolute top-3 left-3' />
-                </div>
-            </div> */}
+
             <div className="lg:w-1/3 flex justify-end gap-2">
                 <IoNotificationsCircleSharp className='h-8 w-8 text-grayRounded' />
                 <img src="/Images/admin-person.png" alt="" className='w-8  h-8 lg:w-10 lg:h-10 rounded-full' />

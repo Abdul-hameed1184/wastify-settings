@@ -8,7 +8,7 @@ import {
   ParagraphExtraSmallError,
   ParagraphSmall2,
 } from "../../../Component/Paragraph";
-import { InputFieldGray } from "../../../Component/InputField";
+import Input from "../../../Component/InputField";
 import { ButtonsPrimary } from "../../../Component/Buttons";
 import { AdminLogo } from "../../../Component/AlternateLogos";
 import axios from "axios";
@@ -431,7 +431,7 @@ type Err = {
             <form action="" onSubmit={handleSendEmail}>
               <div className="w-full lg:w-4/5">
                 <ParagraphSmall2 content={"Company Email"} />
-                <InputFieldGray
+                <Input
                   type={"text"}
                   value={formData.email}
                   onChange={handleChange}
@@ -441,7 +441,7 @@ type Err = {
               </div>
               <div className="w-full lg:w-4/5">
                 <ParagraphSmall2 content={"Confirm Company Email"} />
-                <InputFieldGray
+                <Input
                   type={"text"}
                   value={formData.email_confrim}
                   onChange={handleChange}
@@ -470,7 +470,7 @@ type Err = {
 
             {/* <div className="w-full lg:w-4/5">
                             <ParagraphSmall2 content={"Input the 4 digit code sent to your mail"} />
-                            <InputFieldGray name={'enterOtp'} type={'number'} value={enterOtp} onChange={(e) => setEntereOtp(e.target.value)} />
+                            <Input name={'enterOtp'} type={'number'} value={enterOtp} onChange={(e) => setEntereOtp(e.target.value)} />
                         </div> */}
             <div className="lg:mx-2 my-10 flex justify-start">
               <form className="space-x-2">
@@ -505,7 +505,7 @@ type Err = {
             <form onSubmit={handleSubmit}>
               <div className="w-full lg:w-4/5">
                 <ParagraphSmall2 content={"Operators Business Name"} />
-                <InputFieldGray
+                <Input
                   type={"text"}
                   name={"businessName"}
                   onChange={formik.handleChange}
@@ -603,7 +603,7 @@ type Err = {
               {/* Phone Number */}
               <div className="w-full lg:w-4/5">
                 <ParagraphSmall2 content={"Phone Number"} />
-                <InputFieldGray
+                <Input
                   name={"phone"}
                   type={"text"}
                   onChange={formik.handleChange}
@@ -618,7 +618,7 @@ type Err = {
               <div className="w-full lg:w-4/5 flex gap-10">
                 <div className="w-3/6">
                   <ParagraphSmall2 content={"Password"} />
-                  <InputFieldGray
+                  <Input
                     onChange={formik.handleChange}
                     value={formik.values.password} // Bind password to formik values
                     name={"password"}
@@ -633,7 +633,7 @@ type Err = {
 
                 <div className="w-3/6">
                   <ParagraphSmall2 content={"Confirm password"} />
-                  <InputFieldGray
+                  <Input
                     onChange={formik.handleChange}
                     value={formik.values.password_confirmation} // Bind password confirmation to formik values
                     name={"password_confirmation"}

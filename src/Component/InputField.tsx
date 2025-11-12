@@ -1,112 +1,92 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React from 'react';
+import clsx from 'clsx'; // Optional: for cleaner class merging
 
 type Props = {
-  id?:string;
+  id?: string;
   type?: string;
   name?: string;
   pattern?: string;
   maxLength?: number;
   value?: string;
+  defaultValue?: string;
   placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: string | null | boolean;
   required?: boolean;
   list?: string;
-  defaultValue?: string
   disabled?: boolean;
-  className?: string
-};
+  className?: string;
+} & React.HTMLProps<HTMLInputElement>; // Optional: allow all native input props
 
-export const InputField:React.FC<Props> = ({ type, name, value, placeholder, defaultValue, onChange, error, required=false, list="" }) => {
+const Input = React.forwardRef<HTMLInputElement, Props>(
+  (
+    {
+      id,
+      type = 'text',
+      name,
+      pattern,
+      maxLength,
+      value,
+      defaultValue,
+      placeholder,
+      onChange,
+      onBlur,
+      list,
+      error,
+      required,
+      disabled,
+      className,
+      ...rest // capture any extra native props
+    },
+    ref
+  ) => {
     return (
-      <input type={type} list={list} name={name} value={value} defaultValue={defaultValue} placeholder={placeholder} onChange={onChange} required={required}  
-className={`border border-gray-300 px-2.5 py-3.5 pl-8 shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-lightGreen  placeholder:text-gray focus:outline-none focus:ring-2 focus:border-purple border-gray ring-gray  ${ error ? 'focus:ring-error' : 'focus:ring-gray'}`} />
-    )
+      <div className="w-full">
+        <input
+          id={id}
+          type={type}
+          name={name}
+          pattern={pattern}
+          maxLength={maxLength}
+          value={value}
+          defaultValue={defaultValue}
+          placeholder={placeholder}
+          onChange={onChange}
+          onBlur={onBlur}
+          list={list}
+          required={required}
+          disabled={disabled}
+          ref={ref}
+          {...rest}
+          className={clsx(
+            // Base styles
+            'block w-full',
+            'px-2 py-3 pl-5',
+            'bg-grayInput shadow-sm rounded-lg',
+            'font-Poppins h-14 text-black text-base mt-1',
+            'border-2 transition-all duration-200 ease-in-out',
+            'focus:outline-none focus:ring-2 focus:ring-offset-1',
+            'placeholder:text-gray-400 text-gray-800',
+
+            // Conditional border & focus ring
+            error
+              ? 'border-red-500 focus:ring-red-400 focus:border-red-500'
+              : 'border-gray-300 focus:border-green focus:ring-green/50',
+
+            // User override
+            className
+          )}
+        />
+        {error && typeof error === 'string' && (
+          <p className="mt-1 text-xs font-medium text-red-600">{error}</p>
+        )}
+      </div>
+    );
   }
+);
 
-export const InputFieldGray:React.FC<Props> = ({ type, name, value, placeholder, onChange, error, disabled }) => {
-    return (
-      <input type={type} name={name} value={value} placeholder={placeholder} disabled={disabled} onChange={onChange}  className={`border px-2.5 py-3.5 pl-8  bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-grayInput border-transparent placeholder:text-black focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-grayInput  ${ error ? 'focus:ring-error' : 'focus:ring-grayInput'}`} />
-    )
-  }
-export const InputFieldGrayHome:React.FC<Props> = ({ type, name, value, placeholder, onChange, error }) => {
-    return (
-      <input type={type} name={name} value={value} placeholder={placeholder} onChange={onChange}  className={`border px-2.5 py-3.5 pl-5  bg-grayInput shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-grayInput border-transparent placeholder:text-grayRounded placeholder:tracking-widestSa focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-grayInput  ${ error ? 'focus:ring-error' : 'focus:ring-grayInput'}`} />
-    )
-  }
+Input.displayName = 'Input'; // For React DevTools
 
-export const InputFieldSecondary:React.FC<Props> = ({ type, name, value, placeholder, onChange, error }) => {
-    return (
-      <input type={type} name={name} value={value} placeholder={placeholder} onChange={onChange}  className={`border-2 px-2.5 py-3.5 pl-8  bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-gray  placeholder:text-gray focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray  ${ error ? 'focus:ring-error' : 'focus:ring-gray'}`} />
-    )
-  }
-
-export const InputFieldSecondaryGreen:React.FC<Props> = ({ type, name, value, placeholder, onChange, error }) => {
-    return (
-      <input type={type} name={name} value={value} placeholder={placeholder} onChange={onChange}  className={` border border-2 font-lg border-gray-200 px-2.5 py-4 pl-8  bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-gray  placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray  ${ error ? 'focus:ring-error' : 'focus:ring-gray'}`} />
-    )
-  }
-
-  export const InputFieldGreenWhite:React.FC<Props> = ({ type, name, value, placeholder, onChange, error }) => {
-    return (
-      <input type={type} name={name} value={value} placeholder={placeholder} onChange={onChange}  className={`border-2 border-lightGreen px-2.5 py-3.5 pl-10  bg-white shadow-sm rounded-lg block font-Poppins w-full h-10 text-black text-base mt-1 ring-lightGreen placeholder:text-black focus:outline-none focus:ring-2 focus:border-purple focus:border-lightGreen focus:ring-lightGreen  ${ error ? 'focus:ring-error' : 'focus:ring-lightGreen'}`} />
-    )
-  }
-
-
-  
-export const Input: React.FC<Props> = ({
-  id,
-  type = "text",
-  maxLength,
-  name,
-  value,
-  pattern,
-  placeholder,
-  onChange,
-  onBlur,
-  error,
-  className,
-}) => {
-  return (
-    <div className="w-full">
-      <input
-      id={id}
-        type={type}
-        pattern={pattern}
-        name={name}
-        maxLength={maxLength}
-        value={value}
-        placeholder={placeholder}
-        onChange={onChange}
-        onBlur={onBlur}
-        className={`
-          border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
-          block
-          w-full
-
-          border
-          border-gray
-          text-base
-          text-gray-800
-          placeholder:text-gray-400
-          transition-all
-          duration-200
-          ease-in-out
-          focus:outline-none
-          focus:ring-2
-          focus:ring-offset-1
-          ${error
-            ? "border-red-500 focus:ring-red-400 focus:border-red-500"
-            : "border-gray-300 focus:border-green focus:ring-green/50"}
-          ${className || ""}
-        `}
-      />
-      {error && (
-        <p className="mt-1 text-xs font-medium text-red-600">{error}</p>
-      )}
-    </div>
-  );
-};
+export default Input;

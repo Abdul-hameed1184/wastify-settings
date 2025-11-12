@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Input } from "./InputField";
+import Input  from "./InputField";
 import { Button } from "./Button";
 import { Modal } from "./Modal/Modal";
 import { IApartment } from "../models/apartment.interface";

@@ -15,3 +15,7 @@ export const verifyPayment = async (reference: string) => {
 export const create_transaction = async (data: any) => {
     return await  axios.post(`/billPayment`,data);
 }
+
+export const quickpay_create_payment = async (data) => {
+    return await  axios.post(`/billPayment/quickpay-create-payment`,data);
+}

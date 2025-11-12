@@ -209,7 +209,7 @@ const App: React.FC = () => {
                           <Route path="" element={<Properties />} />
                           <Route path=":propertyId" element={<Property />} />
                           <Route
-                            path=":propertyId/apartments/:apartment"
+                            path=":propertyId/apartments/:apartmentId"
                             element={<ApartmentBill />}
                           />
                         </Routes>

@@ -23,6 +23,7 @@ import { Link } from "react-router-dom";
 import InfoModal from "../../../Component/Modal/InfoModal";
 import DropdownMenu from "../../../Component/DropdownMenu";
 import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";
+import { Button } from "../../../Component/Button";
 
 
 const Properties:React.FC = () => {
@@ -66,9 +67,9 @@ const Properties:React.FC = () => {
         <ParagraphLargeGreen content={"Property Records"} />
         <div>
         <div className="grid justify-items-end my-8">
-          <div className="md:w-1/3 w-full">
-      <ButtonsPrimaryIcon icon={<FaPlusCircle />
-} type="button" name={"Add Property"} onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}/>
+          <div className="w-full text-right">
+      <Button icon={<FaPlusCircle />
+} type="button"  onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}>{"Add Property"}</Button>
       </div>
       </div>
           
@@ -82,6 +83,7 @@ const Properties:React.FC = () => {
               <TableHeadCell>Property address</TableHeadCell>
               {/* <TableHeadCell>LGA</TableHeadCell> */}
               <TableHeadCell>Ward</TableHeadCell>
+                    <TableHeadCell>Owner</TableHeadCell>
               <TableHeadCell>No of Apartments</TableHeadCell>{" "}
               <TableHeadCell>Action</TableHeadCell>
             </TableHead>
@@ -99,6 +101,7 @@ const Properties:React.FC = () => {
                   <TableCell>{item.propertyAddress} </TableCell>
                   {/* <TableCell>{item.lgaName} </TableCell> */}
                   <TableCell>{item.wardName}</TableCell>
+                        <TableCell className="uppercase">{item.ownerFullname}</TableCell>
                   {/* <TableCell>{item.propertyCode}</TableCell> */}
                   <TableCell>{item.noOfDistinctApartment}</TableCell>
                   {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}

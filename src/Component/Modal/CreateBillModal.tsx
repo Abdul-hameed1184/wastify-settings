@@ -2,7 +2,13 @@ import React, { useState } from 'react'
 import { Button, Checkbox, Label, Modal, Radio, TextInput } from "flowbite-react";
 import { ButtonsPrimaryBlack } from '../Buttons';
 import { Paragraph2, ParagraphSmall2, ParagraphXl } from '../Paragraph';
-import { InputFieldSecondaryGreen } from '../InputField';
+
+
+type Props = {
+    openModal: boolean;
+    setOpenModal: ()=>void;
+
+}
 const CreateBillModal = ({ openModal, setOpenModal, customer, type }) => {
 
     const [Billtype, setBillType] = useState('all');

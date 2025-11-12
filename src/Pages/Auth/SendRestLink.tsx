@@ -6,11 +6,13 @@ import baseURL from '../../utils/apiConfig';
 import { LogoWhite } from '../../Component/Logo';
 import { Paragraph2Xl, ParagraphExtraSmallError, ParagraphSmall } from '../../Component/Paragraph';
 import { ButtonsPrimary } from '../../Component/Buttons';
-import { InputFieldSecondaryGreen } from '../../Component/InputField';
+import Input from '../../Component/InputField';
 import { useNavigate } from 'react-router-dom';
 
 const validate = values => {
-    const errors = {};
+    const errors = {
+        phone: ''
+    };
 
     if (!values.phone) {
         errors.phone = 'Phone Number is Required';
@@ -78,7 +80,7 @@ const SendRestLink = () => {
                                 <Paragraph2Xl content={"Reset Password"} />
                                 <ParagraphSmall content={"Please enter your phone number to receive verification Code."} />
                                 <div className="m-4">
-                                <InputFieldSecondaryGreen placeholder={"Phone Number"} type={"tel"} name={"phone"} onChange={formik.handleChange} value={formik.values.phone} error={formik.errors.phone ? true : false} />
+                                <Input placeholder={"Phone Number"} type={"tel"} name={"phone"} onChange={formik.handleChange} value={formik.values.phone} error={formik.errors.phone ? true : false} />
                                 {formik.errors.phone ? <ParagraphExtraSmallError content={formik.errors.phone} /> : null}
                             </div>
                                 <div className="mx-4 my-8">

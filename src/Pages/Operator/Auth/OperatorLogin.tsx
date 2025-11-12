@@ -4,7 +4,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {  useFormik } from "formik";
 import { ToastContainer, Zoom, toast } from "react-toastify";
 import axios from "axios";
-import { Input } from "../../../Component/InputField";
+import Input from "../../../Component/InputField";
 import { AdminLogo } from "../../../Component/AlternateLogos";
 import baseURL from "../../../utils/apiConfig";
 import { Button } from "../../../Component/Button";

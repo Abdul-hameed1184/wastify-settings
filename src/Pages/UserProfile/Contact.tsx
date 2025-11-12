@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 
 import { getCustomerReportPaginatedByCustomer, sendMessage } from "../../api/customer/customer.service";
-import { Input } from "../../Component/InputField";
+import Input  from "../../Component/InputField";
 import { customerReportSchema } from "../../utils/validators/CustomerReportSchema";
 import CustomerReports from "./CustomerReports";
 import { IApartment } from "../../models/apartment.interface";

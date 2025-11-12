@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Modal } from 'flowbite-react';
-import { InputField, InputFieldGray, InputFieldSecondary } from './InputField';
+import Input from './InputField';
 const SupportModal = ({ openModal, setOpenModal }) => {
     return (
         <Modal dismissible show={openModal} onClose={() => setOpenModal(false)} size={'md'} position={'center-right'}>
@@ -10,16 +10,16 @@ const SupportModal = ({ openModal, setOpenModal }) => {
                 <Modal.Body>
                     <div className="space-y-6">
                         <div className="">
-                            <label htmlFor="">Full Name</label>
-                            <InputFieldSecondary name={'fullname'} placeholder={'my name'}  />
+                            <label htmlFor="fullname">Full Name</label>
+                            <Input name={'fullname'} placeholder={'my name'}  />
                         </div>
                         <div className="">
-                            <label htmlFor="">Email</label>
-                            <InputFieldSecondary name={'email'} placeholder={'myname@yahoo.com'} type={'email'}  />
+                            <label htmlFor="email">Email</label>
+                            <Input name={'email'} placeholder={'myname@yahoo.com'} type={'email'}  />
                         </div>
                         <div className="">
-                            <label htmlFor="">Message</label>
-                        <textarea name="messages" id="" cols="30" rows="5" className='border-2 px-2.5 py-3.5 pl-8  bg-white shadow-sm rounded-lg block font-Poppins w-full text-black text-base mt-1 ring-gray  placeholder:text-gray focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray'></textarea>
+                            <label htmlFor="message">Message</label>
+                        <textarea id="message" name="messages" cols="30" rows="5" className='border-2 px-2.5 py-3.5 pl-8  bg-white shadow-sm rounded-lg block font-Poppins w-full text-black text-base mt-1 ring-gray  placeholder:text-gray focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray'></textarea>
 
                         </div>
                     </div>

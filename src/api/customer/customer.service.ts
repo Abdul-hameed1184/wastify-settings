@@ -38,7 +38,12 @@ export const updateMessageReadStatus = async (reportId: number) => {
     return await axios.put(`/customerReport/update_read_status/${reportId}`, {});
 }
 
-export const updateCustomer = async (customerId: string, data: {phone: string, lastname: string, firstname:string, email: string} ) => {
-    return await axios.put(`/customer/${customerId}`, data)
+export const updateCustomer = async (customerId: string, data ) => {
+    console.log(data)
+    return await axios.post(`/customer/${customerId}`, data, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
 }
 

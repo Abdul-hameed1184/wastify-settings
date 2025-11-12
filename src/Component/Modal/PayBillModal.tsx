@@ -5,7 +5,7 @@ import { IBillData } from "../../models/billdata.interface";
 import { Naira } from "../../utils/format";
 
 type Props = {
-  handleBillPayment: (x: IBillData) => void;
+  handleBillPayment: () => void;
   bill: IBillData;
   isOpen: boolean;
   handleOpen: () => void;
@@ -75,7 +75,7 @@ export const PayBillModal: React.FC<Props> = ({ bill, isOpen, handleOpen, handle
           className={`w-full mt-4 ${
             !isAgreed ? "opacity-60 cursor-not-allowed" : ""
           }`}
-          onClick={() => handleBillPayment(bill)}
+          onClick={handleBillPayment  }
           disabled={!isAgreed}
         >
           Pay {Naira.format(parseFloat(bill.totalAmount))}

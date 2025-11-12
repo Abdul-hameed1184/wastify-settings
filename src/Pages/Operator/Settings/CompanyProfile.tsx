@@ -6,9 +6,9 @@ import axios from "axios";
 import { Button } from "../../../Component/Button";
 import { IOperator } from "../../../models/operator.interface";
 import { getProfile } from "../../../api/psp-operator/psp-operator.service";
-import { Input } from "../../../Component/InputField";
-import { FaBusinessTime } from "react-icons/fa";
+import  Input from "../../../Component/InputField";
 import Loader from "../../../Component/Loader";
+import { MdOutlineCloudUpload } from "react-icons/md";
 
 
 const updateProfile = async (formData: FormData) => {
@@ -50,7 +50,7 @@ const CompanyProfile: React.FC = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      businessName: profile?.firstName || "",
+      businessName: profile?.businessName || "",
       email: profile?.email || "",
       phone: profile?.phone || "",
       imgUrl: null,
@@ -74,17 +74,51 @@ const CompanyProfile: React.FC = () => {
       <h2 className="text-xl font-semibold mb-3">Update Photo and Personal Details</h2>
 
       <form onSubmit={formik.handleSubmit} className="space-y-3">
-        <div>
-          <label htmlFor="photo">Profile Photo</label>
-          <input
-          id="photo"
-            type="file"
-            name="imgUrl"
-            accept="image/*"
-            onChange={(e) => formik.setFieldValue("imgUrl", e.currentTarget.files?.[0])}
-            className="block mt-1 bg-primary p-2 rounded w-full"
-          />
-        </div>
+        <div className="flex flex-col space-y-2">
+  <label
+    htmlFor="photo"
+    className="text-sm font-medium text-gray-700"
+  >
+    Profile Photo
+  </label>
+
+  <div className="relative flex items-center justify-center w-full">
+    <label
+      htmlFor="photo"
+        aria-label="Upload profile photo"
+      className="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
+    >
+      <div className="flex flex-col items-center justify-center py-4">
+        <MdOutlineCloudUpload className="text-2xl"/>
+        <p className="text-sm text-gray-500">
+          <span className="font-semibold">Click to upload</span> or drag and drop
+        </p>
+        <p className="text-xs text-gray-400 mt-1">PNG, JPG or JPEG (max. 5MB)</p>
+      </div>
+      <input
+        id="photo"
+        type="file"
+        name="imgUrl"
+        accept="image/*"
+        onChange={(e) => formik.setFieldValue("imgUrl", e.currentTarget.files?.[0])}
+        className="hidden"
+      />
+    </label>
+  </div>
+  <div>
+    {formik.values.imgUrl && (
+      <div className="mt-2 text-sm bg-green rounded-md p-2 w-full text-white">
+            {formik.values.imgUrl?.name} - {formik.values.imgUrl?.size} bytes
+      </div>
+    )}
+  </div>
+  <div>
+    {formik.touched.imgUrl && formik.errors.imgUrl && (
+      <div className="text-red-600 text-sm mt-1">{formik.errors.imgUrl}</div>
+    )}
+  </div>
+</div>
+
 
         <div>
           <label htmlFor="businessName">Business Name</label>
@@ -129,7 +163,7 @@ const CompanyProfile: React.FC = () => {
         <Button
           type="submit"
           disabled={mutation.isPending}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="bg-green-600 text-white px-4 py-2 rounded w-full"
         >
           {mutation.isPending ? "Updating..." : "Update Profile"}
         </Button>

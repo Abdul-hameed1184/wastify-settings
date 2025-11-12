@@ -1,6 +1,6 @@
 import React from "react";
 import { ParagraphSmall2 } from "../Paragraph";
-import { Input } from "../InputField";
+import Input from "../InputField";
 import { type FormikValues, useFormik } from "formik";
 
 import { createCustomer } from "../../api/customer/customer.service";

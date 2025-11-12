@@ -1,8 +1,7 @@
-
+import React from 'react';
 import { IoChevronBack } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import { Paragraph2Xl, ParagraphSmall, ParagraphSmall2 } from '../../Component/Paragraph';
-import { InputField, InputFieldSecondary } from '../../Component/InputField';
 import { ButtonsPrimary } from '../../Component/Buttons';
 
 const CardPayment:React.FC = () => {

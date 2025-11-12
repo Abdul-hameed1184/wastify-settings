@@ -7,24 +7,25 @@ import { createApartmentBill } from "../../api/psp-operator/psp-operator.service
 import { useFormik } from "formik";
 import { Modal } from "./Modal";
 import { Button } from "../Button";
+import Input from "../InputField";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 type Props = {
   openModal: boolean;
   setOpenModal: (x) => void;
   apartmentBill: string;
   apartment: IApartment;
-  setRefresh: () => void;
 };
 const CreateApartmentBill: React.FC<Props> = ({
   openModal,
   setOpenModal,
   apartmentBill,
-  apartment,
-  setRefresh,
+  apartment
 }) => {
   console.log(apartmentBill);
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
   );
+  const queryClient = useQueryClient();
 
   const months = [
     { id: "01", name: "January" },
@@ -102,15 +103,19 @@ const CreateApartmentBill: React.FC<Props> = ({
             }, ${values.year} bill was created successfully`,
             { autoClose: 3000 }
           );
-          setRefresh();
+            queryClient.invalidateQueries({
+    queryKey: ["billHistory"],
+  });
           setOpenModal(false);
         })
         .catch((error) => {
           toast.error("Failed to create bill");
           console.error(error);
         });
+
     },
   });
+
 
   return (
     <Modal
@@ -119,15 +124,15 @@ const CreateApartmentBill: React.FC<Props> = ({
       size={"lg"}
       title="Create Monthly Bill"
     >
-      <form onSubmit={createFormikBill.handleSubmit} className="p-4">
+    {apartmentBill !== "0.00" ? <form onSubmit={createFormikBill.handleSubmit} className="p-4">
         <div className="flex gap-4 w-full"></div>
 
         <div>
           <p className="text-xl font-semibold mb-2">
-            Apartment: {apartment.apartmentTypeName}
+           <span className="text-gray font-bold">Apartment Type:</span>  <span className="font-bold">{apartment.apartmentTypeName}</span>
           </p>
           <p className="text-lg mb-2">
-            Apartment Type: {apartment.customerFullname}
+            <span className="text-gray font-bold">Customer Name: </span> <span className="font-bold uppercase">{apartment.customerFullname}</span>
           </p>
 
           <div className="flex flex-col ">
@@ -136,7 +141,13 @@ const CreateApartmentBill: React.FC<Props> = ({
               onChange={handleMonthlyBill}
               name="month"
               defaultValue={createFormikBill.values.month}
-              className="p-2 border text-xl mb-4 rounded-md p-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="   border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
+          block w-full
+          border border-gray
+          text-base text-gray-800
+          placeholder:text-gray-400
+          transition-all duration-200 ease-in-out
+          focus:outline-none focus:ring-2 focus:ring-offset-1"
             >
               {months.map((z, index) => (
                 <option key={index} value={z.id}>
@@ -162,8 +173,8 @@ const CreateApartmentBill: React.FC<Props> = ({
             </select>
 
             <p className="m-0 p-0 font-bold">Discount(Percentage)</p>
-            <input
-              type="number"
+            <Input
+              type="string"
               id="quantity"
               min="0"
               max="100"
@@ -208,12 +219,13 @@ const CreateApartmentBill: React.FC<Props> = ({
           <Button
             type="submit"
             className="w-full"
-            // disabled={apartmentBill <= 0 || discount <= 0 || discount > 100}
+           disabled={parseFloat(apartmentBill) <= 0 }
           >
             Create Bill
           </Button>
         </div>
-      </form>
+      </form>: <h2 className="text-gray font-bold text-center">Create a Bill for this Property and Apartment Type</h2>
+}
     </Modal>
   );
 };

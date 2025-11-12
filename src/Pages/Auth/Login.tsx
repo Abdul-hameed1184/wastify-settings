@@ -11,7 +11,7 @@ import {
   Paragraph2Xl,
   ParagraphLargeWhite,
 } from "../../Component/Paragraph";
-import { Input } from "../../Component/InputField";
+import  Input  from "../../Component/InputField";
 import baseURL from "../../utils/apiConfig";
 import { Button } from "../../Component/Button";
 type Err = {

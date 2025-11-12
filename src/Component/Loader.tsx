@@ -1,4 +1,5 @@
 import React from 'react';
+import { ImSpinner } from 'react-icons/im';
 
 const Loader:React.FC<{color?: string}> = ({color="green"}) => {
   return (
@@ -6,7 +7,8 @@ const Loader:React.FC<{color?: string}> = ({color="green"}) => {
     className="flex items-center justify-center min-h-50 bg-gray-100"
   >
     <div className="flex items-center justify-center">
-    <div className={`w-16 h-16 border-b-8 border-${color} rounded-full animate-spin`}></div>
+    {/* <div className={`w-16 h-16 border-b-8 border-${color} rounded-full animate-spin`}></div> */}
+    <ImSpinner className={`text-4xl animate-spin text-${color}`} />
     <h3 className={`text-4xl font-bold px-4 animate-bounce text-${color}`}>Wasteefy</h3>
     </div>
   </div>
