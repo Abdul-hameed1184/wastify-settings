@@ -77,7 +77,7 @@ const Property: React.FC = () => {
   return (
     <div className="p-4 ">
         <div className="flex justify-between flex-row">
-          <DataCard title={"Property Information"} data={property} fields={propertyField}  />
+       { property &&  <DataCard title={"Property Information"} data={property} fields={propertyField}  />}
          
             <div className="flex flex-col justify-between">
               <Button variant="black" onClick={()=>setUpdateModal(!updateModal)}>Edit Property</Button>

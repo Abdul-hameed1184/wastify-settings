@@ -41,10 +41,10 @@ export function PaginatedTable<T>({
     <div className="space-y-6 overflow-x-auto">
       {/* Table */}
       <Table striped={striped}>
-        <TableHead className="font-Poppins text-xl capitalize text-white bg-slate-900 dark:text-white">
+        <TableHead className="font-Poppins text-xl font-thin text-white bg-slate-900 dark:text-white">
           <TableHeadCell>S/N</TableHeadCell>
           {columns.map((col, idx) => (
-            <TableHeadCell key={idx} className={col.className}>
+            <TableHeadCell key={idx} className={col.className+ "font-thin"}>
               {col.header}
             </TableHeadCell>
           ))}

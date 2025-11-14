@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { getBillingsByApartmentId } from "../../api/property/apartment.service";
-import { IPaginatedApartmentBills } from "../../models/paginatedApartmentBillsForCustomer";
 import {
   Table,
   TableHead,
@@ -24,6 +23,7 @@ import { Naira } from "../../utils/format";
 import { IApartment } from "../../models/apartment.interface";
 import OccupancyStatusBadge from "../../utils/OccupyStatusBadge";
 import { PayBillModal } from "../../Component/Modal/PayBillModal";
+import { useQuery } from "@tanstack/react-query";
 
 const Wastebills: React.FC = () => {
   const customer: ICustomer = JSON.parse(
@@ -33,49 +33,27 @@ const Wastebills: React.FC = () => {
     sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]"
   );
 
-  const [page, setPage] = useState<number>(1);
-  const [ apartment, setApartment ] = useState<IApartment>(customerApartments[0])
-  const [apartmentBills, setApartmentBills] = useState<IPaginatedApartmentBills>({
-    data: [],
-    total: 0,
-    per_page: 10
-  } as unknown as IPaginatedApartmentBills);
+
+  const [ apartment, setApartment ] = useState<IApartment>(customerApartments[0]);
+
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const [ billData, setBillData ] = useState<IBillData>({} as IBillData);
-  const [ billModal, setBillModal ] = useState<boolean>(false)
-useEffect(() => {
-  (async () => {
-    try {
-      const response = await getBillingsByApartmentId(apartment.id);
+  const [ billModal, setBillModal ] = useState<boolean>(false);
+  const [ page, setPage ] = useState<number>(1)
+    const params = {
+    page: page,
+    perPage: 10,
+  };
 
-      // Ensure response matches IPaginatedApartmentBills
-      const bills: IPaginatedApartmentBills = response.data.data ?? {
-        data: [],
-        total: 0,
-        per_page: 10,
-      };
-
-      setApartmentBills(bills);
-    } catch (err) {
-      console.error("Error fetching bills:", err);
-      setApartmentBills({
-        data: [],
-        total: 0,
-        per_page: 10,
-        current_page: 1,
-        first_page_url: "",
-        from: 0,
-        last_page: 1,
-        last_page_url: "",
-        next_page_url: null,
-        path: "",
-        prev_page_url: null,
-        to: 0
-      });
-    }
-  })();
-}, [apartment, page]);
+const { data:apartmentBills } = useQuery({
+  queryKey: ['apartmentBills', apartment],
+  queryFn: async () => {
+    const xy =  await getBillingsByApartmentId(apartment.id, params);
+    console.log(xy);
+    return xy.data.data;
+  }
+})
   const handleBillModal = (x: IBillData) => {
     setBillData(x);
     setBillModal(!billModal);
@@ -250,7 +228,7 @@ useEffect(() => {
           </Table>
 
           {/* Pagination */}
-          {apartment && apartmentBills.data.length > 0 && (
+          {apartment && apartmentBills?.data?.length > 0 && (
             <div className="flex justify-between items-center mt-6 p-4 w-100">
               <button
                 className="text-green font-medium disabled:opacity-50"

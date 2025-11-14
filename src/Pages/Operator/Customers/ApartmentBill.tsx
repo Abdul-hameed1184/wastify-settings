@@ -14,6 +14,7 @@ import DataCard from "../../../Component/DataCard";
 import { UpdateApartmentModal } from "../../../Component/Modal/UpdateApartmentModal";
 import { useQuery } from "@tanstack/react-query";
 import CreateApartmentBill from "../../../Component/Modal/CreateApartmentBill";
+import { toast } from "react-toastify";
 
 
 const ApartmentBill: React.FC = () => {
@@ -62,17 +63,18 @@ const ApartmentBill: React.FC = () => {
     page: page,
     perPage: 10,
   };
-  const { data : bill } = useQuery({
+  const { data : bill = null } = useQuery({
         queryKey: ['bill', property],
         queryFn: async() => {
           const data =  await getApartmentTypePrice(apartment.apartmentTypeId, operator.id, property?.propertyTypeId)
           console.log(data);
           return data.data.data[0];
-        }
+        },
+        placeholderData: null
   })
 
 
-const { data: billHistory, isLoading, isError } = useQuery({
+const { data: billHistory, isLoading } = useQuery({
   queryKey: ['billHistory', apartmentId, page],
   queryFn: async () => {
     try {
@@ -122,7 +124,7 @@ const apartmentField = [
 
               <h2 className="text-3xl font-bold flex">Apartment Details        
                  <span className="block text-2xl mx-4">
-                      {<OccupancyStatusBadge status={apartment?.status} />}
+                      {apartment && <OccupancyStatusBadge status={apartment?.status} />}
                     </span></h2>
             </div>
             <div className="flex lg:flex-row md:justify-between p-4 flex-wrap">
@@ -141,7 +143,13 @@ const apartmentField = [
               <div className=" pr-4">
                 <Button
                   variant="black"
-                  onClick={() => setOpenCreateBillModal(true)}
+                  onClick={() =>{
+                    if(bill == null){
+                        toast.error("No price setup for this customer")
+                    }else{
+                     setOpenCreateBillModal(true);
+                    } 
+                  }}
                 >CreateBill</Button>
               </div>
             </div>
@@ -226,7 +234,7 @@ const apartmentField = [
                   </TableBody>
               </Table>
                       {/* Pagination */}
-          <div className="flex justify-center items-center h-20 my-10 w-full ">
+      {   <div className="flex justify-center items-center h-20 my-10 w-full ">
             <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
               <button
                 className={`text-green font-weight-bold`}
@@ -263,7 +271,7 @@ const apartmentField = [
                 Next
               </button>
             </div>
-          </div>
+          </div>}
               </>
               : 
               <>

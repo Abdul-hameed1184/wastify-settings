@@ -19,7 +19,7 @@ const DataCard: React.FC<DataCardProps> = ({ title, data, fields }) => {
       </div>
       <div className="px-4 py-3">
         <ul className="space-y-2">
-          {fields && fields.map(({ key, label }) => (
+          {fields && fields?.map(({ key, label }) => (
             <li
               key={key}
               className="flex justify-between  pb-1 "

@@ -7,7 +7,6 @@ import { customerDetails, updateCustomer } from "../../api/customer/customer.ser
 import { ProfileForm } from "../../Component/ProfileForm";
 import { Naira } from "../../utils/format";
 import { Button } from "../../Component/Button";
-import { ChangePasswordModal } from "../../Component/Modal/ChangePasswordModal";
 import { toast } from "react-toastify";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
