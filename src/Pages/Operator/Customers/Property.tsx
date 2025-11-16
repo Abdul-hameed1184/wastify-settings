@@ -9,6 +9,7 @@ import { Button } from "../../../Component/Button";
 import DataCard from "../../../Component/DataCard";
 import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";
 import { getPropertyById } from "../../../api/property/property.service";
+import { toast } from "react-toastify";
 
 
 const Property: React.FC = () => {
@@ -39,10 +40,12 @@ const Property: React.FC = () => {
     });
 
     const handleCreateApartmentModal = () => {
+
       setOpenCreateApartmentModal(!openCreateApartmentModal);
      queryClient.invalidateQueries({
     queryKey: ["property", propertyId],
   });
+
     };
 
 
@@ -93,8 +96,15 @@ const Property: React.FC = () => {
                     <Button
             variant="black"
               onClick={() => {
+                console.log(apartments?.data);
+                console.log(property)
+                      if(apartments?.data.data.data.length == property.noOfDistinctApartment){
+                      
+        toast.error("Apartments Completed for Property")
+      }else{
                 setOpenCreateApartmentModal(true);
               } }
+            }
 
               type={"button"}>Add Apartment</Button>
       </div>

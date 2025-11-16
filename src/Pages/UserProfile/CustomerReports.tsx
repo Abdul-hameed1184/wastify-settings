@@ -193,7 +193,7 @@ const CustomerReports: React.FC<Props> = ({ handleFormView }) => {
         </>
       ) : (
         <div className="text-center text-2xl text-gray-500">
-          <Paragraph2Xl content="No Reports from Customers" />
+          <Paragraph2Xl content="No Tickets from Customers" />
         </div>
       )}
     </div>

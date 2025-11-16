@@ -68,6 +68,7 @@ const { data:customers } = useQuery({
 
   const handleCreateApartment = async (xapartment: FormikValues) => {
     try {
+      
       const newApartment = await createApartment({
         propertyId: xapartment.propertyId,
         apartmentData: [

@@ -59,6 +59,7 @@ const Transaction = () => {
       console.log(error)
       toast.error("Error generating Bills")
     }
+    setAutoX(!autoX);
   }
 
 

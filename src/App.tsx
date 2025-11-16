@@ -180,7 +180,7 @@ const App: React.FC = () => {
           <Route path="operator-login" element={<OperatorLogin />} />
           <Route path="operator-register" element={<OperatorReg />} />
           <Route
-            path="operator-forgot-password"
+            path="admin-forgot-password"
             element={<OperatorForgotPassword />}
           />
           <Route
