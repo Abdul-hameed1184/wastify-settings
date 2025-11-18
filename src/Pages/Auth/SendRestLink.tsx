@@ -1,39 +1,35 @@
-import React, { useState } from 'react'
-import { useFormik } from 'formik';
+import { FormikValues, useFormik } from 'formik';
 import { ToastContainer, toast } from "react-toastify";
 import axios from 'axios';
 import baseURL from '../../utils/apiConfig';
 import { LogoWhite } from '../../Component/Logo';
-import { Paragraph2Xl, ParagraphExtraSmallError, ParagraphSmall } from '../../Component/Paragraph';
-import { ButtonsPrimary } from '../../Component/Buttons';
+import { Paragraph2Xl, ParagraphSmall } from '../../Component/Paragraph';
 import Input from '../../Component/InputField';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '../../Component/Button';
 
-const validate = values => {
-    const errors = {
-        phone: ''
-    };
+const validate = (values) => {
+    const errors = { phone: ''};
 
     if (!values.phone) {
         errors.phone = 'Phone Number is Required';
-    } else if ((values.phone.length > 11) || (values.phone.length < 11)) {
-        errors.phone = 'Phone Must be 11 characters';
+    } else if (values.phone.length !== 11) {
+        errors.phone = 'Phone must be 11 characters';
     }
 
     return errors;
-
 };
 
 const SendRestLink = () => {
-    const [loading, SetLoading] = useState(false);
+
     const navigate = useNavigate();
-    const formik = useFormik({
+    const formik = useFormik<FormikValues>({
         initialValues: {
             phone: '',
         },
-        validate,
-        onSubmit: values => {
-            SetLoading(true);
+        onSubmit: (values) => {
+            console.log(values)
+  
             // console.log(data);
             axios.post(baseURL + 'auth/customer/forgot-Password', values, {
                 headers: {
@@ -42,7 +38,7 @@ const SendRestLink = () => {
             })
                 .then((res) => {
                     console.log(res);
-                    SetLoading(false)
+ 
                     const message = res.data?.message;
                     const errorState = res.data?.errorState;
                     const data = res.data?.data;
@@ -59,7 +55,7 @@ const SendRestLink = () => {
                 })
                 .catch((err) => {
                     console.log(err);
-                    SetLoading(false)
+
                     const message = err.response.data?.message;
                     toast.error(message, { autoClose: 7000 });
                 });
@@ -80,11 +76,10 @@ const SendRestLink = () => {
                                 <Paragraph2Xl content={"Reset Password"} />
                                 <ParagraphSmall content={"Please enter your phone number to receive verification Code."} />
                                 <div className="m-4">
-                                <Input placeholder={"Phone Number"} type={"tel"} name={"phone"} onChange={formik.handleChange} value={formik.values.phone} error={formik.errors.phone ? true : false} />
-                                {formik.errors.phone ? <ParagraphExtraSmallError content={formik.errors.phone} /> : null}
-                            </div>
+                                <Input placeholder={"Phone Number"} type={"tel"} name={"phone"} onChange={formik.handleChange} value={formik.values.phone} error={formik.errors.phone} />
+                                </div>
                                 <div className="mx-4 my-8">
-                                    <ButtonsPrimary type={"submit"} name={"Set Password"} loading={loading} />
+                                    <Button type={"submit"}  className='w-full'>Set Password </Button>
                                 </div>
                             </form>
                         </div>

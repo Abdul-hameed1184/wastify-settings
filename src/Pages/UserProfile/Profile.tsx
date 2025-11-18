@@ -94,7 +94,7 @@ const [ edit, setEdit ] = useState<boolean>(false);
             <ProfileItem label="Phone" value={customer?.phone} />
             <ProfileItem
               label="Role"
-              value={customer?.role === 1 ? "Operator" : "User"}
+              value={customer?.role === 1 ? "User" : "Operator"}
             />
             <ProfileItem label="Overdue Bill" value={Naira.format(parseFloat(customer?.totalOverdueBill))} />
           </div>
