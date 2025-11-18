@@ -5,11 +5,18 @@ import { IoNotificationsCircleSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';
 import { AdminLogo2 } from '../Component/AlternateLogos'
 import { toggleSidebar } from '../Features/adminSidebarSlice';
+import { useQuery } from '@tanstack/react-query';
+import { getProfile } from '../api/psp-operator/psp-operator.service';
 
 const AdminNavbar = () => {
     const dispatch = useDispatch();
+    const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
     const toggle = useSelector((state: {sidebar: { isOpen: boolean}}) => state.sidebar.isOpen);
-
+    const { data } = useQuery({
+        queryKey: ["operator"],
+        queryFn: () => getProfile(operator.id)
+    })
+    console.log(data);
     const handleToggle = () => {
         dispatch(toggleSidebar());
     };

@@ -57,7 +57,7 @@ export const ChangePasswordModal = ({ isOpen, onClose,  customer }: ChangePasswo
     <Modal isOpen={isOpen} onClose={onClose} title="Change Password">
       <div className="w-full max-w-md">
         <Formik
-          initialValues={{ customerId: customer.customerId,oldPassword: "", password: "", password_confirmation: "" }}
+          initialValues={{ customerId: customer?.customerId,oldPassword: "", password: "", password_confirmation: "" }}
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
             try{
