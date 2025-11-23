@@ -9,6 +9,7 @@ import { Naira } from "../../utils/format";
 import { Button } from "../../Component/Button";
 import { toast } from "react-toastify";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ChangePasswordModal } from "../../Component/Modal/ChangePasswordModal";
 
 const Profile: React.FC = () => {
     const user = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "{}");
@@ -105,7 +106,7 @@ const [ edit, setEdit ] = useState<boolean>(false);
       )}
     </div>
   
-        {/* <ChangePasswordModal isOpen={showModalPassword} customer={customer} onClose={()=>setShowModalPassword(!showModalPassword)} /> */}
+       <ChangePasswordModal isOpen={showModalPassword} customer={customer} onClose={()=>setShowModalPassword(!showModalPassword)} /> 
 
     </main>
   );
