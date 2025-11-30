@@ -15,12 +15,14 @@ type Props = {
   apartment: IApartment;
   openModal: boolean;
   handleUpdateModal: () => void;
+  owing: boolean
 };
 
 export const UpdateApartmentModal: React.FC<Props> = ({
   apartment,
   openModal,
   handleUpdateModal,
+  owing
 }) => {
 const queryClient = useQueryClient();
 
@@ -168,7 +170,7 @@ const handleSearchChange = (search: string) => {
         
 
         {/* Status */}
-<div className="flex flex-col">
+{!owing ? <div className="flex flex-col">
   <label htmlFor="status" className="font-bold text-gray">Status</label>
   <select
     id="status"
@@ -181,8 +183,9 @@ const handleSearchChange = (search: string) => {
     <option value={0}>Vacant</option>
     <option value={1}>Occupied</option>
   </select>
-</div>
-
+</div> :
+<h2 className="font-bold text-center text-red-500 text-lg">Customer is owing</h2>
+}
         <Button type="submit" className="w-full" loading={formik.isSubmitting}>
           Update Apartment
         </Button>

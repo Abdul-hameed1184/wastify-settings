@@ -40,6 +40,10 @@ const ApartmentBill: React.FC = () => {
     }
   })
 
+
+
+
+
   
 
   const [viewDelete, setViewDelete] = useState<boolean>(false);
@@ -293,7 +297,7 @@ const apartmentField = [
 
 
       {
-        updateModal && <UpdateApartmentModal apartment={apartment} openModal={updateModal} handleUpdateModal={()=>setUpdateModal(!updateModal)} />
+        updateModal && <UpdateApartmentModal apartment={apartment} openModal={updateModal} handleUpdateModal={()=>setUpdateModal(!updateModal)} owing={ billHistory?.data.data.data.filter(x => x.paymentStatus = 0)} />
       }
       
     </main>
