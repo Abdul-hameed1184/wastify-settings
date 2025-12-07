@@ -2,6 +2,8 @@ import React, { ReactNode, useEffect } from 'react'
 import AdminNavbar from './OperatorNavbar'
 import AdminSidebar from './OperatorSidebar'
 import { ToastContainer, Zoom } from 'react-toastify';
+import SuperAdminNavbar from './SuperAdminNavbar';
+import SuperAdminSidebar from './SuperAdminSidebar';
 
 
 type Props = {
@@ -15,7 +17,7 @@ const AdminLayout:React.FC<Props> = ({children}) => {
     })
     return (
         <div>
-            <AdminNavbar />
+            <SuperAdminNavbar />
             <ToastContainer 
        position="top-center"
        autoClose={3000}
@@ -31,7 +33,7 @@ const AdminLayout:React.FC<Props> = ({children}) => {
       />
             <div className="flex">
             
-                    <AdminSidebar />
+                    <SuperAdminSidebar />
  
                 <div className="w-full flex-1 lg:w-4/5 mt-28 lg:mx-10">
                     <main>{children}</main>

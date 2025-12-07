@@ -65,6 +65,10 @@ import SupportLogin from "./Pages/Support/Auth/SupportLogin";
 import { Tickets } from "./Pages/Support/Tickets/Ticket";
 import { SupportDashboard } from "./Pages/Support/Dashboard/SupportDashboard";
 import SupportLayout from "./Layouts/SupportLayout";
+import SuperAdminLogin from "./Pages/Auth/SuperAdminLogin";
+import AdminDash from "./Pages/SuperAdmin/AdminDash";
+import AdminRevenue from "./Pages/SuperAdmin/Revenue/AdminRevenue";
+import AdminCustomers from "./Pages/SuperAdmin/AdminCustomers";
 
 const App: React.FC = () => {
   axios.interceptors.request.use(function (config) {
@@ -97,6 +101,7 @@ const App: React.FC = () => {
         <Route element={<LoginProtect />}>
           {/* <Route path="signup" element={<SignUp />} /> */}
           <Route path="login" element={<Login />} />
+                   <Route path="admin-login" element={<SuperAdminLogin />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="forget-password" element={<SendRestLink />} />
           <Route
@@ -260,13 +265,13 @@ const App: React.FC = () => {
         </Route>
                 <Route element={<ProtectedRoutes />}>
           <Route
-            path="admin/dashboard/*"
+            path="admin/*"
             element={
               <AdminLayout>
                 <Routes>
-                  <Route path="" element={<Dash />} />
-                  <Route path="revenue" element={<RevenueIndex />} />
-                  <Route path="customers" element={<Customers />} />
+                  <Route path="dashboard" index element={<AdminDash />} />
+                  {/* <Route path="revenue" element={<AdminRevenue />} /> */}
+                  <Route path="customers" element={<AdminCustomers />} />
                   <Route path="records" element={<Records />} />
                   <Route path="billing" element={<Transaction />} />
                   <Route
@@ -313,7 +318,7 @@ const App: React.FC = () => {
             element={
               <SuperAdminLayout>
                 <Routes>
-                  <Route path="" element={<Dash />} />
+                  <Route path="dashboard" element={<AdminDash />} />
                   <Route path="revenue" element={<RevenueIndex />} />
                   <Route path="customers" element={<Customers />} />
                   <Route path="records" element={<Records />} />

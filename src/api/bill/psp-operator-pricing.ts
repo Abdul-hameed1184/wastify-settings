@@ -32,4 +32,9 @@ export const autoBillingByOperator = (operatorId: number) => {
 
 export const autoBillingByAdmin = () => {
     return axios.post(`/apartmentBilling/auto-monthly-billing`)
+
+}
+
+export const checkApartmentStatus = (customerId:string, apartmentId:number)  => {
+    return axios.get(`apartmentBilling/check-customer-apartment-debt-status/${apartmentId}`)
 }

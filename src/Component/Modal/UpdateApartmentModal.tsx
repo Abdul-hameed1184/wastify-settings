@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import Input  from "../InputField";
+import { checkApartmentStatus } from "../../api/bill/psp-operator-pricing";
 
 type Props = {
   apartment: IApartment;
@@ -34,6 +35,14 @@ const queryClient = useQueryClient();
             return apartments.data.data;
     }
   });
+
+  const { data:status } = useQuery({
+    queryKey: ['apartmentStatus'],
+    queryFn: async () => {
+            const statuses = await checkApartmentStatus(apartment.customerId, apartment.id);
+            console.log(statuses.data.data);
+            return statuses.data.data;
+    }});
 
     const { data: customers } = useQuery({
     queryKey: ['customers'],
@@ -170,7 +179,7 @@ const handleSearchChange = (search: string) => {
         
 
         {/* Status */}
-{!owing ? <div className="flex flex-col">
+{!status ? <div className="flex flex-col">
   <label htmlFor="status" className="font-bold text-gray">Status</label>
   <select
     id="status"

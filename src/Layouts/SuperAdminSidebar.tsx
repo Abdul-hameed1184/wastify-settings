@@ -56,29 +56,29 @@ const SuperAdminSidebar:React.FC = () => {
          {/* desktop viww */}
         <main className={`admin-sidebar fixed transform  ease-in-out duration-500 delay-300 ${toggle ? "translate-x-0" : "-translate-x-full"} w-4/5 lg:w-1/5 py-10 mt-10 h-screen lg:flex flex-col bg-white shadow-2xl font-Poppins z-20 overflow-auto`}>
             
-            <NavLink to="/dashboard/"
+            <NavLink to="/admin/dashboard/"
                 className={` w-full p-4 ${isActive === "/dashboard/" ? "lg:bg-green lg:text-white text-green" : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
                 onClick={() => handleOptionClick("/dashboard")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
-                        <RiDashboardFill className={` text-center mt-1 ${isActive  === "/dashboard/" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Dashboard
+                        <RiDashboardFill className={` text-center mt-1 ${isActive  === "/admin/" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Dashboard
                     </p>
          
             </NavLink>
             
-            <NavLink to="/dashboard/revenue"
-                className={` w-full p-4 ${isActive === "/dashboard/revenue" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-lightGreen  hover:lg:text-white`}
-                onClick={() => handleOptionClick("/dashboard/revenue")}
+            <NavLink to="/admin/revenue"
+                className={` w-full p-4 ${isActive === "/admin/revenue" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-lightGreen  hover:lg:text-white`}
+                onClick={() => handleOptionClick("/admin/revenue")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
-                        <BsBarChartFill className={`text-center mt-1 ${isActive  === "/dashboard/revenue" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Revenue
+                        <BsBarChartFill className={`text-center mt-1 ${isActive  === "/admin/revenue" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Revenue
                     </p>
          
             </NavLink>
 
-            <NavLink to="/dashboard/properties"
-                className={` w-full p-4 ${isActive === "/dashboard/properties" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
-                onClick={() => handleOptionClick("/dashboard/properties")}
+            <NavLink to="/admin/properties"
+                className={` w-full p-4 ${isActive === "/admin/properties" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
+                onClick={() => handleOptionClick("/admin/properties")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
                         <PiBookFill className={`text-center mt-1 ${isActive  === "/dashboard/properties" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Properties
@@ -86,19 +86,19 @@ const SuperAdminSidebar:React.FC = () => {
          
             </NavLink>
 
-            <NavLink to="/dashboard/billing"
-                className={` w-full p-4 ${isActive === "/dashboard/billing" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
-                onClick={() => handleOptionClick("/dashboard/billing")}
+            <NavLink to="/admin/billing"
+                className={` w-full p-4 ${isActive === "/admin/billing" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
+                onClick={() => handleOptionClick("/admin/billing")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
-                        <RiBillFill className={`text-center mt-1 ${isActive  === "/dashboard/billing" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Billing & Transactions
+                        <RiBillFill className={`text-center mt-1 ${isActive  === "/admin/billing" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Billing & Transactions
                     </p>
          
             </NavLink>
 
-            <NavLink to="/dashboard/reports"
-                className={` w-full p-4 ${isActive === "/dashboard/reports" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
-                onClick={() => handleOptionClick("/dashboard/reports")}
+            <NavLink to="/admin/reports"
+                className={` w-full p-4 ${isActive === "/admin/reports" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
+                onClick={() => handleOptionClick("/admin/reports")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
                         <IoMdAlert className={`text-center mt-1 ${isActive  === "/dashboard/reports" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Customer Reports
@@ -106,9 +106,9 @@ const SuperAdminSidebar:React.FC = () => {
          
             </NavLink>
 
-            <NavLink to="/dashboard/customers"
-                className={` w-full p-4  ${isActive === "/dashboard/customer" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
-                onClick={() => handleOptionClick("/dashboard/customer")}
+            <NavLink to="/admin/customers"
+                className={` w-full p-4  ${isActive === "/admin/customer" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
+                onClick={() => handleOptionClick("/admin/customer")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
                         <IoPersonAdd className={`text-center mt-1 ${isActive  === "/dashboard/customer" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Customers
@@ -116,12 +116,12 @@ const SuperAdminSidebar:React.FC = () => {
          
             </NavLink>
 
-            <NavLink to="/dashboard/settings"
-                className={` w-full p-4 ${isActive === "/dashboard/settings" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
-                onClick={() => handleOptionClick("/dashboard/settings")}
+            <NavLink to="/admin/settings"
+                className={` w-full p-4 ${isActive === "/admin/settings" ? "lg:bg-green lg:text-white text-green " : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
+                onClick={() => handleOptionClick("/admin/settings")}
             >
                     <p className="text-center flex justify-start px-5 py-3 gap-2">
-                        <IoSettings className={`text-center mt-1 ${isActive  === "/dashboard/settings" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Settings
+                        <IoSettings className={`text-center mt-1 ${isActive  === "/admin/settings" ? 'lg:text-white text-green' : 'text-grayRounded'}`} />  Settings
                     </p>
          
             </NavLink>
