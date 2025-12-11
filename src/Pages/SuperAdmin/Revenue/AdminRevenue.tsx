@@ -5,8 +5,6 @@ import { Paragraph2XlGreenMargin } from '../../../Component/Paragraph';
 import FirstChart from '../../../Component/Charts/FirstChart';
 import FirstPieChart from '../../../Component/Charts/FirstPieChart';
 import { useQuery } from '@tanstack/react-query';
-import { getOperatorRevenue } from '../../../api/psp-operator/psp-operator.service';
-import { IOperator } from '../../../models/operator.interface';
 import Loader from '../../../Component/Loader';
 import { Naira } from '../../../utils/format';
 

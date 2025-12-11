@@ -15,7 +15,6 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { ToastContainer, Zoom } from "react-toastify";
 import AdminCard from "../../Component/Card/AdminCard";
 import Loader from "../../Component/Loader";
-import { Paragraph2XlGreen, ParagraphXlGreenNoMargin, Paragraph2XlGreenMargin } from "../../Component/Paragraph";
 import { IRecentTransaction } from "../../models/recentTransaction.interface";
 import { Naira } from "../../utils/format";
 import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
@@ -62,7 +61,7 @@ const Dash = () => {
 
 
   if(isLoading){
-    return <Loader />
+    return  <Loader color="slate-900" />
   }
 
   return (
@@ -84,9 +83,9 @@ const Dash = () => {
   <div>
     <div className="flex flex-col lg:flex-row gap-5">
         <div className="lg:w-[80%]">
-          <Paragraph2XlGreen content={`Wasteefy Management System`} />
+          <h2 className="text-bold text-3xl uppercase">{`Wasteefy Management System`}</h2>
           <div className="">
-            <p className="flex text-base font-inter font-medium not-italic text-green leading-6 mt-4 items-center">
+            <p className="flex text-base font-inter font-medium not-italic text-slate-900 leading-6 mt-4 items-center">
               <span>{"Welcome ,"}</span>
               <span className="text-black font-bold text-2xl">
                 {" "}
@@ -96,8 +95,8 @@ const Dash = () => {
           </div>
         </div>
         <div className="lg:w-[20%] flex flex-col justify-end text-end">
-          <ParagraphXlGreenNoMargin content={currentDate} />
-          <ParagraphXlGreenNoMargin content={currentTime} />
+          <h3 className="text-2xl text-semibold">{currentDate}</h3>
+          <h3  className="text-2xl text-semibold">{currentTime}</h3>
         </div>
       </div>
       <div className="flex flex-col lg:flex-row justify-between my-10 gap-12">
@@ -105,28 +104,32 @@ const Dash = () => {
           <AdminCard
             heading={"Total Revenue"}
             amount={Naira.format(dash.data.totalRevenue)}
-            icon={<RiBarChart2Fill className="text-green w-10 h-8" />}
+            icon={<RiBarChart2Fill className="text-slate-900 w-10 h-8" />}
+            className="text-slate-900"
           />
         </div>
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Property"}
             amount={dash.data.totalProperties}
-            icon={<FaHouse className="text-green w-10 h-7 mt-1" />}
+            icon={<FaHouse className="text-slate-900 w-10 h-7 mt-1" />}
+                      className="text-slate-900"
           />
         </div>
              <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Customers"}
             amount={dash.data.totalCustomers}
-            icon={<IoPersonCircleOutline className="text-green w-10 h-7 mt-1" />}
+            icon={<IoPersonCircleOutline className="text-slate-900 w-10 h-7 mt-1" />}
+                      className="text-slate-900"
           />
         </div>
         <div className="w-full lg:w-1/3">
           <AdminCard
             heading={"Total Overdue Payments"}
             amount={Naira.format(dash.data.totalOverDuePayment)}
-            icon={<BiTransfer className="text-green w-10 h-7 mt-1" />}
+            icon={<BiTransfer className="text-slate-900 w-10 h-7 mt-1" />}
+                      className="text-slate-900"
           />
         </div>
       </div>
@@ -135,12 +138,12 @@ const Dash = () => {
 
       {/* recent transaction  */}
       <div className="py-5">
-        <Paragraph2XlGreenMargin content={"Recent Transactions"} />
-        <div className="overflow-x-auto font-Poppins mt-3">
+        <h3 className="text-3xl font-semibold text-slate-900">Recent Transactions</h3>
+        <div className="overflow-x-auto font-Poppins mt-3 shadow-2xl rounded-2xl">
           <Table striped>
-            <TableHead className=" font-Poppins text-xl capitalize text-white bg-green ">
+            <TableHead className="text-lg text-normal text-white bg-slate-900 ">
               <TableHeadCell>Date & Time</TableHeadCell>
-              <TableHeadCell>Customer Name</TableHeadCell>
+              <TableHeadCell >Customer Name</TableHeadCell>
               <TableHeadCell>Address</TableHeadCell>
               <TableHeadCell>Bill Amount</TableHeadCell>
               <TableHeadCell>Amount Paid</TableHeadCell>

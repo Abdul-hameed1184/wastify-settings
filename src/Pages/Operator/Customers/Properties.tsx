@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "flowbite-react";
 import { ParagraphLargeGreen } from "../../../Component/Paragraph";
-import { ButtonsPrimaryIcon } from "../../../Component/Buttons";
 import CreatePropertyModal from "../../../Component/Modal/CreatePropertyModal";
 import { IProperty } from "../../../models/property.interface";
 import { IOperator } from "../../../models/operator.interface";

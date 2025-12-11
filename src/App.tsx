@@ -53,7 +53,6 @@ import ApartmentBill from "./Pages/Operator/Customers/ApartmentBill";
 import UserLayout from "./Layouts/UserLayout";
 import ContactUs from "./Pages/UserProfile/Contact";
 import Customers from "./Pages/Operator/Customers/Customers";
-import SuperAdminLayout from "./Layouts/SuperAdminLayout";
 import Dashboard from "./Pages/UserProfile/Dashboard";
 import OperatorLayout from "./Layouts/OperatorLayout";
 import OperatorForgotPassword from "./Pages/Operator/Auth/OperatorForgotPassword";
@@ -67,8 +66,13 @@ import { SupportDashboard } from "./Pages/Support/Dashboard/SupportDashboard";
 import SupportLayout from "./Layouts/SupportLayout";
 import SuperAdminLogin from "./Pages/Auth/SuperAdminLogin";
 import AdminDash from "./Pages/SuperAdmin/AdminDash";
-import AdminRevenue from "./Pages/SuperAdmin/Revenue/AdminRevenue";
+// import AdminRevenue from "./Pages/SuperAdmin/Revenue/AdminRevenue";
 import AdminCustomers from "./Pages/SuperAdmin/AdminCustomers";
+import AdminProperties from "./Pages/SuperAdmin/AdminProperties";
+import AdminRecords from "./Pages/SuperAdmin/AdminRecords";
+import AdminTransaction from "./Pages/SuperAdmin/AdminTransaction";
+import { AdminProfile } from "./Pages/SuperAdmin/AdminProfile";
+import AdminOperators from "./Pages/SuperAdmin/AdminOperators";
 
 const App: React.FC = () => {
   axios.interceptors.request.use(function (config) {
@@ -265,21 +269,22 @@ const App: React.FC = () => {
         </Route>
                 <Route element={<ProtectedRoutes />}>
           <Route
-            path="admin/*"
+            path="super-admin/*"
             element={
               <AdminLayout>
                 <Routes>
                   <Route path="dashboard" index element={<AdminDash />} />
                   {/* <Route path="revenue" element={<AdminRevenue />} /> */}
                   <Route path="customers" element={<AdminCustomers />} />
-                  <Route path="records" element={<Records />} />
-                  <Route path="billing" element={<Transaction />} />
+                  <Route path="records" element={<AdminRecords />} />
+                             <Route path="operators" element={<AdminOperators />} />
+                  <Route path="billing" element={<AdminTransaction />} />
                   <Route
                     path="/properties/*"
                     element={
                       <PropertiesLayout>
                         <Routes>
-                          <Route path="" element={<Properties />} />
+                          <Route path="" element={<AdminProperties />} />
                           <Route path=":propertyId" element={<Property />} />
                           <Route
                             path=":propertyId/apartments/:apartment"
@@ -302,7 +307,7 @@ const App: React.FC = () => {
                   <Route path="pricing" element={<Pricing />} />
                   <Route path="user-access" element={<UserAccess />} />
                   <Route path="security" element={<Security />} />
-                  <Route path="company-settings" element={<CompanyProfile />} />
+                  <Route path="company-settings" element={<AdminProfile />} />
                   <Route
                     path="notification-settings"
                     element={<NotificationSettings />}
@@ -313,7 +318,7 @@ const App: React.FC = () => {
             }
           />
 
-                    <Route
+                    {/* <Route
             path="/super-admin/dashboard/*"
             element={
               <SuperAdminLayout>
@@ -342,10 +347,6 @@ const App: React.FC = () => {
                     path="billing-customer-all"
                     element={<AllCustomers />}
                   />
-                  {/* <Route
-                    path="billing-customer-details"
-                    element={<Customer />}
-                  /> */}
                   <Route path="reports" element={<Reports />} />
                   <Route path="settings" element={<All />} />
                   <Route path="pricing" element={<Pricing />} />
@@ -360,7 +361,7 @@ const App: React.FC = () => {
                 </Routes>
               </SuperAdminLayout>
             }
-          />
+          /> */}
 
 
         </Route>

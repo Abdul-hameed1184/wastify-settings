@@ -19,7 +19,6 @@ import { useQuery } from "@tanstack/react-query";
 import {  getPaginatedCustomers } from "../../api/customer/customer.service";
 import { ButtonsPrimaryIcon } from "../../Component/Buttons";
 import Loader from "../../Component/Loader";
-import { ParagraphLargeGreen } from "../../Component/Paragraph";
 import { IApartment } from "../../models/apartment.interface";
 import CreateCustomer from "../Operator/AddCustomer/CreateCustomer";
 
@@ -31,7 +30,7 @@ const AdminCustomers: React.FC = () => {
   const [customerApartments, setCustomerApartments] = useState<IApartment[]>();
   const [ openViewCustomer, setOpenViewCustomer ] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const [ autoX, setAutoX ] = useState<boolean>(false)
+  // const [ autoX, setAutoX ] = useState<boolean>(false)
 
 
   const { data: allcustomers, isLoading, isError } = useQuery({
@@ -65,47 +64,47 @@ const AdminCustomers: React.FC = () => {
 
  
 
-const comp = <div>
-              <div className="flex justify-between items-center">
-            </div>
-            {isError && <p className="text-red-500">Error loading apartments</p>}
-            <Table striped>
-              <TableHead className="font-Poppins text-lg capitalize text-white bg-green dark:text-white">
-                <TableHeadCell>S/N</TableHeadCell>
-                <TableHeadCell>Apartment Type</TableHeadCell>
-                <TableHeadCell>Description</TableHeadCell>
-              </TableHead>
-              <TableBody className="font-Poppins text-xl">
-                {customerApartments && customerApartments.map((apartment:IApartment, index) => (
-                  <TableRow
-                    key={index}
-                    className={
-                      index % 2 === 0
-                        ? "odd:bg-tableBackground"
-                        : "bg-white dark:border-gray-700 dark:bg-gray-800"
-                    }
-                  >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{apartment.apartmentTypeName}</TableCell>
-                    <TableCell>{apartment.propertyAddress}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table> 
-</div>
+// const comp = <div>
+//               <div className="flex justify-between items-center">
+//             </div>
+//             {isError && <p className="text-red-500">Error loading apartments</p>}
+//             <Table striped>
+//               <TableHead className="font-Poppins text-lg capitalize text-white bg-slate-900 dark:text-white">
+//                 <TableHeadCell>S/N</TableHeadCell>
+//                 <TableHeadCell>Apartment Type</TableHeadCell>
+//                 <TableHeadCell>Description</TableHeadCell>
+//               </TableHead>
+//               <TableBody className="font-Poppins text-xl">
+//                 {customerApartments && customerApartments.map((apartment:IApartment, index) => (
+//                   <TableRow
+//                     key={index}
+//                     className={
+//                       index % 2 === 0
+//                         ? "odd:bg-tableBackground"
+//                         : "bg-white dark:border-gray-700 dark:bg-gray-800"
+//                     }
+//                   >
+//                     <TableCell>{index + 1}</TableCell>
+//                     <TableCell>{apartment.apartmentTypeName}</TableCell>
+//                     <TableCell>{apartment.propertyAddress}</TableCell>
+//                   </TableRow>
+//                 ))}
+//               </TableBody>
+//             </Table> 
+// </div>
 
 
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader color="slate-900"/>;
   }
 
   return (
     <main>
       <div className="p-5">
-        <ParagraphLargeGreen content={"Customers"} />
+                <h3 className="text-3xl font-semibold text-slate-900">Customers</h3>
         <div>
-          <div className="grid justify-items-end my-8">
+          {/* <div className="grid justify-items-end my-8">
             <div className="md:w-1/3 w-full">
               <ButtonsPrimaryIcon
                 icon={<FaPlusCircle />}
@@ -117,13 +116,13 @@ const comp = <div>
                 loading={false}
               />
             </div>
-          </div>
+          </div> */}
         </div>
 
         {(page && allcustomers) && (
           <div className="overflow-x-auto font-Poppins mt-3">
             <Table striped>
-              <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
+              <TableHead className=" font-Poppins text-lg capitalize text-white bg-slate-900 dark:text-white">
                 {/* <TableHeadCell>Property ID</TableHeadCell> */}
                 <TableHeadCell>Customer Name</TableHeadCell>
                 {/* <TableHeadCell>LGA</TableHeadCell> */}
@@ -176,7 +175,7 @@ const comp = <div>
             <div className="flex justify-center items-center h-20 my-10 w-full ">
               <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
                 <button
-                  className={`text-green font-weight-bold`}
+                  className={`text-slate-900 font-weight-bold`}
                   onClick={() => setPage(page - 1)}
                   disabled={page === 1}
                 >
@@ -188,7 +187,7 @@ const comp = <div>
                   }).map((_, index) => (
                     <button
                       className={`w-8 h-full  ${
-                        page === index + 1 ? "bg-green text-white " : ""
+                        page === index + 1 ? "bg-slate-900 text-white " : ""
                       } mr-2`}
                       key={index}
                       onClick={() => setPage(index + 1)}
@@ -198,7 +197,7 @@ const comp = <div>
                   ))}
                 </div>
                 <button
-                  className={`text-green font-weight-bold`}
+                  className={`text-slate-900 font-weight-bold`}
                   onClick={() => setPage(page + 1)}
                   disabled={
                     Math.ceil(allcustomers.data.data.total / allcustomers.data.data.per_page) <= page 
@@ -213,17 +212,13 @@ const comp = <div>
       </div>
       {openCreateCustomer && (
         <CreateCustomer
-          openModal={openCreateCustomer}
-          setOpenModal={setOpenCreateCustomer}
+          // openModal={openCreateCustomer}
+          // setOpenModal={setOpenCreateCustomer}
         />
       )}{" "}
 
-      {
+      {/* {
      openViewCustomer &&  
-
-    //  <InfoModal 
-    //  openModal={openViewCustomer} setOpenModal={()=> setOpenViewCustomer(!openViewCustomer)} header={"Customer Apartments"} 
-    //  content={comp} buttonName={"Ok"} handleConfirm={()=>{}} />
     <Modal isOpen={openViewCustomer} onClose={()=> setOpenViewCustomer(!openViewCustomer)} title="Customer Apartments">
             {comp}
       
@@ -231,7 +226,7 @@ const comp = <div>
 
 
     
-      }
+      } */}
 
     </main>
   );

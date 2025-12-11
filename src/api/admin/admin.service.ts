@@ -12,6 +12,14 @@ export const getOperatorRevenue = async (operatorId: number) => {
     return await axios.get(`/billPayment/monthly-summary-by-operator-id/${operatorId}`);
 }
 
-export const getPropertyByOperator = async (operatorId: number, params) => {
-    return await axios.get(`/property/${operatorId}/list-by-operator`, { params});
+export const getAdminProperties = async (params) => {
+    return await axios.get(`/property`, { params});
+}
+
+export const getBillingByAdmin = (params) => {
+    return axios.get(`/apartmentBilling`,{params})
+}
+
+export const getOperators = (params) => {
+    return axios.get(`/pspOperator`,{params})
 }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+    Button,
   Table,
   TableBody,
   TableCell,
@@ -14,11 +15,19 @@ import { FaPlusCircle } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
+import Loader from "../../Component/Loader";
+import DropdownMenu from "../../Component/DropdownMenu";
+import CreatePropertyModal from "../../Component/Modal/CreatePropertyModal";
+import InfoModal from "../../Component/Modal/InfoModal";
+import UpdatePropertyModal from "../../Component/Modal/UpdatePropertyModal";
+import { ParagraphLargeGreen } from "../../Component/Paragraph";
+import { IProperty } from "../../models/property.interface";
+import { getAdminProperties } from "../../api/admin/admin.service";
 
 
 
 const AdminProperties:React.FC = () => {
-  const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
+  const admin = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
     const [ openUpdateProperty, setOpenUpdateProperty] = useState<boolean>(false);
   const [ viewDelete, setViewDelete ] = useState<boolean>(false)
@@ -32,9 +41,9 @@ const AdminProperties:React.FC = () => {
     setOpenUpdateProperty(!openUpdateProperty);
   }
   const { data: allProperties, isLoading } = useQuery({
-        queryKey: ['properties', operator.id, page],
+        queryKey: ['properties', page],
         queryFn: async() => {
-          const res =  await  getAdminProperties(operator.id,params)
+          const res =  await  getAdminProperties(params)
           console.log(res);
           return res;
         }
@@ -47,7 +56,7 @@ const AdminProperties:React.FC = () => {
 
   };
   if(isLoading){
-    return <Loader />
+    return <Loader color="slate-900" />
   }
 
 
@@ -55,12 +64,13 @@ const AdminProperties:React.FC = () => {
 
     <main>
       <div className="p-5">
-        <ParagraphLargeGreen content={"Property Records"} />
+        <h3 className="text-3xl text-bold ">{"Property Records"} </h3>
         <div>
         <div className="grid justify-items-end my-8">
           <div className="w-full text-right">
-      <Button icon={<FaPlusCircle />
-} type="button"  onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}>{"Add Property"}</Button>
+      <Button 
+      icon={<FaPlusCircle />} 
+      type="button"  onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}>{"Add Property"}</Button>
       </div>
       </div>
           

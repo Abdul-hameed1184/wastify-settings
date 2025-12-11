@@ -1,0 +1,228 @@
+import { useState } from "react";
+import {
+    Button,
+    Modal,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from "flowbite-react";
+
+import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
+import { GrOverview } from "react-icons/gr";
+import { getBillingByOperator, autoBillingByOperator } from "../../api/bill/psp-operator-pricing";
+import Loader from "../../Component/Loader";
+import InfoModal from "../../Component/Modal/InfoModal";
+import { Paragraph2XlGreenMargin, Paragraph2Xl } from "../../Component/Paragraph";
+import { IBillData } from "../../models/billdata.interface";
+import { Naira } from "../../utils/format";
+import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
+import { getBillingByAdmin } from "../../api/admin/admin.service";
+
+const AdminTransaction = () => {
+  const admin = JSON.parse(
+    sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
+  );
+  const [page, setPage] = useState<number>(1);
+  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [billpayment, setBillPayment] = useState<IBillData>({} as IBillData);
+  const [ autoX, setAutoX ] = useState<boolean>(false)
+
+
+    const params = {
+    page: page,
+    perPage: 10,
+  };
+  const { data: bills, isLoading } = useQuery({
+        queryKey: ['bills', page],
+        queryFn: async() =>  await  getBillingByAdmin(params)
+  })
+  if(isLoading){
+    return <Loader color="slate-900" />;
+  }
+
+  const handleViewDetails = (item) => {
+    setBillPayment(item);
+    setShowDetails(true);
+  }
+
+  const handleAutoBilling = async () => {
+    try{
+      // await autoBillingByOperator(operator.id)
+      toast.success("Auto Bills Generated")
+    }catch(error){
+      console.log(error)
+      toast.error("Error generating Bills")
+    }
+    setAutoX(!autoX);
+  }
+
+
+  return (
+    <main className="px-4 ">
+      {
+        showDetails && <InfoModal openModal={showDetails} setOpenModal={setShowDetails} header={"Bill Data Details"} 
+                      content={<div className="row g-3">
+          <div className="col-md-6">
+            <strong>Property:</strong> {billpayment.propertyCode} - {billpayment.propertyAddress}
+          </div>
+          <div className="col-md-6">
+            <strong>Apartment ID:</strong> {billpayment.apartmentId}
+          </div>
+
+          <div className="col-md-6">
+            <strong>Apartment Type:</strong> {billpayment.apartmentTypeName || "N/A"}
+          </div>
+
+          <div className="col-md-6">
+            <strong>Bill Period:</strong> {billpayment.billPeriod}
+          </div>
+          <div className="col-md-6">
+            <strong>Bill Amount:</strong> ₦{billpayment.billAmount}
+          </div>
+
+          <div className="col-md-6">
+            <strong>Discount:</strong> {billpayment.discountPercentage}% (₦{billpayment.discountAmount})
+          </div>
+          <div className="col-md-6">
+            <strong>Total Amount:</strong> ₦{billpayment.totalAmount}
+          </div>
+
+          <div className="col-md-6">
+            <strong>Customer:</strong> {billpayment.customerFullname}
+          </div>
+          <div className="col-md-6">
+            <strong>Phone:</strong> {billpayment.customerPhone}
+          </div>
+
+          <div className="col-md-6">
+            <strong>Email:</strong> {billpayment.customerPhone}
+          </div>
+
+
+        </div>} buttonName={'Close'} handleConfirm={() => setShowDetails(!showDetails)}></InfoModal>
+      }
+      <div className="my-10">
+        <div className="py-5">
+          <div className="flex justify-between items-center">
+          <h2 className="text-slate-900 text-3xl text-bold uppercase">{"Customer Billings"}</h2>
+          {/* <div>
+          <Button className="px-4 py-2"  onClick={() => setAutoX(!autoX)}>Auto Billing </Button>
+          </div> */}
+          </div>
+          {bills?.data.data.data ? (
+            <div className="overflow-x-auto font-Poppins mt-3">
+              <Table striped>
+                <TableHead className=" font-Poppins text-sm capitalize text-white bg-slate-900 dark:text-white">
+                  <TableHeadCell>Bill Period</TableHeadCell>
+                  <TableHeadCell>Property address</TableHeadCell>
+                           <TableHeadCell>Customer</TableHeadCell>
+                  <TableHeadCell>Amount</TableHeadCell>
+                  <TableHeadCell>discounted</TableHeadCell>
+         
+                  {/* <TableHeadCell>Customer Phone number</TableHeadCell> */}
+                            <TableHeadCell>Status</TableHeadCell>
+                  <TableHeadCell>Action</TableHeadCell>
+                </TableHead>
+                <TableBody className="divide-y font-Poppins ">
+                  { bills?.data.data.data.map((item, index) => (
+                      <TableRow
+                        className={
+                          index % 2 === 0
+                            ? "odd:bg-tableBackground"
+                            : "bg-white dark:border-gray-700 dark:bg-gray-800"
+                        }
+                        key={index}
+                      >
+                        <TableCell>{item.billPeriod}</TableCell>
+                        <TableCell>{item.propertyAddress} </TableCell>
+                                               <TableCell>{item.customerFullname}</TableCell>
+                        <TableCell>{Naira.format(Number(item.billAmount))} </TableCell>
+                        <TableCell>{Naira.format(Number(item.totalAmount))}   </TableCell>
+ 
+                        {/* <TableCell>{item.customerPhone}</TableCell> */}
+                              <TableCell><PaymentStatusBadge status={item.paymentStatus} /></TableCell>
+                        <TableCell onClick={() => handleViewDetails(item)}>
+                          {/* <Link
+                            to={"/dashboard/billing-customer-all"}
+                            className="text-white bg-green  w-full h-14  justify-center px-10  py-2 text-base md:text-sm font-normal shadow-sm ring-transparent border-transparent rounded-lg ring-2 font-Poppins border"
+                          >
+                            Bill
+                          </Link> */}
+                          {/* <ButtonsPrimary name={"Bill"} /> */}
+                          <GrOverview />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+              <div className="flex justify-center items-center h-20 my-10 w-full ">
+                <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
+                  <button
+                    className={`text-slate-900 font-weight-bold`}
+                    onClick={async () => {
+                      setPage(page - 1);
+                          
+                    }}
+                    disabled={page === 1}
+                  >
+                    Previous
+                  </button>
+                  <div className="mx-8 h-full">
+                    {Array.from({
+                      length: Math.ceil(bills?.data.data.total / bills?.data.data.per_page),
+                    }).map((_, index) => (
+                      <button
+                        className={`w-8 h-full  ${
+                          page === index + 1 ? "bg-slate-900 text-white " : ""
+                        } mr-2`}
+                        key={index}
+                        onClick={() =>{
+                           setPage(index+1);
+                     
+                        }}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    className={`text-slate-900 font-weight-bold`}
+                           onClick={async () => {
+                      setPage(page + 1);
+                               
+                    }}
+                    disabled={
+                     page >= Math.ceil(
+    bills?.data.data.total / bills?.data.data.per_page
+  )
+                    }
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <h2 className="text-3xl text-slate-900 text-semibold text-center">{"no Billing for Customers"}</h2>
+          )}
+        </div>
+      </div>
+      
+      {
+        <Modal isOpen={autoX} title="Auto Billing" onClose={() => setAutoX(!autoX)}>
+          <p className="text-2xl p-2">I hereby confirm that I want to start auto billing</p>
+          <div className="flex justify-between">
+            <span></span>
+            <Button type="button" onClick={handleAutoBilling}>Confirm</Button>
+          </div>
+  </Modal>
+      }
+    </main>
+  );
+};
+
+export default AdminTransaction;

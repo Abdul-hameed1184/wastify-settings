@@ -40,7 +40,7 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
       var customer = customersRes.data.data.find(x => x.customerId == property.ownerId)
       setSelectedCustomer(customer)
     })();
-  }, []);
+  }, [property.ownerId]);
 
   const handleSearchChange = (search: string) => {
     const customer = customers.find((c) => c.phone === search);
