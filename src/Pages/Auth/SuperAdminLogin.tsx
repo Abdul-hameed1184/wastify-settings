@@ -97,7 +97,7 @@ const SuperAdminLogin:React.FC = () => {
           if(adminData)
             setTimeout(() => {
               SetLoading(false);
-              navigate("/admin");
+              navigate("/super-admin/dashboard");
             }, 2000);
           } else {
             toast.error(message, { autoClose: 5000 });
