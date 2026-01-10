@@ -44,10 +44,10 @@ const Dashboard: React.FC = () => {
 
   return (
     <main className="min-h-screen bg-green bg-no-repeat py-10">
-      <div className="flex flex-col md:flex-row items-center justify-center gap-8 px-4">
+      <div className="flex flex-col items-center justify-center gap-8 px-4">
         <ProfileCard dashBoard={dashboard} />
 
-        <div className="flex-1 w-full max-w-4xl">
+        <div className="flex-1 w-full">
           <div className="p-4">
             <ProfileSlider />
           </div>

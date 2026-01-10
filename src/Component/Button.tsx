@@ -31,7 +31,7 @@ export const Button: React.FC<ButtonProps> = ({
     "inline-flex items-center justify-center font-poppins rounded-lg font-medium shadow-sm focus:outline-none transition-colors duration-150 disabled:cursor-not-allowed";
 
   const variantStyles: Record<typeof variant, string> = {
-    primary: "bg-green text-white hover:bg-green-600 disabled:bg-lightGreen",
+    primary: "dark:bg-green text-black hover:bg-green disabled:bg-lightGreen",
     secondary: "bg-gray text-white hover:bg-gray-700 disabled:bg-lightgray",
     danger: "bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300",
     black: "bg-slate-900 text-white hover:bg-gray-900 disabled:bg-gray-600",

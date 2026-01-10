@@ -8,7 +8,18 @@ type ModalProps = {
   children: React.ReactNode;
   footer?: React.ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
+  position?:
+    | "center"
+    | "top"
+    | "bottom"
+    | "left"
+    | "right"
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right";
   closeOnOverlay?: boolean;
+  className?: string;
 };
 
 const sizeClasses: Record<NonNullable<ModalProps["size"]>, string> = {
@@ -25,7 +36,9 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   footer,
   size = "md",
+  position = "center",
   closeOnOverlay = true,
+  className
 }) => {
   // Disable body scroll when modal is open
   useEffect(() => {
@@ -44,18 +57,40 @@ export const Modal: React.FC<ModalProps> = ({
     return () => document.removeEventListener("keydown", handleKey);
   }, [isOpen, onClose]);
 
+  // Map `position` prop to flex alignment classes on the overlay
+  const overlayPositionClass = (() => {
+    switch (position) {
+      case "top":
+        return "items-start justify-center";
+      case "bottom":
+        return "items-end justify-center";
+      case "left":
+        return "items-center justify-start";
+      case "right":
+        return "items-center justify-end";
+      case "top-left":
+        return "items-start justify-start";
+      case "top-right":
+        return "items-start justify-end";
+      case "bottom-left":
+        return "items-end justify-start";
+      case "bottom-right":
+        return "items-end justify-end";
+      case "center":
+      default:
+        return "items-center justify-center";
+    }
+  })();
+
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4 py-6 overflow-y-auto"
-      role="button"                 // 👈 tells screen readers this is clickable
-      tabIndex={0}                  // 👈 makes it focusable for keyboard users
+      className={`fixed inset-0 z-50 flex ${overlayPositionClass} bg-black/50 backdrop-blur-sm px-4 py-6 overflow-y-auto`}
       onClick={closeOnOverlay ? onClose : undefined}
-      onKeyDown={(e) => e.key === "Enter" && closeOnOverlay && onClose()} // 👈 accessibility fix
     >
       <div
-        className={` m-2 relative w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-lg max-h-[90vh] overflow-y-auto`}
+        className={` m-2 relative w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-lg max-h-[90vh] overflow-y-auto ${className}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}

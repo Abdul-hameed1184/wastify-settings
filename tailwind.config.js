@@ -8,9 +8,6 @@ export const tail = {
     'node_modules/flowbite-react/lib/esm/**/*.js',
   ],
   theme: {
-    fontFamily: {
-      'Poppins': 'Poppins',
-    },
     fontSize: {
       'xxs': '0.563rem', 
       'xs': '0.625rem',
@@ -30,11 +27,13 @@ export const tail = {
         'bgmobile-pattern': "url('https://wasteefy.com/Images/bgmobile.png')", 
       },
       colors:{
+        primary: '#95c53c',
+        tertiary: '#c4c4c4',
         black: '#000000',
-        gray: '#555861',
+        secondary: '#555861',
      lightGreen: '#77963cff', 
    //lightGreen:'#c7f76d',
-        green: '#486a00ff',
+        green: '#95c53c',
         Oldgreen: '#96C63D',
         navgreen: '#AAC27D',
         lightgray: "#15234980",

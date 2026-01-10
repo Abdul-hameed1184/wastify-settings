@@ -1,0 +1,52 @@
+import React from 'react';
+
+interface CardProps {
+  children: React.ReactNode;
+  className?: string;
+  variant?: 'default' | 'dark' | 'light';
+  icon?: React.ReactNode;
+}
+
+const Card: React.FC<CardProps> = ({ children, className = '', variant = 'default', icon }) => {
+  const baseStyles = "shadow-md hover:shadow-lg p-6 rounded-xl border ";
+  
+  const variants = {
+    default: "bg-white/10 border-white/20",
+    light: "bg-white/30 border-white/40",
+    dark: "bg-black/20 border-white/10 text-white"
+  };
+
+  return (
+    <div
+      className={`
+        ${baseStyles}
+        ${variants[variant]}
+        ${className}
+      `}
+    >
+      {icon && <div className='p-2 h-12 w-12 bg-green/10 text-green text-2xl rounded-lg flex justify-center items-center text'>{icon}</div>}
+      {children}
+      </div>
+
+  );
+};
+interface CardTextIconProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  className?: string;
+}
+export const CardTextIcon:React.FC<CardTextIconProps> = ({icon, title, description, className}) => {
+  return (
+                <Card icon={icon} className={className}>
+                <h3 className="mx-0 my-4 text-left text-2xl font-semibold leading-8">
+                  {title}
+                </h3>
+               <p className="mx-0 my-4 text-left text-gray">
+                    {description}
+                  </p>
+                </Card>
+  )
+}
+
+export default Card;

@@ -1,10 +1,8 @@
-import React from 'react';
-import { Card } from 'flowbite-react';
-import Slider from 'react-slick';
+import React from "react";
+import { Card } from "flowbite-react";
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-import { Paragraph, Paragraph2Xl } from '../Paragraph';
 
 const tips = [
   {
@@ -37,20 +35,28 @@ const sliderSettings = {
 
 const ProfileSlider: React.FC = () => {
   return (
-    <Card className="w-full max-w-md p-4 shadow-lg border-none">
+    <Card className="w-full h-screen p-0 border-none shadow-none rounded-xl">
       <Slider {...sliderSettings}>
         {tips.map((tip, index) => (
           <div key={index}>
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-center text-center md:text-left">
-              <div className="flex-1">
-                <Paragraph2Xl content={tip.title} />
-                <Paragraph content={tip.text} />
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 px-6 md:px-16 py-12 w-full">
+              
+              {/* Text */}
+              <div className="flex-1 text-center md:text-left">
+                <h2 className="text-4xl md:text-8xl font-extrabold">
+                  {tip.title}
+                </h2>
+                <p className="mt-4 text-2xl text-gray-600">
+                  {tip.text}
+                </p>
               </div>
-              <div className="flex-1">
+
+              {/* Image */}
+              <div className="flex-1 flex justify-center">
                 <img
                   src={tip.image}
-                  alt={`Illustration for ${tip.title}`}
-                  className="w-full max-w-[160px] mx-auto rounded-md object-cover"
+                  alt={tip.title}
+                  className="w-full max-w-sm rounded-lg object-cover"
                 />
               </div>
             </div>

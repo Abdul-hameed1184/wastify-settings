@@ -1,130 +1,72 @@
-import React from 'react'
+import { CiLocationOn, CiMail } from "react-icons/ci";
+
 import {
-  AiFillFacebook, AiOutlineInstagram,
-  AiOutlineTwitter,
-  AiFillLinkedin
-} from "react-icons/ai"
-import { FaApple } from "react-icons/fa";
+  AiFillFacebook, AiOutlineInstagram} from "react-icons/ai"
 import { FaXTwitter } from "react-icons/fa6";
-import { ParagraphExtraSmall, ParagraphSmall, ParagraphSmall2White, ParagraphXl, ParagraphXlWhite, Paragraphbase2White } from '../Component/Paragraph'
 import { Link } from 'react-router-dom'
-import { Logo, LogoTrans } from '../Component/Logo';
+import { LogoWithText } from '../Component/Logo';
+import { MdOutlineLocalPhone } from 'react-icons/md';
 
 const Footer = () => {
   return (
-    <main className=' md:p-14 bg-black px-8 py-5'>
-
-      <Link to="/"  >
-        <div className="w-14 h-14">
-          <LogoTrans />
-        </div>
+    <footer className=' md:p-14 bg-black px-8 py-5 flex flex-col md:text-lg text-sm'>
+      <div className='flex flex-col md:flex-row '>
+      <div className='flex flex-col flex-grow'>
+      <Link to="/" className="w-14 h-14" >
+    
+          <LogoWithText />
       </Link>
-      <Paragraphbase2White content={"Waste payment made easy"} />
-      <div className="mt-5 md:flex md:flex-col justify-between">
-        <div className="">
-          <ParagraphXlWhite content={"Follow us"} />
-          <div className=" h-10 w-full flex my-4">
-            <div className="w-8 h-8 bg-green rounded-full flex justify-center items-center">
-              <AiFillFacebook size={20} className="text-black  cursor-pointer" />
-            </div>
-            <div className="w-8 h-8 bg-green rounded-full ml-5 flex justify-center items-center">
-              <AiOutlineInstagram size={20} className="text-black  cursor-pointer " />
-            </div>
-            <div className="w-8 h-8 bg-green rounded-full ml-5 flex justify-center items-center">
-              <FaXTwitter size={20} className="text-black  cursor-pointer " />
-            </div>
-            <div className="w-8 h-8 bg-green rounded-full ml-5 flex justify-center items-center">
-              <AiOutlineTwitter size={20} className="text-black  cursor-pointer  " />
-            </div>
-            <div className="w-8 h-8 bg-green rounded-full ml-5 flex justify-center items-center ">
-              <AiFillLinkedin size={20} className="text-black  cursor-pointer  " />
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row md:gap-60 md:mt-10">
-          <div className="">
-            <ParagraphXlWhite content={"Learn"} />
-            <div className="flex flex-col">
-              <Link to={"/"} className='py-2 text-base font-Poppins font-normal leading-5 text-white'>Blog</Link>
-              <Link to={"/"} className='py-2 text-base font-Poppins font-normal leading-5 text-white'>FAQ</Link>
-              <Link to={"/"} className='py-2 text-base font-Poppins font-normal leading-5 text-white'>About Us</Link>
-            </div>
-          </div>
-          <div className="mt-6 md:mt-0">
-            <ParagraphXlWhite content={"Legal"} />
-            <div className="flex flex-col">
-              <Link to={"/"} className='py-2 text-base font-Poppins font-normal leading-5 text-white'>Terms of use</Link>
-              <Link to={"/"} className=' py-2 text-base font-Poppins font-normal leading-5 text-white'>Privacy</Link>
-              <Link to={"/"} className='py-2 text-base font-Poppins font-normal leading-5 text-white'>Wasteefy Merchant <ParagraphExtraSmall content={"Coming Soon"} /></Link>
-
-            </div>
-
-          </div>
-          <div className="mt-6 md:mt-0">
-            <ParagraphXlWhite content={"Contact"} />
-            <div className="flex flex-col">
-              <Link to={"/"} className='py-2 text-base font-Poppins font-normal leading-5 text-white'>Hello@wasteefy.com</Link>
-              <Link to={"/"} className='py-2 text-base font-Poppins font-normal leading-5 text-white'>22, Iseyin Street, Palmgrove, Lagos, Nigeria.</Link>
-              {/* <Link to={"/"} className='p-4'>About Us</Link> */}
-            </div>
-
-          </div>
-        </div>
-        <div className="text-center mt-6 md:text-end">
-          <ParagraphXlWhite content={"Download now"} />
-          <div className="flex md:hidden m-4 gap-3 md:justify-end md:items-end md:w-1/2">
-            <div className="w-1/2 text-center md:w-full ">
-              <button className='bg-white rounded-lg border w-full h-16 border-white flex gap-3 py-3 px-2'>
-                <img src="Images/playstore.png" alt="" className='w-8 h-8' />
-                <div className="">
-                  <p className='text-xxs text-start font-Poppins font-light text-black leading-3'>GET IT ON</p>
-                  <p className='text-sm text-start font-Poppins font-semibold text-black leading-6'>Google Play</p>
-                </div>
-              </button>
-              <ParagraphExtraSmall content={"Coming Soon"} />
-            </div>
-            <div className="w-1/2 text-center md:w-full">
-              <button className='bg-white rounded-lg border full h-16 border-white flex gap-3 p-3'>
-                <FaApple className='w-8 h-8' />
-                <div className="">
-                  <p className='text-xxs text-start font-Poppins font-light text-black leading-3'>Download on</p>
-                  <p className='text-sm text-start font-Poppins font-semibold text-black leading-6'>App Store</p>
-                </div>
-              </button>
-              <ParagraphExtraSmall content={"Coming Soon"} />
-            </div>
-          </div>
-          <div className="hidden md:flex gap-5 justify-end item-center mt-2">
-             {/* <p className='text-white'>LIve</p> */}
-                <div className="w-1/2 text-center md:w-[12%]">
-              <button className='bg-white rounded-lg border w-full h-16 border-white flex gap-3 py-3 px-2'>
-                <img src="Images/playstore.png" alt="" className='w-8 h-8' />
-                <div className="">
-                  <p className='text-xxs text-start font-Poppins font-light text-black leading-3'>GET IT ON</p>
-                  <p className='text-sm text-start font-Poppins font-semibold text-black leading-6'>Google Play</p>
-                </div>
-              </button>
-              <ParagraphExtraSmall content={"Coming Soon"} />
-            </div>
-            <div className="w-1/2 text-center md:w-[10.5%]">
-              <button className='bg-white rounded-lg border full h-16 border-white flex gap-3 p-3'>
-                <FaApple className='w-8 h-8' />
-                <div className="">
-                  <p className='text-xxs text-start font-Poppins font-light text-black leading-3'>Download on</p>
-                  <p className='text-sm text-start font-Poppins font-semibold text-black leading-6'>App Store</p>
-                </div>
-              </button>
-              <ParagraphExtraSmall content={"Coming Soon"} />
-            </div>
-          </div>
-           
-        </div>
+      <div className='ml-4 text-gray-200 mt-4  text-gray-500'>
+      <p className='my-4'>The modern platform for digital waste bill
+management. Simplify payments, track usage, and stay compliant.</p>
+<p className='mt-4 flex flex-row gap-2 items-center'><span><CiMail className='text-xl'/></span><span>support@wasteefy.com</span></p>
+<p className='mt-4 flex flex-row gap-2 items-center'><span><MdOutlineLocalPhone  className='text-xl' /></span>09131415012</p>
+<p className='mt-4 flex flex-row gap-2 items-center'><span><CiLocationOn  className='text-xl'/></span>Hello@wasteefy.com</p>
+    </div>
       </div>
-      <div className="pt-4  md:pt-8 text-center">
-        <hr className='text-white' />
-        <p className="text-base text-white mt-2" > <span className="w-5 h-5">&copy; </span> 2023 All rights reserved</p>
+      <div className='grid grid-cols-2 md:grid-cols-4 gap-8 mt-10 md:mt-0 w-full flex-wrap justify-between'>
+      <div className='text-gray-500 flex-1 flex flex-col mt-4 gap-4 tracking-tight'>
+        <h4 className='text-white font-bold mb-2'>Product</h4>
+        <p>Features</p>
+        <p>Pricing</p>
+        <p>How It Works</p>
+        <p>API Documentation</p>
       </div>
-    </main>
+        <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
+        <h4 className='text-white font-bold mb-2'>Company</h4>
+        <p>About Us</p>
+        <p>Careers</p>
+        <p>Press</p>
+        <p>Contact</p>
+      </div>
+      <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
+        <h4 className='text-white font-bold mb-2'>Resources</h4>
+        <p>Help Center</p>
+        <p>Blog</p>
+        <p>Community</p>
+        <p>Webinars</p>
+      </div>
+      <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
+        <h4 className='text-white font-bold mb-2'>Legal</h4>
+        <p>Privacy Policy</p>
+        <p>Terms of Service</p>
+        <p>Cookie Policy</p>
+        <p>GDPR</p>
+      </div>
+      </div>
+    </div>
+    <div className='flex flex-col md:flex-row items-center justify-center md:justify-between mt-20'>
+      <div className='text-gray-500 flex flex-row md:flex-col gap-4 md:justify-right justify-center tracking-tight'>
+        <p className='text-center md:text-right text-sm mb-4 '>&copy; 2025 Wasteefy. All rights reserved.</p>
+        </div>
+        <div className="text-gray-500 font-bold text-xl flex flex-row gap-2">
+          <span><FaXTwitter /></span>
+          <span><AiOutlineInstagram /></span>
+          <span><AiFillFacebook /></span>
+        </div>
+    </div>
+    
+    </footer>
   )
 }
 

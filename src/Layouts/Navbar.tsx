@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FaBars, } from "react-icons/fa";
+import { FaAngleUp, FaBars, FaCaretDown, FaTimes, } from "react-icons/fa";
 import { TiTimes } from "react-icons/ti"
 import { Link } from "react-router-dom";
 import {
@@ -7,7 +7,8 @@ import {
     AiOutlineTwitter,
     AiFillLinkedin
 } from "react-icons/ai"
-import {Logo} from '../Component/Logo';
+import { Button } from '../Component/Button';
+import { LogoWithText } from '../Component/Logo';
 
 const Navbar = () => {
 
@@ -38,10 +39,10 @@ const Navbar = () => {
 
     const activeAuth = sessionStorage.getItem('SESSION_AUTH_TOKEN');
     return (
-        <main className={`fixed  w-full h-20 md:h-20  bg-white shadow-lg flex justify-between items-center  px-6  md:px-12 xl:px-12   text-black z-10  capitalize font-Poppins md:mt-0 `}>
+        <nav className={`mt-0 fixed w-full h-20 md:h-20  bg-white shadow-lg flex items-center justify-between items-center  px-6  md:px-12 xl:px-12   text-black z-10  capitalize`}>
             <Link to="/"  className='mt-3 md:mt-0'>
                 <div className="h-14 w-14">
-                    <Logo />
+                    <LogoWithText />
                 </div>
             </Link>
             <button
@@ -51,17 +52,17 @@ const Navbar = () => {
                         handleToggle();
                     }
                 }}
-                className="md:hidden z-10 pr-1.5 mt-5"
+                className="md:hidden z-10 pr-1.5"
                 aria-label="Toggle navigation menu"
                 tabIndex={0}
                 type="button"
             >
                 {toggle ? (
-                    <span>
-                        <FaBars className="text-black w-10 h-8  cursor-pointer transition-transform ease-in-out delay-300 duration-500 transform hover:scale-110" />
-                    </span>
+                 
+                        <FaBars className="text-black w-6 h-6   cursor-pointer transition-transform ease-in-out delay-300 duration-500 transform hover:scale-110" />
+     
                 ) : (
-                    <FaBars className="text-black w-10 h-8  cursor-pointer transition-transform ease-in-out delay-300 duration-500 transform hover:scale-110 " />
+                    <FaTimes className="text-black w-6 h-6   cursor-pointer transition-transform ease-in-out delay-300 duration-500 transform hover:scale-110 " />
                 )}
             </button>
 
@@ -72,8 +73,8 @@ const Navbar = () => {
             >
                 <div className="flex justify-between px-4 mb-0 mt-10 items-center">
                     <Link to="/" className='mt-3 md:mt-0'>
-                        <div className=" h-14 w-14">
-                            <Logo />
+                        <div className=" h-20   w-40">
+                            <LogoWithText/>
                         </div>
                     </Link>
                     <div
@@ -102,12 +103,14 @@ const Navbar = () => {
                     </div>
                     :
                     <div className=" mt-14 mx-5 ">
-                        <Link to="login">
-                            <li className="text-gray leading-5 text-xl flex font-Poppins font-normal mb-8">
-                                {/* <img src={person2} alt="login" className="cursor-pointer" /> */}
-                                <p className=" cursor-pointer font-semibold">Login</p>
-                            </li>
-                        </Link>
+               
+                            <Button>
+                                         <Link to="login">Login</Link>
+                            </Button>
+                            <Button>
+                                <FaAngleUp className='text-black'/>
+                            </Button>
+                
 
                         {/* <Link to="signup">
                             <li className="text-gray leading-5 text-xl flex  font-Poppins mb-8">
@@ -179,10 +182,15 @@ const Navbar = () => {
                     :
                     <div className="w-full flex space-x-4  lg:space-x-10 items-center">
 
-                        <li >
-                            <Link to="/login" className={`${scrolled ? "text-green font-semibold" : "text-green"}`}>
+                        <li className='flex items-center space-x-2'>
+                            <Button>
+                            <Link to="/login">
                                 Login
                             </Link>
+                            </Button>
+                            <Button>
+                                <FaCaretDown className="text-white"/>
+                            </Button>
                         </li>
 
                         {/* <li>
@@ -200,7 +208,7 @@ const Navbar = () => {
 
 
             </ul>
-        </main>
+        </nav>
     )
 }
 
