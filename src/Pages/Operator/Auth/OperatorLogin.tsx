@@ -5,9 +5,15 @@ import {  useFormik } from "formik";
 import { ToastContainer, Zoom, toast } from "react-toastify";
 import axios from "axios";
 import Input from "../../../Component/InputField";
-import { AdminLogo } from "../../../Component/AlternateLogos";
+
 import baseURL from "../../../utils/apiConfig";
 import { Button } from "../../../Component/Button";
+import { BsBarChartLine } from "react-icons/bs";
+import { IoMdKeypad } from "react-icons/io";
+import { MdOutlineShield } from "react-icons/md";
+import { Logo } from "../../../Component/Logo";
+import { PiUser } from "react-icons/pi";
+import BgWasteOperator from "../../../assets/images/bg-waste-operator.png";
 
 type Err  = {
   email:string;
@@ -122,21 +128,10 @@ const OperatorLogin:React.FC = () => {
   });
 
   return (
-    <main className="p-10">
-      <div className="flex items-center justify-center mt-10 lg:justify-start">
-        <AdminLogo />
-      </div>
-      <div className="flex flex-col lg:flex-row justify-around py-20">
-        <div className="hidden lg:block w-2/5">
-          <img src="Images/admin.png" alt="icon" srcSet="" />
-        </div>
-        <div className="text-center w-full max-w-lg lg:text-start lg:w-[45%]">
-          <form onSubmit={formik.handleSubmit} >
-            <p className="text-2xl font-Poppins font-semibold not-italic text-black leading-8 my-4">
-              Login to{" "}
-              <span className="text-green">Wasteefy Management System</span>
-            </p>
-            <ToastContainer 
+    <div className="md:p-4 p-0 h-screen ">
+
+        <main className="  md:bg-white p-0 md:p-4 md:flex  md:flex-row h-screen">
+                    <ToastContainer 
        position="top-center"
        autoClose={5000}
        hideProgressBar
@@ -150,81 +145,112 @@ const OperatorLogin:React.FC = () => {
        transition={Zoom}
       />
 
-            <div className="w-full  flex flex-col justify-left my-4">
-              <label className="font-semibold text-gray text-left">{"Email"}</label>
-              <Input
-                id="email"
-                type={"email"}
-                name={"email"}
-                placeholder={"Email"}
-                onChange={formik.handleChange}
-                value={formik.values.email}
-              />
 
-              {formik.errors.email ? (
-                           <p className="text-red-500 text-sm">{formik.errors.email}</p>
-              ) : null}
-            </div>
-            <div className=" relative w-full flex flex-col justify-left">
-              <label htmlFor="password" className="font-semibold text-gray text-left">Password</label>
-              <Input
-                id="password"
-                type={istoggle ? "text" : "password"}
-                name={"password"}
-                placeholder={"Password"}
-                onChange={formik.handleChange}
-                value={formik.values.password}
-              />
-              <button
-                className="absolute top-10 right-5"
-                onClick={toggle}
-                type="button"
-              >
-                {istoggle ? <FaEye /> : <FaEyeSlash />}
-              </button>
-                         {formik.errors.password ? (
-                <p className="text-red-500 text-sm">{formik.errors.password}</p>
-              ) : null}
-              <div className="flex justify-end mt-2">
-                <Link
-                  to={"/operator-forgot-password"}
-                  className="text-sm font-inter font-normal not-italic text-gray leading-4"
-                >
-                  Reset Password?
-                </Link>
-              </div>
+    {/* Overlay */}
+<div className="relative flex bg-white overflow-hidden rounded-none md:rounded-xl h-screen md:h-auto md:flex-1">
+  
+  {/* Image */}
+  <div className="absolute inset-0 z-0">
+    <img
+      src={BgWasteOperator}
+      alt="Background Waste Login"
+      className="w-full h-full object-cover"
+    />
+  </div>
 
-   
-            </div>
+  {/* Bottom Overlay (desktop only) */}
+  <div className="hidden md:block absolute bottom-0 left-0 right-0 p-6 m-4 z-10">
+    <div className="bg-white rounded-xl p-6">
+      <h3 className="text-black text-2xl font-semibold mb-2">
+        From Chaos to Coordination.
+      </h3>
 
+      <p className="text-gray-500 text-lg mb-4">
+        Waste management simplified by replacing cash, paper, and guesswork with digital payments, clear records, and reliable communication.
+      </p>
 
+      <div className="flex gap-6">
+        <div className="flex items-center gap-2 shadow-lg p-2 rounded-xl">
+          <BsBarChartLine className="text-green text-lg" />
+          <span className="text-black">Smart Tracking</span>
+        </div>
 
-            <div className="w-full mt-6">
-              <Button
-                type={"submit"}
-                variant="primary"
-                loading={loading}
-                className="w-full"
-              > Login </Button>
-            </div>
-
-                        <div className="text-center w-full  my-8">
-              <p>
-                New Psp Operator?{" "}
-                <span>
-                  <Link
-                    to={"/operator-register"}
-                    className="font-inter font-normal not-italic text-gray leading-4"
-                  >
-                    Sign up
-                  </Link>
-                </span>
-              </p>
-            </div>
-          </form>
+        <div className="flex items-center gap-2 shadow-lg p-2 rounded-xl">
+          <MdOutlineShield className="text-green text-lg" />
+          <span className="text-black">Secure Data</span>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+ 
+
+      <div className="absolute md:relative bottom-0 left-0 right-0 md:flex-1 flex  md:justify-center md:items-center p-4  bg-white rounded-xl  m-4 md:m-0">
+
+          <div className="mt-2 w-full">
+            <form onSubmit={formik.handleSubmit} className="text-left">
+          
+            
+                <Logo className="m-0"/>
+           
+                  <h3 className="text-black text-2xl">Log in as Operator</h3>
+                  <p className="text-gray-500 ">Please enter your details to sign in</p>
+              <div className="mt-4">
+                <label className="text-black font-semibold mb-2 block" htmlFor="email">Email Address</label>
+                <Input
+                  id="email"
+                  icon={<PiUser />}
+                  placeholder={"email"}
+                  type={"email"}
+                  name={"email"}
+                  onChange={formik.handleChange}
+                  value={formik.values.email}
+                />
+
+                {formik.errors.password ? (
+                  <p className="text-red-900 text-sm">*{formik.errors.password}</p>
+                ) : null}
+              </div>
+              <div className="mt-4 relative">
+                <label className="text-black font-semibold mb-2 block" htmlFor="password">Password</label>
+                <Input
+                  id="password"
+                  icon={<IoMdKeypad />}
+                  iconPosition="left"
+                  placeholder={"Password"}
+                  type={istoggle ? "text" : "password"}
+                  name={"password"}
+                  onChange={formik.handleChange}
+                  value={formik.values.password}
+                />
+                <button
+                  className="absolute top-12 right-6"
+                  onClick={toggle}
+                  type="button"
+                >
+                  {istoggle ? <FaEye /> : <FaEyeSlash />}
+                </button>
+                {formik.errors.password ? (
+                  <p className="text-red-900 text-sm">*{formik.errors.password}</p>
+                ) : null}
+              </div>
+              <div className="flex justify-end  mt-4">
+                <Link
+                  to="/forget-password"
+                  className=" text-green text-sm underline"
+                >
+                  Reset password?
+                </Link>
+              </div>
+ 
+                <Button variant="primary" className="mt-8 w-full" type="submit"  loading={loading}>Login &#8594; </Button>
+      
+            </form>
+          </div>
+
+      </div>
     </main>
+    </div>
   );
 };
 

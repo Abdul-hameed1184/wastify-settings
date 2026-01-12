@@ -11,7 +11,6 @@ import { RiSecurePaymentLine } from "react-icons/ri";
 import { IoMdKeypad, IoMdNotificationsOutline } from "react-icons/io";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { GrNotes } from "react-icons/gr";
-import { FaCaretDown } from "react-icons/fa";
 import { BsPhone } from "react-icons/bs";
 import { Accordion } from "../Component/Accordion";
 
@@ -19,6 +18,8 @@ import { Accordion } from "../Component/Accordion";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [openCustomer, setOpenCustomer] = React.useState<number | null>(null);
+  const [openOperator, setOpenOperator] = React.useState<number | null>(null);
 
   const formik = useFormik({
     initialValues: {
@@ -38,7 +39,7 @@ const Home: React.FC = () => {
   return (
     <Layout>
       <main className="w-full">
-        <div className="w-full px-6 md:px-12 lg:px-20">
+        <div className="w-full px-6 md:px-12 lg:px-20 h-100">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-col max-w-2xl text-center md:text-left mx-2 mt-4 md:mt-0">
               <h2 className="flex flex-col font-extrabold text-[3.5em] p-0 m-0 tracking-tight leading loose">
@@ -67,7 +68,7 @@ const Home: React.FC = () => {
                   <h3 className="font-bold text-[1.5em] p-0 m-0 pt-2 text-lg tracking-tight">
                     QuickPay
                   </h3>
-                  <p className="font-normal text-[0.875em] pt-2 text-gray">
+                  <p className="font-normal text-[0.875em] pt-2 text-gray-500">
                     QuickPay lets you pay your waste bill instantly using your
                     phone number and property code, no login required.
                   </p>
@@ -83,7 +84,7 @@ const Home: React.FC = () => {
                         onChange={formik.handleChange}
                         value={formik.values.phoneNumber}
                         placeholder={"  Enter your phone number"}
-                        className="border px-2.5 py-3.5 pl-5 shadow-sm rounded-lg block text-xl  w-full h-14 text-black text-base mt-1 placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:ring-purple"
+      
                       />
                     </div>
                     <div className="mt-4">
@@ -95,8 +96,7 @@ const Home: React.FC = () => {
                         onChange={formik.handleChange}
                         value={formik.values.propertyCode}
                         placeholder={"  Enter Property code"}
-                        className="border px-2.5 py-3.5 pl-5 shadow-sm rounded-lg block text-xl  w-full h-14 text-black text-base mt-1 placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:ring-purple"
-                      />
+                                            />
                     </div>
                     <div className="w-full mt-4">
                       <Button
@@ -113,8 +113,9 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-16 flex justify-center text-center md:mt-32">
+        <div className="mt-32  flex justify-center text-center">
           <div className="w-[960px] mx-auto">
+                        <p className="text-green"><span className="bg-green/20 rounded-lg py-2 px-4 ">Features</span></p>
             <h3 className="font-semibold text-[3em] tracking-[-0.02em] p-0 m-0 pt-2 text-lg leading-[58px] text-center">
               Who We Are
             </h3>
@@ -123,7 +124,7 @@ const Home: React.FC = () => {
               operators (waste collectors) efficiently manage properties,
               customers, payments, and daily operations in one place.
             </p>
-            <div className="flex flex-col md:flex-row gap-4 w-full p-0 justify-center md:justify-between">
+            <div className="flex flex-col md:flex-row gap-4 w-full p-0 justify-center md:justify-between space-y-4 space-x-4">
               <CardTextIcon
                 className="flex-1 max-w-sm"
                 icon={<LuCreditCard />}
@@ -162,7 +163,7 @@ const Home: React.FC = () => {
 
     <div className="flex flex-col justify-center text-center md:my-24">
           <div className="mx-auto">
-            <p className="text-green"><span className="bg-green/5 rounded-lg py-2 px-4 ">Things you should know</span></p>
+            <p className="text-green"><span className="bg-green/20 rounded-lg py-2 px-4 ">Things you should know</span></p>
             <h3 className="font-semibold text-[3em] tracking-[-0.02em] p-0 m-0 pt-2 text-lg leading-[58px] text-center">
               How It Works
             </h3>
@@ -171,68 +172,89 @@ const Home: React.FC = () => {
               simple steps to take control of your payments today.
             </p>
           </div>
-          <div className="flex flex-col md:flex-row  gap-4 w-full p-4 justify-center md:justify-between">
-            <div className="bg-green flex-1 rounded-2xl m-4 ">
+          <div className="flex flex-col md:flex-row gap-4 w-full p-4 items-stretch">
+            <div className="bg-green flex-1 rounded-2xl m-4 flex flex-col">
               <h3 className="font-bold text-xl p-2">Customers</h3>
-              <div className="bg-white rounded-2xl border border-green p-4">
+              <div className="bg-white rounded-2xl border border-green p-4 flex-1">
                                 <Accordion 
-                itemNumber={"1"}
-                titleText="Get Onboarded" 
-                infolist={[
-                  "Your psp operators register your property on Wasteefy",
-                  "You'll receive links to your phoe number and property code"
-                  ]} />
+                  itemNumber={"1"}
+                  titleText="Get Onboarded"
+                  infolist={[
+                    "Your psp operators register your property on Wasteefy",
+                    "You'll receive links to your phoe number and property code"
+                  ]} 
+                  isOpen={openCustomer == 1} 
+                  onToggle={() => setOpenCustomer(openCustomer === 1 ? null : 1)} />
                                                   <Accordion 
-                itemNumber={"2"}
-                titleText= {"Login or Quickpay (No login required)"}
-                infolist={[
-                  "Your psp operators register your property on Wasteefy",
-                  "You'll receive links to your phoe number and property code"
-                  ]} />
+                  itemNumber={"2"}
+                  titleText={"Login or Quickpay (No login required)"}
+                  infolist={[
+                    "Your psp operators register your property on Wasteefy",
+                    "You'll receive links to your phoe number and property code"
+                  ]} 
+                      isOpen={openCustomer == 2} 
+                  onToggle={() => setOpenCustomer(openCustomer === 2 ? null : 2)}
+                  />
                                                   <Accordion 
-                itemNumber={"3"}
-                titleText="Pay & Stay Updated" 
-                infolist={[
-                  "Your psp operators register your property on Wasteefy",
-                  "You'll receive links to your phoe number and property code"
-                  ]} />
+                  itemNumber={"3"}
+                  titleText="Pay & Stay Updated"
+                  infolist={[
+                    "Your psp operators register your property on Wasteefy",
+                    "You'll receive links to your phoe number and property code"
+                  ]}
+                      isOpen={openCustomer == 3} 
+                  onToggle={() => setOpenCustomer(openCustomer === 3 ? null : 3)}
+                  />
 
               </div>
             </div>
-                        <div className="bg-green flex-1 rounded-2xl m-4 ">
+                        <div className="bg-green flex-1 rounded-2xl m-4 flex flex-col">
               <h3 className="font-bold text-xl p-2">Operators</h3>
-              <div className="bg-white  rounded-2xl border border-green p-4">
+              <div className="bg-white rounded-2xl border border-green p-4 flex-1">
                 <Accordion 
-                itemNumber={"1"}
-                titleText="Create an Operator Account" 
-                infolist={[
-                  "Your psp operators register your property on Wasteefy",
-                  "You'll receive links to your phoe number and property code"
-                  ]} />
+                  itemNumber={"1"}
+                  titleText="Create an Operator Account"
+                  infolist={[
+                    "Your psp operators register your property on Wasteefy",
+                    "You'll receive links to your phoe number and property code"
+                  ]}
+                      isOpen={openOperator == 1} 
+                  onToggle={() => setOpenOperator(openOperator === 1 ? null : 1)}
+                  />
 
                                   <Accordion 
-                itemNumber={"2"}
-                titleText={"Register Properties & Customers"} 
-                infolist={[
-                  "Your psp operators register your property on Wasteefy",
-                  "You'll receive links to your phoe number and property code"
-                  ]} />
+                  itemNumber={"2"}
+                  titleText={"Register Properties & Customers"}
+                  infolist={[
+                    "Your psp operators register your property on Wasteefy",
+                    "You'll receive links to your phoe number and property code"
+                  ]}
+                    isOpen={openOperator == 2} 
+                  onToggle={() => setOpenOperator(openOperator === 2 ? null : 2)}
+                  />
 
                    <Accordion 
-                itemNumber={"3"}
-                titleText={"Generate & Send Bills"} 
-                infolist={[
-                  "Your psp operators register your property on Wasteefy",
-                  "You'll receive links to your phoe number and property code"
-                  ]} />
+                  itemNumber={"3"}
+                  titleText={"Generate & Send Bills"}
+                  infolist={[
+                    "Your psp operators register your property on Wasteefy",
+                    "You'll receive links to your phoe number and property code"
+                  ]}
+                    isOpen={openOperator == 3} 
+                  onToggle={() => setOpenOperator(openOperator === 3 ? null : 3)}
+                  />
 
               <Accordion 
-                itemNumber={"4"}
-                titleText={"Track Payments"} 
-                infolist={[
-                  "Your psp operators register your property on Wasteefy",
-                  "You'll receive links to your phoe number and property code"
-                  ]} />
+                  itemNumber={"4"}
+                  titleText={"Track Payments"}
+                  infolist={[
+                    "Your psp operators register your property on Wasteefy",
+                    "You'll receive links to your phoe number and property code"
+                  ]} 
+                  
+                    isOpen={openOperator ==4} 
+                  onToggle={() => setOpenOperator(openOperator === 4 ? null : 4)}
+                  />
 
               </div>
             </div>

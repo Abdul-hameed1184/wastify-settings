@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { TiTimes } from "react-icons/ti";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from "formik";
@@ -7,13 +6,14 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../../Features/authSlice";
-import {
-  Paragraph2Xl,
-  ParagraphLargeWhite,
-} from "../../Component/Paragraph";
 import  Input  from "../../Component/InputField";
 import baseURL from "../../utils/apiConfig";
 import { Button } from "../../Component/Button";
+import BgWasteLogin from "../../assets/images/bg-waste-login.png";
+import { Logo } from "../../Component/Logo";
+import { BsBarChartLine, BsPhone } from "react-icons/bs";
+import { MdOutlineShield } from "react-icons/md";
+import { IoMdKeypad } from "react-icons/io";
 type Err = {
   phone: string,
   password: string
@@ -100,26 +100,67 @@ const Login:React.FC = () => {
   });
 
   return (
-    <main className="m-4 md:m-0 md:bg-green md:h-screen md:bg-bgdesktop-pattern md:bg-cover">
-      <div className="md:mt-0 md:p-10 md:flex md:justify-between">
+    <main className=" m-0  md:bg-white p-0 md:p-4 md:flex  md:flex-row h-screen">
         <ToastContainer />
-        <div className="hidden md:block md:p-10">
-          <ParagraphLargeWhite content={"Log in"} />
+
+
+
+    {/* Overlay */}
+<div className="relative flex bg-white overflow-hidden rounded-none md:rounded-xl h-screen md:h-auto md:flex-1">
+  
+  {/* Image */}
+  <div className="absolute inset-0 z-0">
+    <img
+      src={BgWasteLogin}
+      alt="Background Waste Login"
+      className="w-full h-full object-cover"
+    />
+  </div>
+
+  {/* Bottom Overlay (desktop only) */}
+  <div className="hidden md:block absolute bottom-0 left-0 right-0 p-6 m-4 z-10">
+    <div className="bg-white rounded-xl p-6">
+      <h3 className="text-black text-2xl font-semibold mb-2">
+        Manage Your Waste Bill Efficiently.
+      </h3>
+
+      <p className="text-gray-500 text-lg mb-4">
+        Secure login for residents, businesses, and municipal partners. Access
+        your dashboard to view bills, schedule pickups, and manage services in
+        one place.
+      </p>
+
+      <div className="flex gap-6">
+        <div className="flex items-center gap-2 shadow-lg p-2 rounded-xl">
+          <BsBarChartLine className="text-green text-lg" />
+          <span className="text-black">Smart Tracking</span>
         </div>
-        <div className="mt-10 md:mt-3 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
-          <div className="flex justify-end mr-8">
-            <Link to="/">
-              <TiTimes size={24} className="bg-green text-white rounded-2xl" />
-            </Link>
-          </div>
-          <div className="mt-2">
-            <form onSubmit={formik.handleSubmit}>
-              <Paragraph2Xl content={"Welcome Back"} />
-              <div className=" m-auto h-20 w-20">
-                <img src="Images/logo.png" alt="logo" srcSet="" />
-              </div>
-              <div className="m-4">
+
+        <div className="flex items-center gap-2 shadow-lg p-2 rounded-xl">
+          <MdOutlineShield className="text-green text-lg" />
+          <span className="text-black">Secure Data</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+
+      <div className="absolute md:relative bottom-0 left-0 right-0 md:flex-1 flex  md:justify-center md:items-center p-4  bg-white rounded-xl  m-4 md:m-0">
+
+          <div className="mt-2 w-full">
+            <form onSubmit={formik.handleSubmit} className="text-left">
+          
+            
+                <Logo className="m-0"/>
+           
+                  <h3 className="text-black text-2xl">Welcome Back</h3>
+                  <p className="text-gray-500 ">Please enter your details to sign in</p>
+              <div className="mt-4">
+                <label className="text-black font-semibold mb-2 block" htmlFor="phoneNumber">Phone Number</label>
                 <Input
+                  id="phoneNumber"
+                  icon={<BsPhone />}
                   placeholder={"Phone Number"}
                   type={"tel"}
                   name={"phone"}
@@ -131,8 +172,12 @@ const Login:React.FC = () => {
                   <p className="text-red-900 text-sm">*{formik.errors.phone}</p>
                 ) : null}
               </div>
-              <div className="m-4 relative">
+              <div className="mt-4 relative">
+                <label className="text-black font-semibold mb-2 block" htmlFor="password">Password</label>
                 <Input
+                  id="password"
+                  icon={<IoMdKeypad />}
+                  iconPosition="left"
                   placeholder={"Password"}
                   type={istoggle ? "text" : "password"}
                   name={"password"}
@@ -140,7 +185,7 @@ const Login:React.FC = () => {
                   value={formik.values.password}
                 />
                 <button
-                  className="absolute top-5 right-6"
+                  className="absolute top-12 right-6"
                   onClick={toggle}
                   type="button"
                 >
@@ -150,7 +195,7 @@ const Login:React.FC = () => {
                   <p className="text-red-900 text-sm">*{formik.errors.password}</p>
                 ) : null}
               </div>
-              <div className="flex justify-end mr-8">
+              <div className="flex justify-end  mt-4">
                 <Link
                   to="/forget-password"
                   className=" text-green text-sm underline"
@@ -158,12 +203,12 @@ const Login:React.FC = () => {
                   Reset password?
                 </Link>
               </div>
-              <div className="mx-4 my-8">
-                <Button variant="primary" type="submit" className="w-full" loading={loading}>Submit</Button>
-              </div>
+ 
+                <Button variant="primary" className="mt-8 w-full" type="submit"  loading={loading}>Login &#8594; </Button>
+      
             </form>
           </div>
-        </div>
+
       </div>
     </main>
   );

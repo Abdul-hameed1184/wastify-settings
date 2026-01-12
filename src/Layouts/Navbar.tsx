@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { FaAngleUp, FaBars, FaCaretDown, FaTimes, } from "react-icons/fa";
+import React, {  useState } from 'react'
+import { FaAngleUp, FaBars, FaTimes, FaUserTie, } from "react-icons/fa";
 import { TiTimes } from "react-icons/ti"
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
     AiFillFacebook, AiOutlineInstagram,
     AiOutlineTwitter,
@@ -9,33 +9,37 @@ import {
 } from "react-icons/ai"
 import { Button } from '../Component/Button';
 import { LogoWithText } from '../Component/Logo';
+import { PiUsersLight } from 'react-icons/pi';
+import { TfiAngleUp } from 'react-icons/tfi';
 
-const Navbar = () => {
+const Navbar:React.FC = () => {
 
     const [toggle, setToggle] = useState(false);
+    const [ open, setOpen ] = useState(false);
+
 
     // To set mobile navbar toggle
     const handleToggle = () => {
         setToggle(!toggle);
     };
 
-    const [scrolled, setScrolled] = useState(false);
+    // const [scrolled, setScrolled] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > window.innerHeight) {
-                setScrolled(true);
-            } else {
-                setScrolled(false);
-            }
-        };
+    // useEffect(() => {
+    //     const handleScroll = () => {
+    //         if (window.scrollY > window.innerHeight) {
+    //             setScrolled(true);
+    //         } else {
+    //             setScrolled(false);
+    //         }
+    //     };
 
-        window.addEventListener('scroll', handleScroll);
+    //     window.addEventListener('scroll', handleScroll);
 
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+    //     return () => {
+    //         window.removeEventListener('scroll', handleScroll);
+    //     };
+    // }, []);
 
     const activeAuth = sessionStorage.getItem('SESSION_AUTH_TOKEN');
     return (
@@ -123,6 +127,7 @@ const Navbar = () => {
                             <Button>
                                 <FaAngleUp className='text-black'/>
                             </Button>
+
                 
 
                         {/* <Link to="signup">
@@ -201,9 +206,28 @@ const Navbar = () => {
                                 Login
                             </Link>
                             </Button>
-                            <Button>
-                                <FaCaretDown className="text-white"/>
+                            <Button className="hover:border-2 hover:border-white hover:shadow-green hover:shadow-outer" onClick={() => setOpen(!open)}>
+                                <TfiAngleUp className='text-black' />
                             </Button>
+                               {open && (
+        <div className="absolute right-0 mt-48 w-56  rounded-xl bg-white text-black shadow-lg border border-gray-200 z-50">
+          <h3 className='p-4 font-semibold text-black'>Login As</h3>
+          <NavLink
+            to={"/login"}
+            className="w-full flex items-center text-left py-2 px-4 hover:bg-gray-100 transition hover:bg-green/20"
+          >
+           <span className='mr-4'><PiUsersLight /></span><span> Customer</span>
+          </NavLink>
+
+          <NavLink
+            to={"/operator-login"}
+            className="w-full flex items-center text-left py-2 px-4 hover:bg-gray-100 transition hover:bg-green/20"
+          >
+            <span className='mr-4'><FaUserTie /></span><span> Operator</span>
+          </NavLink>
+          
+        </div>
+      )}
                         </li>
 
                         {/* <li>
