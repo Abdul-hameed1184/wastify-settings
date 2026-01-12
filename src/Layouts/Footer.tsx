@@ -30,7 +30,7 @@ management. Simplify payments, track usage, and stay compliant.</p>
         <p>Features</p>
         <p>Pricing</p>
         <p>How It Works</p>
-        <p>API Documentation</p>
+        <p>FAQ</p>
       </div>
         <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Company</h4>

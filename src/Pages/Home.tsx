@@ -13,6 +13,9 @@ import { MdOutlineAccessTime } from "react-icons/md";
 import { GrNotes } from "react-icons/gr";
 import { FaCaretDown } from "react-icons/fa";
 import { BsPhone } from "react-icons/bs";
+import { Accordion } from "../Component/Accordion";
+
+
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -47,7 +50,7 @@ const Home: React.FC = () => {
                   <span className="text-green font-extrabold text-[1.5em] p-0 m-0 text-lg tracking-tight">
                     Was
                   </span>
-                  <span className="text-gray font-extrabold text-[1.5em] p-0 m-0 text-lg tracking-tight">
+                  <span className="text-gray-500 font-extrabold text-[1.5em] p-0 m-0 text-lg tracking-tight">
                     teefy
                   </span>
                 </span>
@@ -58,7 +61,7 @@ const Home: React.FC = () => {
                 with our secure digital platform.
               </p>
             </div>
-            <Card className="max-w-lg rounded-xl shadow-lg border p-4">
+            <Card className="max-w-lg rounded-xl shadow-lg border p-4 ">
               <form onSubmit={formik.handleSubmit}>
                 <div className="px-4">
                   <h3 className="font-bold text-[1.5em] p-0 m-0 pt-2 text-lg tracking-tight">
@@ -125,7 +128,7 @@ const Home: React.FC = () => {
                 className="flex-1 max-w-sm"
                 icon={<LuCreditCard />}
                 title="Easy Wastebill Payment"
-                description="we're on a mission to simplify the waste bill payment process. We understand the hassles and fraustrations that often comes with waste payment and managing waste bills."
+                description="We're on a mission to simplify the waste bill payment process. We understand the hassles and fraustrations that often comes with waste payment and managing waste bills."
               />
               <CardTextIcon
                 className="flex-1 max-w-sm"
@@ -159,7 +162,7 @@ const Home: React.FC = () => {
 
     <div className="flex flex-col justify-center text-center md:my-24">
           <div className="mx-auto">
-            <p className="text-green">Things you should know</p>
+            <p className="text-green"><span className="bg-green/5 rounded-lg py-2 px-4 ">Things you should know</span></p>
             <h3 className="font-semibold text-[3em] tracking-[-0.02em] p-0 m-0 pt-2 text-lg leading-[58px] text-center">
               How It Works
             </h3>
@@ -172,114 +175,65 @@ const Home: React.FC = () => {
             <div className="bg-green flex-1 rounded-2xl m-4 ">
               <h3 className="font-bold text-xl p-2">Customers</h3>
               <div className="bg-white rounded-2xl border border-green p-4">
-                <div className="flex flex-row items-center justify-between border mt-2 px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      1
-                    </span>
-                    <span>
-                      <p className="text-xl">Get Onboarded</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
+                                <Accordion 
+                itemNumber={"1"}
+                titleText="Get Onboarded" 
+                infolist={[
+                  "Your psp operators register your property on Wasteefy",
+                  "You'll receive links to your phoe number and property code"
+                  ]} />
+                                                  <Accordion 
+                itemNumber={"2"}
+                titleText= {"Login or Quickpay (No login required)"}
+                infolist={[
+                  "Your psp operators register your property on Wasteefy",
+                  "You'll receive links to your phoe number and property code"
+                  ]} />
+                                                  <Accordion 
+                itemNumber={"3"}
+                titleText="Pay & Stay Updated" 
+                infolist={[
+                  "Your psp operators register your property on Wasteefy",
+                  "You'll receive links to your phoe number and property code"
+                  ]} />
 
-                <div className="flex flex-row items-center justify-between border border-gray-200 mt-2 px-4 py-4 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      2
-                    </span>
-                    <span>
-                      <p className="text-xl">
-                        {"Login or Quickpay (No login required)"}
-                      </p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
-                <div className="flex flex-row items-center justify-between mt-2 border px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      3
-                    </span>
-                    <span>
-                      <p className="text-xl">Pay & Stay Updated</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
-                        <div className="flex flex-row items-center justify-between  px-4 py-[2.55em]">
-                  <div className="flex items-center ">
-                    
-                  </div>
-             
-                </div>
               </div>
             </div>
                         <div className="bg-green flex-1 rounded-2xl m-4 ">
               <h3 className="font-bold text-xl p-2">Operators</h3>
               <div className="bg-white  rounded-2xl border border-green p-4">
-                <div className="flex flex-row items-center justify-between border mt-2 px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      1
-                    </span>
-                    <span>
-                      <p className="text-xl">Create an Operator Account</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
+                <Accordion 
+                itemNumber={"1"}
+                titleText="Create an Operator Account" 
+                infolist={[
+                  "Your psp operators register your property on Wasteefy",
+                  "You'll receive links to your phoe number and property code"
+                  ]} />
 
-                <div className="flex flex-row items-center justify-between border border-gray-200 mt-2 px-4 py-4 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      2
-                    </span>
-                    <span>
-                      <p className="text-xl">
-                        {"Register Properties & Customers"}
-                      </p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
-                <div className="flex flex-row items-center justify-between mt-2 border px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      3
-                    </span>
-                    <span>
-                      <p className="text-xl">Generate & Send Bills</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
-                                <div className="flex flex-row items-center justify-between mt-2 border px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      4
-                    </span>
-                    <span>
-                      <p className="text-xl">Track Payments</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
+                                  <Accordion 
+                itemNumber={"2"}
+                titleText={"Register Properties & Customers"} 
+                infolist={[
+                  "Your psp operators register your property on Wasteefy",
+                  "You'll receive links to your phoe number and property code"
+                  ]} />
+
+                   <Accordion 
+                itemNumber={"3"}
+                titleText={"Generate & Send Bills"} 
+                infolist={[
+                  "Your psp operators register your property on Wasteefy",
+                  "You'll receive links to your phoe number and property code"
+                  ]} />
+
+              <Accordion 
+                itemNumber={"4"}
+                titleText={"Track Payments"} 
+                infolist={[
+                  "Your psp operators register your property on Wasteefy",
+                  "You'll receive links to your phoe number and property code"
+                  ]} />
+
               </div>
             </div>
           </div>

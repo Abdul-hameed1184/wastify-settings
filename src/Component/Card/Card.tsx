@@ -24,7 +24,7 @@ const Card: React.FC<CardProps> = ({ children, className = '', variant = 'defaul
         ${className}
       `}
     >
-      {icon && <div className='p-2 h-12 w-12 bg-green/10 text-green text-2xl rounded-lg flex justify-center items-center text'>{icon}</div>}
+      {icon && <div className='p-2 h-12 w-12 bg-green/10 hover:h-16 hover:w-16 hover:bg-green hover:text-white text-green text-2xl hover:text-3xl rounded-3xl flex justify-center items-center text'>{icon}</div>}
       {children}
       </div>
 
@@ -38,11 +38,11 @@ interface CardTextIconProps {
 }
 export const CardTextIcon:React.FC<CardTextIconProps> = ({icon, title, description, className}) => {
   return (
-                <Card icon={icon} className={className}>
+                <Card icon={icon} className={`leading-relaxed ${className}`}>
                 <h3 className="mx-0 my-4 text-left text-2xl font-semibold leading-8">
                   {title}
                 </h3>
-               <p className="mx-0 my-4 text-left text-gray">
+               <p className="mx-0 my-4 text-left text-gray-500 p-1">
                     {description}
                   </p>
                 </Card>

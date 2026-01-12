@@ -45,6 +45,19 @@ const Navbar = () => {
                     <LogoWithText />
                 </div>
             </Link>
+            <div>
+                <ul className="hidden md:flex space-x-4">
+                    <li className="font-Poppins text-gray-500 hover:text-green cursor-pointer">
+                        <Link to="/about">Who We Are</Link>
+                    </li>
+                    <li className="font-Poppins text-gray-500 hover:text-green cursor-pointer">
+                        <Link to="/services">How It Works</Link>
+                    </li>
+                    <li className="font-Poppins text-gray-500 hover:text-green cursor-pointer">
+                        <Link to="/contact">Contact</Link>
+                    </li>
+                </ul>
+            </div>
             <button
                 onClick={handleToggle}
                 onKeyDown={(e) => {
@@ -57,7 +70,7 @@ const Navbar = () => {
                 tabIndex={0}
                 type="button"
             >
-                {toggle ? (
+                {!toggle ? (
                  
                         <FaBars className="text-black w-6 h-6   cursor-pointer transition-transform ease-in-out delay-300 duration-500 transform hover:scale-110" />
      
