@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const api =  axios.create({
-    baseURL :'https://api2.wasteefy.com/api',
+    baseURL :'https://api2staging.wasteefy.com/api/',
     headers: {
         "Content-type": "application/json",
-        "Authorization": `Bearer $sessionToken`,
         "Accept": "*/*"
       }
 })

@@ -1,86 +1,77 @@
-import React, { useEffect, useState } from 'react'
-import { Navigate, Outlet, useNavigate } from 'react-router-dom'
-import { jwtDecode } from 'jwt-decode';
-import Loader from '../Component/Loader';
-import { IDecodeToken } from './models/decodedtoken.interface';
+import React, { useEffect, useState } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import Loader from "../Component/Loader";
+import { IDecodeToken } from "./models/decodedtoken.interface";
 
-
-const ProtectedRoutes:React.FC = () => {
-  const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [token] = useState<string>(sessionStorage.getItem('SESSION_AUTH_TOKEN')||"")
-  const navigate = useNavigate();
-  const [ loading, setLoading ] = useState<boolean>(true)
+const ProtectedRoutes: React.FC = () => {
+  const [authState, setAuthState] = useState<{
+    loading: boolean;
+    loggedIn: boolean;
+    redirectTo?: string;
+  }>({
+    loading: true,
+    loggedIn: false,
+  });
 
   useEffect(() => {
-    const userDetails:IDecodeToken|null = decodeToken(token);
- 
-    if (userDetails) {
+    const token = sessionStorage.getItem("SESSION_AUTH_TOKEN");
 
-      const tokenExpired = isTokenExpired(userDetails.exp);
-
-      if (tokenExpired) {
-
-        //send logout request
-
-        //navigate user to login page based on customer or psp
-        if (userDetails.role === 1) {
-          sessionStorage.removeItem('SESSION_AUTH_TOKEN')
-          sessionStorage.removeItem('AUTH_USERDETAILS')
-          navigate('/login')
-        }
-
-        if (userDetails.role === 2) {
-          sessionStorage.removeItem('SESSION_AUTH_TOKEN')
-          sessionStorage.removeItem('AUTH_ADMIN_DETAILS')
-          navigate('/admin-login')
-
-        }
-
-                if (userDetails.role === 3) {
-          sessionStorage.removeItem('SESSION_AUTH_TOKEN')
-          sessionStorage.removeItem('AUTH_ADMIN_DETAILS')
-          navigate('')
-
-        }
-        setLoggedIn(false)
-      } else {
-
-        setLoggedIn(true)
-      }
-    } else {
-      setLoggedIn(false)
+    if (!token) {
+      setAuthState({
+        loading: false,
+        loggedIn: false,
+        redirectTo: "/login",
+      });
+      return;
     }
-    setLoading(false)
 
-  }, [navigate, token]);
-
-
-
-  const decodeToken = (token) => {
     try {
-      return jwtDecode(token);
-    } catch (error) {
-      console.log('Error decoding token:', error);
-      return null;
+      const decoded:IDecodeToken = jwtDecode<IDecodeToken>(token);
+      console.log(decoded)
+      const isExpired =   decoded.exp ? decoded.exp < Math.floor(Date.now() / 1000) : false;
+      console.log(isExpired)
+
+      if (isExpired) {
+        sessionStorage.clear();
+
+        const redirect =
+          decoded.role === 2
+            ? "/admin-login"
+            : "/login";
+
+        setAuthState({
+          loading: false,
+          loggedIn: false,
+          redirectTo: redirect,
+        });
+        return;
+      }
+
+      // ✅ VALID TOKEN
+      setAuthState({
+        loading: false,
+        loggedIn: true,
+      });
+    } catch {
+      sessionStorage.clear();
+      setAuthState({
+        loading: false,
+        loggedIn: false,
+        redirectTo: "/login",
+      });
     }
-  };
+  }, []);
 
-  const isTokenExpired = (exp) => {
-    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-    return exp < currentTimeInSeconds;
-  };
-
-  if (loggedIn === null) {
-    return <div className='flex justify-center items-center h-screen'> <img src='loader.gif' className='w-60 h-60' alt='loader' /> </div>;
+  if (authState.loading) {
+    return <Loader />;
   }
 
-  if(loading){
-    return <Loader/>
+  if (!authState.loggedIn) {
+    return <Navigate to={authState.redirectTo ?? "/login"} replace />;
   }
 
-  return (
-    loggedIn ?<div> <Outlet /> </div>: <Navigate to='/login' />
-  )
-}
+  return <Outlet />;
+};
 
-export default ProtectedRoutes
+export default ProtectedRoutes;

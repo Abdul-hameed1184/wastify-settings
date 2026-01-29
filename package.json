@@ -39,7 +39,7 @@
     "use-places-autocomplete": "^4.0.1",
     "vite-plugin-checker": "^0.8.0",
     "web-vitals": "^2.1.4",
-    "yup": "^1.6.1"
+    "yup": "^1.7.1"
   },
   "type": "module",
   "scripts": {

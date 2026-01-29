@@ -7,10 +7,10 @@ import { MdOutlinePayments } from "react-icons/md";
 import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { FiMenu, FiX } from "react-icons/fi";
 import { logout } from "../Features/authSlice";
-import { RoundedLogo } from "./AlternateLogos";
 import { IoMdCall } from "react-icons/io";
 import { TfiDashboard } from "react-icons/tfi";
 import { CgProfile } from "react-icons/cg";
+import { LogoWithText } from "./Logo";
 const navLinks = [
     { to: "/dashboard", label: "Dashboard", icon: <TfiDashboard /> },
   { to: "/wastebills", label: "Waste bills", icon: <FaMoneyBillTrendUp /> },
@@ -37,11 +37,11 @@ export const UsernavBar = () => {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav className="p-4 bg-white shadow-md">
+    <nav className="p-4 bg-lightGreen shadow-md">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
         {/* Logo */}
         <Link to="/" aria-label="Home">
-          <RoundedLogo />
+          <LogoWithText />
         </Link>
 
         {/* Desktop Menu */}

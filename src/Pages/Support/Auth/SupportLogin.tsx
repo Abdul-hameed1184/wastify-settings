@@ -136,7 +136,7 @@ const SupportLogin:React.FC = () => {
             <ToastContainer 
        position="top-center"
        autoClose={5000}
-       hideProgressBar
+               hideProgressBar={true}
        newestOnTop={false}
        closeOnClick
        rtl={false}

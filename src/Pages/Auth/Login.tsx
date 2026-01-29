@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from "formik";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, Zoom, toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../../Features/authSlice";
@@ -55,7 +55,7 @@ const Login:React.FC = () => {
       console.log(values)
       SetLoading(true);
       axios
-        .post(baseURL + "auth/customer/login", values, {
+        .post(baseURL + "/auth/customer/login", values, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -67,7 +67,7 @@ const Login:React.FC = () => {
           if (!errorState) {
             const user = res.data.data.CustomerDetails;
             const userApartment = res.data.data.customerApartments;
-
+            console.log(res.data.data.customerDetails)
             // console.log("userInit", user);
             const token = res.data?.data?.authorisation.token;
             sessionStorage.setItem("SESSION_AUTH_TOKEN", token);
@@ -101,7 +101,20 @@ const Login:React.FC = () => {
 
   return (
     <main className=" m-0  md:bg-white p-0 md:p-4 md:flex  md:flex-row h-screen">
-        <ToastContainer />
+  <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Zoom}
+        hideProgressBar={true}
+      />
+
 
 
 
@@ -148,7 +161,7 @@ const Login:React.FC = () => {
 
       <div className="absolute md:relative bottom-0 left-0 right-0 md:flex-1 flex  md:justify-center md:items-center p-4  bg-white rounded-xl  m-4 md:m-0">
 
-          <div className="mt-2 w-full">
+          <div className="mt-2 w-full max-w-md">
             <form onSubmit={formik.handleSubmit} className="text-left">
           
             

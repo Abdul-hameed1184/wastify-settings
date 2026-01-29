@@ -18,8 +18,9 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <>
-      <Navbar />
-      <main className="w-full pt-32">
+
+      <main className="w-full pt-32 bg-lightGreen">
+              <Navbar />
         {children}
         <button className="fixed bottom-4 text-center bg-white rounded-xl p-2 right-4" onClick={changeView}>
           <div className="flex flex-row items-center">

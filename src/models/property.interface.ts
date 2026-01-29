@@ -13,5 +13,6 @@ export interface IProperty {
     propertyDescription: string;
     created_at: string;
     propertyTypeId: number;
+    apartments: IApartment[];
     
 }

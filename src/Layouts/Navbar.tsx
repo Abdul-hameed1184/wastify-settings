@@ -1,5 +1,5 @@
 import React, {  useState } from 'react'
-import { FaAngleUp, FaBars, FaTimes, FaUserTie, } from "react-icons/fa";
+import {  FaBars, FaTimes, FaUserTie, } from "react-icons/fa";
 import { TiTimes } from "react-icons/ti"
 import { Link, NavLink } from "react-router-dom";
 import {
@@ -10,7 +10,7 @@ import {
 import { Button } from '../Component/Button';
 import { LogoWithText } from '../Component/Logo';
 import { PiUsersLight } from 'react-icons/pi';
-import { TfiAngleUp } from 'react-icons/tfi';
+import { TfiAngleDown, TfiAngleUp } from 'react-icons/tfi';
 
 const Navbar:React.FC = () => {
 
@@ -43,7 +43,7 @@ const Navbar:React.FC = () => {
 
     const activeAuth = sessionStorage.getItem('SESSION_AUTH_TOKEN');
     return (
-        <nav className={`mt-0 fixed w-full h-20 md:h-20  bg-white shadow-lg flex items-center justify-between items-center  px-6  md:px-12 xl:px-12   text-black z-10  capitalize`}>
+        <nav className={`mt-0 fixed top-0 left-0 w-full h-20 md:h-20  bg-white shadow-lg flex items-center justify-between   px-6  md:px-12 xl:px-12   text-black z-10  capitalize`}>
             <Link to="/"  className='mt-3 md:mt-0'>
                 <div className="h-14 w-14">
                     <LogoWithText />
@@ -125,7 +125,7 @@ const Navbar:React.FC = () => {
                                          <Link to="login">Login</Link>
                             </Button>
                             <Button>
-                                <FaAngleUp className='text-black'/>
+                                         {!open ? <TfiAngleUp className='text-black' /> : <TfiAngleDown className='text-black' />}
                             </Button>
 
                 
@@ -207,7 +207,7 @@ const Navbar:React.FC = () => {
                             </Link>
                             </Button>
                             <Button className="hover:border-2 hover:border-white hover:shadow-green hover:shadow-outer" onClick={() => setOpen(!open)}>
-                                <TfiAngleUp className='text-black' />
+                                {!open ? <TfiAngleUp className='text-black' /> : <TfiAngleDown className='text-black' />}
                             </Button>
                                {open && (
         <div className="absolute right-0 mt-48 w-56  rounded-xl bg-white text-black shadow-lg border border-gray-200 z-50">

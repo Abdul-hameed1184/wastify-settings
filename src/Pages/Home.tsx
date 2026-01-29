@@ -180,8 +180,8 @@ const Home: React.FC = () => {
                   itemNumber={"1"}
                   titleText="Get Onboarded"
                   infolist={[
-                    "Your psp operators register your property on Wasteefy",
-                    "You'll receive links to your phoe number and property code"
+                    "Your psp operator registers your property on Wasteefy.",
+                    "You’ll receive bills linked to your phone number and property code."
                   ]} 
                   isOpen={openCustomer == 1} 
                   onToggle={() => setOpenCustomer(openCustomer === 1 ? null : 1)} />
@@ -189,8 +189,7 @@ const Home: React.FC = () => {
                   itemNumber={"2"}
                   titleText={"Login or Quickpay (No login required)"}
                   infolist={[
-                    "Your psp operators register your property on Wasteefy",
-                    "You'll receive links to your phoe number and property code"
+                    "Enter your registered phone number and last name as password to log in or use QuickPay."
                   ]} 
                       isOpen={openCustomer == 2} 
                   onToggle={() => setOpenCustomer(openCustomer === 2 ? null : 2)}
@@ -199,8 +198,8 @@ const Home: React.FC = () => {
                   itemNumber={"3"}
                   titleText="Pay & Stay Updated"
                   infolist={[
-                    "Your psp operators register your property on Wasteefy",
-                    "You'll receive links to your phoe number and property code"
+                    "Pay your waste bill securely and receive instant confirmation.",
+                    "Get SMS reminders so you never miss a payment."
                   ]}
                       isOpen={openCustomer == 3} 
                   onToggle={() => setOpenCustomer(openCustomer === 3 ? null : 3)}
@@ -215,8 +214,8 @@ const Home: React.FC = () => {
                   itemNumber={"1"}
                   titleText="Create an Operator Account"
                   infolist={[
-                    "Your psp operators register your property on Wasteefy",
-                    "You'll receive links to your phoe number and property code"
+                    "Register your business on Wasteefy to access the operator dashboard.",
+                    "This account is used to manage properties, customers, and billings."
                   ]}
                       isOpen={openOperator == 1} 
                   onToggle={() => setOpenOperator(openOperator === 1 ? null : 1)}
@@ -226,8 +225,8 @@ const Home: React.FC = () => {
                   itemNumber={"2"}
                   titleText={"Register Properties & Customers"}
                   infolist={[
-                    "Your psp operators register your property on Wasteefy",
-                    "You'll receive links to your phoe number and property code"
+                    "Add properties (estates or buildings) and register households under each property using their phone numbers.",
+                    "Each property is assigned a unique property code for billing and payments."
                   ]}
                     isOpen={openOperator == 2} 
                   onToggle={() => setOpenOperator(openOperator === 2 ? null : 2)}
@@ -237,8 +236,7 @@ const Home: React.FC = () => {
                   itemNumber={"3"}
                   titleText={"Generate & Send Bills"}
                   infolist={[
-                    "Your psp operators register your property on Wasteefy",
-                    "You'll receive links to your phoe number and property code"
+                    "Create waste bills and send them to customers via the Wasteefy platform."
                   ]}
                     isOpen={openOperator == 3} 
                   onToggle={() => setOpenOperator(openOperator === 3 ? null : 3)}
@@ -248,8 +246,7 @@ const Home: React.FC = () => {
                   itemNumber={"4"}
                   titleText={"Track Payments"}
                   infolist={[
-                    "Your psp operators register your property on Wasteefy",
-                    "You'll receive links to your phoe number and property code"
+                    "Monitor payments in real time and access transaction history per property or customer."
                   ]} 
                   
                     isOpen={openOperator ==4} 

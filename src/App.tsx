@@ -97,6 +97,7 @@ const App: React.FC = () => {
         pauseOnHover
         theme="light"
         transition={Zoom}
+        hideProgressBar={true}
       />
 
       <Routes>

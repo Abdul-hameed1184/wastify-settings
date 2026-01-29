@@ -24,8 +24,9 @@ import { IApartment } from "../../models/apartment.interface";
 import OccupancyStatusBadge from "../../utils/OccupyStatusBadge";
 import { PayBillModal } from "../../Component/Modal/PayBillModal";
 import { useQuery } from "@tanstack/react-query";
+import {ApartmentsTable} from "../../Component/ApartmentTable";
 
-const Wastebills: React.FC = () => {
+const Wastebillss: React.FC = () => {
   const customer: ICustomer = JSON.parse(
     sessionStorage.getItem("AUTH_USERDETAILS") || "{}"
   );
@@ -155,9 +156,7 @@ const { data:apartmentBills } = useQuery({
 
       </div>
       <div className="flex flex-col items-center mb-6">
-        {/* <Link to="/profile">
-          <IoChevronBack size={28} className="bg-green text-white rounded-xl p-1" />
-        </Link> */}
+
         <h1 className="text-3xl font-semibold text-gray-700 ml-4 text-center">Waste Bills</h1>
         <p className="text-center font-semibold">Property Code - {apartment.propertyCode}</p>
       </div>
@@ -227,7 +226,6 @@ const { data:apartmentBills } = useQuery({
             </TableBody>
           </Table>
 
-          {/* Pagination */}
           {apartment && apartmentBills?.data?.length > 0 && (
             <div className="flex justify-between items-center mt-6 p-4 w-100">
               <button
@@ -272,5 +270,13 @@ const { data:apartmentBills } = useQuery({
     </main>
   );
 };
+
+const Wastebills:React.FC = () => {
+  return (
+    <div className="p-4">
+      {/* <ApartmentsTable />  */}
+    </div>
+  )
+}
 
 export default Wastebills;

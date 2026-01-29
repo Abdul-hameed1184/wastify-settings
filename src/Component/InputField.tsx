@@ -18,6 +18,7 @@ type Props = {
   list?: string;
   disabled?: boolean;
   className?: string;
+  label?: string;
 
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
@@ -33,6 +34,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
     {
       id,
       type = 'text',
+      label,
       name,
       pattern,
       maxLength,
@@ -87,6 +89,8 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
     };
 
     return (
+      <div className="flex flex-col mb-4">
+        {label && <label htmlFor={name} className="text-gray-500">{label}</label>}
       <div className="relative w-full">
         {leftIcon && (
           <span
@@ -159,6 +163,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
             {error}
           </p>
         )}
+      </div>
       </div>
     );
   }

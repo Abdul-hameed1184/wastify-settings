@@ -1,5 +1,6 @@
 export interface ICustomerDashboard {
-    totalBills: number;
-    customerFullname: string;
-    totalApartment: number;
+customerFullname: string;
+  totalBills: string;
+  totalApartment: number;
+ 
 }

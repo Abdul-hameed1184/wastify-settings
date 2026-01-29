@@ -18,4 +18,12 @@ const OccupancyStatusBadge: React.FC<{ status: number }> = ({ status }) => {
   );
 };
 
+export const LabelBadge: React.FC<{ label: string, className?: string }> = ({ label, className }) => {
+  return (
+    <span className={`inline-block px-4 py-2 text-xl font-medium rounded-full bg-blue-100 text-blue-600 ${className}`}>
+      {label}
+    </span>
+  );
+}
+
 export default OccupancyStatusBadge;
