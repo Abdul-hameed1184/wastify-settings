@@ -1,3 +1,5 @@
+import { IApartment } from "./apartment.interface";
+
 export interface IProperty {
     id: number;
     propertyAddress: string;
@@ -13,6 +15,6 @@ export interface IProperty {
     propertyDescription: string;
     created_at: string;
     propertyTypeId: number;
-    apartments: IApartment[];
+    apartments?: IApartment[];
     
 }

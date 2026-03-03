@@ -57,18 +57,17 @@ const OperatorLogin:React.FC = () => {
     onSubmit: (values) => {
       SetLoading(true);
       axios
-        .post(baseURL + "auth/login/admin-psp-operator", values, {
+        .post(baseURL + "/auth/login/admin-psp-operator", values, {
           headers: {
             "Content-Type": "application/json",
           },
         })
         .then((res) => {
-          console.log(res);
 
           const errorState = res.data?.errorState;
           const message = res?.data?.message;
           const pspOperatorData = res.data?.data?.PspOperatorData?.[0]; // Access the first object in the array
-
+ 
           if (pspOperatorData && !errorState) {
             // Ensure pspOperatorData exists and errorState is false
             const {
@@ -107,7 +106,7 @@ const OperatorLogin:React.FC = () => {
             sessionStorage.setItem("SESSION_AUTH_TOKEN", token);
             sessionStorage.setItem("AUTH_ADMIN_DETAILS", JSON.stringify(user));
 
-            toast.success(message, { autoClose: 3000 });
+            // toast.success(message, { autoClose: 3000 });
 
           if(pspOperatorData)
             setTimeout(() => {
@@ -187,7 +186,7 @@ const OperatorLogin:React.FC = () => {
 
       <div className="absolute md:relative bottom-0 left-0 right-0 md:flex-1 flex  md:justify-center md:items-center p-4  bg-white rounded-xl  m-4 md:m-0">
 
-          <div className="mt-2 w-full">
+          <div className="mt-2 w-full max-w-md">
             <form onSubmit={formik.handleSubmit} className="text-left">
           
             
@@ -200,7 +199,7 @@ const OperatorLogin:React.FC = () => {
                 <Input
                   id="email"
                   icon={<PiUser />}
-                  placeholder={"email"}
+                  placeholder={"Email"}
                   type={"email"}
                   name={"email"}
                   onChange={formik.handleChange}

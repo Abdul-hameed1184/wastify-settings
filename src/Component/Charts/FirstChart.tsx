@@ -1,37 +1,71 @@
-import React from 'react'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React from "react";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
+import { Naira } from "../../utils/format";
 
 type Props = {
-    revenue: any[];
-}
-const FirstChart:React.FC<Props> = ({revenue}) => {
-    return (
-        <div style={{ width: '100%' }} className='bg-lightBackground px-5 py-3'>
-       
-            <p className=' font-Poppins text-green text-2xl leading-5 font-semibold m-4'>Monthly sales</p>
+  revenue: any[];
+};
 
-            <ResponsiveContainer width="100%" height={412}>
-                <AreaChart
-                    width={900}
-                    height={400}
-                    data={revenue}
-                    syncId="anyId"
-                    margin={{
-                        top: 10,
-                        right: 30,
-                        left: 0,
-                        bottom: 0,
-                    }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="billPeriod" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area type="monotone" dataKey="totalBillAmount" stroke="#96C63D" fill="#96C63D" />
-                </AreaChart>
-            </ResponsiveContainer>
-        </div>
-    )
-}
+const FirstChart: React.FC<Props> = ({ revenue }) => {
+  return (
+    <div style={{ width: "100%" }} className="px-5 py-3 border border-gray-100 border-2 rounded-xl">
+      <p className="text-black text-2xl leading-5 font-bold m-4">
+        Monthly sales
+      </p>
 
-export default FirstChart
+      <ResponsiveContainer width="100%" height={412}>
+        <BarChart
+          data={revenue}
+          margin={{ top: 10, right: 30, left: 20, bottom: 20 }}
+        >
+          {/* Grid */}
+          {/* <CartesianGrid strokeDasharray="3 3" /> */}
+
+          {/* Horizontal axis (X-axis) */}
+          {/* <XAxis
+            dataKey="billPeriod"
+            tick={{ fill: "#666" }}
+            axisLine={{ stroke: "#ccc" }}
+            tickLine={false}
+          /> */}
+        <XAxis
+  dataKey="monthWord"
+  tickFormatter={(value, index) => {
+    const year = revenue[index]?.year;
+    return `${value.slice(0, 3)}, ${year}`;
+  }}
+    tick={{
+    fontSize: 10,   // 👈 smaller font
+    fill: "#666"
+  }}
+  axisLine={{ stroke: "#ccc" }}
+  tickLine={false}
+/>
+
+  <YAxis
+    tickFormatter={(value) => `₦${value.toLocaleString()}`}
+    tick={{ fontSize: 10 }}
+  />
+
+          {/* Tooltip */}
+          <Tooltip
+  formatter={(value: number) => [`${Naira.format(value)}`, "Revenue"]}
+/>
+
+          {/* Bars */}
+          <Bar dataKey="totalBillAmount" fill="#96C63D" radius={[6, 6, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
+
+export default FirstChart;

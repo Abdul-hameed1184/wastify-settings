@@ -29,8 +29,8 @@ const Dashboard: React.FC = () => {
          {dashboard &&   <ProfileCard dashBoard={dashboard} />}
  
   
-{/* 
-        <RecentActivities /> */}
+
+        <RecentActivities />
 
     </div>
   );

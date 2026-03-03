@@ -1,22 +1,21 @@
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
-const api =  axios.create({
-    baseURL :'https://api2staging.wasteefy.com/api/',
-    headers: {
-        "Content-type": "application/json",
-        "Accept": "*/*"
-      }
-})
+const api = axios.create({
+  baseURL: `${API_URL}/api`,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "*/*",
+  },
+});
 
 
 
 api.interceptors.request.use((config) => {
-  const sessionToken = sessionStorage.getItem("SESSION_AUTH_TOKEN");
-
-  if (sessionToken) {
-    config.headers.Authorization = `Bearer ${sessionToken}`;
+  const token = sessionStorage.getItem("SESSION_AUTH_TOKEN");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-
   return config;
 });
 

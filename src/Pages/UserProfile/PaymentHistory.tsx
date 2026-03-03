@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { getBillingsPaymentByApartmentId } from '../../api/property/apartment.service';
 import { IPaginatedBillPayment } from '../../models/paginatedBillPayment';
-import { IApartmentBillingTransaction } from '../../models/billdata.interface';
-import { Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 'flowbite-react';
-import PaymentStatusBadge from '../../utils/PaymentStatusBadge';
-import { Naira } from '../../utils/format';
 
 import { IApartment } from '../../models/apartment.interface';
-
-
-import OccupancyStatusBadge from '../../utils/OccupyStatusBadge';
+import { useQuery } from '@tanstack/react-query';
+import {properties} from "../../models/propertyexample"
+import PropertyApartment from '../../Component/Modal/PropertyApartment';
 
 const PaymentHistory:React.FC = () => {
     const customerApartments:IApartment[] = JSON.parse(
@@ -25,6 +21,13 @@ const PaymentHistory:React.FC = () => {
     const [ modalDetails, setModalDetails ] = useState<boolean>(false)
    // const [ billpayment, setBillPayment ] = useState<IApartmentBillingTransaction>();
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const { data:apartmentBills } = useQuery({
+      queryKey: ['apartmentBills', apartment.id],
+      queryFn: async () => {
+        const response = await getBillingsPaymentByApartmentId(apartment.id);
+        return response.data.data;
+      }
+    })
 
 useEffect(() => {
   (async () => {
@@ -74,8 +77,17 @@ useEffect(() => {
 
 
     return (
-        <div className='min-h-screen bg-gray-50 py-6 px-4 md:px-10'>
-         <h2>Payment History</h2>
+        <div className='min-h-screen bg-gray-50 py-6 px-4 md:px-10 '>
+         <div>
+            <h2>Apartments</h2>
+            {properties && properties[0].apartments && properties[0].apartments.map((apartment:IApartment, index) => <PropertyApartment key={index} apartment={apartment} />)}
+         </div>
+             {apartmentBills &&<div>
+            <h3>{apartmentBills?.address}</h3>
+         {/* apartmentBills.data.map((item, index) => (
+              <PaymentHistoryCard key={index} data={item} />
+            )) */}
+         </div>}
                           
         </div>
     )

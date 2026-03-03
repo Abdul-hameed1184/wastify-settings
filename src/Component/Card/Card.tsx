@@ -8,7 +8,7 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ children, className = '', variant = 'default', icon }) => {
-  const baseStyles = "border border-1  border-gray-200/50 shadow-md hover:shadow-lg  rounded-xl p-6 ";
+  const baseStyles = "border border-1 border-gray-200/50 shadow-md hover:shadow-lg  rounded-xl p-6 ";
   
   const variants = {
     default: "bg-white/10 border-white/20",

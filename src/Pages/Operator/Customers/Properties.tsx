@@ -23,6 +23,9 @@ import InfoModal from "../../../Component/Modal/InfoModal";
 import DropdownMenu from "../../../Component/DropdownMenu";
 import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";
 import { Button } from "../../../Component/Button";
+import Card from "../../../Component/Card/Card";
+import { TbCurrencyNaira } from "react-icons/tb";
+import { IoEllipsisVertical } from "react-icons/io5";
 
 
 const Properties:React.FC = () => {
@@ -61,18 +64,63 @@ const Properties:React.FC = () => {
 
   return (
 
-    <main>
-      <div className="p-5">
-        <ParagraphLargeGreen content={"Property Records"} />
-        <div>
-        <div className="grid justify-items-end my-8">
-          <div className="w-full text-right">
-      <Button icon={<FaPlusCircle />
-} type="button"  onClick={() => { setOpenCreateProperty(!openCreateProperty) } } loading={false}>{"Add Property"}</Button>
-      </div>
-      </div>
-          
+          <div className="flex flex-col p-4">
+        <h3 className="font-semibold text-xl leading-[40px] tracking-[0] my-0">Properties List</h3>
+        <p className="text-gray-500 text-lg my-0">{"Here's what's happening with your waste management account."}</p>
+
+    
+      <div className="flex items-center justify-between mb-4 gap-4">
+        <Card className="flex-1 max-w-sm">
+          <div className="flex flex-row justify-between">
+            <div>
+              <p className="font-semibold flexjustify-between text-gray-500"><span>Total Properties</span></p>
+              <p className="font-semibold text-2xl text-black py-2">{allProperties?.data.data.total}</p>
+
+            </div>
+
+            <span className="bg-primary/10 flex items-center justify-center text-primary p-4 rounded-lg text-2xl"><TbCurrencyNaira /></span>
+          </div>
+          {/* <h3 className="flex justify-between"><NavLink to="/transactions" className="text-primary hover:bg-primary/70 hover:text-white p-1 text-sm rounded-md ">{"View Transactions"}</NavLink><span className="rounded-lg bg-red-200 p-1 text-sm text-red-700">Overdue</span></h3> */}
+
+        </Card>
+
         </div>
+
+       { allProperties?.data.data.data.length > 0 &&  
+                  <div className="hidden md:block overflow-x-auto rounded-xl border border-gray-200 m-4 overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-100">
+            <thead className="bg-gray-300/50">
+              <tr>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">S/N</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Property Address</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Ward</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Owner</th>
+                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Property Code</th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">No Of Apartments</th>
+
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>    
+            <tbody className="bg-white divide-y divide-gray-50">
+              {allProperties && allProperties.data.data.data.map((property, index) => (
+                <tr key={index} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-semibold text-secondary">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-600">{property.propertyAddress}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">{property.wardName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">{property.ownerFullname}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">{property.propertyCode}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
+                    {property.noOfDistinctApartment}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-sm text-gray-500">
+                    <IoEllipsisVertical />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+       }
 
 {  allProperties?.data.data.data.length > 0 &&      <div className="overflow-x-auto font-Poppins mt-3">
 
@@ -207,25 +255,22 @@ const Properties:React.FC = () => {
 
 
       </div>              
-  { 
-  openCreateProperty &&   <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
-}
+//   { 
+//   openCreateProperty &&   <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
+// }
 
 
-      {viewDelete && (
-        <InfoModal
-          openModal={viewDelete}
-          setOpenModal={setViewDelete}
-          header={"Delete Property"}
-          content={"Do you really want to delete this property? Once deleted, it cannot be recovered."}
-          buttonName={"Delete Property"}
-          handleConfirm={handleDelete}
-        />
-      )} 
+      // {viewDelete && (
+      //   <InfoModal
+      //     openModal={viewDelete}
+      //     setOpenModal={setViewDelete}
+      //     header={"Delete Property"}
+      //     content={"Do you really want to delete this property? Once deleted, it cannot be recovered."}
+      //     buttonName={"Delete Property"}
+      //     handleConfirm={handleDelete}
+      //   />
+      // )} 
 
-
-
-    </main>
 
   );
 };

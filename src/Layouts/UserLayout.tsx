@@ -113,7 +113,7 @@ const UserLayout: React.FC = () => {
 
           {/* Overlay (mobile) */}
           {open && (
-            <div
+            <button
               onClick={() => setOpen(false)}
               className="fixed inset-0 bg-black/40 z-30 md:hidden"
             />
