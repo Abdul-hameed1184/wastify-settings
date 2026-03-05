@@ -5,7 +5,6 @@ export const tail = {
     "./src/**/*.{js,jsx,ts,tsx}",
     './Component/**/*.{js,ts,jsx,tsx,mdx}',
     './Pages/**/*.{js,ts,jsx,tsx,mdx}',
-    'node_modules/flowbite-react/lib/esm/**/*.js',
   ],
   theme: {
     fontSize: {
@@ -53,7 +52,7 @@ export const tail = {
     },
   },
   plugins: [
-    import('flowbite/plugin')
+    
   ],
 }
 

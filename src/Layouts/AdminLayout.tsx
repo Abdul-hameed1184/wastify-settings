@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect } from 'react'
 import AdminNavbar from './OperatorNavbar'
 import AdminSidebar from './OperatorSidebar'
-import { ToastContainer, Zoom } from 'react-toastify';
+import { Zoom } from 'react-toastify';
 import SuperAdminNavbar from './SuperAdminNavbar';
 import SuperAdminSidebar from './SuperAdminSidebar';
 
@@ -18,7 +18,7 @@ const AdminLayout:React.FC<Props> = ({children}) => {
     return (
         <div>
             <SuperAdminNavbar />
-            <ToastContainer 
+            {/* <ToastContainer 
        position="top-center"
        autoClose={3000}
         hideProgressBar={true}
@@ -30,7 +30,7 @@ const AdminLayout:React.FC<Props> = ({children}) => {
        pauseOnHover
        theme="light"
        transition={Zoom}
-      />
+      /> */}
             <div className="flex">
             
                     <SuperAdminSidebar />

@@ -66,7 +66,7 @@ const Dash = () => {
 
   return (
     <main className="px-4">
-       <ToastContainer 
+       {/* <ToastContainer 
        position="top-center"
        autoClose={5000}
                hideProgressBar={true}
@@ -78,7 +78,7 @@ const Dash = () => {
        pauseOnHover
        theme="light"
        transition={Zoom}
-      />
+      /> */}
 {   dash &&    
   <div>
     <div className="flex flex-col lg:flex-row gap-5">

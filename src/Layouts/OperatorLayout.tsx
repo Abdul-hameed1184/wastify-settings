@@ -1,8 +1,7 @@
-import React, { ReactNode, useState } from 'react'
+import React, { useState } from 'react'
 
 import { IoPeople, IoWalletOutline } from 'react-icons/io5';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { ToastContainer, Zoom } from 'react-toastify';
 import { LogoWithText } from '../Component/Logo';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import { TfiDashboard } from 'react-icons/tfi';
@@ -15,7 +14,7 @@ import { logout } from '../Features/authSlice';
 
 
 const navLinks = [
-  { to: "/", label: "Dashboard", icon: <TfiDashboard /> },
+  { to: "/dashboard", label: "Dashboard", icon: <TfiDashboard /> },
   { to: "/revenue", label: "Revenue", icon: <FaMoneyBill /> },
   { to: "/properties", label: "Properties", icon: <PiBuildingsBold /> },
   { to: "/transactions", label: "Transactions", icon: <IoWalletOutline /> },
@@ -36,7 +35,7 @@ const OperatorLayout:React.FC = () => {
     return (
         <>
         
-     <ToastContainer position="top-center" autoClose={3000} transition={Zoom} />
+
 
       <div className="min-h-screen bg-lightGreen flex flex-col">
         {/* ===== Header ===== */}

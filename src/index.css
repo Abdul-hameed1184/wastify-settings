@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 
+
 * {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
@@ -12,7 +13,7 @@
   letter-spacing: 0;
 }
 
-h1 {
+/* h1 {
   font-size: 2rem;
 }
 
@@ -34,7 +35,7 @@ h5 {
 
 h6 {
   font-size: 0.625rem;
-}
+} */
 
 
 main.admin-sidebar {

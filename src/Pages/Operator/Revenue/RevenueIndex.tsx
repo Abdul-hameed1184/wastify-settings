@@ -1,7 +1,3 @@
-import React from 'react'
-import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableRow } from 'flowbite-react';
-import AdminCard from '../../../Component/Card/AdminCard';
-import { Paragraph2XlGreenMargin } from '../../../Component/Paragraph';
 import FirstChart from '../../../Component/Charts/FirstChart';
 import FirstPieChart from '../../../Component/Charts/FirstPieChart';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +5,6 @@ import { getOperatorRevenue, getPspOperatorDashboard } from '../../../api/psp-op
 import { IOperator } from '../../../models/operator.interface';
 import Loader from '../../../Component/Loader';
 import { Naira } from '../../../utils/format';
-import Card from '../../../Component/Card/Card';
 import { TbCurrencyNaira } from 'react-icons/tb';
 
 
@@ -34,7 +29,7 @@ const RevenueIndex = () => {
           return data.data.data;
         }
       });
-    const totalAmount = revenue ? revenue.map(item => item.totalAmount).reduce((acc, curr) => acc + curr, 0) : 0;
+    // const totalAmount = revenue ? revenue.map(item => item.totalAmount).reduce((acc, curr) => acc + curr, 0) : 0;
     if (isLoading) {
         return <Loader />;
     }

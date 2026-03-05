@@ -8,7 +8,7 @@ import {
   ParagraphExtraSmallError,
   ParagraphSmall2,
 } from "../../../Component/Paragraph";
-import { InputFieldGray } from "../../../Component/InputField";
+import Input, { InputFieldGray } from "../../../Component/InputField";
 import { ButtonsPrimary } from "../../../Component/Buttons";
 import { AdminLogo } from "../../../Component/AlternateLogos";
 import axios from "axios";
@@ -685,7 +685,7 @@ type Err = {
       <div className="flex flex-col lg:flex-row justify-around py-2">
         <div className="hidden lg:block w-2/5">
           {/* <img src="Images/admin.png" alt="icon" srcSet="" /> */}
-          <ToastContainer />
+ 
           <div className="py-10 px-10 flex gap-3">
             <div className="">
               <div className="rounded-full bg-grayRounded w-12 h-12 px-5 py-3 text-white">

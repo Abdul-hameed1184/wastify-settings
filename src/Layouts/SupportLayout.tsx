@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from 'react'
-import { ToastContainer, Zoom } from 'react-toastify';
+import { Zoom } from 'react-toastify';
 import SupportNavbar from './SupportNavbar';
 import SupportSidebar from './SupportSidebar';
 
@@ -17,7 +17,7 @@ const SupportLayout:React.FC<Props> = ({children}) => {
     return (
         <div>
             <SupportNavbar />
-            <ToastContainer 
+            {/* <ToastContainer 
        position="top-center"
        autoClose={3000}
                hideProgressBar={true}
@@ -29,7 +29,7 @@ const SupportLayout:React.FC<Props> = ({children}) => {
        pauseOnHover
        theme="light"
        transition={Zoom}
-      />
+      /> */}
             <div className="flex">
             
                     <SupportSidebar />

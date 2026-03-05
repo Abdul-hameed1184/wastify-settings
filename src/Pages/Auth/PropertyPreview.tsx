@@ -29,7 +29,7 @@ const PropertyPreview = () => {
                 <div className="hidden md:block md:p-10">
                     <ParagraphLargeWhite content={"Sign Up"} />
                 </div>
-                <ToastContainer />
+
                 <div className="md:mt-1 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg md:mb-20">
                     <div className="flex justify-start mt-6 ml-4 md:mt-2">
                         <Link to="/propertyunit">

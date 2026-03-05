@@ -2,7 +2,7 @@ import React,{ useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {  useFormik } from "formik";
-import { ToastContainer, Zoom, toast } from "react-toastify";
+import { Zoom, toast } from "react-toastify";
 import axios from "axios";
 import Input from "../../../Component/InputField";
 
@@ -130,19 +130,7 @@ const OperatorLogin:React.FC = () => {
     <div className="md:p-4 p-0 h-screen ">
 
         <main className="  md:bg-white p-0 md:p-4 md:flex  md:flex-row h-screen">
-                    <ToastContainer 
-       position="top-center"
-       autoClose={5000}
-       hideProgressBar
-       newestOnTop={false}
-       closeOnClick
-       rtl={false}
-       pauseOnFocusLoss
-       draggable
-       pauseOnHover
-       theme="light"
-       transition={Zoom}
-      />
+
 
 
     {/* Overlay */}

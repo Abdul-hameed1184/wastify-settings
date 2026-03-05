@@ -88,7 +88,7 @@ const OperatorForgotPassword:React.FC = () => {
               Reset Password{" "}
               <span className="text-green">Wasteefy Management System</span>
             </p>
-            <ToastContainer />
+            {/* <ToastContainer /> */}
 
             <div className="w-full lg:w-4/5">
               <ParagraphSmall2 content={"Email"} />

@@ -199,11 +199,11 @@ const Wastebills: React.FC = () => {
                         <PaymentStatusBadge status={item.paymentStatus} />
                       </td>
                       <td className="px-6 py-5">
-                        <ButtonsPrimary
+                     { !item.paymentStatus ?   <ButtonsPrimary
                           name="Pay"
                           disabled={Number(item.billAmount) <= 0}
                           onClick={() => handleBillModal(item)}
-                        />
+                        />: <span className="text-gray-500 italic">Already Paid</span>}
                       </td>
                     </tr>
                   ))
@@ -217,7 +217,7 @@ const Wastebills: React.FC = () => {
                         </svg>
                       </div>
                       <h2 className="text-lg font-semibold text-gray-700">No pending bills found</h2>
-                      <p className="text-sm text-gray-500 mt-1">You're all caught up on your payments!</p>
+                      <p className="text-sm text-gray-500 mt-1">{"You're all caught up on your payments!"}</p>
                     </div>
                   </td>
                 </tr>

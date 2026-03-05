@@ -284,7 +284,7 @@ const PropertyAccount:React.FC = () => {
   return (
     <main className="mt-4 mx-4 md:m-0 md:bg-green md:h-screen md:bg-bgdesktop-pattern md:bg-cover">
       <div className="md:mt-0 md:py-5 md:px-10 md:flex md:justify-between">
-        <ToastContainer />
+       
         <div className="hidden md:block md:p-10">
           <ParagraphLargeWhite content={"Sign Up"} />
         </div>

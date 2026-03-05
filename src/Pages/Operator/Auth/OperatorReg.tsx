@@ -685,7 +685,7 @@ type Err = {
       <div className="flex flex-col lg:flex-row justify-around py-2">
         <div className="hidden lg:block w-2/5">
           {/* <img src="Images/admin.png" alt="icon" srcSet="" /> */}
-          <ToastContainer />
+          {/* <ToastContainer /> */}
           <div className="py-10 px-10 flex gap-3">
             <div className="">
               <div className="rounded-full bg-grayRounded w-12 h-12 px-5 py-3 text-white">

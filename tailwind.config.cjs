@@ -4,7 +4,6 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
     './Component/**/*.{js,ts,jsx,tsx,mdx}',
     './Pages/**/*.{js,ts,jsx,tsx,mdx}',
-    'node_modules/flowbite-react/lib/esm/**/*.js',
   ],
   theme: {
     fontFamily: {
@@ -52,7 +51,7 @@ module.exports = {
     },
   },
   plugins: [
-    require('flowbite/plugin'),
+
   ],
 }
 

@@ -1,8 +1,8 @@
 import React from "react";
-import { Card } from "flowbite-react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Card from "../Card/Card";
 
 const tips = [
   {

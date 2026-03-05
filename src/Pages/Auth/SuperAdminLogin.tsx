@@ -181,7 +181,7 @@ const SuperAdminLogin:React.FC = () => {
   return (
 <main className="m-4 md:m-0 bg-slate-900 md:h-screen bg-bgdesktop-pattern md:bg-cover">
   <div className="md:p-10 flex items-center justify-center min-h-screen">
-    <ToastContainer />
+    {/* <ToastContainer /> */}
 
 <div className="mt-2 flex justify-center bg-white rounded-md max-w-2xl w-full p-6">
 {    !formType  ?

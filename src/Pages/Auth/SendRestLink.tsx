@@ -65,7 +65,7 @@ const SendRestLink = () => {
     return (
         <main className='mt-4 mx-4 md:m-0 md:bg-green md:h-screen md:bg-cover'>
             <div className="md:mt-0 md:py-5 md:px-10 ">
-                <ToastContainer />
+                {/* <ToastContainer /> */}
                 <div className=" flex justify-start w-20 h-20">
                     <LogoWhite />
                 </div>

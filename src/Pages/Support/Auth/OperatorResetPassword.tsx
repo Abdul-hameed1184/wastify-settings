@@ -102,7 +102,7 @@ const AdminResetPassword:React.FC = () => {
               Reset Password{" "}
               <span className="text-green">Wasteefy Management System</span>
             </p>
-            <ToastContainer />
+
 
             <div className="my-4 mx-4 relative w-full lg:w-4/5">
               <input

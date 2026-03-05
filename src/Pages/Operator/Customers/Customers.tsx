@@ -1,12 +1,4 @@
 import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeadCell,
-  TableRow,
-} from "flowbite-react";
 import { ParagraphLargeGreen } from "../../../Component/Paragraph";
 import { ButtonsPrimaryIcon } from "../../../Component/Buttons";
 import Loader from "../../../Component/Loader";
@@ -28,7 +20,7 @@ const Customers: React.FC = () => {
   const [customerApartments, setCustomerApartments] = useState<IApartment[]>();
   const [ openViewCustomer, setOpenViewCustomer ] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
-  const [ autoX, setAutoX ] = useState<boolean>(false)
+  // const [ autoX, setAutoX ] = useState<boolean>(false)
 
 
   const { data: allcustomers, isLoading, isError } = useQuery({
@@ -65,15 +57,15 @@ const comp = <div>
               <div className="flex justify-between items-center">
             </div>
             {isError && <p className="text-red-500">Error loading apartments</p>}
-            <Table striped>
-              <TableHead className="font-Poppins text-lg capitalize text-white bg-green dark:text-white">
-                <TableHeadCell>S/N</TableHeadCell>
-                <TableHeadCell>Apartment Type</TableHeadCell>
-                <TableHeadCell>Description</TableHeadCell>
-              </TableHead>
-              <TableBody className="font-Poppins text-xl">
+            <table className="table-auto w-full">
+              <thead className="font-Poppins text-lg capitalize text-white bg-green dark:text-white">
+                <th className="p-3">S/N</th>
+                <th className="p-3">Apartment Type</th>
+                <th className="p-3">Description</th>
+              </thead>
+              <tbody className="font-Poppins text-xl">
                 {customerApartments && customerApartments.map((apartment:IApartment, index) => (
-                  <TableRow
+                  <tr
                     key={index}
                     className={
                       index % 2 === 0
@@ -81,13 +73,13 @@ const comp = <div>
                         : "bg-white dark:border-gray-700 dark:bg-gray-800"
                     }
                   >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{apartment.apartmentTypeName}</TableCell>
-                    <TableCell>{apartment.propertyAddress}</TableCell>
-                  </TableRow>
+                    <td className="p-3">{index + 1}</td>
+                    <td className="p-3">{apartment.apartmentTypeName}</td>
+                    <td className="p-3">{apartment.propertyAddress}</td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table> 
+              </tbody>
+            </table> 
 </div>
 
 
@@ -118,20 +110,20 @@ const comp = <div>
 
         {(page && allcustomers) && (
           <div className="overflow-x-auto font-Poppins mt-3">
-            <Table striped>
-              <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
-                {/* <TableHeadCell>Property ID</TableHeadCell> */}
-                <TableHeadCell>Customer Name</TableHeadCell>
-                {/* <TableHeadCell>LGA</TableHeadCell> */}
-                <TableHeadCell>Phone Number</TableHeadCell>
-                {/* <TableHeadCell>Property code</TableHeadCell> */}
+            <table className="table-auto">
+              <thead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
+                {/* <th>Property ID</th> */}
+                <th className="p-3">Customer Name</th>
+                {/* <th>LGA</th> */}
+                <th className="p-3">Phone Number</th>
+                {/* <th>Property code</th> */}
             
-                <TableHeadCell>Details</TableHeadCell>
-              </TableHead>
-              <TableBody className=" font-Poppins text-xl ">
+                <th className="p-3">Details</th>
+              </thead>
+              <tbody className=" font-Poppins text-xl ">
                 {
                   allcustomers.data.data.data.map((item: Customerx, index) => (
-                    <TableRow
+                    <tr
                       className={
                         index % 2 === 0
                           ? "odd:bg-tableBackground"
@@ -140,15 +132,15 @@ const comp = <div>
                       key={index}
                     >
                       {/* <TableCell>{item.id}</TableCell> */}
-                      <TableCell>
+                      <td>
                         {item.customerFullname}{" "}
-                      </TableCell>
+                      </td>
                       {/* <TableCell>{item.lgaName} </TableCell> */}
-                      <TableCell>{item.customerPhone}</TableCell>
+                      <td>{item.customerPhone}</td>
                       {/* <TableCell>{item.propertyCode}</TableCell> */}
     
                      
-                      <TableCell onClick={() => viewCustomer(item.customerId)}>
+                      <td onClick={() => viewCustomer(item.customerId)}>
             
                         
                         {/* <Link
@@ -162,12 +154,12 @@ const comp = <div>
                           />
                         </Link> */}
                         <GrOverview />
-                      </TableCell>
+                      </td>
                       {/* <TableCell> ... </TableCell> */}
-                    </TableRow>
+                    </tr>
                   ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
             {/* Pagination */}
             <div className="flex justify-center items-center h-20 my-10 w-full ">
               <div className="w-full h-10 flex items-center justify-center rounded-md px-5">

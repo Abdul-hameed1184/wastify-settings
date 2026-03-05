@@ -36,7 +36,7 @@ const UserLayout: React.FC = () => {
 
   return (
     <>
-      <ToastContainer position="top-center" autoClose={3000} transition={Zoom} />
+      {/* <ToastContainer position="top-center" autoClose={3000} transition={Zoom} /> */}
 
       <div className="min-h-screen bg-lightGreen flex flex-col">
         {/* ===== Header ===== */}

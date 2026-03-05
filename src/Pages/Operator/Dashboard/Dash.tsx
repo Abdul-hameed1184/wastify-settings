@@ -1,52 +1,52 @@
 import { useState } from "react";
 import { getPspOperatorDashboard } from "../../../api/psp-operator/psp-operator.service";
 import Loader from "../../../Component/Loader";
-import { formatDateWithSuffix, Naira } from "../../../utils/format";
+import { Naira } from "../../../utils/format";
 import { useQuery } from "@tanstack/react-query";
 import Card from "../../../Component/Card/Card";
-import { NavLink } from "react-router-dom";
 import { TbCurrencyNaira, TbUsersGroup } from "react-icons/tb";
 import { PiBuildingsBold } from "react-icons/pi";
-import { IoIosArrowRoundBack, IoIosArrowRoundForward } from "react-icons/io";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 
 
 const Dash = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
-  const operator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const operatorData = sessionStorage.getItem("AUTH_ADMIN_DETAILS");
+  const operator = operatorData ? JSON.parse(operatorData) : null;
 
 
 
-  const updateDateTime = () => {
-    const now = new Date();
 
-    // Format date as "23 January 2023"
-    const dateOptions: Intl.DateTimeFormatOptions = { day: "2-digit", month: "long", year: "numeric" };
-    const formattedDate = now.toLocaleDateString("en-GB", dateOptions);
+  // const updateDateTime = () => {
+  //   const now = new Date();
 
-    // Format time as "14:23:45"
-    const timeOptions: Intl.DateTimeFormatOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    };
-    const formattedTime: string = now.toLocaleTimeString("en-GB", timeOptions);
+  //   // Format date as "23 January 2023"
+  //   const dateOptions: Intl.DateTimeFormatOptions = { day: "2-digit", month: "long", year: "numeric" };
+  //   const formattedDate = now.toLocaleDateString("en-GB", dateOptions);
 
-    setCurrentDate(formattedDate);
-    setCurrentTime(formattedTime);
-  };
+  //   // Format time as "14:23:45"
+  //   const timeOptions: Intl.DateTimeFormatOptions = {
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     second: "2-digit",
+  //     hour12: false,
+  //   };
+  //   const formattedTime: string = now.toLocaleTimeString("en-GB", timeOptions);
+
+  //   setCurrentDate(formattedDate);
+  //   setCurrentTime(formattedTime);
+  // };
 
   const { data: dash, isLoading } = useQuery({
-    queryKey: ["pspOperatorDashboard", operator.id],
+    queryKey: ["pspOperatorDashboard", operator?.id],
     queryFn: async () => {
+      if (!operator?.id) throw new Error("Operator not found");
       const data = await getPspOperatorDashboard(operator.id);
       console.log("Dashboard Data: ", data);
       return data.data;
-    }
+    },
+    enabled: !!operator?.id
   });
 
 
@@ -54,15 +54,34 @@ const Dash = () => {
     return <Loader />
   }
 
+  if (!operator) {
+    return <div className="p-4">Operator details not found. Please log in again.</div>
+  }
+
+  if (!dash) {
+    return <div className="p-4">Failed to load dashboard data.</div>
+  }
+
   function getStatusColor(status: any): string | undefined {
-    console.log(status)
+    switch (status) {
+      case "success":
+      case "paid":
+        return "text-green-600 bg-green-100 px-2 py-1 rounded";
+      case "pending":
+        return "text-yellow-600 bg-yellow-100 px-2 py-1 rounded";
+      case "failed":
+      case "overdue":
+        return "text-red-600 bg-red-100 px-2 py-1 rounded";
+      default:
+        return "text-gray-600 bg-gray-100 px-2 py-1 rounded";
+    }
   }
 
   return (
 
     <div className="flex flex-col gap-4 p-4">
       <div>
-        <h3 className="font-semibold text-xl leading-[40px] tracking-[0] my-0">Welcome Back, <span className="font-bold">{dash?.data.operatorsName?.toLocaleUpperCase() || ""}</span></h3>
+        <h3 className="font-semibold text-xl leading-[40px] tracking-[0] my-0">Welcome Back, <span className="font-bold">{dash?.data?.operatorsName?.toUpperCase() || ""}</span></h3>
         <p className="text-gray-500 text-lg my-0">{"Here's what's happening with your waste management account."}</p>
 
       </div>
@@ -71,7 +90,7 @@ const Dash = () => {
           <div className="flex flex-row justify-between">
             <div>
               <p className="font-semibold flexjustify-between text-gray-500"><span>Total Revenue</span></p>
-              <p className="font-semibold text-2xl text-black py-2">{Naira.format(parseFloat(dash.data.totalRevenue))}</p>
+              <p className="font-semibold text-2xl text-black py-2">{Naira.format(parseFloat(dash?.data?.totalRevenue || "0"))}</p>
 
             </div>
 
@@ -84,7 +103,7 @@ const Dash = () => {
           <div className="flex flex-row justify-between">
             <div>
               <p className="font-semibold flexjustify-between text-gray-500"><span>Total Properties</span></p>
-              <p className="font-semibold text-2xl text-black py-2">{dash.data.totalProperties}</p>
+              <p className="font-semibold text-2xl text-black py-2">{dash?.data?.totalProperties || 0}</p>
 
             </div>
 
@@ -98,7 +117,7 @@ const Dash = () => {
           <div className="flex flex-row justify-between">
             <div>
               <p className="font-semibold flexjustify-between text-gray-500"><span>Total Customers</span></p>
-              <p className="font-semibold text-2xl text-black py-2">{dash.data.totalCustomers}</p>
+              <p className="font-semibold text-2xl text-black py-2">{dash?.data?.totalCustomers || 0}</p>
 
             </div>
 
@@ -111,7 +130,7 @@ const Dash = () => {
           <div className="flex flex-row justify-between">
             <div>
               <p className="font-semibold flexjustify-between text-gray-500"><span>Overdue Payment</span></p>
-              <p className="font-semibold text-2xl text-black py-2">{Naira.format(parseFloat(dash.data.totalOverDuePayment))}</p>
+              <p className="font-semibold text-2xl text-black py-2">{Naira.format(parseFloat(dash?.data?.totalOverDuePayment || "0"))}</p>
 
             </div>
 
@@ -151,7 +170,7 @@ const Dash = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-50">
-              {dash && dash.data.recentTransactions.map((activity) => (
+              {dash?.data?.recentTransactions?.map((activity) => (
                 <tr key={activity.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-secondary">{activity.paidDateTime}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{activity.customerName}</td>
@@ -181,7 +200,7 @@ const Dash = () => {
 
         {/* Mobile Card-based List View */}
         <div className="md:hidden divide-y-8">
-          {dash && dash.data.recentTransactions.map((activity) => (
+          {dash?.data?.recentTransactions?.map((activity) => (
             <div key={activity.id} className="p-4 space-y-3">
               <div className="flex justify-between items-start">
                 <div>

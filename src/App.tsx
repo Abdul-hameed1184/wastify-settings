@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import ScrolltoTop from "./Component/ScrolltoTop";
-import { ToastContainer, Zoom } from "react-toastify";
+
 
 // layouts
 import UserLayout from "./Layouts/UserLayout";
@@ -29,12 +29,27 @@ import Wastebills from "./Pages/UserProfile/Wastebills";
 import PaymentHistory from "./Pages/UserProfile/PaymentHistory";
 import Profile from "./Pages/UserProfile/Profile";
 import ContactUs from "./Pages/UserProfile/Contact";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, Zoom } from "react-toastify";
+
 
 const App = () => {
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        transition={Zoom}
+        hideProgressBar
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+        toastClassName="bg-gradient-to-r from-indigo-500 to-blue-500 text-sm text-white shadow-lg"
+      />
+
       <ScrolltoTop />
-      <ToastContainer position="top-center" autoClose={5000} transition={Zoom} />
+
 
       <Routes>
 

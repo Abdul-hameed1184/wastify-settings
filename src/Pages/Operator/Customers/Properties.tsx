@@ -1,28 +1,15 @@
 import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeadCell,
-  TableRow,
-} from "flowbite-react";
-import { ParagraphLargeGreen } from "../../../Component/Paragraph";
-import CreatePropertyModal from "../../../Component/Modal/CreatePropertyModal";
 import { IProperty } from "../../../models/property.interface";
 import { IOperator } from "../../../models/operator.interface";
 import { getPropertyByOperator } from "../../../api/psp-operator/psp-operator.service";
 import Loader from "../../../Component/Loader";
 import { LuGlasses } from "react-icons/lu";
 
-import { FaPlusCircle } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
-import InfoModal from "../../../Component/Modal/InfoModal";
 import DropdownMenu from "../../../Component/DropdownMenu";
 import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";
-import { Button } from "../../../Component/Button";
 import Card from "../../../Component/Card/Card";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { IoEllipsisVertical } from "react-icons/io5";
@@ -30,7 +17,7 @@ import { IoEllipsisVertical } from "react-icons/io5";
 
 const Properties:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
-  const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
+  // const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
     const [ openUpdateProperty, setOpenUpdateProperty] = useState<boolean>(false);
   const [ viewDelete, setViewDelete ] = useState<boolean>(false)
   const [ page, setPage] = useState<number>(1);
@@ -54,9 +41,6 @@ const Properties:React.FC = () => {
   })
 
   console.log(allProperties);
-  const handleDelete = () => {
-
-  };
   if(isLoading){
     return <Loader />
   }
@@ -88,7 +72,7 @@ const Properties:React.FC = () => {
 
        { allProperties?.data.data.data.length > 0 &&  
                   <div className="hidden md:block overflow-x-auto rounded-xl border border-gray-200 m-4 overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-100">
+          <table className="table-auto min-w-full divide-y divide-gray-100">
             <thead className="bg-gray-300/50">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">S/N</th>
@@ -124,19 +108,19 @@ const Properties:React.FC = () => {
 
 {  allProperties?.data.data.data.length > 0 &&      <div className="overflow-x-auto font-Poppins mt-3">
 
-          <Table striped className="border-collapse rounded-lg  border-gray-900">
-            <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
+          <table  className="table-auto border-collapse rounded-lg  border-gray-900">
+            <thead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
               {/* <TableHeadCell>Property ID</TableHeadCell> */}
-              <TableHeadCell>Property address</TableHeadCell>
+              <th>Property address</th>
               {/* <TableHeadCell>LGA</TableHeadCell> */}
-              <TableHeadCell>Ward</TableHeadCell>
-                    <TableHeadCell>Owner</TableHeadCell>
-              <TableHeadCell>No of Apartments</TableHeadCell>{" "}
-              <TableHeadCell>Action</TableHeadCell>
-            </TableHead>
-            <TableBody className="font-Poppins text-xl ">
+              <th>Ward</th>
+                    <th>Owner</th>
+              <th>No of Apartments</th>{" "}
+              <th>Action</th>
+            </thead>
+            <tbody className="font-Poppins text-xl ">
               {allProperties && allProperties?.data.data.data.map((item:IProperty, index) => (
-                <TableRow
+                <tr
                   className={
                     index % 2 === 0
                       ? "odd:bg-tableBackground"
@@ -145,14 +129,14 @@ const Properties:React.FC = () => {
                   key={index}
                 >
                   {/* <TableCell>{item.id}</TableCell> */}
-                  <TableCell>{item.propertyAddress} </TableCell>
+                  <td>{item.propertyAddress} </td>
                   {/* <TableCell>{item.lgaName} </TableCell> */}
-                  <TableCell>{item.wardName}</TableCell>
-                        <TableCell className="uppercase">{item.ownerFullname}</TableCell>
+                  <td>{item.wardName}</td>
+                        <td className="uppercase">{item.ownerFullname}</td>
                   {/* <TableCell>{item.propertyCode}</TableCell> */}
-                  <TableCell>{item.noOfDistinctApartment}</TableCell>
+                  <td>{item.noOfDistinctApartment}</td>
                   {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
-                  <TableCell>
+                  <td>
 
                       <DropdownMenu>
 <div className="flex flex-col  rounded-lg divide-y divide-gray-200 shadow-sm">
@@ -194,14 +178,14 @@ const Properties:React.FC = () => {
     </div>
 
                       </DropdownMenu>
-                  </TableCell>
+                  </td>
                   {/* <TableCell> ... </TableCell> */}
-                </TableRow>
+                </tr>
               ))}
 
 
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
           {/* Pagination */}
           <div className="flex justify-center items-center h-20 my-10 w-full ">
             <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
