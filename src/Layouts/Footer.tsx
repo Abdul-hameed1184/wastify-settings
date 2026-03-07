@@ -3,7 +3,7 @@ import { CiLocationOn, CiMail } from "react-icons/ci";
 import {
   AiFillFacebook, AiOutlineInstagram} from "react-icons/ai"
 import { FaXTwitter } from "react-icons/fa6";
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { LogoWithText } from '../Component/Logo';
 import { MdOutlineLocalPhone } from 'react-icons/md';
 
@@ -12,7 +12,7 @@ const Footer = () => {
     <footer className=' md:p-14 bg-black px-8 py-5 flex flex-col md:text-lg text-sm'>
       <div className='flex flex-col md:flex-row '>
       <div className='flex flex-col flex-grow'>
-      <Link to="/" className="w-14 h-14" >
+      <Link to="/" className="w-14 h-14 cursor-pointer" >
     
           <LogoWithText />
       </Link>
@@ -27,31 +27,31 @@ management. Simplify payments, track usage, and stay compliant.</p>
       <div className='grid grid-cols-2 md:grid-cols-4 gap-8 mt-10 md:mt-0 w-full flex-wrap justify-between'>
       <div className='text-gray-500 flex-1 flex flex-col mt-4 gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Product</h4>
-        <p>Features</p>
-        <p>Pricing</p>
-        <p>How It Works</p>
-        <p>FAQ</p>
+        <NavLink to="/#features" className="cursor-pointer">Features</NavLink>
+        <NavLink to="/pricing" className="cursor-pointer">Pricing</NavLink>
+        <NavLink to="/#how-it-works" className="cursor-pointer">How It Works</NavLink>
+        <NavLink to="/faq" className="cursor-pointer">FAQ</NavLink>
       </div>
         <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Company</h4>
-        <p>About Us</p>
-        <p>Careers</p>
-        <p>Press</p>
-        <p>Contact</p>
+        <NavLink to="/about" className="cursor-pointer">About Us</NavLink>
+        <NavLink to="/careers" className="cursor-pointer">Careers</NavLink>
+        <NavLink to="/press" className="cursor-pointer">Press</NavLink>
+        <NavLink to="/contact" className="cursor-pointer">Contact</NavLink>
       </div>
       <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Resources</h4>
-        <p>Help Center</p>
-        <p>Blog</p>
-        <p>Community</p>
-        <p>Webinars</p>
+        <NavLink to="/help" className="cursor-pointer">Help Center</NavLink>
+        <NavLink to="/blog" className="cursor-pointer">Blog</NavLink>
+        <NavLink to="/community" className="cursor-pointer">Community</NavLink>
+        <NavLink to="/webinars" className="cursor-pointer">Webinars</NavLink>
       </div>
       <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Legal</h4>
-        <p>Privacy Policy</p>
-        <p>Terms of Service</p>
-        <p>Cookie Policy</p>
-        <p>GDPR</p>
+        <NavLink to="/privacy" className="cursor-pointer">Privacy Policy</NavLink>
+        <NavLink to="/terms" className="cursor-pointer">Terms of Service</NavLink>
+        <NavLink to="/cookies" className="cursor-pointer">Cookie Policy</NavLink>
+        <NavLink to="/gdpr" className="cursor-pointer">GDPR</NavLink>
       </div>
       </div>
     </div>

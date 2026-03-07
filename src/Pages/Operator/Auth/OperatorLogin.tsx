@@ -2,7 +2,7 @@ import React,{ useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import {  useFormik } from "formik";
-import { Zoom, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
 import Input from "../../../Component/InputField";
 
@@ -14,6 +14,7 @@ import { MdOutlineShield } from "react-icons/md";
 import { Logo } from "../../../Component/Logo";
 import { PiUser } from "react-icons/pi";
 import BgWasteOperator from "../../../assets/images/bg-waste-operator.png";
+import { SendResetLink } from "../../Auth/SendResetLink";
 
 type Err  = {
   email:string;
@@ -41,6 +42,7 @@ const OperatorLogin:React.FC = () => {
   const navigate = useNavigate();
   const [istoggle, setIstoggle] = useState(false);
   const [loading, SetLoading] = useState(false);
+  const [openResetModal, setOpenResetModal] = useState(false);
 
   const toggle = () => {
     setIstoggle((prev) => !prev);
@@ -221,20 +223,24 @@ const OperatorLogin:React.FC = () => {
                   <p className="text-red-900 text-sm">*{formik.errors.password}</p>
                 ) : null}
               </div>
-              <div className="flex justify-end  mt-4">
-                <Link
-                  to="/forget-password"
-                  className=" text-green text-sm underline"
-                >
-                  Reset password?
-                </Link>
-              </div>
+                  <div className="flex justify-end  mt-4">
+              <button
+         
+                onClick={()=>setOpenResetModal(true)}
+                className=" text-green text-sm underline"
+              >
+                Reset password?
+              </button>
+            </div>
  
                 <Button variant="primary" className="mt-8 w-full" type="submit"  loading={loading}>Login &#8594; </Button>
+                <p className="text-center mt-4"><span>{"New PSP Operator?"}</span> <Link to="/operator-register" className="hover:underline text-green">Sign up</Link></p>
       
             </form>
           </div>
-
+                              {
+                                openResetModal && <SendResetLink openModal={openResetModal} setOpenModal={() =>setOpenResetModal(!openResetModal)} />
+                              }
       </div>
     </main>
     </div>

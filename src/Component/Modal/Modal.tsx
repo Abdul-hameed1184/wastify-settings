@@ -88,6 +88,9 @@ export const Modal: React.FC<ModalProps> = ({
     <div
       className={`fixed inset-0 z-50 flex ${overlayPositionClass} bg-black/50 backdrop-blur-sm px-4 py-6 overflow-y-auto`}
       onClick={closeOnOverlay ? onClose : undefined}
+      onKeyDown={(e) => closeOnOverlay && e.key === "Escape" && onClose()}
+      role="presentation"
+      tabIndex={-1}
     >
       <div
         className={` m-2 relative w-full border border-1 border-gray-200 ${sizeClasses[size]} bg-white rounded-2xl shadow-lg max-h-[90vh] overflow-y-auto ${className}`}

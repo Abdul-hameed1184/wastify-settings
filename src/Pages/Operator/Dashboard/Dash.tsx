@@ -10,8 +10,7 @@ import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
 
 
 const Dash = () => {
-  const [currentDate, setCurrentDate] = useState("");
-  const [currentTime, setCurrentTime] = useState("");
+
   const operatorData = sessionStorage.getItem("AUTH_ADMIN_DETAILS");
   const operator = operatorData ? JSON.parse(operatorData) : null;
 

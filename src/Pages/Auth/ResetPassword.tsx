@@ -88,10 +88,7 @@ const ResetPassword = () => {
     return (
         <main className='mt-4 mx-4 md:m-0 md:bg-green md:h-screen md:bg-cover'>
             <div className="md:mt-0 md:py-5 md:px-10 ">
-                {/* <ToastContainer /> */}
-                <div className=" flex justify-start w-20 h-20">
-                    <LogoWhite />
-                </div>
+
                 <div className=" flex justify-center items-center mt-20">
                     <div className="mt-10 md:mt-3 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
                         <div className="mt-2 ">

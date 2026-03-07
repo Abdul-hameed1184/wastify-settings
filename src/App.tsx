@@ -31,6 +31,7 @@ import Profile from "./Pages/UserProfile/Profile";
 import ContactUs from "./Pages/UserProfile/Contact";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, Zoom } from "react-toastify";
+import { OperatorRegister } from "./Pages/Operator/Auth/OperatorRegister";
 
 
 const App = () => {
@@ -76,6 +77,7 @@ const App = () => {
         {/* ===== OPERATOR AUTH ===== */}
         <Route element={<AdminLoginProtect />}>
           <Route path="operator-login" element={<OperatorLogin />} />
+          <Route path="operator-register" element={<OperatorRegister />} />
         </Route>
 
         {/* ===== OPERATOR ===== */}

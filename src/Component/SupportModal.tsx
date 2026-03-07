@@ -5,12 +5,12 @@ import { Button } from './Button';
 
 interface SupportModalProps {
     openModal: boolean;
-    setOpenModal: (open: boolean) => void;
+    setOpenModal: () => void;
 }
 
-const SupportModal = ({ openModal, setOpenModal }: SupportModalProps) => {
+export const SupportModal:React.FC<SupportModalProps> = ({ openModal, setOpenModal }: SupportModalProps) => {
     return (
-        <Modal className="glass" position="bottom-right" title="Support Message" isOpen={openModal} onClose={() => setOpenModal(false)} size={'md'} >
+        <Modal className="glass" position="bottom-right" title="Support Message" isOpen={openModal} onClose={() => setOpenModal()} size={'md'} >
             <div>
 
 
@@ -26,17 +26,17 @@ const SupportModal = ({ openModal, setOpenModal }: SupportModalProps) => {
                         </div>
                         <div className="mt-2 mb-4">
                             <label htmlFor="message">Message</label>
-                        <textarea id="message" name="message" placeholder="Enter your message here" cols="30" rows="5" className='border-2 px-2.5 py-3.5 pl-8 bg-white shadow-sm rounded-lg block font-Poppins w-full text-black text-base mt-1 placeholder:text-gray focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent'></textarea>
+                        <textarea id="message" name="message" placeholder="Enter your message here" 
+                        cols={30} rows={5} 
+                        className='border-2 px-2.5 py-3.5 pl-8 bg-white shadow-sm rounded-lg block font-Poppins w-full text-black text-base mt-1 placeholder:text-gray focus:outline-none focus:ring-2 focus:ring-purple focus:border-transparent'></textarea>
 
                         </div>
                     </div>  
            
    
-                    <Button onClick={() => setOpenModal(false)} className=' bg-green w-full mt-4'>Send</Button>
+                    <Button onClick={() => setOpenModal()} className=' bg-green w-full mt-4'>Send Mail</Button>
            
             </div>
         </Modal>
     )
 }
-
-export default SupportModal

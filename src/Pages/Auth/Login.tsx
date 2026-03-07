@@ -13,7 +13,8 @@ import { BsBarChartLine, BsPhone } from "react-icons/bs";
 import { MdOutlineShield } from "react-icons/md";
 import { IoMdKeypad } from "react-icons/io";
 import { customerLogin } from "../../api/auth.service";
-import { AxiosError } from "axios";
+import axios from "axios";
+import  { SendResetLink } from "./SendResetLink";
 type Err = {
   phone: string,
   password: string
@@ -40,6 +41,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [istoggle, setIstoggle] = useState(false);
+  const [openResetModal, setOpenResetModal] = useState(false);
   const [loading, SetLoading] = useState(false);
 
   const toggle = () => {
@@ -61,8 +63,6 @@ const Login: React.FC = () => {
           const message = res.data.message;
           const errorState = res.data?.errorState;
           if (!errorState) {
-
-            SetLoading(false);
             const user = res.data.data.CustomerDetails;
             const userApartment = res.data.data.customerApartments;
             // console.log("userInit", user);
@@ -81,10 +81,15 @@ const Login: React.FC = () => {
             navigate("/dashboard", { state: { user: user } });
 
           } 
-        }catch(e){ 
-          console.log("got here", e);
-          const message = e?.response?.data?.message || e?.message || "An error occurred during login";
+        } catch (err: unknown) {
+          let message = "An error occurred during login";
+          if (axios.isAxiosError(err)) {
+            message = err.response?.data?.message || err.message || message;
+          } else if (err instanceof Error) {
+            message = err.message;
+          }
           toast.error(message, { autoClose: 5000 });
+        } finally {
           SetLoading(false);
         }
       
@@ -187,19 +192,22 @@ const Login: React.FC = () => {
               ) : null}
             </div>
             <div className="flex justify-end  mt-4">
-              <Link
-                to="/forget-password"
+              <button
+         
+                onClick={()=>setOpenResetModal(true)}
                 className=" text-green text-sm underline"
               >
                 Reset password?
-              </Link>
+              </button>
             </div>
 
             <Button variant="primary" className="mt-8 w-full" type="submit" loading={loading}>Login &#8594; </Button>
 
           </form>
         </div>
-
+              {
+                openResetModal && <SendResetLink openModal={openResetModal} setOpenModal={() =>setOpenResetModal(!openResetModal)} />
+              }
       </div>
               </div>
     </>
