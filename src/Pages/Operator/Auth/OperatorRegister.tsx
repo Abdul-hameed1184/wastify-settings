@@ -431,7 +431,7 @@ export const OperatorRegister = () => {
       </div>
 
       {/* Right – form content */}
-      <div className="flex-1 lg:p-12 flex flex-col items-center justify-center">
+      <div className="flex-1 lg:p-12 flex flex-col items-center justify-center mx-4">
          <div className="w-full max-w-xl">            
           <div className="hidden md:block">  
               <Logo size={100} />
