@@ -113,7 +113,7 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-32  flex justify-center text-center">
+        <div className="mt-32  flex justify-center text-center" id="whoWeAre">
           <div className="w-[960px] mx-auto">
                         <p className="text-green"><span className="bg-green/20 rounded-lg py-2 px-4 ">Features</span></p>
             <h3 className="font-semibold text-[3em] tracking-[-0.02em] p-0 m-0 pt-2 text-lg leading-[58px] text-center">
@@ -161,7 +161,7 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-    <div className="flex flex-col justify-center text-center md:my-24">
+    <div className="flex flex-col justify-center text-center md:my-24" id="howItWorks">
           <div className="mx-auto">
             <p className="text-green"><span className="bg-green/20 rounded-lg py-2 px-4 ">Things you should know</span></p>
             <h3 className="font-semibold text-[3em] tracking-[-0.02em] p-0 m-0 pt-2 text-lg leading-[58px] text-center">

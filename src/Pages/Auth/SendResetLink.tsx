@@ -37,15 +37,10 @@ export const SendResetLink:React.FC<ResetModalProps> = ({openModal, setOpenModal
         },
         validate,
         onSubmit: async (values) => {
-            console.log("Form submitted with values:", values);
-            console.log("Validation errors:", formik.errors);
             try{
                 const res = await forgotPassword(values);
-                console.log("API Response:", res);
                 const message = res.data?.message;
                 const errorState = res.data?.errorState;
-                const data = res.data?.data;
-                console.log(data)
                 if (!errorState) {
                     toast.success(message, { autoClose: 5000 });
                     setOpenOTPModal(true);

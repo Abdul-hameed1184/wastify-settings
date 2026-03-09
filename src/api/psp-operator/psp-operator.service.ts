@@ -37,6 +37,18 @@ export const getOperatorRevenue = async (operatorId: number) => {
     return await api.get(`/billPayment/monthly-summary-by-operator-id/${operatorId}`);
 }
 
+export const getStates = async () =>  {
+    return await api.get(`/state/list`);
+}
+
+export const getLGAs = async (stateId: number) => {
+    return await api.get(`/lga/stateid/${stateId}`)
+}
+
+export const getWards = async (lgaId:number) => {
+    return await api.get(`/ward/lgaid/${lgaId}`)
+}
+
 // export const getPropertyByOperator = async (operatorId: string, params: any) => {
 //   const { perPage, searchTerm, sortBy, sortOrder, page } = params;
 

@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useFormik } from 'formik';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from 'axios';
 import baseURL from '../../utils/apiConfig';
-import { LogoWhite } from '../../Component/Logo';
 import { Paragraph2Xl, ParagraphExtraSmallError, ParagraphSmall } from '../../Component/Paragraph';
 import { ButtonsPrimary } from '../../Component/Buttons';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+type Err ={
+    password: string;
+    password_confirmation: string;
+}
 const validate = values => {
-    const errors = {};
+    const errors:Err = {} as Err;
 
     if (!values.password) {
         errors.password = 'Password is Required';

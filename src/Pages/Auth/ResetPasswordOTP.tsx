@@ -2,9 +2,7 @@ import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useFormik } from 'formik';
 import { toast } from "react-toastify";
-import { Paragraph2Xl, ParagraphExtraSmallError, ParagraphSmall } from '../../Component/Paragraph';
-import { ButtonsPrimary } from '../../Component/Buttons';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Modal } from '../../Component/Modal/Modal';
 import { customerPasswordReset } from '../../api/auth.service';
 import { Button } from '../../Component/Button';
@@ -12,8 +10,9 @@ import Input from '../../Component/InputField';
 type Err = {
     password:string;
     password_confirmation: string;
-}
-const validate = values => {
+};
+
+const validate = (values:Err) => {
     const errors:Err = {} as Err;
 
     if (!values.password) {
@@ -23,7 +22,7 @@ const validate = values => {
     }
 
     if (!values.password_confirmation) {
-        errors.password_confirmation = 'Password Confirmarion is Required';
+        errors.password_confirmation = 'Password Confirmation is Required';
     } else if (values.password_confirmation.length < 8) {
         errors.password_confirmation = 'Password Confirmation must be greater than 8 characters'
     } else if (values.password_confirmation !== values.password) {
@@ -75,17 +74,13 @@ const ResetPassword:React.FC<{ customerId:string, otp:string, openResetPasswordM
                         toast.error(message, { autoClose: 5000 });
                     }
      
-                    console.log(err);
-                    // SetLoading(false)
-                    // const message = err.response.data?.message;
-                    // toast.error(message, { autoClose: 7000 });
+        
        
 
         }catch(err){
             console.log(err);
-            // SetLoading(false)
-            // const message = err.response.data?.message;
-            // toast.error(message, { autoClose: 7000 });
+            const message = err.response.data?.message;
+            toast.error(message, { autoClose: 7000 });
         }
     }
 

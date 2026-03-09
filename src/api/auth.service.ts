@@ -8,6 +8,10 @@ export  const  changeOperatorPassword = async (data: IChangepassword) => {
     return await axios.post('/auth/admin/change-password', data);
 }
 
+export const sendResetEmail = async (data) => {
+    return await axios.post(`/auth/admin/forgot-password`, data)
+}
+
 export const customerLogin = async (data) => {
     return await axios.post(`/auth/customer/login`, data)
 }
@@ -29,5 +33,9 @@ export const operatorVerifyEmail = async (data) => {
 }
 
 export const operatorVerifyOTP = async (data) => {
-    return await axios.post(`/auth/admin/psp-operator/verify-otp`, data)
+    return await axios.post(`/auth/operator/signup/verify-otp`, data)
+}
+
+export const createOperator = async (data) => {
+    return await axios.post(`/auth/operator/signup/create-account`, data)
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { TiTick } from "react-icons/ti";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -6,24 +6,26 @@ import "react-toastify/dist/ReactToastify.css";
 import { useFormik } from "formik";
 import * as Yup from "yup"; // ← better than manual validate
 import {
-  ParagraphExtraSmallError,
   ParagraphSmall2,
 } from "../../../Component/Paragraph";
 import Input from "../../../Component/InputField";
-import { ButtonsPrimary } from "../../../Component/Buttons";
 import { Logo, LogoWithText } from "../../../Component/Logo"; // assuming you have this
-import axios from "axios";
-import baseURL from "../../../utils/apiConfig";
-import { operatorVerifyEmail, operatorVerifyOTP } from "../../../api/auth.service";
+import success from "../../../assets/images/success.png"
+import { createOperator, operatorVerifyEmail, operatorVerifyOTP } from "../../../api/auth.service";
+import { Button } from "../../../Component/Button";
+import { ILga, IState, IWard } from "../../../models/location.interface";
+import { useQuery } from "@tanstack/react-query";
+import { getLGAs, getStates, getWards } from "../../../api/psp-operator/psp-operator.service";
+import { Modal } from "../../../Component/Modal/Modal";
 
-// ──────────────────────────────────────────────
-// Yup Schema (cleaner & more powerful than manual validate)
+
+
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email").required("Company Email is required"),
   email_confirm: Yup.string()
     .oneOf([Yup.ref("email")], "Emails must match")
     .required("Confirm Email is required"),
-  businessName: Yup.string().required("Business Name is required"),
+  businessName: Yup.string().required("Company Name is required"),
   phone: Yup.string().required("Phone is required"),
   state: Yup.string().required("State is required"),
   lga: Yup.string().required("Local Government is required"),
@@ -36,32 +38,26 @@ const validationSchema = Yup.object({
     .required("Confirm Password is required"),
 });
 
-// ──────────────────────────────────────────────
+
 export const OperatorRegister = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [successModal, setSuccessModal] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // ──── Location data ────
-  const [allStates, setAllStates] = useState([]);
-  const [lgas, setLgas] = useState([]);
-  const [wards, setWards] = useState([]);
-
   const inputRefs = useRef(Array(6).fill(null).map(() => React.createRef()));
-
   const [otpInputs, setOtpInputs] = useState(["", "", "", "", "", ""]);
   const otpValue = otpInputs.join("");
 
-  // ──── Formik (one instance for the whole wizard) ────
+
   const formik = useFormik({
     initialValues: {
       email: "",
       email_confirm: "",
       businessName: "",
       phone: "",
-      state: "",
-      lga: "",
-      ward: "",
+      state: 1,
+      lga: 1,
+      ward: 1,
       password: "",
       password_confirmation: "",
     },
@@ -71,11 +67,12 @@ export const OperatorRegister = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        const res = await axios.post(`${baseURL}auth/operator/signup/create-account`, values);
+        const res = await createOperator(values);
         const { message, errorState } = res.data;
         if (!errorState) {
           toast.success(message || "Account created successfully!");
-          setTimeout(() => navigate("/admin-login"), 3000);
+          setSuccessModal(true)
+          setTimeout(() => navigate("/operator-login"), 3000);
         } else {
           toast.error(message || "Something went wrong");
         }
@@ -88,41 +85,35 @@ export const OperatorRegister = () => {
     },
   });
 
-  // ──── Fetch states on mount ────
-  useEffect(() => {
-    axios
-      .get(`${baseURL}state/list`)
-      .then((res) => setAllStates(res.data.data || []))
-      .catch((err) => console.error("States fetch failed", err));
-  }, []);
-
-  // Fetch LGAs when state changes
-  useEffect(() => {
-    if (!formik.values.state) {
-      setLgas([]);
-      formik.setFieldValue("lga", "");
-      setWards([]);
-      formik.setFieldValue("ward", "");
-      return;
+  const { data:states } = useQuery({
+    queryKey: ['states'],
+    queryFn: async () => {
+     const data = await getStates()
+    return data.data.data;
     }
-    axios
-      .get(`${baseURL}lga/stateid/${formik.values.state}`)
-      .then((res) => setLgas(res.data.data || []))
-      .catch((err) => console.error("LGA fetch failed", err));
-  }, [formik.values.state]);
+  })
 
-  // Fetch Wards when LGA changes
-  useEffect(() => {
-    if (!formik.values.lga) {
-      setWards([]);
-      formik.setFieldValue("ward", "");
-      return;
-    }
-    axios
-      .get(`${baseURL}ward/lgaid/${formik.values.lga}`)
-      .then((res) => setWards(res.data.data || []))
-      .catch((err) => console.error("Ward fetch failed", err));
-  }, [formik.values.lga]);
+    const { data:lgas } = useQuery({
+    queryKey: ['lgas', formik.values.state],
+    queryFn: async () => {
+     if (!formik.values.state) return [];
+     const data = await getLGAs(formik.values.state)
+    return data.data.data;
+    },
+    enabled: !!formik.values.state
+  })
+
+      const { data:wards } = useQuery({
+    queryKey: ['wards', formik.values.lga],
+    queryFn: async () => {
+     if (!formik.values.lga) return [];
+     const data = await getWards(formik.values.lga)
+    return data.data.data;
+    },
+    enabled: !!formik.values.lga
+  })
+
+
 
   // ──── OTP handlers ────
   const handleOtpChange = (e, index) => {
@@ -194,35 +185,35 @@ export const OperatorRegister = () => {
           <div>
            
 
-            <div className="w-full lg:w-4/5">
-              <ParagraphSmall2 content="Company Email" />
+            <div className="w-full">
               <Input
                 type="email"
                 name="email"
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                label="Company Email"
               />
             
                            {formik.touched.email && formik.errors.email ? (
                 <p className="text-red-900 text-sm">*{formik.errors.email}</p>
               ) : null}
             </div>
-            <div className="w-full lg:w-4/5 mt-4">
-              <ParagraphSmall2 content="Confirm Company Email" />
+            <div className="w-full  mt-4">
               <Input
                 type="email"
                 name="email_confirm"
                 value={formik.values.email_confirm}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                label={"Confirm Company Email"}
               />
                          {formik.touched.email_confirm && formik.errors.email_confirm ? (
                 <p className="text-red-900 text-sm">*{formik.errors.email}</p>
               ) : null}
             </div>
-            <div className="w-full lg:w-4/5 my-10">
-              <ButtonsPrimary name="Confirm" onClick={nextStep} loading={loading} />
+            <div className="w-full my-10">
+              <Button  onClick={nextStep} loading={loading} className="w-full">Confirm</Button>
             </div>
           </div>
         );
@@ -233,7 +224,7 @@ export const OperatorRegister = () => {
             <p className="text-xl font-semibold text-black my-4">
               Enter OTP sent to <span className="text-green">{formik.values.email}</span>
             </p>
-            <div className="flex justify-center lg:justify-start my-10 space-x-2">
+            <div className="flex justify-around my-10 space-x-2 w-full">
               {otpInputs.map((val, i) => (
                 <input
                   key={i}
@@ -247,8 +238,8 @@ export const OperatorRegister = () => {
               ))}
             </div>
             
-            <div className="w-full lg:w-4/5">
-              <ButtonsPrimary name="Confirm OTP" onClick={nextStep} loading={loading} />
+            <div className="w-full ">
+              <Button onClick={nextStep} loading={loading} className="w-full">Confirm OTP</Button>
             </div>
           </div>
         );
@@ -260,23 +251,43 @@ export const OperatorRegister = () => {
               Organization Details
             </p>
 
-            <div className="w-full lg:w-4/5">
-              <ParagraphSmall2 content="Operator's Business Name" />
-              <Input {...formik.getFieldProps("businessName")} />
+            <div className="w-full">
+         
+              <Input 
+              placeholder="Input your company name"
+              label="Company Name"
+              {...formik.getFieldProps("businessName")} />
               {formik.touched.businessName && formik.errors.businessName ? (
                 <p className="text-red-900 text-sm">*{formik.errors.businessName}</p>
               ) : null}
             </div>
 
-            <div className="w-full lg:w-4/5">
-              <ParagraphSmall2 content="State" />
+                   <div className="w-full">
+             
+              <Input
+              label="Phone number"
+              placeholder="Enter Phone number"
+              {...formik.getFieldProps("phone")} />
+
+              {formik.touched.phone && formik.errors.phone ? (
+                <p className="text-red-900 text-sm">*{formik.errors.phone}</p>
+              ) : null}
+            </div>
+
+            <div className="w-full">
+              <label>State</label>
               <select
       
                 className="border-2 px-4 py-3 bg-gray-100 rounded-lg w-full h-14"
                 {...formik.getFieldProps("state")}
+                onChange={(e) => {
+                  formik.handleChange(e);
+                  formik.setFieldValue("lga", "");
+                  formik.setFieldValue("ward", "");
+                }}
               >
                 <option value="">Select State</option>
-                {allStates.map((s) => (
+                {states && states.map((s:IState) => (
                   <option key={s.id} value={s.id}>
                     {s.name}
                   </option>
@@ -288,7 +299,7 @@ export const OperatorRegister = () => {
               ) : null}
             </div>
 
-            <div className="w-full lg:w-4/5 flex gap-6">
+            <div className="w-full  flex gap-6">
               <div className="flex-1">
                 <ParagraphSmall2 content="LGA / LCDA" />
                 <select
@@ -296,9 +307,13 @@ export const OperatorRegister = () => {
                   className="border-2 px-4 py-3 bg-gray-100 rounded-lg w-full h-14"
                   disabled={!formik.values.state}
                   {...formik.getFieldProps("lga")}
+                  onChange={(e) => {
+                    formik.handleChange(e);
+                    formik.setFieldValue("ward", "");
+                  }}
                 >
                   <option value="">Select LGA</option>
-                  {lgas && lgas.map((l) => (
+                  {lgas && lgas.map((l:ILga) => (
                     <option key={l.id} value={l.id}>
                       {l.name}
                     </option>
@@ -319,7 +334,7 @@ export const OperatorRegister = () => {
                   {...formik.getFieldProps("ward")}
                 >
                   <option value="">Select Ward</option>
-                  {wards && wards.map((w) => (
+                  {wards && wards.map((w:IWard) => (
                     <option key={w.id} value={w.id}>
                       {w.name}
                     </option>
@@ -332,27 +347,25 @@ export const OperatorRegister = () => {
               </div>
             </div>
 
-            <div className="w-full lg:w-4/5">
-              <ParagraphSmall2 content="Phone Number" />
-              <Input  {...formik.getFieldProps("phone")} />
+     
 
-                                         {formik.touched.phone && formik.errors.phone ? (
-                <p className="text-red-900 text-sm">*{formik.errors.phone}</p>
-              ) : null}
-            </div>
-
-            <div className="w-full lg:w-4/5 flex gap-6">
+            <div className="w-full flex flex-col gap-6">
               <div className="flex-1">
-                <ParagraphSmall2 content="Password" />
-                <Input type="password"  {...formik.getFieldProps("password")} />
+    
+                <Input type="password"
+                label="Password"
+                placeholder="Password"
+
+                {...formik.getFieldProps("password")} />
                     {formik.touched.password && formik.errors.password ? (
                 <p className="text-red-900 text-sm">*{formik.errors.password}</p>
               ) : null}
               </div>
               <div className="flex-1">
-                <ParagraphSmall2 content="Confirm Password" />
                 <Input
+                  label="Confirm Password"
                   type="password"
+                  placeholder="Confirm Password"
           
                   {...formik.getFieldProps("password_confirmation")}
                 />
@@ -363,16 +376,16 @@ export const OperatorRegister = () => {
               </div>
             </div>
 
-            <div className="w-full lg:w-4/5 pt-6">
-              <ButtonsPrimary
-                name="Sign Up"
+            <div className="w-full pt-6">
+              <Button
+              className="w-full"
                 type="submit"
                 disabled={loading || !formik.isValid}
                 loading={loading}
-              />
+              >Confirm </Button>
               <p className="text-center mt-3 text-sm text-gray-600">
                 Already have an account?{" "}
-                <Link to="/admin-login" className="text-green-600 font-medium">
+                <Link to="/operator-login" className="w-full text-green  hover:underline font-medium">
                   Login
                 </Link>
               </p>
@@ -392,11 +405,12 @@ export const OperatorRegister = () => {
            <h2 className=" text-2xl text-center mt-8 font-bold">Wasteefy <br /> Management System</h2>
       </div>
       {/* Left sidebar – progress */}
-      <div className="hidden lg:flex flex-col justify-center items-center h-screen flex-1 bg-green p-10 bg-gradient-to-b from-white via-green-50 to-lightGreen/30 space-y-10">
-                    <div className="flex flex-col gap-8">
-                    <div className="flex items-center gap-4">
-                      <h2 className="text-2xl font-semibold">Wasteefy Management System</h2>
-                    </div>
+      <div className="hidden lg:block flex-1 bg-green bg-gradient-to-b from-white via-green-50 to-lightGreen/30">
+        <div className="flex flex-col justify-center items-center h-screen sticky top-0 p-10">
+          <div className="flex flex-col gap-8">
+            <div className="flex items-center gap-4">
+              <h2 className="text-2xl font-semibold">Wasteefy Management System</h2>
+            </div>
           <div className="flex items-center gap-4">
             <div className={`rounded-full w-10 h-10 border-2 flex bg-green items-center justify-center ${step >= 1 ? "bg-green" : "bg-white"}`} style={{ borderColor: step >= 1 ? "#22c55e" : "#d1d5db" }}>
               <TiTick className={`text-4xl ${step >= 1 ? "text-white" : "hidden"}`} />
@@ -427,11 +441,11 @@ export const OperatorRegister = () => {
             </div>
           </div>
           </div>
- 
+        </div>
       </div>
 
       {/* Right – form content */}
-      <div className="flex-1 lg:p-12 flex flex-col items-center justify-center mx-4">
+      <div className="flex-1 p-12 flex flex-col items-center justify-center mx-4">
          <div className="w-full max-w-xl">            
           <div className="hidden md:block">  
               <Logo size={100} />
@@ -445,6 +459,16 @@ export const OperatorRegister = () => {
             </div>
         <div className="w-full max-w-xl">{renderStep()}</div>
       </div>
+      {
+        successModal && <Modal title="Registration Success" closeButton={false} isOpen={successModal} onClose={() => setSuccessModal(!successModal) }>
+           <div className="flex items-center justify-center">
+          <img src={success} className="w-30 h-30 object-contain"/>
+          </div>
+          <h2 className="py-2 text-center text-2xl font-semibold">Registration Successful</h2>
+          <p className="text-center pb-4">We will review your account and mail you on your account status after sometime.</p>
+          <Button className="w-full" onClick={() => navigate("/")}>Go to Homepage</Button>
+        </Modal>
+      }
     </div>
   );
 };

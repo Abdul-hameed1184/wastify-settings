@@ -14,7 +14,7 @@ import { MdOutlineShield } from "react-icons/md";
 import { Logo } from "../../../Component/Logo";
 import { PiUser } from "react-icons/pi";
 import BgWasteOperator from "../../../assets/images/bg-waste-operator.png";
-import { SendResetLink } from "../../Auth/SendResetLink";
+import { SendEmailResetLink } from "./SendEmailResetLink";
 
 type Err  = {
   email:string;
@@ -239,7 +239,7 @@ const OperatorLogin:React.FC = () => {
             </form>
           </div>
                               {
-                                openResetModal && <SendResetLink openModal={openResetModal} setOpenModal={() =>setOpenResetModal(!openResetModal)} />
+                                openResetModal && <SendEmailResetLink openModal={openResetModal} setOpenModal={() =>setOpenResetModal(!openResetModal)} />
                               }
       </div>
     </main>

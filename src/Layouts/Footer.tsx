@@ -16,7 +16,7 @@ const Footer = () => {
     
           <LogoWithText />
       </Link>
-      <div className='ml-4 text-gray-200 mt-4  text-gray-500'>
+      <div className='ml-4 text-gray-200 mt-4  text-gray-500' id="contact">
       <p className='my-4'>The modern platform for digital waste bill
 management. Simplify payments, track usage, and stay compliant.</p>
 <p className='mt-4 flex flex-row gap-2 items-center'><span><CiMail className='text-xl'/></span><span>support@wasteefy.com</span></p>
@@ -29,7 +29,7 @@ management. Simplify payments, track usage, and stay compliant.</p>
         <h4 className='text-white font-bold mb-2'>Product</h4>
         <NavLink to="/#features" className="cursor-pointer">Features</NavLink>
         <NavLink to="/pricing" className="cursor-pointer">Pricing</NavLink>
-        <NavLink to="/#how-it-works" className="cursor-pointer">How It Works</NavLink>
+        <NavLink to="/#howItWorks" className="cursor-pointer">How It Works</NavLink>
         <NavLink to="/faq" className="cursor-pointer">FAQ</NavLink>
       </div>
         <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>

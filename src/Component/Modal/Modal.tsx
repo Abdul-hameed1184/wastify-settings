@@ -3,8 +3,9 @@ import { IoCloseSharp } from "react-icons/io5";
 
 type ModalProps = {
   isOpen: boolean;
+  closeButton?: boolean;
   onClose: () => void;
-  title?: string;
+  title?: string | React.ReactNode;
   children: React.ReactNode;
   footer?: React.ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
@@ -38,6 +39,7 @@ export const Modal: React.FC<ModalProps> = ({
   size = "md",
   position = "center",
   closeOnOverlay = true,
+  closeButton = true,
   className
 }) => {
   // Disable body scroll when modal is open
@@ -106,13 +108,13 @@ export const Modal: React.FC<ModalProps> = ({
               {title}
             </h2>
           )}
-          <IoCloseSharp
+  { closeButton &&       <IoCloseSharp
             onClick={onClose}
             className=" p-2 rounded-md text-4xl hover:bg-red-500 hover:text-white cursor-pointer text-gray-500 border border-gray-200 "
             role="button"
             tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && onClose()}
-          />
+          />}
         </div>
 
         {/* Body */}
