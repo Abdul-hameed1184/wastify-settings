@@ -7,6 +7,8 @@ import baseURL from '../../utils/apiConfig';
 import { Paragraph2Xl, ParagraphExtraSmallError, ParagraphSmall } from '../../Component/Paragraph';
 import { ButtonsPrimary } from '../../Component/Buttons';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Input from '../../Component/InputField';
+import { Button } from '../../Component/Button';
 type Err ={
     password: string;
     password_confirmation: string;
@@ -95,12 +97,12 @@ const ResetPassword = () => {
                     <div className="mt-10 md:mt-3 md:w-2/6 md:bg-white md:border-transparent md:p-5 md:rounded-lg">
                         <div className="mt-2 ">
                             <form onSubmit={formik.handleSubmit}>
-                                <Paragraph2Xl content={"Set new password"} />
-                                <ParagraphSmall content={"Create a new password that would be used for authenticating all your apps."} />
+                                <p className="text-2xl font-semibold">Set new password</p>
+                                <p className="text-sm text-gray-500">Create a new password that would be used for authenticating all your apps.</p>
                                 <div className="my-4 mx-4 relative">
-                                    <input type={istoggle ? 'text' : 'password'}
+                                    <Input type={istoggle ? 'text' : 'password'}
                                         placeholder="Password"
-                                        className="border-2 px-2.5 py-3.5 pl-8  bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-gray  placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray" name={"password"} onChange={formik.handleChange} value={formik.values.password} />
+                                        name={"password"} onChange={formik.handleChange} value={formik.values.password} />
                                     <button
                                         className='absolute top-5 right-6'
                                         onClick={toggle}
@@ -108,13 +110,13 @@ const ResetPassword = () => {
                                     >
                                         {istoggle ? <FaEye /> : <FaEyeSlash />}
                                     </button>
-                                    {formik.errors.password ? <ParagraphExtraSmallError content={formik.errors.password} /> : null}
-                                </div>
+                                        
+                                                                   </div>
 
                                 <div className="my-4 mx-4 relative">
-                                    <input type={istoggleConfirm ? 'text' : 'password'}
+                                    <Input type={istoggleConfirm ? 'text' : 'password'}
                                         placeholder="Confirm Password"
-                                        className="border-2 px-2.5 py-3.5 pl-8  bg-white shadow-sm rounded-lg block font-Poppins w-full h-14 text-black text-base mt-1 ring-gray  placeholder:text-green focus:outline-none focus:ring-2 focus:border-purple focus:border-transparent focus:ring-gray" name={"password_confirmation"} onChange={formik.handleChange} value={formik.values.password_confirmation} />
+                                        name={"password_confirmation"} onChange={formik.handleChange} value={formik.values.password_confirmation} />
                                     <button
                                         className='absolute top-5 right-6'
                                         onClick={toggleConfirmPassword}
@@ -122,10 +124,12 @@ const ResetPassword = () => {
                                     >
                                         {istoggleConfirm ? <FaEye /> : <FaEyeSlash />}
                                     </button>
-                                    {formik.errors.password_confirmation ? <ParagraphExtraSmallError content={formik.errors.password_confirmation} /> : null}
-                                </div>
-                                <div className="mx-4 my-8">
-                                    <ButtonsPrimary type={"submit"} name={"Set Password"} loading={loading} />
+                                    {formik.errors.password_confirmation ? (
+                  <p className="text-red-900 text-sm">*{formik.errors.password_confirmation}</p>
+                ) : null}
+                                                                    </div>
+                                <div className="mx-4 my-8 w-full">
+                                    <Button type={"submit"} loading={loading}>Set Password</Button>
                                 </div>
                             </form>
                         </div>

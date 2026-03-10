@@ -13,23 +13,23 @@ type DataCardProps = {
 
 const DataCard: React.FC<DataCardProps> = ({ title, data, fields }) => {
   return (
-    <div className="w-full max-w-md rounded-2xl shadow-md border border-gray-200 bg-white">
-      <div className="px-4 py-3 border-b border-gray-200 bg-slate-900 text-white">
+    <div className="w-full bg-white">
+      <div className="px-4 py-3 border-b border-gray-500 bg-slate-900 text-white">
         <h2 className="text-lg font-semibold">{title}</h2>
       </div>
-      <div className="px-4 py-3">
-        <ul className="space-y-2">
+
+        <ul className="flex flex-row space-y-2">
           {fields && fields?.map(({ key, label }) => (
             <li
               key={key}
-              className="flex justify-between  pb-1 "
+              className="flex flex-col space-around border border-gray-500  pb-1 "
             >
               <span className="font-medium text-gray">{label}</span>
                <span className="font-bold uppercase">{ data[key]?.toString() ? data[key]?.toString() : "-"}</span> 
             </li>
           ))}
         </ul>
-      </div>
+
     </div>
   );
 };

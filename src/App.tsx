@@ -95,7 +95,6 @@ const App = () => {
             <Route path="transactions" element={<OperatorTransactions />} />
             <Route path="complaint" element={<Complaint />} />
             <Route path="settings" element={<OperatorSettings />} />
-                        <Route path="properties" element={<Properties />} />
 
   
              <Route path="properties" element={<PropertiesLayout />}>

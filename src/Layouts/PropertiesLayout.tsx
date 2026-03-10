@@ -36,24 +36,22 @@ const PropertiesLayout:React.FC = () => {
   return (
 
     <main className="px-4">
-      <div className="flex flex-col lg:flex-row justify-between my-10">
+      <div className="flex flex-col lg:flex-row justify-between">
         {/* <div className="w-full lg:w-[45%]">
                     <AdminCard heading={"Total Customers"} amount={"300"} icon={<IoPeople className='text-green w-10 h-8' />} />
                 </div> */}
-        <div className="w-full mt-5 lg:mt-0 ">
+        {/* <div className="w-full mt-5 lg:mt-0 ">
           <AdminCard
             heading={"Total Property"}
             amount={allProperties?.data.data.total || "0"}
             icon={<FaHouse className="text-green w-10 h-6 mt-1" />}
           />
-        </div>
+        </div> */}
       </div>
 
-      <div className="py-5 rounded-3xl my-4">
             <Outlet />
-      </div>
-        <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
-     </main>
+  
+       </main>
 
   );
 };

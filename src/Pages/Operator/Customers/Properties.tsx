@@ -11,17 +11,17 @@ import { Link } from "react-router-dom";
 import DropdownMenu from "../../../Component/DropdownMenu";
 import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";
 import Card from "../../../Component/Card/Card";
-import { TbCurrencyNaira } from "react-icons/tb";
-import { IoEllipsisVertical, IoSearchOutline } from "react-icons/io5";
+import { IoSearchOutline } from "react-icons/io5";
 import { PiBuildings } from "react-icons/pi";
 import { Button } from "../../../Component/Button";
 import Input from "../../../Component/InputField";
 import { FaLongArrowAltRight } from "react-icons/fa";
+import CreatePropertyModal from "../../../Component/Modal/CreatePropertyModal";
 
 
 const Properties:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
-  // const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
+  const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
     const [ openUpdateProperty, setOpenUpdateProperty] = useState<boolean>(false);
   const [ viewDelete, setViewDelete ] = useState<boolean>(false)
   const [ page, setPage] = useState<number>(1);
@@ -77,7 +77,7 @@ const Properties:React.FC = () => {
           <h2 className="font-semibold text-2xl leading-[40px] tracking-[0] my-0">Properties</h2>
           <div className="flex gap-2  items-center justify-center md:flex-row flex-col">
             <Input iconPosition="left" icon={<IoSearchOutline />} type="text" placeholder="Search Property"/>
-          <Button className="w-full md:w-auto p-4 mb-4">Add Property <FaLongArrowAltRight /></Button>
+          <Button className="w-full md:w-auto p-4 mb-4" onClick={()=>setOpenCreateProperty(!openCreateProperty)}>Add Property <FaLongArrowAltRight /></Button>
           </div>
         </div>
 
@@ -172,6 +172,8 @@ const Properties:React.FC = () => {
               </button>
             </div>
           </div>
+                <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
+
         </div>
        }
 

@@ -196,8 +196,8 @@ const OperatorLogin:React.FC = () => {
                   value={formik.values.email}
                 />
 
-                {formik.errors.password ? (
-                  <p className="text-red-900 text-sm">*{formik.errors.password}</p>
+                {formik.errors.email ? (
+                  <p className="text-red-900 text-sm">*{formik.errors.email}</p>
                 ) : null}
               </div>
               <div className="mt-4 relative">

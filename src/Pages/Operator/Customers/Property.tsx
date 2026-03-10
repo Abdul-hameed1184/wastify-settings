@@ -81,18 +81,18 @@ const Property: React.FC = () => {
     <div className="p-4 ">
         <div className="flex justify-between flex-row">
        { property &&  <DataCard title={"Property Information"} data={property} fields={propertyField}  />}
-         
-            <div className="flex flex-col justify-between">
-              <Button variant="black" onClick={()=>setUpdateModal(!updateModal)}>Edit Property</Button>
-              <span className="">Registered: {property?.created_at} </span>
-   
-          </div>
+          <Button variant="black" onClick={()=>setUpdateModal(!updateModal)}>Edit Property</Button>
+
+
       
         </div>
   
       <div className="flex flex-row justify-between my-4">
           <h2 className="text-2xl font-semibold">Apartments</h2>
-
+            <div className="flex flex-col justify-between">
+                           <span className="">Registered: {property?.created_at} </span>
+   
+          </div>
                     <Button
             variant="black"
               onClick={() => {
