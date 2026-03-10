@@ -7,8 +7,9 @@ import CreatePropertyModal from "../Component/Modal/CreatePropertyModal";
 import { IOperator } from "../models/operator.interface";
 
 import { useQuery } from "@tanstack/react-query";
+import { Outlet } from "react-router-dom";
 
-const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
+const PropertiesLayout:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
 
@@ -49,7 +50,7 @@ const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
       </div>
 
       <div className="py-5 rounded-3xl my-4">
-            {children}
+            <Outlet />
       </div>
         <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
      </main>

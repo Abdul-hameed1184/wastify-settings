@@ -1,5 +1,5 @@
 import React from "react"
-import { PaginatedTable } from "./PaginatedTable";
+
 
 import { LuGlasses } from "react-icons/lu";
 import { Link } from "react-router-dom";
@@ -45,7 +45,7 @@ export const ApartmentList:React.FC<Props> = ({ property, apartments, page, setP
 
   return (
     <>
-    <PaginatedTable
+    {/* <PaginatedTable
       columns={columns}
       data={apartments.data.data}
       total={apartments.data.total}
@@ -54,7 +54,7 @@ export const ApartmentList:React.FC<Props> = ({ property, apartments, page, setP
       setPage={setPage}
       striped
       emptyMessage="No apartments found."
-    />
+    /> */}
 
     </>
   );

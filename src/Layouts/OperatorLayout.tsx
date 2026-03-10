@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { IoPeople, IoWalletOutline } from 'react-icons/io5';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { LogoWithText } from '../Component/Logo';
 import { HiMenuAlt3, HiX } from 'react-icons/hi';
 import { TfiDashboard } from 'react-icons/tfi';
@@ -25,7 +25,7 @@ const navLinks = [
 const OperatorLayout:React.FC = () => {
   const [open, setOpen] = useState(false);
     const navigate =   useNavigate();
-
+    const location = useLocation();
 
     const handleLogout = () => {
       logout();
@@ -76,7 +76,7 @@ const OperatorLayout:React.FC = () => {
             <nav className="flex flex-col mt-20 md:mt-6 justify-between">
               <ul>
                 {navLinks.map((link) => {
-                  const isActive = location.pathname === link.to;
+                  const isActive = location.pathname === "/operator"+link.to;
 
                   return (
                     <li key={link.to} className="px-4 my-2">

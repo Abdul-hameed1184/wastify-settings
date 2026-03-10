@@ -33,6 +33,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, Zoom } from "react-toastify";
 import { OperatorRegister } from "./Pages/Operator/Auth/OperatorRegister";
 import AdminResetPassword from "./Pages/Operator/Auth/OperatorResetPassword";
+import PropertiesLayout from "./Layouts/PropertiesLayout";
+import Property from "./Pages/Operator/Customers/Property";
+import ApartmentBill from "./Pages/Operator/Customers/ApartmentBill";
 
 
 const App = () => {
@@ -94,15 +97,15 @@ const App = () => {
             <Route path="settings" element={<OperatorSettings />} />
                         <Route path="properties" element={<Properties />} />
 
-            {/* nested properties */}
-            {/* <Route path="properties" element={<PropertiesLayout />}>
+  
+             <Route path="properties" element={<PropertiesLayout />}>
               <Route index element={<Properties />} />
               <Route path=":propertyId" element={<Property />} />
               <Route
                 path=":propertyId/apartments/:apartmentId"
                 element={<ApartmentBill />}
               />
-            </Route> */}
+            </Route>
           </Route>
         </Route>
 

@@ -7,12 +7,14 @@ import Card from "../../../Component/Card/Card";
 import { TbCurrencyNaira, TbUsersGroup } from "react-icons/tb";
 import { PiBuildingsBold } from "react-icons/pi";
 import PaymentStatusBadge from "../../../utils/PaymentStatusBadge";
+import { ReceiptModal } from "../../../Component/ReceiptModal";
 
 
 const Dash = () => {
 
   const operatorData = sessionStorage.getItem("AUTH_ADMIN_DETAILS");
   const operator = operatorData ? JSON.parse(operatorData) : null;
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
 
 
@@ -169,8 +171,8 @@ const Dash = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-50">
-              {dash?.data?.recentTransactions?.map((activity) => (
-                <tr key={activity.id} className="hover:bg-gray-50/50 transition-colors">
+              {dash?.data?.recentTransactions?.map((activity, index) => (
+                <tr key={activity.id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-secondary">{activity.paidDateTime}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{activity.customerName}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{activity.propertyAddress}</td>
@@ -181,7 +183,10 @@ const Dash = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     {
                       activity.receiptNo ? (
-                        <button className="text-primary hover:text-green font-bold transition-colors">
+                        <button
+                          onClick={() => setSelectedTransaction(activity)}
+                          className="text-primary hover:underline  font-bold transition-colors"
+                        >
                           View Receipt
                         </button>
                       ) : (
@@ -259,6 +264,13 @@ const Dash = () => {
         </button>
       </div> */}
       </div>
+
+      {/* Receipt Modal */}
+      <ReceiptModal
+        isOpen={!!selectedTransaction}
+        onClose={() => setSelectedTransaction(null)}
+        transaction={selectedTransaction}
+      />
     </div>
 
 

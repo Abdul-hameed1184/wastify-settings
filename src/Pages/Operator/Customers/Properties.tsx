@@ -12,7 +12,11 @@ import DropdownMenu from "../../../Component/DropdownMenu";
 import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";
 import Card from "../../../Component/Card/Card";
 import { TbCurrencyNaira } from "react-icons/tb";
-import { IoEllipsisVertical } from "react-icons/io5";
+import { IoEllipsisVertical, IoSearchOutline } from "react-icons/io5";
+import { PiBuildings } from "react-icons/pi";
+import { Button } from "../../../Component/Button";
+import Input from "../../../Component/InputField";
+import { FaLongArrowAltRight } from "react-icons/fa";
 
 
 const Properties:React.FC = () => {
@@ -62,12 +66,19 @@ const Properties:React.FC = () => {
 
             </div>
 
-            <span className="bg-primary/10 flex items-center justify-center text-primary p-4 rounded-lg text-2xl"><TbCurrencyNaira /></span>
+            <span className="bg-primary/10 flex items-center justify-center text-primary p-4 rounded-lg text-2xl"><PiBuildings /></span>
           </div>
           {/* <h3 className="flex justify-between"><NavLink to="/transactions" className="text-primary hover:bg-primary/70 hover:text-white p-1 text-sm rounded-md ">{"View Transactions"}</NavLink><span className="rounded-lg bg-red-200 p-1 text-sm text-red-700">Overdue</span></h3> */}
 
         </Card>
 
+        </div>
+        <div className="flex justify-between items-center md:flex-row flex-col">
+          <h2 className="font-semibold text-2xl leading-[40px] tracking-[0] my-0">Properties</h2>
+          <div className="flex gap-2  items-center justify-center md:flex-row flex-col">
+            <Input iconPosition="left" icon={<IoSearchOutline />} type="text" placeholder="Search Property"/>
+          <Button className="w-full md:w-auto p-4 mb-4">Add Property <FaLongArrowAltRight /></Button>
+          </div>
         </div>
 
        { allProperties?.data.data.data.length > 0 &&  
@@ -86,146 +97,85 @@ const Properties:React.FC = () => {
               </tr>
             </thead>    
             <tbody className="bg-white divide-y divide-gray-50">
-              {allProperties && allProperties.data.data.data.map((property, index) => (
-                <tr key={index} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-base font-semibold text-secondary">{index + 1}</td>
+              {allProperties && allProperties.data.data.data.map((property:IProperty, index) => (
+                <tr key={index} className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`}>
+                  <td className="px-6 py-4 whitespace-nowrap text-base font-semibold text-secondary">{(page - 1) * params.perPage + index + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-base text-gray-600">{property.propertyAddress}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">{property.wardName}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">{property.ownerFullname}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">{property.propertyCode}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-base text-center text-gray-500">
                     {property.noOfDistinctApartment}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-base text-sm text-gray-500">
-                    <IoEllipsisVertical />
+                    <DropdownMenu>
+                      <h2 className=" px-4 py-2 font-semibold">Take Action</h2>
+                      <Link
+                        to={`${property.id}`}
+                        state={{ property }}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        <LuGlasses className="text-green" />
+                        <span>View Property</span>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setOpenUpdateProperty(!openUpdateProperty)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+                      >
+                        <MdEdit className="text-blue-500" />
+                        <span>Edit Property</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setViewDelete(!viewDelete)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+                      >
+                        <MdDeleteForever className="text-red-500" />
+                        <span>Delete Property</span>
+                      </button>
+                    </DropdownMenu>
+                    {openUpdateProperty && (
+                      <UpdatePropertyModal
+                        openModal={openUpdateProperty}
+                        handleOpenModal={handleOpenUpdateProperty}
+                        operator={operator}
+                        property={property}
+                      />
+                    )}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-       }
 
-{  allProperties?.data.data.data.length > 0 &&      <div className="overflow-x-auto font-Poppins mt-3">
-
-          <table  className="table-auto border-collapse rounded-lg  border-gray-900">
-            <thead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
-              {/* <TableHeadCell>Property ID</TableHeadCell> */}
-              <th>Property address</th>
-              {/* <TableHeadCell>LGA</TableHeadCell> */}
-              <th>Ward</th>
-                    <th>Owner</th>
-              <th>No of Apartments</th>{" "}
-              <th>Action</th>
-            </thead>
-            <tbody className="font-Poppins text-xl ">
-              {allProperties && allProperties?.data.data.data.map((item:IProperty, index) => (
-                <tr
-                  className={
-                    index % 2 === 0
-                      ? "odd:bg-tableBackground"
-                      : "bg-white dark:border-gray-700 dark:bg-gray-800"
-                  }
-                  key={index}
-                >
-                  {/* <TableCell>{item.id}</TableCell> */}
-                  <td>{item.propertyAddress} </td>
-                  {/* <TableCell>{item.lgaName} </TableCell> */}
-                  <td>{item.wardName}</td>
-                        <td className="uppercase">{item.ownerFullname}</td>
-                  {/* <TableCell>{item.propertyCode}</TableCell> */}
-                  <td>{item.noOfDistinctApartment}</td>
-                  {/* <TableCell>{<FaCirclePlus className="text-green w-10 h-6 mt-1"  onClick={()=> handleCreateApartmentModal(item)}/>}</TableCell> */}
-                  <td>
-
-                      <DropdownMenu>
-<div className="flex flex-col  rounded-lg divide-y divide-gray-200 shadow-sm">
-      {/* View */}
-      <Link
-        to={`${item.id}`}
-        state={{ property: item }}
-        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
-      >
-        <LuGlasses className="text-green-500" />
-        <span>View Property</span>
-      </Link>
-
-      {/* Edit */}
-      <div className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-        <button
-          type="button"
-          onClick={() => setOpenUpdateProperty(!openUpdateProperty)}
-          className="flex items-center gap-2 focus:outline-none"
-          aria-label="Edit Property"
-        >
-          <MdEdit className="text-blue-500" />
-          <span>Edit Property</span>
-        </button>
-      </div>
-  { 
-   openUpdateProperty &&   <UpdatePropertyModal openModal={openUpdateProperty} handleOpenModal={handleOpenUpdateProperty} operator={operator} property={item} />
-}
-      {/* Delete */}
-      <button
-        type="button"
-        onClick={() => setViewDelete(!viewDelete)}
-        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer w-full text-left"
-        aria-label="Delete Property"
-      >
-        <MdDeleteForever className="text-red-500" />
-        <span>Delete Property</span>
-      </button>
-    </div>
-
-                      </DropdownMenu>
-                  </td>
-                  {/* <TableCell> ... </TableCell> */}
-                </tr>
-              ))}
-
-
-            </tbody>
-          </table>
           {/* Pagination */}
-          <div className="flex justify-center items-center h-20 my-10 w-full ">
-            <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
+          <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">
+            <p className="text-sm text-gray-500">
+              Page {page} of {Math.ceil((allProperties?.data.data.total || 1) / (allProperties?.data.data.per_page || 10))}
+              <span className="ml-2 text-gray-400">({allProperties?.data.data.total} total)</span>
+            </p>
+            <div className="flex gap-2">
               <button
-                className={`text-green font-weight-bold`}
                 onClick={() => setPage(page - 1)}
-                disabled={page === 1}
+                disabled={page <= 1}
+                className="px-4 py-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Previous
               </button>
-              <div className="mx-8 h-full">
-                {
-                  Array.from({
-                    length: Math.ceil(
-                      (allProperties?.data.data.total/allProperties?.data.data.per_page)
-                    ),
-                  }).map((_, index) => (
-                    <button
-                      className={`w-8 h-full  ${
-                        page === index + 1 ? "bg-green text-white " : ""
-                      } mr-2`}
-                      key={index}
-                      onClick={() => setPage(page + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-              </div>
               <button
-                className={`text-green font-weight-bold`}
-                onClick={() =>setPage(page+1)}
-                disabled={page >= Math.ceil(
-    allProperties?.data.data.total / allProperties?.data.data.per_page
-  )}
+                onClick={() => setPage(page + 1)}
+                disabled={page >= Math.ceil((allProperties?.data.data.total || 1) / (allProperties?.data.data.per_page || 10))}
+                className="px-4 py-2 text-sm font-semibold rounded-lg bg-green text-white hover:bg-green/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Next
               </button>
             </div>
           </div>
-        </div>}
+        </div>
+       }
+
+
 { allProperties?.status === 404  && (
   <div className="flex justify-center items-center h-96 text-4xl font-semibold text-gray-400">
     <h2>No properties found</h2>

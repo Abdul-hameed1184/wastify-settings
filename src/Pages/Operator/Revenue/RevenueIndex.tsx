@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import FirstChart from '../../../Component/Charts/FirstChart';
 import FirstPieChart from '../../../Component/Charts/FirstPieChart';
 import { useQuery } from '@tanstack/react-query';
@@ -11,6 +12,7 @@ import { TbCurrencyNaira } from 'react-icons/tb';
 const RevenueIndex = () => {
 
     const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "{}");
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     console.log(operator);
     const { data: revenue, isLoading  } = useQuery({
         queryKey: ['operator-revenue', operator.id],
@@ -69,14 +71,28 @@ const RevenueIndex = () => {
    
 
     <div className="my-5 border border-1 border-gray-200 p-4 rounded-md py-5 rounded-3xl">
-                <h2 className='text-2xl font-semibold'>Revenue History</h2>
-
+                <div className="flex justify-between items-center mb-2">
+                  <h2 className='text-2xl font-semibold'>Revenue History</h2>
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-500">Show</label>
+                    <select
+                      value={rowsPerPage}
+                      onChange={(e) => setRowsPerPage(Number(e.target.value))}
+                      className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green/30"
+                    >
+                      <option value={5}>5</option>
+                      <option value={10}>10</option>
+                      <option value={15}>15</option>
+                    </select>
+                    <span className="text-sm text-gray-500">entries</span>
+                  </div>
+                </div>
                 
                         {/* Desktop Table View */}
                         <div className=" overflow-x rounded-xl border border-gray-200 m-4 overflow-hidden">
-                          <table className="min-w-full divide-y divide-gray-100">
+                          <table className="min-w-full divide-y divide-gray-100 bg-white">
                             <thead className="bg-gray-300/50">
-                              <tr>
+                              <tr >
                                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date, Year</th>
                                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Total Amount</th>
                                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Total Bill Amount</th>
@@ -85,9 +101,9 @@ const RevenueIndex = () => {
                                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Total Overdue Amount</th>
                               </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-50">
-                              {revenue && revenue.map((activity) => (
-                                <tr key={activity.id} className="hover:bg-gray-50/50 transition-colors">
+                            <tbody className="bg-white divide-y divide-gray-200">
+                              {revenue && revenue.slice(0, rowsPerPage).map((activity, index) => (
+                                <tr key={activity.id} className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`}>
                                   <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-secondary">{activity.monthWord+","+activity.year}</td>
                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{Naira.format(parseFloat(activity.totalAmount))}</td>
                                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{Naira.format(parseFloat(activity.totalBillAmount))}</td>

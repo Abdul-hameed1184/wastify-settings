@@ -50,7 +50,19 @@ const FirstPieChart = ({ revenue, overdue }: { revenue: string, overdue: string 
 
                 </PieChart>
                 <div className="flex flex-col gap-2">
-                    <div className="flex flex-col  items-center text-secondary">
+                                        <div className="flex flex-col items-center text-secondary">
+                        <div className='flex flex-row items-center gap-2'>
+                        <FaSquare className='text-[#ff0000]' size={20} />
+                                                    <p className='text-gray-500 text-sm md:text-xl font-medium leading-5'>Overdue Bills</p>
+                        </div>
+                        <div className="mx-2">
+
+                            <p className='text-black text-lg md:text-2xl font-bold'>{Naira.format(parseFloat(overdue) || 0)}</p>
+                        </div>
+                    </div>
+                    
+                    <hr className='border-1 border-gray-200' />
+                   <div className="flex flex-col  items-center text-secondary">
                         <div className='flex flex-row items-center gap-2'>
                         <FaSquare className='text-green ' size={20} />
                                                     <p className='text-gray-500 text-sm md:text-xl font-medium leading-5'>Current Bills</p>
@@ -58,17 +70,6 @@ const FirstPieChart = ({ revenue, overdue }: { revenue: string, overdue: string 
                         <div className="mx-2">
 
                             <p className='text-black text-lg md:text-2xl font-bold'>{Naira.format(parseFloat(revenue) || 0)}</p>
-                        </div>
-                    </div>
-                    <hr className='border-1 border-gray-200' />
-                    <div className="flex flex-col items-center text-secondary">
-                        <div className='flex flex-row items-center gap-2'>
-                        <FaSquare className='text-red-900' size={20} />
-                                                    <p className='text-gray-500 text-sm md:text-xl font-medium leading-5'>Overdue Bills</p>
-                        </div>
-                        <div className="mx-2">
-
-                            <p className='text-black text-lg md:text-2xl font-bold'>{Naira.format(parseFloat(overdue) || 0)}</p>
                         </div>
                     </div>
                 </div>
