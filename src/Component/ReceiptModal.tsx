@@ -12,8 +12,10 @@ interface Transaction {
   receiptNo?: string;
   customerName: string;
   propertyAddress: string;
-  amountPaid: string;
-  paidDateTime: string;
+  propertyCode: string;
+  amountPaid?: string;
+  totalAmount?: string;
+  paidDateTime?: string;
   paymentStatus: string;
 }
 
@@ -114,7 +116,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
               Amount Paid
             </span>
             <span className="text-xl font-bold text-green">
-              {Naira.format(parseFloat(String(transaction.amountPaid)))}
+              {transaction.amountPaid ? Naira.format(parseFloat(String(transaction.amountPaid))) : Naira.format(parseFloat(String(transaction.totalAmount)))}
             </span>
           </div>
         </div>

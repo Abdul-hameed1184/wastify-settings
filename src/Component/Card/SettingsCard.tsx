@@ -11,18 +11,16 @@ type SettingProps = {
 }
 const SettingsCard:React.FC<SettingProps> = ({icon, title, text, path}) => {
   return (
-    <Link to={path} className='h-40 my-2 mx-2 inline-block border border-Oldgreen rounded-lg ring-2 ring-transparent shadow p-4 w-full md:w-[45%] '>
-        <div className="flex gap-10 items-center">
-            <div className="h-8 w-8 ">
+    <Link to={path} className='bg-white group block border border-gray-300 rounded-2xl shadow-sm hover:shadow-md  hover:bg-gray-50 transition-all p-6'>
+        <div className="flex gap-4 items-start">
+            <div className="h-12 w-12 flex-shrink-0 flex items-center justify-center p-3 rounded-xl bg-gray-50 text-gray-500 group-hover:bg-green/10 group-hover:text-green transition-colors">
                 {icon}
             </div>
-            <div className="">
-                <ParagraphSettings content={title} />
-                <ParagraphTextSettings content={text} />
+            <div className="flex flex-col pt-1">
+                <h3 className="font-bold text-gray-900 text-lg tracking-tight mb-1">{title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{text}</p>
             </div>
-
         </div>
-
     </Link>
   )
 }

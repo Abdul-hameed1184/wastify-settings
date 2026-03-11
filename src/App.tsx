@@ -22,7 +22,6 @@ import Customers from "./Pages/Operator/Customers/Customers";
 import OperatorLogin from "./Pages/Operator/Auth/OperatorLogin";
 import SupportLogin from "./Pages/Support/Auth/SupportLogin";
 import { OperatorTransactions } from "./Pages/Operator/OperatorTransactions/OperatorTransactions";
-import { OperatorSettings } from "./Pages/Operator/Settings/Settings";
 import { Complaint } from "./Pages/Operator/Complaint/Complaints";
 import Properties from "./Pages/Operator/Customers/Properties";
 import Wastebills from "./Pages/UserProfile/Wastebills";
@@ -36,6 +35,9 @@ import AdminResetPassword from "./Pages/Operator/Auth/OperatorResetPassword";
 import PropertiesLayout from "./Layouts/PropertiesLayout";
 import Property from "./Pages/Operator/Customers/Property";
 import ApartmentBill from "./Pages/Operator/Customers/ApartmentBill";
+import { OperatorSettings } from "./Pages/Operator/Settings/OperatorSettings";
+import Pricing from "./Pages/Operator/Settings/Pricing";
+import Transaction from "./Pages/Operator/Billing/Transaction";
 
 
 const App = () => {
@@ -92,9 +94,9 @@ const App = () => {
             <Route path="dashboard" element={<Dash />} />
             <Route path="revenue" element={<RevenueIndex />} />
             <Route path="customers" element={<Customers />} />
-            <Route path="transactions" element={<OperatorTransactions />} />
+            <Route path="transactions" element={<Transaction />} />
             <Route path="complaint" element={<Complaint />} />
-            <Route path="settings" element={<OperatorSettings />} />
+
 
   
              <Route path="properties" element={<PropertiesLayout />}>
@@ -105,6 +107,8 @@ const App = () => {
                 element={<ApartmentBill />}
               />
             </Route>
+            <Route path="settings" element={<OperatorSettings />} />
+            <Route path="pricing" element={<Pricing />} />
           </Route>
         </Route>
 

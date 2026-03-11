@@ -185,13 +185,13 @@ const Dash = () => {
                       activity.receiptNo ? (
                         <button
                           onClick={() => setSelectedTransaction(activity)}
-                          className="text-primary hover:underline  font-bold transition-colors"
+                          className="text-primary hover:underline  transition-colors"
                         >
                           View Receipt
                         </button>
                       ) : (
-                        <button className="text-primary hover:text-green font-bold transition-colors">
-                          Generate Receipt
+                        <button className="text-red-500 hover:text-red-600 hover:underline transition-colors">
+                          No Payment
                         </button>
                       )
                     }

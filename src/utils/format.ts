@@ -20,6 +20,33 @@ export const   formatDateWithSuffix = (date: Date) => {
   return `${month} ${day}${suffix} ${year}`;
 }
 
+  const months = [
+    { id: "01", name: "January" },
+    { id: "02", name: "February" },
+    { id: "03", name: "March" },
+    { id: "04", name: "April" },
+    { id: "05", name: "May" },
+    { id: "06", name: "June" },
+    { id: "07", name: "July" },
+    { id: "08", name: "August" },
+    { id: "09", name: "September" },
+    { id: "10", name: "October" },
+    { id: "11", name: "November" },
+    { id: "12", name: "December" },
+  ];
+
+  export function formatDate(dx: string): string {
+    const splitted = dx.split("-");
+    return getMonthById(splitted[0]).name + ", " + splitted[1];
+  }
+
+
+
+    function getMonthById(id: string): { id: string; name: string } {
+    const month = months.find((month) => month.id === id);
+    return month ? month : months[0];
+  }
+
 
 export const getInitials = (name: string) => {
   if (!name) return "";

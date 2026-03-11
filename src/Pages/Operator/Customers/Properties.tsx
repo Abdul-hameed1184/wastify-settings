@@ -45,66 +45,69 @@ const Properties:React.FC = () => {
   })
 
   console.log(allProperties);
-  if(isLoading){
-    return <Loader />
-  }
+
 
 
   return (
-
-          <div className="flex flex-col p-4">
-        <h3 className="font-semibold text-xl leading-[40px] tracking-[0] my-0">Properties List</h3>
-        <p className="text-gray-500 text-lg my-0">{"Here's what's happening with your waste management account."}</p>
+    <main className="mb-10 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6">
+      <div className="flex flex-col mb-8">
+        <h3 className="font-bold text-2xl text-gray-900 tracking-tight">Properties List</h3>
+        <p className="text-gray-500 text-sm mt-1">{"Here's what's happening with your waste management account."}</p>
+      </div>
 
     
-      <div className="flex items-center justify-between mb-4 gap-4">
-        <Card className="flex-1 max-w-sm">
-          <div className="flex flex-row justify-between">
+      <div className="flex items-center justify-between mb-8 gap-4">
+        <Card className="flex-1 max-w-sm rounded-2xl  overflow-hidden p-2">
+          <div className="flex flex-row justify-between items-center px-2 py-1">
             <div>
-              <p className="font-semibold flexjustify-between text-gray-500"><span>Total Properties</span></p>
-              <p className="font-semibold text-2xl text-black py-2">{allProperties?.data.data.total}</p>
-
+              <p className="font-medium text-sm text-gray-500 flex justify-between"><span>Total Properties</span></p>
+              <p className="font-bold text-3xl text-gray-900 py-1">{allProperties?.data.data.total || 0}</p>
             </div>
-
-            <span className="bg-primary/10 flex items-center justify-center text-primary p-4 rounded-lg text-2xl"><PiBuildings /></span>
+            <span className="bg-green/10 flex items-center justify-center text-green p-4 rounded-xl text-3xl shadow-sm"><PiBuildings /></span>
           </div>
-          {/* <h3 className="flex justify-between"><NavLink to="/transactions" className="text-primary hover:bg-primary/70 hover:text-white p-1 text-sm rounded-md ">{"View Transactions"}</NavLink><span className="rounded-lg bg-red-200 p-1 text-sm text-red-700">Overdue</span></h3> */}
-
         </Card>
+      </div>
 
-        </div>
-        <div className="flex justify-between items-center md:flex-row flex-col">
-          <h2 className="font-semibold text-2xl leading-[40px] tracking-[0] my-0">Properties</h2>
-          <div className="flex gap-2  items-center justify-center md:flex-row flex-col">
-            <Input iconPosition="left" icon={<IoSearchOutline />} type="text" placeholder="Search Property"/>
-          <Button className="w-full md:w-auto p-4 mb-4" onClick={()=>setOpenCreateProperty(!openCreateProperty)}>Add Property <FaLongArrowAltRight /></Button>
+      <div className="bg-white border border-gray-300 rounded-2xl mb-10 overflow-hidden shadow-sm flex flex-col p-4">
+        <div className="p-4 mb-4 border border-gray-300 flex justify-between rounded-lg items-center bg-gray-50/50 flex-wrap gap-4">
+          <h2 className="text-xl font-bold text-gray-900 tracking-tight">All Properties</h2>
+          <div className="flex gap-3 items-center w-full md:w-auto md:flex-row flex-col">
+            <div className="w-full md:w-auto">
+              <Input iconPosition="left" className="mb-2" icon={<IoSearchOutline />} type="text" placeholder="Search Property" />
+            </div>
+            <Button className="w-full md:w-auto px-5 py-2.5 text-sm mb-6 font-medium text-black bg-green rounded-lg hover:bg-green/90 transition-all shadow-sm hover:shadow-md whitespace-nowrap flex items-center gap-2 justify-center" onClick={()=>setOpenCreateProperty(!openCreateProperty)}>
+              Add Property <FaLongArrowAltRight />
+            </Button>
           </div>
         </div>
 
-       { allProperties?.data.data.data.length > 0 &&  
-                  <div className="hidden md:block overflow-x-auto rounded-xl border border-gray-200 m-4 overflow-hidden">
-          <table className="table-auto min-w-full divide-y divide-gray-100">
-            <thead className="bg-gray-300/50">
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">S/N</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Property Address</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Ward</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Owner</th>
-                                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Property Code</th>
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">No Of Apartments</th>
-
-                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Action</th>
-              </tr>
-            </thead>    
-            <tbody className="bg-white divide-y divide-gray-50">
-              {allProperties && allProperties.data.data.data.map((property:IProperty, index) => (
-                <tr key={index} className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100 transition-colors`}>
-                  <td className="px-6 py-4 whitespace-nowrap text-base font-semibold text-secondary">{(page - 1) * params.perPage + index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-600">{property.propertyAddress}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">{property.wardName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">{property.ownerFullname}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">{property.propertyCode}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-base text-center text-gray-500">
+       { !isLoading && allProperties?.data.data.data.length > 0 &&  
+          <div className="w-full border border-gray-300 rounded-lg overflow-x-auto shadow-sm">
+            <table className="table-auto min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">S/N</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Property Address</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Ward</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Owner</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Property Code</th>
+                  <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">No Of Apartments</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>    
+              <tbody className="bg-white divide-y divide-gray-100">
+                {allProperties && allProperties.data.data.data.map((property:IProperty, index) => (
+                  <tr key={index} className="hover:bg-blue-50/50 transition-colors group">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{(page - 1) * params.perPage + index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">{property.propertyAddress}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      {property.wardName}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{property.ownerFullname}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{property.propertyCode}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-gray-900">
                     {property.noOfDistinctApartment}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-base text-sm text-gray-500">
@@ -172,25 +175,25 @@ const Properties:React.FC = () => {
               </button>
             </div>
           </div>
-                <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
-
         </div>
        }
 
 
-{ allProperties?.status === 404  && (
-  <div className="flex justify-center items-center h-96 text-4xl font-semibold text-gray-400">
-    <h2>No properties found</h2>
-  </div>
-) }
+      { (!allProperties?.data.data.data.length || allProperties?.status === 404)  && (
+        <div className="flex flex-col items-center justify-center p-12 bg-white border-t border-gray-100 border-dashed">
+          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-1">No Properties Found</h2>
+          <p className="text-gray-500 text-center max-w-sm">You haven't added any properties yet. Add a new property to get started.</p>
+        </div>
+      ) }
 
-
-        
-
-
-
-
-      </div>              
+      </div>
+      <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
+    </main>
 //   { 
 //   openCreateProperty &&   <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
 // }

@@ -6,31 +6,26 @@ type Field = {
 };
 
 type DataCardProps = {
-  title: string;
   data: object;
   fields: Field[];
 };
 
-const DataCard: React.FC<DataCardProps> = ({ title, data, fields }) => {
+const DataCard: React.FC<DataCardProps> = ({ data, fields }) => {
   return (
-    <div className="w-full bg-white">
-      <div className="px-4 py-3 border-b border-gray-500 bg-slate-900 text-white">
-        <h2 className="text-lg font-semibold">{title}</h2>
-      </div>
 
-        <ul className="flex flex-row space-y-2">
+
+        <ul className="flex md:flex-row flex-col justify-between w-full border border-gray-300 rounded-lg">
           {fields && fields?.map(({ key, label }) => (
             <li
               key={key}
-              className="flex flex-col space-around border border-gray-500  pb-1 "
+              className="flex flex-col flex-1  px-3 py-2 border md:border-x border-y border-gray-300 "
             >
-              <span className="font-medium text-gray">{label}</span>
-               <span className="font-bold uppercase">{ data[key]?.toString() ? data[key]?.toString() : "-"}</span> 
+              <span className="font-medium text-gray-500">{label}</span>
+               <span className="font-medium uppercase">{ data[key]?.toString() ? data[key]?.toString() : "-"}</span> 
             </li>
           ))}
         </ul>
 
-    </div>
   );
 };
 

@@ -109,7 +109,8 @@ const UpdatePropertyModal: React.FC<Props> = ({ openModal, handleOpenModal, oper
     <Modal
       isOpen={openModal}
       onClose={handleOpenModal}
-      size="lg"
+      position="right"
+      size="sm"
       title="Update Property"
     >
 

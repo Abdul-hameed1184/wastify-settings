@@ -139,6 +139,7 @@ const { data:customers } = useQuery({
       isOpen={openModal}
       onClose={() => setOpenModal(false)}
       size={"md"}
+      position="right"
       title={`Create Apartment`}
     >
       {!showCreateCustomer && (
