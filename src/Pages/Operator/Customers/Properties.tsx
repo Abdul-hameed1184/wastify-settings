@@ -49,7 +49,7 @@ const Properties:React.FC = () => {
 
 
   return (
-    <main className="mb-10 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6">
+    <main className="mb-10  mx-auto md:px-8 py-6">
       <div className="flex flex-col mb-8">
         <h3 className="font-bold text-2xl text-gray-900 tracking-tight">Properties List</h3>
         <p className="text-gray-500 text-sm mt-1">{"Here's what's happening with your waste management account."}</p>

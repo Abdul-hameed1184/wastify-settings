@@ -94,7 +94,7 @@ const ContactUs: React.FC = () => {
       <div className="mt-6 flex flex-col lg:flex-row items-stretch border border-gray-200 shadow-sm rounded-2xl bg-white overflow-hidden">
 
         {/* Left Side: Messages */}
-        <div className="w-full lg:w-1/2 p-6 flex flex-col items-start border-b lg:border-b-0 lg:border-r border-gray-200">
+        <div className="w-full lg:w-1/2 p-6 flex flex-col w-128 items-start border-b lg:border-b-0 lg:border-r border-gray-200">
           <h2 className="font-semibold text-lg text-gray-800">Messages</h2>
           <div className="flex flex-row gap-4 mt-4 w-full">
             <Button variant="white" className="flex-1 border border-primary p-2.5 rounded-xl text-primary font-medium hover:bg-primary/5 transition-colors shadow-sm">Create Ticket</Button>

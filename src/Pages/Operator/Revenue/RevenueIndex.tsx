@@ -36,8 +36,8 @@ const RevenueIndex = () => {
         return <Loader />;
     }
     return (
-    <div className="flex flex-col gap-4 p-4">
-      <div>
+    <div className="mb-10 md:px-8 mx-auto  py-6 flex flex-col ">
+      <div className='px-4'>
           <h3 className="font-semibold text-xl leading-[40px] tracking-[0] my-0">Revenue Updated Report</h3>
         <p className="text-gray-500 text-lg my-0">{"Here's what's happening with your waste management account."}</p>
 
@@ -51,7 +51,7 @@ const RevenueIndex = () => {
           <div className="flex flex-row justify-between">
             <div>
               <p className="font-semibold flexjustify-between text-gray-500"><span>Total Revenue</span></p>
-        <p className="font-semibold text-2xl text-black py-2">{Naira.format(parseFloat(dash.totalRevenue))}</p>
+        <p className="font-semibold text-2xl text-black py-2">{Naira.format(parseFloat(dash.totalRevenue|| 0.00))}</p>
 
             </div>
 
@@ -89,7 +89,7 @@ const RevenueIndex = () => {
                 </div>
                 
                         {/* Desktop Table View */}
-                        <div className=" overflow-x rounded-xl border border-gray-200 m-4 overflow-hidden">
+                        <div className=" overflow-x rounded-xl border border-gray-200 m-4 overflow-x-auto">
                           <table className="min-w-full divide-y divide-gray-100 bg-white">
                             <thead className="bg-gray-300/50">
                               <tr >

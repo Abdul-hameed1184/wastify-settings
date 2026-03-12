@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from "formik";
 import {  toast } from "react-toastify";
-import axios from "axios";
-import BgWasteOperator from "../../../assets/images/bg-waste-operator.png";
-import baseURL from "../../../utils/apiConfig";
+import { operatorPasswordReset } from "../../../api/auth.service";
 import { BsBarChartLine } from "react-icons/bs";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { MdOutlineShield } from "react-icons/md";
 import { Button } from "../../../Component/Button";
 import Input from "../../../Component/InputField";
 import { Logo } from "../../../Component/Logo";
+import BgWasteOperator from "../../../assets/images/bg-waste-operator.png";
 type Err = {
   password:string;
   password_confirmation: string;
@@ -42,7 +41,7 @@ const AdminResetPassword:React.FC = () => {
   const [loading, SetLoading] = useState(false);
   const navigate = useNavigate();
 
-  let { userId, token } = useParams();
+  const { userId, token } = useParams();
 
   const toggle = () => {
     setIstoggle((prev) => !prev);
@@ -57,17 +56,12 @@ const AdminResetPassword:React.FC = () => {
       password_confirmation: "",
     },
     validate,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       SetLoading(true);
       // console.log(data);
-
-      axios
-        .put(`${baseURL}auth/admin/password-reset/${userId}/${token}`, values, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((res) => {
+  try {
+      const res = await operatorPasswordReset(userId, token, values);
+    
           console.log(res);
           SetLoading(false);
           const message = res.data?.message;
@@ -78,17 +72,17 @@ const AdminResetPassword:React.FC = () => {
               navigate("/operator-login");
             }, 3000);
           } else {
-            console.log(`${baseURL}auth/admin/password-reset/${userId}/${token}`)
+
             toast.error(message, { autoClose: 5000 });
           }
-        })
-        .catch((err) => {
+      
+      }catch(err) {
           console.log(err);
           // SetLoading(false)
           // const message = err.response.data?.message;
           // toast.error(message, { autoClose: 7000 });
-        });
-    },
+        }
+      }
   });
   return (
      <div className="md:p-4 p-0 h-screen ">

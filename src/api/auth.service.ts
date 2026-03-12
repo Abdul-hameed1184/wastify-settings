@@ -39,3 +39,7 @@ export const operatorVerifyOTP = async (data) => {
 export const createOperator = async (data) => {
     return await axios.post(`/auth/operator/signup/create-account`, data)
 }
+
+export const operatorPasswordReset = async (operatorId: string, token: string, data) => {
+    return await axios.put(`/auth/admin/password-reset/${operatorId}/${token}`, data)
+}

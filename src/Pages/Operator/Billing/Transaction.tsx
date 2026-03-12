@@ -83,7 +83,7 @@ const Transaction = () => {
         </Modal>)
       }
 
-      <div className="mb-10 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6">
+      <div className="mb-10 mx-auto md:px-8 sm:px-6 lg:px-8 py-6">
 
         {/* Header Card */}
 

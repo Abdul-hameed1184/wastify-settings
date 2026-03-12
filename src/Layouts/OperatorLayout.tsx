@@ -39,7 +39,7 @@ const OperatorLayout:React.FC = () => {
 
       <div className="min-h-screen bg-lightGreen flex flex-col">
         {/* ===== Header ===== */}
-        <header className="flex items-center justify-between p-2 bg-lightGreen md:px-6">
+        <header className="flex items-center  justify-between p-2 bg-lightGreen md:px-6">
           <Link to="/">
             <LogoWithText />
           </Link>
@@ -62,37 +62,38 @@ const OperatorLayout:React.FC = () => {
           </NavLink> */}
         </header>
 
-        <div className="flex flex-1 relative">
+        <div className="flex flex-1 relative px-4">
           {/* ===== Sidebar ===== */}
           <aside
-            
             className={`
-              fixed md:static top-0 left-0 h-full w-64 bg-lightGreen z-40
-              transform transition-transform duration-300
+              fixed md:static top-0 left-0 h-screen md:h-full w-72 bg-lightGreen z-40
+              transform transition-transform duration-300 ease-in-out border-r border-gray-100/50
               ${open ? "translate-x-0" : "-translate-x-full"}
-              md:translate-x-0
+              md:translate-x-0 flex flex-col
             `}
           >
-            <nav className="flex flex-col mt-20 md:mt-6 justify-between">
-              <ul>
+            <nav className="flex flex-col flex-1 mt-20 md:mt-6 overflow-y-auto justify-between">
+              <ul className="flex-1 px-8 space-y-4">
                 {navLinks.map((link) => {
                   const isActive = location.pathname === "/operator"+link.to;
 
                   return (
-                    <li key={link.to} className="px-4 my-2">
+                    <li key={link.to} className='px-4'>
                       <Link
                         to={"/operator"+link.to}
                         onClick={() => setOpen(false)}
-                        className={`flex items-center gap-4 p-4 rounded-lg font-semibold
+                        className={`flex items-center gap-4 px-4 py-4 rounded-xl font-semibold transition-all duration-200 group
                           ${
                             isActive
-                              ? "bg-green text-black"
-                              : "text-gray-600 hover:bg-green/20"
+                              ? "bg-green text-black shadow-sm font-bold shadow-green/5 border-r-4 border-green"
+                              : "text-gray-500 hover:text-green hover:bg-green/10"
                           }
                         `}
                       >
-                        {link.icon}
-                        {link.label}
+                        <span className={`text-xl transition-colors ${isActive ? 'text-black font-bold' : 'text-gray-400 group-hover:text-green'}`}>
+                          {link.icon}
+                        </span>
+                        <span>{link.label}</span>
                       </Link>
                     </li>
                   );
@@ -100,13 +101,15 @@ const OperatorLayout:React.FC = () => {
               </ul>
 
               {/* Logout */}
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-4 m-4 p-4 bg-red-500 text-white rounded-md hover:bg-red-600"
-              >
-                <FaToggleOff />
-                Logout
-              </button>
+              <div className="p-4 border-t border-gray-100/30">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-white font-bold bg-red-600 rounded-xl transition-all duration-200 border border-transparent hover:border-red-100 group"
+                >
+                  <FaToggleOff className="text-xl group-hover:scale-110 transition-transform" />
+                  Logout
+                </button>
+              </div>
             </nav>
           </aside>
 
@@ -119,7 +122,7 @@ const OperatorLayout:React.FC = () => {
           )}
 
           {/* ===== Main Content ===== */}
-          <main className="flex-1 p-4 md:p-6 md:ml-0">
+          <main className="flex-1 p-4 overflow-x-hidden ">
             <div className="bg-white rounded-xl min-h-full">
               <Outlet />
             </div>

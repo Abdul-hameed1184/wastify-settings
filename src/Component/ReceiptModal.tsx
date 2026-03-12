@@ -5,17 +5,19 @@ import { Modal } from "./Modal/Modal";
 import { Naira } from "../utils/format";
 import PaymentStatusBadge from "../utils/PaymentStatusBadge";
 import { FiDownload, FiImage } from "react-icons/fi";
-import { Logo, LogoWithText } from "./Logo";
+import { Logo } from "./Logo";
 
 interface Transaction {
   id: string;
   receiptNo?: string;
   customerName: string;
+  customerFullname?:string;
   propertyAddress: string;
   propertyCode: string;
   amountPaid?: string;
   totalAmount?: string;
   paidDateTime?: string;
+  updated_at?:string;
   paymentStatus: string;
 }
 
@@ -92,7 +94,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           <div className="flex justify-between items-center py-1 border-b border-gray-100">
             <span className="text-sm text-gray-500">Customer</span>
             <span className="text-sm font-semibold text-black">
-              {transaction.customerName}
+              {transaction.customerName ?? transaction.customerFullname}
             </span>
           </div>
           <div className="flex justify-between items-center py-1 border-b border-gray-100">
@@ -104,7 +106,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           <div className="flex justify-between items-center py-1 border-b border-gray-100">
             <span className="text-sm text-gray-500">Date</span>
             <span className="text-sm font-semibold text-black">
-              {transaction.paidDateTime}
+              {transaction.paidDateTime ?? transaction.updated_at}
             </span>
           </div>
           <div className="flex justify-between items-center py-1 border-b border-gray-100">
