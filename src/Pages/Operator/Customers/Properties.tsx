@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IProperty } from "../../../models/property.interface";
 import { IOperator } from "../../../models/operator.interface";
 import { getPropertyByOperator } from "../../../api/psp-operator/psp-operator.service";
@@ -7,7 +7,7 @@ import { LuGlasses } from "react-icons/lu";
 
 import { useQuery } from "@tanstack/react-query";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import DropdownMenu from "../../../Component/DropdownMenu";
 import UpdatePropertyModal from "../../../Component/Modal/UpdatePropertyModal";
 import Card from "../../../Component/Card/Card";
@@ -24,17 +24,42 @@ const Properties:React.FC = () => {
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
     const [ openUpdateProperty, setOpenUpdateProperty] = useState<boolean>(false);
   const [ viewDelete, setViewDelete ] = useState<boolean>(false)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [localSearch, setLocalSearch] = useState(searchParams.get("search") || "");
   const [ page, setPage] = useState<number>(1);
+
+  const searchTerm = searchParams.get("search") || "";
+
   const params = {
     page: page,
     perPage: 10,
+    searchTerm: searchTerm,
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchParams(prev => {
+        if (localSearch) {
+          prev.set("search", localSearch);
+        } else {
+          prev.delete("search");
+        }
+        return prev;
+      });
+      setPage(1); 
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [localSearch, setSearchParams]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalSearch(e.target.value);
   };
      
   const handleOpenUpdateProperty = () => {
     setOpenUpdateProperty(!openUpdateProperty);
   }
   const { data: allProperties, isLoading } = useQuery({
-        queryKey: ['properties', operator.id, page],
+        queryKey: ['properties', operator.id, page, searchTerm],
         queryFn: async() => {
           const res =  await  getPropertyByOperator(operator.id,params)
           console.log(res);
@@ -73,7 +98,15 @@ const Properties:React.FC = () => {
           <h2 className="text-xl font-bold text-gray-900 tracking-tight">All Properties</h2>
           <div className="flex gap-3 items-center w-full md:w-auto md:flex-row flex-col">
             <div className="w-full md:w-auto">
-              <Input iconPosition="left" className="mb-2" icon={<IoSearchOutline />} type="text" placeholder="Search Property" />
+              <Input 
+                iconPosition="left" 
+                className="mb-2" 
+                icon={<IoSearchOutline />} 
+                type="text" 
+                placeholder="Search Property" 
+                value={localSearch}
+                onChange={handleSearchChange}
+              />
             </div>
             <Button className="w-full md:w-auto px-5 py-2.5 text-sm mb-6 font-medium text-black bg-green rounded-lg hover:bg-green/90 transition-all shadow-sm hover:shadow-md whitespace-nowrap flex items-center gap-2 justify-center" onClick={()=>setOpenCreateProperty(!openCreateProperty)}>
               Add Property <FaLongArrowAltRight />
@@ -179,7 +212,7 @@ const Properties:React.FC = () => {
        }
 
 
-      { (!allProperties?.data.data.data.length || allProperties?.status === 404)  && (
+      { allProperties?.data.data.data.length === 0  && (
         <div className="flex flex-col items-center justify-center p-12 bg-white border-t border-gray-100 border-dashed">
           <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
             <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -21,8 +21,8 @@ export const getCustomerReports =  async (operatorId:string) => {
     return await api.get(`/customerReport/list-by-psp-operator-id/${operatorId}`);
 }
 
-export const getCustomers = async (page:number, operatorId:number ) => {
-    return await api.get(`/customer/psp-operator/${operatorId}?page=${page}`);
+export const getCustomers = async (operatorId: number, params: any) => {
+    return await api.get(`/customer/psp-operator/${operatorId}`, { params });
 }
 
 export const getProfile = async (userId: string) => {

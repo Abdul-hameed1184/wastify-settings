@@ -35,11 +35,19 @@ export const   formatDateWithSuffix = (date: Date) => {
     { id: "12", name: "December" },
   ];
 
-  export function formatDate(dx: string): string {
-    const splitted = dx.split("-");
-    return getMonthById(splitted[0]).name + ", " + splitted[1];
-  }
+export function formatDate(dx?: string | null): string {
+  if (!dx || typeof dx !== "string") return "";
 
+  const splitted = dx.split("-");
+
+  if (splitted.length < 2) return "";
+
+  const month = getMonthById(splitted[0]);
+
+  if (!month || !month.name) return "";
+
+  return `${month.name}, ${splitted[1]}`;
+}
 
 
     function getMonthById(id: string): { id: string; name: string } {

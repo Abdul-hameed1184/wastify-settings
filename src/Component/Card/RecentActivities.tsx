@@ -48,57 +48,57 @@ export const RecentActivities: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'Completed':
-        return 'text-green font-semibold bg-lightGreen px-2 py-1 rounded-full text-xxs';
+        return 'text-green  bg-lightGreen px-2 py-1 rounded-full text-sm';
       case 'Pending':
-        return 'text-support font-semibold bg-yellow-50 px-2 py-1 rounded-full text-xxs';
+        return 'text-support  bg-yellow-50 px-2 py-1 rounded-full text-sm';
       case 'Failed':
-        return 'text-error font-semibold bg-red-50 px-2 py-1 rounded-full text-xxs';
+        return 'text-error  bg-red-50 px-2 py-1 rounded-full text-sm';
       default:
         return 'text-gray-600';
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-full flex flex-col">
+    <div className="bg-white overflow-hidden h-full flex flex-col tracking-tight">
       {/* Header */}
-      <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/10">
-        <h2 className="text-xl font-bold text-gray-800">Recent Activities</h2>
-      </div>
-
-      {/* Navigation / Filter */}
-      <div className="px-6 py-3 border-b border-gray-50 bg-gray-50/30">
+      <div className="py-5 flex justify-between items-center ">
+        <h2 className="text-xl font-normal tracking-tight text-gray-800">Recent Activities</h2>
+              <div className="px-6 py-3 border-b border-gray-50 bg-gray-50/30">
         <div className="flex  justify-between space-x-6 text-sm">
           <span></span>
           <button className="text-primary font-bold border-b-2 border-primary pb-1">All</button>
-          {/* Add more filters if needed */}
         </div>
       </div>
+      </div>
+
+
+
 
       {/* Desktop Table View */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-100">
-          <thead className="bg-gray-50/50">
+      <div className="hidden md:block overflow-x-auto rounded-2xl border border-gray-200 m-0 p-0 rounded-2xl">
+        <table className="min-w-full divide-y divide-gray-300     bg-gray-200">
+          <thead className="">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Activity</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Description</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Ref ID</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Action</th>
+              <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Activity</th>
+              <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Description</th>
+              <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Ref ID</th>
+              <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Date</th>
+              <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-50">
+          <tbody className="bg-white divide-y divide-gray-300">
             {activities.map((activity) => (
               <tr key={activity.id} className="hover:bg-primary/5 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 cursor-default">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">{activity.type}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{activity.description}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{activity.refId}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{activity.date}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{activity.type}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{activity.description}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{activity.refId}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">{activity.date}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={getStatusColor(activity.status)}>{activity.status}</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <button className="text-primary hover:text-green font-bold transition-colors hover:underline">
+                  <button className="text-primary hover:text-green hover:underline hover:offset-2">
                     {activity.actionLabel}
                   </button>
                 </td>
@@ -106,6 +106,29 @@ export const RecentActivities: React.FC = () => {
             ))}
           </tbody>
         </table>
+              <div className="hidden md:flex  px-6 py-4 border-t border-gray-100  items-center justify-between bg-white text-sm">
+        <button
+          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          disabled={currentPage === 1}
+          className="flex items-center text-black  hover:text-primary disabled:text-gray-200 disabled:cursor-not-allowed transition-colors"
+        >
+          <IoIosArrowRoundBack className="text-xl mr-1" />
+          <span>Previous</span>
+        </button>
+
+        <span className=" font-medium">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+          disabled={currentPage === totalPages}
+          className="flex items-center text-black hover:text-primary disabled:text-gray-200 disabled:cursor-not-allowed transition-colors"
+        >
+          <span>Next</span>
+          <IoIosArrowRoundForward className="text-xl ml-1" />
+        </button>
+      </div>
       </div>
 
       {/* Mobile Card-based List View */}
@@ -146,24 +169,24 @@ export const RecentActivities: React.FC = () => {
       </div>
 
       {/* Shared Pagination */}
-      <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-white text-sm">
+      <div className="md:hidden px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-white text-sm">
         <button
           onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
           disabled={currentPage === 1}
-          className="flex items-center text-secondary font-bold hover:text-primary disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center text-black  hover:text-primary disabled:text-gray-200 disabled:cursor-not-allowed transition-colors"
         >
           <IoIosArrowRoundBack className="text-xl mr-1" />
           <span>Previous</span>
         </button>
 
-        <span className="text-gray-500 font-medium">
+        <span className=" font-medium">
           Page {currentPage} of {totalPages}
         </span>
 
         <button
           onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
           disabled={currentPage === totalPages}
-          className="flex items-center text-secondary font-bold hover:text-primary disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+          className="flex items-center text-black hover:text-primary disabled:text-gray-200 disabled:cursor-not-allowed transition-colors"
         >
           <span>Next</span>
           <IoIosArrowRoundForward className="text-xl ml-1" />

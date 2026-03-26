@@ -78,14 +78,14 @@ const OperatorLayout:React.FC = () => {
                   const isActive = location.pathname === "/operator"+link.to;
 
                   return (
-                    <li key={link.to} className='px-4'>
+                    <li key={link.to} className=''>
                       <Link
                         to={"/operator"+link.to}
                         onClick={() => setOpen(false)}
-                        className={`flex items-center gap-4 px-4 py-4 rounded-xl font-semibold transition-all duration-200 group
+                        className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-200 group
                           ${
                             isActive
-                              ? "bg-green text-black shadow-sm font-bold shadow-green/5 border-r-4 border-green"
+                              ? "bg-green/70 text-black shadow-sm font-semibold shadow-green/5 border-r-4 border-green/70"
                               : "text-gray-500 hover:text-green hover:bg-green/10"
                           }
                         `}

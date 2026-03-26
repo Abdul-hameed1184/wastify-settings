@@ -38,6 +38,7 @@ import ApartmentBill from "./Pages/Operator/Customers/ApartmentBill";
 import { OperatorSettings } from "./Pages/Operator/Settings/OperatorSettings";
 import Pricing from "./Pages/Operator/Settings/Pricing";
 import Transaction from "./Pages/Operator/Billing/Transaction";
+import BillList from "./Pages/QuickPay/BillList";
 
 
 const App = () => {
@@ -62,7 +63,7 @@ const App = () => {
 
         {/* ===== PUBLIC ===== */}
         <Route path="/" element={<Home />} />
-
+        <Route path="/currentbills" element={<BillList />} />
         {/* ===== AUTH ===== */}
         <Route element={<LoginProtect />}>
           <Route path="login" element={<Login />} />

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Loader from "../../../Component/Loader";
 import { GrOverview } from "react-icons/gr";
 
 import CreateCustomer from "../../../Component/Modal/CreateCustomer";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { IApartment } from "../../../models/apartment.interface";
 import { IOperator } from "../../../models/operator.interface";
 import { getCustomers } from "../../../api/psp-operator/psp-operator.service";
@@ -22,14 +23,41 @@ const Customers: React.FC = () => {
   const [openCreateCustomer, setOpenCreateCustomer] = useState<boolean>(false);
   const [customerApartments, setCustomerApartments] = useState<IApartment[]>();
   const [ openViewCustomer, setOpenViewCustomer ] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [localSearch, setLocalSearch] = useState(searchParams.get("search") || "");
   const [page, setPage] = useState<number>(1);
-  // const [ autoX, setAutoX ] = useState<boolean>(false)
 
+  const searchTerm = searchParams.get("search") || "";
+
+  const params = {
+    page: page,
+    perPage: 10,
+    searchTerm: searchTerm,
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchParams(prev => {
+        if (localSearch) {
+          prev.set("search", localSearch);
+        } else {
+          prev.delete("search");
+        }
+        return prev;
+      });
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [localSearch, setSearchParams]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalSearch(e.target.value);
+  };
 
   const { data: allcustomers, isLoading, isError } = useQuery({
-    queryKey: ['customers', page, operator.id],
+    queryKey: ['customers', operator.id, page, searchTerm],
     queryFn: async () => {
-      const xy = await getCustomers(page, operator.id);
+      const xy = await getCustomers(operator.id, params);
       return xy;
     }
   });
@@ -120,7 +148,15 @@ const comp = (
           <h2 className="text-xl font-bold text-gray-900 tracking-tight">All Customers</h2>
           <div className="flex gap-3 items-center w-full md:w-auto md:flex-row flex-col">
             <div className="w-full md:w-auto">
-              <Input iconPosition="left" className="mb-2" icon={<IoSearchOutline />} type="text" placeholder="Search Customer" />
+              <Input 
+                iconPosition="left" 
+                className="mb-2" 
+                icon={<IoSearchOutline />} 
+                type="text" 
+                placeholder="Search Customer" 
+                value={localSearch}
+                onChange={handleSearchChange}
+              />
             </div>
             <Button 
               className="w-full md:w-auto px-5 py-2.5 text-sm mb-6 font-medium text-black bg-green rounded-lg hover:bg-green/90 transition-all shadow-sm hover:shadow-md whitespace-nowrap flex items-center gap-2 justify-center" 

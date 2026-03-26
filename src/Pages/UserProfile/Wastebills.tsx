@@ -263,7 +263,7 @@ const Wastebills: React.FC = () => {
         </div>
       }
       {
-        <PayBillModal handleBillPayment={() => handleBillPayment(billData)} bill={billData} isOpen={billModal} handleOpen={() => setBillModal(!billModal)} />
+       billData && <PayBillModal handleBillPayment={() => handleBillPayment(billData)} bill={billData} isOpen={billModal} onClose={() => setBillModal(!billModal)} />
       }
     </main>
   );

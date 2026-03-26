@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { autoBillingByOperator, getBillingByOperator } from "../../../api/bill/psp-operator-pricing";
 import { IOperator } from "../../../models/operator.interface";
 import { formatDate, Naira } from "../../../utils/format";
@@ -8,6 +8,7 @@ import { GrOverview } from "react-icons/gr";
 import { IBillData } from "../../../models/billdata.interface";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "../../../Component/Button";
 import { Modal } from "../../../Component/Modal/Modal";
 import { toast } from "react-toastify";
@@ -20,16 +21,43 @@ const Transaction = () => {
   const operator: IOperator = JSON.parse(
     sessionStorage.getItem("AUTH_ADMIN_DETAILS") || ""
   );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [localSearch, setLocalSearch] = useState(searchParams.get("search") || "");
   const [page, setPage] = useState<number>(1);
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [billpayment, setBillPayment] = useState<IBillData>({} as IBillData);
   const [autoX, setAutoX] = useState<boolean>(false);
-    const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
-  const params = { page, perPage: 10 };
+  const searchTerm = searchParams.get("search") || "";
+
+  const params = { 
+    page, 
+    perPage: 10,
+    searchTerm: searchTerm,
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchParams(prev => {
+        if (localSearch) {
+          prev.set("search", localSearch);
+        } else {
+          prev.delete("search");
+        }
+        return prev;
+      });
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [localSearch, setSearchParams]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalSearch(e.target.value);
+  };
 
   const { data: bills, isLoading } = useQuery({
-    queryKey: ["bills", operator.id, page],
+    queryKey: ["bills", operator.id, page, searchTerm],
     queryFn: async () => await getBillingByOperator(operator.id, params),
   });
 
@@ -103,7 +131,15 @@ const Transaction = () => {
             </div>
           <div className="flex gap-3 items-center w-full md:w-auto md:flex-row flex-col">
             <div className="w-full md:w-auto">
-              <Input iconPosition="left" className="mb-2" icon={<IoSearchOutline />} type="text" placeholder="Search Property" />
+              <Input 
+                iconPosition="left" 
+                className="mb-2" 
+                icon={<IoSearchOutline />} 
+                type="text" 
+                placeholder="Search Property" 
+                value={localSearch}
+                onChange={handleSearchChange}
+              />
             </div>
             <Button onClick={() => setAutoX(true)} className="w-full md:w-auto px-5 py-2.5 text-sm mb-6 font-medium text-black bg-green rounded-lg hover:bg-green/90 transition-all shadow-sm hover:shadow-md whitespace-nowrap flex items-center gap-2 justify-center">
               Auto Billing <FaLongArrowAltRight />

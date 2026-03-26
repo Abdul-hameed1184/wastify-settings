@@ -42,7 +42,7 @@ const Home: React.FC = () => {
         <div className="w-full px-6 md:px-12 lg:px-20 h-100">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-col max-w-2xl text-center md:text-left mx-2 mt-4 md:mt-0">
-              <h2 className="flex flex-col font-extrabold text-[3.5em] p-0 m-0 tracking-tight leading loose">
+              <h2 className="flex flex-col font-extrabold text-[3.5em] p-0 m-0 tracking-tight leading-[1.25]">
                 Pay & Manage Waste Bills Easily With
               </h2>
 
