@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Link, Outlet, useNavigate, useLocation, NavLink } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
-import { FaMoneyBill, FaToggleOff } from "react-icons/fa6";
-import { TfiDashboard } from "react-icons/tfi";
+import { FaMoneyBill, FaToggleOff, FaUserTie } from "react-icons/fa6";
+import { TfiAngleDown, TfiAngleUp, TfiDashboard } from "react-icons/tfi";
 import { BiSupport } from "react-icons/bi";
 import { IoWalletOutline } from "react-icons/io5";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { logout } from "../Features/authSlice";
 import { LogoWithText } from "../Component/Logo";
+import { PiUsersLight } from "react-icons/pi";
+import { Button } from "../Component/Button";
+import { FaUserCircle } from "react-icons/fa";
 
 const navLinks = [
   { to: "/dashboard", label: "Dashboard", icon: <TfiDashboard /> },
@@ -32,14 +35,50 @@ const UserLayout: React.FC = () => {
     <>
       <div className="min-h-screen bg-lightGreen flex flex-col">
         {/* ===== Header ===== */}
-        <header className="flex items-center justify-between p-2 bg-lightGreen md:px-6">
+        <header className="flex items-center justify-between p-2 bg-lightGreen md:px-6 w-full">
           <Link to="/">
             <LogoWithText />
           </Link>
-
-          <span className="hidden md:block font-semibold">
+          <span className="text-xl flex-grow w-full block font-semibold text-center">
             Account Overview
           </span>
+                                        <div className=" flex-1">
+
+                        <li className='flex items-center space-x-2'>
+                            <FaUserCircle size={30} onClick={() => setOpen(!open)} className="text-gray-300" />
+                               {/* {open && (
+        <div className="absolute right-0 mt-48 w-56  rounded-xl bg-white text-black shadow-lg border border-gray-200 z-50">
+          <h3 className='p-4 font-semibold text-black'>Login As</h3>
+          <NavLink
+            to={"/login"}
+            className="w-full flex items-center text-left py-2 px-4 hover:bg-gray-100 transition hover:bg-green/20"
+          >
+           <span className='mr-4'><PiUsersLight /></span><span> Customer</span>
+          </NavLink>
+
+          <NavLink
+            to={"/operator-login"}
+            className="w-full flex items-center text-left py-2 px-4 hover:bg-gray-100 transition hover:bg-green/20"
+          >
+            <span className='mr-4'><FaUserTie /></span><span> Operator</span>
+          </NavLink>
+          
+        </div>
+      )} */}
+                        </li>
+
+                        {/* <li>
+                            <Link to="/signup">
+                                <button className="bg-green p-2 rounded-md text-white">
+                                    Sign Up
+
+                                </button>
+                            </Link>
+                        </li> */}
+
+                    </div>
+
+      
 
           {/* Mobile Menu Button */}
           <button
@@ -89,10 +128,10 @@ const UserLayout: React.FC = () => {
               </ul>
 
               {/* Logout */}
-              <div className="p-4 border-t border-gray-100/30">
+              <div className="px-8 pt-4 border-t border-gray-100/30">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-white font-bold bg-red-600 rounded-xl transition-all duration-200 border border-transparent hover:border-red-100 group"
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-gray-400 hover:text-white hover:font-bold hover:bg-red-600 rounded-xl transition-all duration-200 border border-transparent hover:border-red-100 group"
                 >
                   <FaToggleOff className="text-xl group-hover:scale-110 transition-transform" />
                   Logout

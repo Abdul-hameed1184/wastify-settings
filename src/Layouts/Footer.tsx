@@ -60,9 +60,9 @@ management. Simplify payments, track usage, and stay compliant.</p>
         <p className='text-center md:text-right text-sm mb-4 '>&copy; 2025 Wasteefy. All rights reserved.</p>
         </div>
         <div className="text-gray-500 font-bold text-xl flex flex-row gap-2">
-          <span><FaXTwitter /></span>
-          <span><AiOutlineInstagram /></span>
-          <span><AiFillFacebook /></span>
+          <span><NavLink to="https://x.com/wasteefy"  target="_blank" rel="noopener noreferrer"><FaXTwitter /></NavLink></span>
+          <span><NavLink to="https://instagram.com/wasteefy"  target="_blank" rel="noopener noreferrer"><AiOutlineInstagram /></NavLink></span>
+          <span><NavLink to="https://facebook.com/wasteefy"  target="_blank" rel="noopener noreferrer"><AiFillFacebook /></NavLink></span>
         </div>
     </div>
     

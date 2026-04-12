@@ -238,7 +238,7 @@ const ContactUs: React.FC = () => {
                 <div className="flex flex-col space-y-1 mb-2">
                   <span className="text-xs text-gray-400 font-medium ml-1 self-end">You</span>
                   <div className="self-end bg-primary text-white p-3.5 sm:p-4 rounded-2xl rounded-tr-sm max-w-[85%] break-words shadow-sm text-[15px] leading-relaxed">
-                    {selectedTicket.message}
+                    {selectedTicket?.message}
                   </div>
                 </div>
             </div>
