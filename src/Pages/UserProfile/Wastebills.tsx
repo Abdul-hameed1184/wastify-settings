@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getBillingsByApartmentId } from "../../api/property/apartment.service";
 import { ButtonsPrimary } from "../../Component/Buttons";
 import { IBillData } from "../../models/billdata.interface";
@@ -15,31 +15,47 @@ import { Naira } from "../../utils/format";
 import { IApartment } from "../../models/apartment.interface";
 import OccupancyStatusBadge from "../../utils/OccupyStatusBadge";
 import { PayBillModal } from "../../Component/Modal/PayBillModal";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { IoIosArrowRoundBack, IoIosArrowRoundForward, IoIosCheckmarkCircle } from "react-icons/io";
 
 const Wastebills: React.FC = () => {
+
   const customer: ICustomer = JSON.parse(
     sessionStorage.getItem("AUTH_USERDETAILS") || "{}"
   );
-  const customerApartments: IApartment[] = JSON.parse(
-    sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]"
-  );
+      const customerApartments:IApartment[] = JSON.parse(
+        sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]"
+      );
+
 
 
   const [apartment, setApartment] = useState<IApartment>(customerApartments[0]);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const selectRef = useRef<HTMLDivElement>(null);
 
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+        setIsSelectOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
 
   const [billData, setBillData] = useState<IBillData>({} as IBillData);
   const [billModal, setBillModal] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(1)
-  const params = {
-    page: page,
+
+
+  const [params, setParams ] = useState({
+    page: 1,
     perPage: 10,
-  };
+    search : ''
+  })
 
   const { data: apartmentBills } = useQuery({
-    queryKey: ['apartmentBills', apartment],
+    queryKey: ['apartmentBills', apartment, params],
     queryFn: async () => {
       const xy = await getBillingsByApartmentId(apartment.id, params);
       console.log(xy);
@@ -79,12 +95,6 @@ const Wastebills: React.FC = () => {
     }
   };
 
-  const handleSelectedApartment = (e) => {
-    const id = parseInt(e.target.value);
-    const apartment = customerApartments.find(x => x.id == id) || {} as IApartment;
-    setApartment(apartment);
-  }
-
   const createTransaction = async (x: IBillData, transaction) => {
     try {
       const billPaymentData = [
@@ -107,49 +117,90 @@ const Wastebills: React.FC = () => {
   return (
     <main className="min-h-screen bg-gray-50 py-6 px-4 md:px-10">
       <div className="flex md:flex-row flex-col justify-between mb-2">
-        <div className="">
+        <div className="w-full md:w-2/5 relative" ref={selectRef}>
           <label
             htmlFor="apartment"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-semibold text-gray-700 mb-1.5 ml-1"
           >
             Select Apartment
           </label>
 
-          <select
-            id="apartment"
-            onChange={handleSelectedApartment}
-            defaultValue=""
-            className=" border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
-          block
-          w-full
-
-          border
-          border-gray
-          text-base
-          text-gray-800
-          placeholder:text-gray-400
-          transition-all
-          duration-200
-          ease-in-out
-          focus:outline-none
-          focus:ring-2
-          focus:ring-offset-1"
+          <div
+            onClick={(e) => {
+              setIsSelectOpen(!isSelectOpen);
+              e.stopPropagation()
+            }}
+            className={`w-full bg-white border-2 flex items-center justify-between px-4 py-2.5 min-h-[56px] rounded-xl cursor-pointer transition-all duration-300 shadow-sm ${isSelectOpen ? 'border-green ring-4 ring-green/10' : 'border-gray-200 hover:border-green/50 hover:shadow-md'}`}
           >
-            {customerApartments?.map((x: IApartment, index) => (
-              <option key={index} value={x.id}>
-                {x.propertyAddress} - {x.apartmentTypeName}
-              </option>
-            ))}
-          </select>
+            <div className="flex flex-col flex-1 justify-center overflow-hidden">
+              <span className="text-gray-900 font-semibold text-sm md:text-base leading-tight truncate overflow-hidden text-ellipsis whitespace-nowrap">
+                {apartment ? apartment.propertyAddress : 'Select an apartment'}
+              </span>
+              {apartment && (
+                <span className="text-xs text-gray-500 font-medium mt-0.5 truncate overflow-hidden text-ellipsis whitespace-nowrap">
+                  {apartment.apartmentTypeName}
+                </span>
+              )}
+            </div>
+            <div className={`flex items-center justify-center p-1.5 rounded-full transition-transform duration-300 shrink-0 ml-3 ${isSelectOpen ? 'rotate-180 bg-green/10 text-green' : 'text-gray-400 bg-gray-50'}`}>
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+
+          <div
+            className={`absolute z-20 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden transition-all duration-200 origin-top
+              ${isSelectOpen ? 'opacity-100 scale-y-100 translate-y-0 visible' : 'opacity-0 scale-y-95 -translate-y-2 invisible'}`}
+          >
+            <div className="max-h-64 overflow-y-auto py-2 custom-scrollbar">
+              {customerApartments?.map((x: IApartment, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setApartment(x);
+                    setIsSelectOpen(false);
+                  }}
+                  className={`px-4 py-3 mx-2 my-1 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-between group
+                    ${apartment?.id === x.id ? 'bg-green/10 border border-green/20 text-green shadow-sm' : 'text-gray-700 hover:bg-gray-50 border border-transparent'}`}
+                >
+                  <div className="flex flex-col mr-3 overflow-hidden">
+                    <span className={`text-sm md:text-base truncate ${apartment?.id === x.id ? 'font-bold text-green' : 'font-medium group-hover:text-green'}`}>
+                      {x.propertyAddress}
+                    </span>
+                    <span className={`text-xs mt-0.5 truncate ${apartment?.id === x.id ? 'text-green/70 font-medium' : 'text-gray-500'}`}>
+                      {x.apartmentTypeName}
+                    </span>
+                  </div>
+                  {apartment?.id === x.id && (
+                    <div className="bg-green text-white p-1 rounded-full shrink-0 shadow-sm">
+                      <IoIosCheckmarkCircle className="text-white bg-green" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-        <h3 className="text-center text-2xl mt-2 font-semibold"><OccupancyStatusBadge status={apartment.status} /> - {apartment.apartmentTypeName.toLocaleUpperCase()},{apartment.propertyAddress.toLocaleUpperCase()}</h3>
-
-
       </div>
-      <div className="flex flex-col items-center mb-6">
 
-        <h1 className="text-3xl font-semibold text-gray-700 ml-4 text-center">Waste Bills</h1>
-        <p className="text-center font-semibold">Property Code - {apartment.propertyCode}</p>
+      <div className="flex flex-col items-center mb-10 mt-6 space-y-4">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 tracking-tight text-center">
+          Waste Bills
+        </h1>
+        
+        <div className="flex flex-col md:flex-row items-center gap-3 bg-white px-6 py-3 rounded-2xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
+          <div className="flex items-center gap-2">
+            <OccupancyStatusBadge status={apartment.status} />
+            <span className="font-bold text-gray-700 tracking-wide text-sm md:text-base">CODE: {apartment.propertyCode}</span>
+          </div>
+          <div className="hidden md:block w-1.5 h-1.5 rounded-full bg-gray-300"></div>
+          <p className="text-center text-gray-600 font-medium text-sm md:text-base">
+            <span className="text-gray-800">{apartment.propertyAddress}</span>
+            <span className="mx-2 text-gray-300">|</span>
+            {apartment.apartmentTypeName}
+          </p>
+        </div>
       </div>
       <div className="mb-6 mt-4 flex justify-center w-full">
         <div className="relative w-full md:w-1/2">
@@ -160,121 +211,82 @@ const Wastebills: React.FC = () => {
           </div>
           <input
             type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by billing period or apartment type..."
+            value={params.search}
+            onChange={(e) => setParams({ ...params, search: e.target.value })}
+            placeholder="Search by billing period..."
             className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green/50 focus:border-green transition-all duration-200"
           />
         </div>
       </div>
 
+     
       {
-        <div className="overflow-hidden overflow-x-auto bg-white rounded-2xl shadow-lg border border-gray-100 w-full mt-4">
-          <table className="w-full text-left border-collapse whitespace-nowrap">
-            <thead>
-              <tr className="bg-green text-white text-sm tracking-wider uppercase">
-                <th className="px-6 py-5 font-semibold">Period</th>
-                <th className="px-6 py-5 font-semibold">Bill Amount</th>
-                <th className="px-6 py-5 font-semibold">Discount</th>
-                <th className="px-6 py-5 font-semibold">Amount to Pay</th>
-                <th className="px-6 py-5 font-semibold">Status</th>
-                <th className="px-6 py-5 font-semibold">Action</th>
+        billData && <PayBillModal handleBillPayment={() => handleBillPayment(billData)} bill={billData} isOpen={billModal} onClose={() => setBillModal(!billModal)} />
+      }
+
+      {apartmentBills?.data && apartmentBills?.data?.length > 0 &&
+        <div className="hidden md:block overflow-x-auto rounded-2xl border border-gray-200 m-0 p-0 rounded-2xl">
+          <table className="min-w-full divide-y divide-gray-300     bg-gray-200">
+            <thead className="">
+              <tr>
+                <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Period</th>
+                <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Bill Amount</th>
+                <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Discount Amount</th>
+                <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Amount to Pay Amount</th>
+                <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-left font-normal text-xs text-gray-500 uppercase tracking-wider">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 text-sm">
-              {apartmentBills?.data?.length ? (
-                apartmentBills.data
-                  // .filter((x: any) => x.paymentStatus !== 1)
-                  // .filter((x: IBillData) => parseFloat(x.totalAmount) !== 0)
-                  .map((item: IBillData, index: number) => (
-                    <tr
-                      className="hover:bg-green-50/50 transition-colors duration-200 bg-white"
-                      key={index}
-                    >
-                      <td className="px-6 py-5 font-medium text-gray-800">{item.billPeriod}</td>
-                      <td className="px-6 py-5 text-gray-600">{Naira.format(Number(item.billAmount))}</td>
-                      <td className="px-6 py-5 text-gray-600">{Naira.format(Number(item.discountAmount))}</td>
-                      <td className="px-6 py-5 font-bold text-gray-900">{Naira.format(Number(item.totalAmount))}</td>
-                      <td className="px-6 py-5">
-                        <PaymentStatusBadge status={item.paymentStatus} />
-                      </td>
-                      <td className="px-6 py-5">
-                     { !item.paymentStatus ?   <ButtonsPrimary
-                          name="Pay"
-                          disabled={Number(item.billAmount) <= 0}
-                          onClick={() => handleBillModal(item)}
-                        />: <span className="text-gray-500 italic">Already Paid</span>}
-                      </td>
-                    </tr>
-                  ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="px-6 py-16 text-center">
-                    <div className="flex flex-col items-center justify-center">
-                      <div className="bg-gray-50 rounded-full p-4 mb-4">
-                        <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                      </div>
-                      <h2 className="text-lg font-semibold text-gray-700">No pending bills found</h2>
-                      <p className="text-sm text-gray-500 mt-1">{"You're all caught up on your payments!"}</p>
-                    </div>
+            <tbody className="bg-white divide-y divide-gray-300">
+              {apartmentBills.data.map((item: IBillData, index: number) => (
+                <tr key={index} className="hover:bg-primary/5 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 cursor-default">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">{item.billPeriod}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">{Naira.format(Number(item.billAmount))}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">{Naira.format(Number(item.discountAmount))}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">{Naira.format(Number(item.totalAmount))}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                    ><PaymentStatusBadge status={item.paymentStatus} /></span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    {!item.paymentStatus ? <ButtonsPrimary
+                      name="Pay"
+                      disabled={Number(item.billAmount) <= 0}
+                      onClick={() => handleBillModal(item)}
+                    /> : <span className="text-gray-500 italic">Already Paid</span>}
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
+          <div className="hidden md:flex  px-6 py-4 border-t border-gray-100  items-center justify-between bg-white text-sm">
+            <button
+              onClick={() => setParams((params) => ({ ...params, page: Math.max(1, params.page - 1) }))}
+              disabled={params.page === 1}
+              className="flex items-center text-black  hover:text-primary disabled:text-gray-200 disabled:cursor-not-allowed transition-colors"
+            >
+              <IoIosArrowRoundBack className="text-xl mr-1" />
+              <span>Previous</span>
+            </button>
 
-          {apartment && apartmentBills?.data?.length > 0 && (
-            <div className="flex justify-between items-center mt-6 p-4 w-100">
-              <button
-                className="text-green font-medium disabled:opacity-50"
-                onClick={() => setPage(page - 1)}
-                disabled={page === 1}
-              >
-                Previous
-              </button>
-              <div className="flex space-x-2">
-                {Array.from({
-                  length: Math.ceil(
-                    apartmentBills.total / apartmentBills.per_page
-                  ),
-                }).map((_, index) => (
-                  <button
-                    key={index}
-                    className={`w-8 h-8 rounded-full text-sm font-medium transition-all duration-150 ${page === index + 1 ? "bg-green text-white" : "bg-gray-200 text-gray-700"
-                      }`}
-                    onClick={() => setPage(index + 1)}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
-              <button
-                className="text-green font-medium disabled:opacity-50"
-                onClick={() => setPage(page + 1)}
-                disabled={
-                  page + 1 > Math.ceil(apartmentBills.total / apartmentBills.per_page)
-                }
-              >
-                Next
-              </button>
-            </div>)}
-        </div>
-      }
-      {
-       billData && <PayBillModal handleBillPayment={() => handleBillPayment(billData)} bill={billData} isOpen={billModal} onClose={() => setBillModal(!billModal)} />
-      }
+            <span className=" font-medium">
+              Page {params.page} of {apartmentBills.last_page}
+            </span>
+
+            <button
+              onClick={() => setParams((params) => ({ ...params, page: params.page + 1 }))}
+              disabled={params.page === apartmentBills.last_page}
+              className="flex items-center text-black hover:text-primary disabled:text-gray-200 disabled:cursor-not-allowed transition-colors"
+            >
+              <span>Next</span>
+              <IoIosArrowRoundForward className="text-xl ml-1" />
+            </button>
+          </div>
+        </div>}
     </main>
   );
 };
 
-// const Wastebills:React.FC = () => {
-//   return (
-//     <div className="p-4">
-//       <ApartmentsTable /> 
-//     </div>
-//   )
-// }
+
 
 export default Wastebills;

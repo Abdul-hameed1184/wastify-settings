@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoArrowForward, IoCallOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 
@@ -77,21 +77,21 @@ const ContactUs: React.FC = () => {
     <div className="min-h-screen p-4">
       <div className="flex items-center flex-row flex-start border border-gray-300 rounded p-2 flex-wrap">
         <h2 className=" p-2">Contact Us  </h2>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        <NavLink to="https://facebook.com/wasteefy"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <FiFacebook /> Facebook
-        </Link>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        </NavLink>
+        <NavLink to="https://x.com/wasteefy"  target="_blank" rel="noopener noreferrer"  className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <FaXTwitter />Twitter
-        </Link>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        </NavLink>
+        <NavLink to="https://mail.google.com/"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <MdOutlineMailOutline /> Email
-        </Link>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        </NavLink>
+        <NavLink to="https://wa.me/2348131415012"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <FaWhatsapp /> Whatsapp
-        </Link>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        </NavLink>
+        <NavLink to="tel:+2348131415012"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <IoCallOutline /> Call us
-        </Link>
+        </NavLink>
       </div>
       <div className="mt-6 flex flex-col lg:flex-row items-stretch border border-gray-200 shadow-sm rounded-2xl bg-white overflow-hidden">
 
