@@ -57,7 +57,7 @@ const FirstPieChart = ({ revenue, overdue }: { revenue: string, overdue: string 
                         </div>
                         <div className="mx-2">
 
-                            <p className='text-black text-lg md:text-2xl font-bold'>{Naira.format(parseFloat(overdue) || 0)}</p>
+                            <p className='text-black text-lg md:text-2xl font-medium'>{Naira.format(parseFloat(overdue) || 0)}</p>
                         </div>
                     </div>
                     
@@ -69,7 +69,7 @@ const FirstPieChart = ({ revenue, overdue }: { revenue: string, overdue: string 
                         </div>
                         <div className="mx-2">
 
-                            <p className='text-black text-lg md:text-2xl font-bold'>{Naira.format(parseFloat(revenue) || 0)}</p>
+                            <p className='text-black text-lg md:text-2xl font-medium'>{Naira.format(parseFloat(revenue) || 0)}</p>
                         </div>
                     </div>
                 </div>

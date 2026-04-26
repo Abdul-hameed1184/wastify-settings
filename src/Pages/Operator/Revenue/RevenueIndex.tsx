@@ -46,12 +46,12 @@ const RevenueIndex = () => {
             <div className="my-5 flex flex-col md:flex-row gap-4 rounded-xl p-4  lg:flex-row justify-between">
            
                 <div className="border border-1 border-gray-200 p-4 rounded-md">
-                       <h2 className='text-2xl font-semibold'>Revenue Summary</h2>
+                       <h2 className='text-2xl font-medium'>Revenue Summary</h2>
                             <div className=" border border-1 border-gray-200 rounded-md my-2 p-2">
           <div className="flex flex-row justify-between">
             <div>
-              <p className="font-semibold flexjustify-between text-gray-500"><span>Total Revenue</span></p>
-        <p className="font-semibold text-2xl text-black py-2">{Naira.format(parseFloat(dash.totalRevenue|| 0.00))}</p>
+              <p className="font-medium flex justify-between text-gray-500"><span>Total Revenue</span></p>
+        <p className="font-medium text-2xl text-black py-2">{Naira.format(parseFloat(dash.totalRevenue|| 0.00))}</p>
 
             </div>
 
@@ -72,10 +72,11 @@ const RevenueIndex = () => {
 
     <div className="my-5 border border-1 border-gray-200 p-4 rounded-md py-5 rounded-3xl">
                 <div className="flex justify-between items-center mb-2">
-                  <h2 className='text-2xl font-semibold'>Revenue History</h2>
+                  <h2 className='text-2xl font-medium'>Revenue History</h2>
                   <div className="flex items-center gap-2">
-                    <label className="text-sm text-gray-500">Show</label>
+                    <label className="text-sm text-gray-500" htmlFor="rows">Show</label>
                     <select
+                      name='rows'
                       value={rowsPerPage}
                       onChange={(e) => setRowsPerPage(Number(e.target.value))}
                       className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green/30"

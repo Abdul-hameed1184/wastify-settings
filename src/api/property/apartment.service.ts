@@ -31,7 +31,7 @@ export const getApartmentBillings = (billingId: number) => {
 }
 
 export const getBillingsByApartmentId = (apartmentId: number, params) => {
-    return axios.get(`/apartmentBilling/billing-by-apartment-id/${apartmentId}?sortBy=created_at&sortOrder=desc&page=${params.page}&perPage=${params.perPage}&searchTerm=${params.search}`);
+    return axios.get(`/apartmentBilling/billing-by-apartment-id/${apartmentId}?sortBy=created_at&sortOrder=asc&page=${params.page}&perPage=${params.perPage}&searchTerm=${params.search}`);
 }
 
 export const getBillingsPaymentByApartmentId = (apartmentId: number) => {

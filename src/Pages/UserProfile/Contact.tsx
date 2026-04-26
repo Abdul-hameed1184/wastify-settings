@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 
-import { getCustomerReportPaginatedByCustomer, sendMessage } from "../../api/customer/customer.service";
+import { getCustomerReportPaginatedByCustomer, getCustomerTickets, sendMessage } from "../../api/customer/customer.service";
 import { customerReportSchema } from "../../utils/validators/CustomerReportSchema";
 import { IApartment } from "../../models/apartment.interface";
 import { FiFacebook } from "react-icons/fi";
@@ -14,64 +14,69 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TicketTypeBadge } from "../../utils/TicketTypeBadge";
 import { Button } from "../../Component/Button";
 import { BsFillSendFill } from "react-icons/bs";
+import { createTicket } from "../../api/customer/ticket.service";
 
 
 // 🔹 Combined Page
 const ContactUs: React.FC = () => {
   const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "{}");
   const apartments: IApartment[] = JSON.parse(sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]") || [];
-
-  const [loading, setLoading] = useState(false);
   const [viewForm, setViewform] = useState(false);
-  const [apartmentId, setApartmentId] = useState<number>(apartments[0]?.id || 0);
+  // const [apartment, setApartment] = useState<IApartment>(apartments[0]);
   const [selectedTicket, setSelectedTicket] = useState<any>(null);
 
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    (async () => {
-      const data = await getCustomerReportPaginatedByCustomer(customer.customerId);
-      console.log("Reports: ", data.data.data);
-    })();
-  }, [customer.customerId]);
 
-  const handleSendMessage = async (message: any) => {
+    const { data: tickets, isLoading: loading } = useQuery({
+      queryKey: ["tickets", customer.customerId],
+      queryFn: async () => {
+        const res = await getCustomerTickets(customer.customerId);
+        console.log("tick", res);
+        return res.data.data;
+      }
+    })
+
+  const handleSendMessage = async (values: any) => {
     try {
-      const res = await sendMessage(message);
+      console.log("Submitting values:", values);
+      const selectedApartment = apartments.find((a: IApartment) => a.id == values.apartmentId);
+      
+      const res = await createTicket({
+        customerId: customer.customerId,
+        apartmentId: values.apartmentId,
+        propertyId: values.propertyId,
+        operatorId: values.operatorId,
+        subject: values.subject,
+        content: values.message,
+      });
       console.log(res);
-      toast.success(`Report Sent`);
+      toast.success(`Ticket Created Successfully`);
       setViewform(false);
-      queryClient.invalidateQueries({ queryKey: ['customerTickets', customer.customerId] });
+      queryClient.invalidateQueries({ queryKey: ['tickets', customer.customerId] });
     } catch (error) {
       console.log(error);
-      toast.error("Error sending report");
+      toast.error("Error creating ticket");
     }
   };
 
   const formik = useFormik({
     initialValues: {
       customerId: customer.customerId,
-      apartmentId: apartmentId,
+      apartmentId: apartments[0]?.id || 0,
+      operatorId: apartments[0]?.pspOperatorId,
+      propertyId: apartments[0]?.propertyId,
       subject: "",
       message: "",
     },
     validationSchema: customerReportSchema,
     onSubmit: async (values, { resetForm }) => {
-      setLoading(true);
       await handleSendMessage(values);
-      setLoading(false);
       resetForm();
     },
   });
 
-  const { data: tickets } = useQuery({
-    queryKey: ['customerTickets', customer.customerId],
-    queryFn: async () => {
-      const data = await getCustomerReportPaginatedByCustomer(customer.customerId);
-      console.log("Tickets data:", data.data.data);
-      return data.data.data;
-    }
-  });
+  const displayTickets = tickets?.data ? tickets.data : (Array.isArray(tickets) ? tickets : []);
 
   return (
     <div className="min-h-screen p-4">
@@ -103,9 +108,9 @@ const ContactUs: React.FC = () => {
             <Button variant="white" onClick={() => { setViewform(true); setSelectedTicket(null); }}  className="flex-1 border border-primary p-2.5 rounded-xl text-primary font-medium hover:bg-primary/5 transition-colors shadow-sm">Report Issue</Button>
           </div>
           <div className="mt-6 w-full space-y-3 flex-1 overflow-y-auto">
-            {tickets && tickets.data.length > 0 ? (
-              tickets.data.map((ticket) => (
-                <div key={ticket.id} onClick={() => { setSelectedTicket(ticket); setViewform(false); }} className={`p-4 rounded-xl flex flex-row items-center cursor-pointer transition-all duration-200 border gap-3 ${selectedTicket?.id === ticket.id ? 'bg-primary/5 border-primary/20 shadow-sm' : 'border-transparent hover:bg-gray-50 hover:border-gray-200'}`}>
+            {displayTickets.length > 0 ? (
+              displayTickets.map((ticket) => (
+                <button key={ticket.id} onClick={() => { setSelectedTicket(ticket); setViewform(false); }} className={`p-4 rounded-xl flex flex-row items-center cursor-pointer transition-all duration-200 border gap-3 ${selectedTicket?.id === ticket.id ? 'bg-primary/5 border-primary/20 shadow-sm' : 'border-transparent hover:bg-gray-50 hover:border-gray-200'}`}>
                   <div className={`rounded-full p-2.5 ${selectedTicket?.id === ticket.id ? 'bg-primary/20 text-primary' : 'bg-gray-100 text-gray-500'}`}>
                     <FaRegCircleUser size={24} />
                   </div>
@@ -119,7 +124,7 @@ const ContactUs: React.FC = () => {
                       <TicketTypeBadge type={"Ticket"} />
                     </div>
                   </div>
-                </div>
+                </button>
               ))
             ) : (
               <div className="flex flex-col items-center justify-center h-40 text-gray-400">
@@ -128,7 +133,7 @@ const ContactUs: React.FC = () => {
               </div>
             )}
           </div>
-          {tickets && tickets.data.length > 0 && (
+          {tickets?.current_page && (
             <div className="flex justify-center items-center gap-6 mt-6 w-full pt-4 border-t border-gray-100">
               <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
                 <IoArrowForward className="rotate-180 w-5 h-5" />
@@ -157,13 +162,30 @@ const ContactUs: React.FC = () => {
                 <div className="flex flex-col gap-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
                   <div className="flex flex-col gap-1.5 w-full">
                     <label htmlFor="subject" className="text-sm font-medium text-gray-700">Subject</label>
-                    <input type="text" name="subject" id="subject" value={formik.values.subject} onChange={formik.handleChange} className="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 text-gray-700 outline-none focus:bg-white focus:ring-2 focus:ring-primary/50 shadow-sm transition-all" placeholder="Brief summary of your issue" />
+                    <input type="text" name="subject" id="subject" value={formik.values.subject} onChange={formik.handleChange} onBlur={formik.handleBlur} className={`w-full border ${formik.touched.subject && formik.errors.subject ? 'border-red-500' : 'border-gray-200'} rounded-xl p-3 bg-gray-50 text-gray-700 outline-none focus:bg-white focus:ring-2 focus:ring-primary/50 shadow-sm transition-all`} placeholder="Brief summary of your issue" />
+                    {formik.touched.subject && formik.errors.subject && (
+                      <span className="text-xs text-red-500 font-medium">{String(formik.errors.subject)}</span>
+                    )}
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex flex-col gap-1.5 flex-1">
                       <label htmlFor="apartmentId" className="text-sm font-medium text-gray-700">Property</label>
-                      <select name="apartmentId" id="apartmentId" value={formik.values.apartmentId} onChange={formik.handleChange} className="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 text-gray-700 outline-none focus:bg-white focus:ring-2 focus:ring-primary/50 shadow-sm transition-all">
+                      <select 
+                        name="apartmentId" 
+                        id="apartmentId" 
+                        value={formik.values.apartmentId} 
+                        onChange={(e) => {
+                          formik.handleChange(e);
+                          const selectedAp = apartments.find((a: IApartment) => String(a.id) === String(e.target.value));
+                          if (selectedAp) {
+                            formik.setFieldValue("operatorId", selectedAp.pspOperatorId);
+                            formik.setFieldValue("propertyId", selectedAp.propertyId);
+                          }
+                        }} 
+                        onBlur={formik.handleBlur} 
+                        className="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 text-gray-700 outline-none focus:bg-white focus:ring-2 focus:ring-primary/50 shadow-sm transition-all"
+                      >
                         {apartments.map((apartment: IApartment) => (
                           <option key={apartment.id} value={apartment.id}>{apartment.propertyAddress} - {apartment.apartmentTypeName}</option>
                         ))}
@@ -173,12 +195,15 @@ const ContactUs: React.FC = () => {
 
                   <div className="flex flex-col gap-1.5 flex-1 w-full min-h-[150px]">
                     <label htmlFor="message" className="text-sm font-medium text-gray-700">Message</label>
-                    <textarea name="message" id="message" value={formik.values.message} onChange={formik.handleChange} className="w-full flex-1 border border-gray-200 bg-gray-50 rounded-xl p-4 text-gray-700 outline-none focus:bg-white focus:ring-2 focus:ring-primary/50 shadow-sm transition-all resize-none" placeholder="Describe your issue in detail..."></textarea>
+                    <textarea name="message" id="message" value={formik.values.message} onChange={formik.handleChange} onBlur={formik.handleBlur} className={`w-full flex-1 border ${formik.touched.message && formik.errors.message ? 'border-red-500' : 'border-gray-200'} bg-gray-50 rounded-xl p-4 text-gray-700 outline-none focus:bg-white focus:ring-2 focus:ring-primary/50 shadow-sm transition-all resize-none`} placeholder="Describe your issue in detail..."></textarea>
+                    {formik.touched.message && formik.errors.message && (
+                      <span className="text-xs text-red-500 font-medium">{String(formik.errors.message)}</span>
+                    )}
                   </div>
                 </div>
 
                 <div className="flex justify-end pt-4 border-t border-gray-100">
-                  <Button type="submit" disabled={formik.isSubmitting || !formik.values.message || !formik.values.subject} className="px-6 py-2.5 bg-primary text-white rounded-xl shadow-sm hover:shadow transition-all font-medium flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                  <Button type="submit" disabled={formik.isSubmitting || !formik.isValid || !formik.values.message || !formik.values.subject} className="px-6 py-2.5 bg-primary text-white rounded-xl shadow-sm hover:shadow transition-all font-medium flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                     {formik.isSubmitting ? "Sending..." : "Submit Ticket"}
                     <BsFillSendFill className="w-4 h-4 ml-1" />
                   </Button>

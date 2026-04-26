@@ -17,7 +17,7 @@ type Props = {
 const FirstChart: React.FC<Props> = ({ revenue }) => {
   return (
     <div style={{ width: "100%" }} className="px-5 py-3 border border-gray-100 border-2 rounded-xl">
-      <p className="text-black text-2xl leading-5 font-semibold m-4">
+      <p className="text-black text-2xl leading-5 font-medium m-4">
         Monthly Sales Report
       </p>
 

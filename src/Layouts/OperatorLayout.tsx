@@ -10,6 +10,7 @@ import { PiBuildingsBold } from 'react-icons/pi';
 import { MdOutlineHeadsetMic } from 'react-icons/md';
 import { GiSettingsKnobs } from "react-icons/gi";
 import { logout } from '../Features/authSlice';
+import { FaCircleUser } from 'react-icons/fa6';
 
 
 
@@ -32,6 +33,20 @@ const OperatorLayout:React.FC = () => {
       sessionStorage.clear();
       navigate("/login");
     };
+
+    const labels =  [
+      { to: "/dashboard", label: "Account Overview" },
+      { to: "/revenue", label: "Revenue Update " },
+      { to: "/properties", label: "Properties" },
+      { to: "/transactions", label: "Transactions" },
+      { to: "/complaint", label: "Complaints" },
+      { to: "/customers", label: "Customers" },
+      { to: "/settings", label: "Settings" }
+    ]
+
+    const activeLink = labels.find((link) => location.pathname.includes(link.to));
+    const pageTitle = activeLink ? activeLink.label : "Account Overview";
+
     return (
         <>
         
@@ -44,9 +59,11 @@ const OperatorLayout:React.FC = () => {
             <LogoWithText />
           </Link>
 
-          <span className="hidden md:block font-semibold">
-            Account Overview
+          <span className="font-medium text-2xl">
+            {pageTitle}
           </span>
+
+          <span className='hidden md:block '><FaCircleUser className='text-2xl text-gray-500'/></span>
 
           {/* Mobile Menu Button */}
           <button

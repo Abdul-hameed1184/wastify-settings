@@ -90,7 +90,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
 
     return (
       <div className="flex flex-col mb-4">
-        {label && <label htmlFor={name} className="text-gray-500">{label}</label>}
+        {label && <label htmlFor={name} className="text-black">{label}</label>}
       <div className="relative w-full">
         {leftIcon && (
           <span

@@ -9,16 +9,18 @@ import { FaRegCircleUser, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { useQuery } from "@tanstack/react-query";
 import { BsFillSendFill } from "react-icons/bs";
-import { getCustomerReportPaginatedByCustomer, sendMessage } from "../../../api/customer/customer.service";
+import { getCustomerReportPaginatedByCustomer, sendMessage, ticketsByOperator } from "../../../api/customer/customer.service";
 import { Button } from "../../../Component/Button";
 import { IApartment } from "../../../models/apartment.interface";
 import { TicketTypeBadge } from "../../../utils/TicketTypeBadge";
 import { customerReportSchema } from "../../../utils/validators/CustomerReportSchema";
+import { IOperator } from "../../../models/operator.interface";
 
 
 // 🔹 Combined Page
 export const Complaint: React.FC = () => {
-  const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "{}");
+  const customer:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS") || "{}");
+  console.log(customer)
   const apartments: IApartment[] = JSON.parse(sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]") || [];
 
   const [loading, setLoading] = useState(false);
@@ -62,10 +64,19 @@ export const Complaint: React.FC = () => {
     },
   });
 
-  const { data: tickets } = useQuery({
+  const { data: data } = useQuery({
     queryKey: ['customerTickets', customer.customerId],
     queryFn: async () => {
       const data = await getCustomerReportPaginatedByCustomer(customer.customerId);
+      console.log("Tickets data:", data.data.data);
+      return data.data.data;
+    }
+  });
+
+    const { data: tickets } = useQuery({
+    queryKey: ['tickets', customer.id],
+    queryFn: async () => {
+      const data = await ticketsByOperator(customer.id);
       console.log("Tickets data:", data.data.data);
       return data.data.data;
     }
@@ -75,19 +86,19 @@ export const Complaint: React.FC = () => {
     <div className="mb-10  mx-auto px-2 md:px-8  sm:px-6 lg:px-8 py-6">
       <div className="flex items-center flex-row flex-start border border-gray-300 rounded p-2">
         <h2 className=" p-2">Contact Us  </h2>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        <Link to="https://facebook.com/wasteefy"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <FiFacebook /> Facebook
         </Link>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        <Link to="https://x.com/wasteefy"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <FaXTwitter />Twitter
         </Link>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        <Link to="https://mail.google.com/"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <MdOutlineMailOutline /> Email
         </Link>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        <Link to="https://wa.me/2348123456789"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <FaWhatsapp /> Whatsapp
         </Link>
-        <Link to="/profile" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+        <Link to="tel:+2348123456789" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
           <IoCallOutline /> Call us
         </Link>
       </div>

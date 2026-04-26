@@ -67,6 +67,8 @@ const ApartmentBill: React.FC = () => {
   const params = {
     page: page,
     perPage: 10,
+    search: "",
+    
   };
   const { data : bill = null } = useQuery({
         queryKey: ['bill', property],
@@ -125,12 +127,13 @@ const apartmentField = [
       {
         <div>
           <div className="flex flex-row items-center gap-3 mb-8">
-            <div 
-              onClick={() => navigate("/properties")}
+            <button 
+              onClick={() =>{
+                navigate("/properties")}}
               className="flex items-center justify-center border border-gray-200 text-gray-500 rounded-xl cursor-pointer w-10 h-10 hover:bg-gray-100 hover:text-gray-900 hover:border-gray-300 transition-all shadow-sm"
             >
               <MdOutlineArrowBackIosNew className="text-lg" />
-            </div>
+            </button>
             <h2 className="text-sm font-medium tracking-wide">
               <span className="text-gray-400">Properties / Apartment / </span>
               <span className="text-gray-900">Details</span>

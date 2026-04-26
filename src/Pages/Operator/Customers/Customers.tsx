@@ -144,7 +144,7 @@ const comp = (
       </div>
 
       <div className="bg-white border border-gray-300 rounded-2xl mb-10 overflow-hidden shadow-sm flex flex-col p-4">
-        <div className="p-4 mb-4 border border-gray-300 flex justify-between rounded-lg items-center bg-gray-50/50 flex-wrap gap-4">
+        <div className="p-4 mb-4 flex justify-between rounded-lg items-center bg-gray-50/50 flex-wrap gap-4">
           <h2 className="text-xl font-bold text-gray-900 tracking-tight">All Customers</h2>
           <div className="flex gap-3 items-center w-full md:w-auto md:flex-row flex-col">
             <div className="w-full md:w-auto">
