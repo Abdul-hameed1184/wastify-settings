@@ -176,8 +176,35 @@ const CreateCustomer: React.FC<Props> = ({ openModal, setOpenModal }) => {
         {activeTab === "bulk" && (
           <form onSubmit={handleBulkUpload}>
             <div className="space-y-6">
-              <p>1. Details on process of uploading</p>
-              <p>2. Yes Yes Yes</p>
+              <p>File Description</p>
+              <p>1. Excel File</p>
+              <p>2. Table Description Example</p>
+              <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">firstname</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">lastname</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">email</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">phone</th>
+                </tr>
+                
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  <tr>
+                    <td className="px-4 py-3 text-sm text-gray-600">Ismaila</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">Matthew</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">ismail@matthew.com</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">08012345678</td>
+                  </tr>
+
+                </tbody>
+              </table>
+              <p>
+                <table>
+                  <tr></tr>
+                </table>
+              </p>
+              
               <div className="w-full">
                 <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">

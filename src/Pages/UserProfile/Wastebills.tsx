@@ -15,10 +15,11 @@ import { Naira } from "../../utils/format";
 import { IApartment } from "../../models/apartment.interface";
 import OccupancyStatusBadge from "../../utils/OccupyStatusBadge";
 import { PayBillModal } from "../../Component/Modal/PayBillModal";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQuery } from "@tanstack/react-query";
 import { IoIosArrowRoundBack, IoIosArrowRoundForward, IoIosCheckmarkCircle } from "react-icons/io";
 
 const Wastebills: React.FC = () => {
+  const queryClient = new QueryClient();
 
   const customer: ICustomer = JSON.parse(
     sessionStorage.getItem("AUTH_USERDETAILS") || "{}"
@@ -75,11 +76,10 @@ const Wastebills: React.FC = () => {
         email: customer.email,
         amount: parseFloat(x.totalAmount) * 100,
         onSuccess: async (transaction) => {
+          // await verifyPayment(transaction.reference);
           await createTransaction(x, transaction);
           toast.success("Payment Successful");
-        },
-        onLoad: async (response) => {
-          await verifyPayment(response.reference);
+
         },
         onCancel: () => {
           console.log("Payment cancelled");
@@ -89,6 +89,9 @@ const Wastebills: React.FC = () => {
           toast.error("Error during payments");
         },
       });
+                queryClient.invalidateQueries({
+            queryKey: ['apartmentBills']
+          })
     } catch (err) {
       console.error(err);
       toast.error("Error initializing payment");
@@ -125,7 +128,7 @@ const Wastebills: React.FC = () => {
             Select Apartment
           </label>
 
-          <div
+          <button
             onClick={(e) => {
               setIsSelectOpen(!isSelectOpen);
               e.stopPropagation()
@@ -147,7 +150,7 @@ const Wastebills: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
-          </div>
+          </button>
 
           <div
             className={`absolute z-20 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden transition-all duration-200 origin-top
@@ -155,13 +158,13 @@ const Wastebills: React.FC = () => {
           >
             <div className="max-h-64 overflow-y-auto py-2 custom-scrollbar">
               {customerApartments?.map((x: IApartment, index) => (
-                <div
+                <button
                   key={index}
                   onClick={() => {
                     setApartment(x);
                     setIsSelectOpen(false);
                   }}
-                  className={`px-4 py-3 mx-2 my-1 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-between group
+                  className={`w-full px-4 py-3 mx-2 my-1 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-between group
                     ${apartment?.id === x.id ? 'bg-green/10 border border-green/20 text-green shadow-sm' : 'text-gray-700 hover:bg-gray-50 border border-transparent'}`}
                 >
                   <div className="flex flex-col mr-3 overflow-hidden">
@@ -177,7 +180,7 @@ const Wastebills: React.FC = () => {
                       <IoIosCheckmarkCircle className="text-white bg-green" />
                     </div>
                   )}
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -225,7 +228,7 @@ const Wastebills: React.FC = () => {
       }
 
       {apartmentBills?.data && apartmentBills?.data?.length > 0 &&
-        <div className="hidden md:block overflow-x-auto rounded-2xl border border-gray-200 m-0 p-0 rounded-2xl">
+        <div className="hidden md:block overflow-x-auto rounded-2xl border border-gray-200 m-0 p-0">
           <table className="min-w-full divide-y divide-gray-300     bg-gray-200">
             <thead className="">
               <tr>

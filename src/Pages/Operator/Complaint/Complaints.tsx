@@ -28,12 +28,7 @@ export const Complaint: React.FC = () => {
   const [apartmentId, setApartmentId] = useState<number>(apartments[0]?.id || 0);
   const [sentMessages, setSentMessages] = useState<string[]>([]);
 
-  useEffect(() => {
-    (async () => {
-      const data = await getCustomerReportPaginatedByCustomer(customer.customerId);
-      console.log("Reports: ", data.data.data);
-    })();
-  }, [customer.customerId]);
+
 
   const handleSendMessage = async (message: any) => {
     try {
@@ -64,14 +59,7 @@ export const Complaint: React.FC = () => {
     },
   });
 
-  const { data: data } = useQuery({
-    queryKey: ['customerTickets', customer.customerId],
-    queryFn: async () => {
-      const data = await getCustomerReportPaginatedByCustomer(customer.customerId);
-      console.log("Tickets data:", data.data.data);
-      return data.data.data;
-    }
-  });
+
 
     const { data: tickets } = useQuery({
     queryKey: ['tickets', customer.id],

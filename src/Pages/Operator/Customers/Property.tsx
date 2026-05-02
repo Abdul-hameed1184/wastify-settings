@@ -86,12 +86,12 @@ const Property: React.FC = () => {
   return (
     <main className="mb-10 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6">
       <div className="flex flex-row items-center gap-3 mb-8">
-        <div 
-          onClick={()=> navigate("/properties")}
+        <button 
+          onClick={()=> navigate("/operator/properties")}
           className="flex items-center justify-center border border-gray-200 text-gray-500 rounded-xl cursor-pointer w-10 h-10 hover:bg-gray-100 hover:text-gray-900 hover:border-gray-300 transition-all shadow-sm"
         >
           <MdOutlineArrowBackIosNew className="text-lg" />
-        </div>
+        </button>
         <h2 className="text-sm font-medium tracking-wide">
           <span className="text-gray-400">Properties / </span>
           <span className="text-gray-900">Apartments</span>

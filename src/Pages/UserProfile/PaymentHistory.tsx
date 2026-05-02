@@ -107,7 +107,7 @@ const PaymentHistory: React.FC = () => {
             Select Apartment
           </label>
 
-          <div
+          <button
             onClick={(e) => setIsSelectOpen(!isSelectOpen)}
             className={`w-full bg-white border-2 flex items-center justify-between px-4 py-2.5 min-h-[56px] rounded-xl cursor-pointer transition-all duration-300 shadow-sm ${isSelectOpen ? 'border-green ring-4 ring-green/10' : 'border-gray-200 hover:border-green/50 hover:shadow-md'}`}
           >
@@ -126,7 +126,7 @@ const PaymentHistory: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
               </svg>
             </div>
-          </div>
+          </button>
 
           <div
             className={`absolute z-20 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl overflow-hidden transition-all duration-200 origin-top
@@ -134,13 +134,13 @@ const PaymentHistory: React.FC = () => {
           >
             <div className="max-h-64 overflow-y-auto py-2 custom-scrollbar">
               {customerApartments?.map((x: IApartment, index) => (
-                <div
+                <button
                   key={index}
                   onClick={() => {
                     setApartment(x);
                     setIsSelectOpen(false);
                   }}
-                  className={`px-4 py-3 mx-2 my-1 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-between group
+                  className={`w-full px-4 py-3 mx-2 my-1 rounded-lg cursor-pointer transition-all duration-200 flex items-center justify-between group
                     ${apartment?.id === x.id ? 'bg-green/10 border border-green/20 text-green shadow-sm' : 'text-gray-700 hover:bg-gray-50 border border-transparent'}`}
                 >
                   <div className="flex flex-col mr-3 overflow-hidden">
@@ -156,7 +156,7 @@ const PaymentHistory: React.FC = () => {
                       <IoIosCheckmarkCircle className="text-white bg-green" />
                     </div>
                   )}
-                </div>
+                </button>
               ))}
             </div>
           </div>

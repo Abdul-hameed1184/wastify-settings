@@ -33,15 +33,19 @@ const ContactUs: React.FC = () => {
       queryFn: async () => {
         const res = await getCustomerTickets(customer.customerId);
         console.log("tick", res);
+        console.log(apartments)
         return res.data.data;
       }
     })
+
+      
 
   const handleSendMessage = async (values: any) => {
     try {
       console.log("Submitting values:", values);
       const selectedApartment = apartments.find((a: IApartment) => a.id == values.apartmentId);
-      
+      console.log(selectedApartment);
+      console.log(customer);
       const res = await createTicket({
         customerId: customer.customerId,
         apartmentId: values.apartmentId,
@@ -71,6 +75,7 @@ const ContactUs: React.FC = () => {
     },
     validationSchema: customerReportSchema,
     onSubmit: async (values, { resetForm }) => {
+      console.log(values)
       await handleSendMessage(values);
       resetForm();
     },
@@ -174,11 +179,13 @@ const ContactUs: React.FC = () => {
                       <select 
                         name="apartmentId" 
                         id="apartmentId" 
-                        value={formik.values.apartmentId} 
+                        value={formik.values.apartmentId } 
                         onChange={(e) => {
                           formik.handleChange(e);
+
                           const selectedAp = apartments.find((a: IApartment) => String(a.id) === String(e.target.value));
                           if (selectedAp) {
+                            console.group(selectedAp)
                             formik.setFieldValue("operatorId", selectedAp.pspOperatorId);
                             formik.setFieldValue("propertyId", selectedAp.propertyId);
                           }

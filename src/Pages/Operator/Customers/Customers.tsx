@@ -76,6 +76,7 @@ const Customers: React.FC = () => {
 
   const viewCustomer = (customerId: string) => {
     const dy = allcustomers?.data.data.data.filter(item => item.customerId === customerId);
+    
     setCustomerApartments(dy);
     console.log(dy)
     setOpenViewCustomer(true)
@@ -90,19 +91,19 @@ const comp = (
     {isError && <p className="text-red-500 mb-4 text-sm font-medium">Error loading apartments</p>}
     <div className="overflow-x-auto rounded-xl border border-gray-300 p-4">
       <table className="table-auto min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+        <thead  className="bg-gray-100">
           <tr>
-            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">S/N</th>
-            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Apartment Type</th>
-            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Address</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">S/N</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Apartment Type</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Address</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
           {customerApartments && customerApartments.map((apartment: IApartment, index) => (
-            <tr key={index} className="hover:bg-blue-50/50 transition-colors">
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{index + 1}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{apartment.apartmentTypeName}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{apartment.propertyAddress}</td>
+            <tr key={index} className="hover:bg-gray-50">
+              <td className="px-4 py-3 text-sm text-gray-600">{index + 1}</td>
+              <td className="px-4 py-3 text-sm text-gray-600">{apartment.apartmentTypeName}</td>
+              <td className="px-4 py-3 text-sm text-gray-600">{apartment.propertyAddress}</td>
             </tr>
           ))}
           {(!customerApartments || customerApartments.length === 0) && (
@@ -237,7 +238,7 @@ const comp = (
               </svg>
             </div>
             <h2 className="text-xl font-semibold text-gray-900 mb-1">No Customers Found</h2>
-            <p className="text-gray-500 text-center max-w-sm">You haven't added any customers yet. Add a new customer to get started.</p>
+            <p className="text-gray-500 text-center max-w-sm">{"You haven't added any customers yet. Add a new customer to get started."}</p>
           </div>
         )}
       </div>
