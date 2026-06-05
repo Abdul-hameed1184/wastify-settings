@@ -38,6 +38,12 @@ import { OperatorSettings } from "./Pages/Operator/Settings/OperatorSettings";
 import Pricing from "./Pages/Operator/Settings/Pricing";
 import Transaction from "./Pages/Operator/Billing/Transaction";
 import BillList from "./Pages/QuickPay/BillList";
+import AdminLayout from "./Layouts/AdminLayout";
+import AdminDash from "./Pages/SuperAdmin/AdminDash";
+import SuperAdminLogin from "./Pages/Auth/SuperAdminLogin";
+import AdminProperties from "./Pages/SuperAdmin/AdminProperties";
+import AdminOperators from "./Pages/SuperAdmin/AdminOperators";
+import AdminCustomers from "./Pages/SuperAdmin/AdminCustomers";
 
 
 const App = () => {
@@ -122,10 +128,15 @@ const App = () => {
 
         {/* ===== SUPER ADMIN ===== */}
         <Route element={<SuperAdminLoginProtect />}>
+        <Route path="admin-login" element={<SuperAdminLogin />} />
           <Route element={<ProtectedRoutes />}>
-            {/* <Route path="super-admin" element={<AdminLayout />}>
-              <Route index element={<AdminDash />} />
-            </Route> */}
+            <Route path="admin" element={<AdminLayout />}>
+              <Route path="dashboard" element={<AdminDash />} />
+              <Route path="operators" element={<AdminOperators />} />
+              <Route path="properties" element={<AdminProperties />} />
+              <Route path="customers" element={<AdminCustomers />} />
+
+            </Route> 
           </Route>
         </Route>
 

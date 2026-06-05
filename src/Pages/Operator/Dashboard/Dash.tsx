@@ -18,28 +18,6 @@ const Dash = () => {
   const [activityFilter, setActivityFilter] = useState("All");
 
 
-
-
-  // const updateDateTime = () => {
-  //   const now = new Date();
-
-  //   // Format date as "23 January 2023"
-  //   const dateOptions: Intl.DateTimeFormatOptions = { day: "2-digit", month: "long", year: "numeric" };
-  //   const formattedDate = now.toLocaleDateString("en-GB", dateOptions);
-
-  //   // Format time as "14:23:45"
-  //   const timeOptions: Intl.DateTimeFormatOptions = {
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //     second: "2-digit",
-  //     hour12: false,
-  //   };
-  //   const formattedTime: string = now.toLocaleTimeString("en-GB", timeOptions);
-
-  //   setCurrentDate(formattedDate);
-  //   setCurrentTime(formattedTime);
-  // };
-
   const { data: dash, isLoading } = useQuery({
     queryKey: ["pspOperatorDashboard", operator?.id],
     queryFn: async () => {

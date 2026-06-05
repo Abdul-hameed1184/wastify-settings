@@ -23,3 +23,7 @@ export const getBillingByAdmin = (params) => {
 export const getOperators = (params) => {
     return axios.get(`/pspOperator`,{params})
 }
+
+export const getAdminCustomers = (params) => {
+    return axios.get(`/customer`,{params})
+}

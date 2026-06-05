@@ -1,187 +1,208 @@
 import { useState } from "react";
-import { RiBarChart2Fill } from "react-icons/ri";
-import { FaHouse } from "react-icons/fa6";
-import { BiTransfer } from "react-icons/bi";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeadCell,
-  TableRow,
-} from "flowbite-react";
 import { useQuery } from "@tanstack/react-query";
-import { IoPersonCircleOutline } from "react-icons/io5";
-import { ToastContainer, Zoom } from "react-toastify";
-import AdminCard from "../../Component/Card/AdminCard";
 import Loader from "../../Component/Loader";
-import { IRecentTransaction } from "../../models/recentTransaction.interface";
-import { Naira } from "../../utils/format";
-import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
 import { getAdminDashboard } from "../../api/admin/admin.service";
+import { ReceiptModal } from "../../Component/ReceiptModal";
+import { TbCurrencyNaira, TbUsersGroup } from "react-icons/tb";
+import { PiBuildingsBold } from "react-icons/pi";
+import Card from "../../Component/Card/Card";
+import { dateformat, Naira } from "../../utils/format";
+import PaymentStatusBadge from "../../utils/PaymentStatusBadge";
 
 
 
-const Dash = () => {
-  const [currentDate, setCurrentDate] = useState("");
-  const [currentTime, setCurrentTime] = useState("");
-  const admin = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
-  console.log(admin)
+const AdminDash = () => {
 
+  const adminData = sessionStorage.getItem("AUTH_ADMIN_DETAILS");
+  const admin = adminData ? JSON.parse(adminData) : null;
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  const [activityFilter, setActivityFilter] = useState("All");
 
-
-  const updateDateTime = () => {
-    const now = new Date();
-
-    // Format date as "23 January 2023"
-    const dateOptions: Intl.DateTimeFormatOptions = { day: "2-digit", month: "long", year: "numeric" };
-    const formattedDate = now.toLocaleDateString("en-GB", dateOptions);
-
-    // Format time as "14:23:45"
-    const timeOptions:Intl.DateTimeFormatOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    };
-    const formattedTime: string  = now.toLocaleTimeString("en-GB", timeOptions);
-
-    setCurrentDate(formattedDate);
-    setCurrentTime(formattedTime);
-  };
 
   const { data: dash, isLoading } = useQuery({
-    queryKey: ["adminDashboard", admin.userId],
+    queryKey: ["adminDashboard", admin?.id],
     queryFn: async () => {
+      if (!admin?.userId) throw new Error("Admin not found");
       const data = await getAdminDashboard(admin.userId);
-      console.log(data.data);
-            return data.data;
-    }
+      console.log("Dashboard Data: ", data);
+      console.log("Recent Transactions: ", data?.data?.data.recentTransactions);
+      return data.data.data;
+    },
+    enabled: !!admin?.userId
   });
 
 
-  if(isLoading){
-    return  <Loader color="slate-900" />
+  if (isLoading) {
+    return <Loader />
   }
 
+  // if (!admin) {
+  //   return <div className="p-4">Operator details not found. Please log in again.</div>
+  // }
+
+  // if (!dash) {
+  //   return <div className="p-4">Failed to load dashboard data.</div>
+  // }
+
+  // const filteredTransactions = dash?.data?.recentTransactions?.filter((activity: any) => {
+  //   if (activityFilter === "All") return true;
+  //   return activity.paymentStatus?.toLowerCase() === activityFilter.toLowerCase();
+  // });
+
+
+  if (isLoading) {
+    return <Loader />
+  }
+
+  if (!dash) {
+    return <div className="p-4">Admin details not found. Please log in again.</div>
+  }
+
+  if (!dash) {
+    return <div className="p-4">Failed to load dashboard data.</div>
+  }
+
+  const filteredTransactions = dash?.recentTransactions?.filter((activity: any) => {
+    if (activityFilter === "All") return true;
+    return activity.paymentStatus?.toLowerCase() === activityFilter.toLowerCase();
+  });
+
+
   return (
-    <main className="px-4">
-       {/* <ToastContainer 
-       position="top-center"
-       autoClose={5000}
-               hideProgressBar={true}
-       newestOnTop={false}
-       closeOnClick
-       rtl={false}
-       pauseOnFocusLoss
-       draggable
-       pauseOnHover
-       theme="light"
-       transition={Zoom}
-      /> */}
-{   dash &&    
-  <div>
-    <div className="flex flex-col lg:flex-row gap-5">
-        <div className="lg:w-[80%]">
-          <h2 className="text-bold text-3xl uppercase">{`Wasteefy Management System`}</h2>
-          <div className="">
-            <p className="flex text-base font-inter font-medium not-italic text-slate-900 leading-6 mt-4 items-center">
-              <span>{"Welcome ,"}</span>
-              <span className="text-black font-bold text-2xl">
-                {" "}
-                {admin &&  admin.firstname + " " + admin.lastname}.
-              </span>{" "}
-            </p>
+    <main className="mb-10 mx-auto md:px-8 px-2 py-6">
+      <div className="flex flex-col mb-8">
+        <h3 className="text-2xl text-gray-900 tracking-tight">Welcome Back, <span className="text-green">{ "Super Admin"}</span></h3>
+        <p className="text-gray-500 text-sm mt-1">{"Here's what's happening with your waste management account."}</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center justify-between mb-8 gap-4">
+        <Card className="rounded-2xl overflow-hidden p-2">
+          <div className="flex flex-row justify-between items-center px-4 py-2">
+            <div>
+              <p className="font-medium text-sm text-gray-500">Total Overdue</p>
+              <p className="text-2xl text-gray-900 py-1">{Naira.format(parseFloat(dash?.totalOverDue || "0"))}</p>
+            </div>
+            <span className="bg-green/10 flex items-center justify-center text-green p-2 rounded-xl text-xl shadow-sm">
+              <TbCurrencyNaira />
+            </span>
+          </div>
+        </Card>
+
+        <Card className="rounded-2xl overflow-hidden p-2">
+          <div className="flex flex-row justify-between items-center px-4 py-2">
+            <div>
+              <p className="font-medium text-sm text-gray-500">Total Properties</p>
+              <p className="text-2xl text-gray-900 py-1">{dash?.totalProperties || 0}</p>
+            </div>
+            <span className="bg-green/10 flex items-center justify-center text-green p-2 rounded-xl text-xl shadow-sm">
+              <PiBuildingsBold />
+            </span>
+          </div>
+        </Card>
+
+        <Card className="rounded-2xl overflow-hidden p-2">
+          <div className="flex flex-row justify-between items-center px-4 py-2">
+            <div>
+              <p className="font-medium text-sm text-gray-500">Total Customers</p>
+              <p className="text-2xl text-gray-900 py-1">{dash?.totalCustomers || 0}</p>
+            </div>
+            <span className="bg-green/10 flex items-center justify-center text-green p-2 rounded-xl text-xl shadow-sm">
+              <TbUsersGroup />
+            </span>
+          </div>
+        </Card>
+
+        <Card className="rounded-2xl overflow-hidden p-2">
+          <div className="flex flex-row justify-between items-center px-4 py-2">
+            <div>
+              <p className="font-medium text-sm text-gray-500">Overdue Payment</p>
+              <p className="text-2xl text-gray-900 py-1">{Naira.format(parseFloat(dash?.totalOverDuePayment || "0"))}</p>
+            </div>
+            <span className="bg-green/10 flex items-center justify-center text-green p-2 rounded-xl text-xl shadow-sm">
+              <TbCurrencyNaira />
+            </span>
+          </div>
+        </Card>
+      </div>
+
+      <div className="bg-white  mb-10 overflow-hidden shadow-sm flex flex-col p-4">
+        <div className="p-4 mb-4  flex justify-between items-center bg-gray-50/50 flex-wrap gap-4">
+          <h2 className="text-2xl text-gray-900 tracking-tight">Recent Activities</h2>
+          <div className="flex gap-2 text-sm">
+             <select 
+               className="text-black font-medium border p-2 rounded-xl border-gray-200 bg-transparent focus:outline-none cursor-pointer"
+               value={activityFilter}
+               onChange={(e) => setActivityFilter(e.target.value)}
+             >
+               <option value="All">All Transactions</option>
+               <option value="Paid">Paid</option>
+               <option value="Pending">Pending</option>
+               <option value="Overdue">Overdue</option>
+             </select>
           </div>
         </div>
-        <div className="lg:w-[20%] flex flex-col justify-end text-end">
-          <h3 className="text-2xl text-semibold">{currentDate}</h3>
-          <h3  className="text-2xl text-semibold">{currentTime}</h3>
-        </div>
-      </div>
-      <div className="flex flex-col lg:flex-row justify-between my-10 gap-12">
-        <div className="w-full lg:w-1/3">
-          <AdminCard
-            heading={"Total Revenue"}
-            amount={Naira.format(dash.data.totalRevenue)}
-            icon={<RiBarChart2Fill className="text-slate-900 w-10 h-8" />}
-            className="text-slate-900"
-          />
-        </div>
-        <div className="w-full lg:w-1/3">
-          <AdminCard
-            heading={"Total Property"}
-            amount={dash.data.totalProperties}
-            icon={<FaHouse className="text-slate-900 w-10 h-7 mt-1" />}
-                      className="text-slate-900"
-          />
-        </div>
-             <div className="w-full lg:w-1/3">
-          <AdminCard
-            heading={"Total Customers"}
-            amount={dash.data.totalCustomers}
-            icon={<IoPersonCircleOutline className="text-slate-900 w-10 h-7 mt-1" />}
-                      className="text-slate-900"
-          />
-        </div>
-        <div className="w-full lg:w-1/3">
-          <AdminCard
-            heading={"Total Overdue Payments"}
-            amount={Naira.format(dash.data.totalOverDuePayment)}
-            icon={<BiTransfer className="text-slate-900 w-10 h-7 mt-1" />}
-                      className="text-slate-900"
-          />
-        </div>
-      </div>
-      </div>
-      }
 
-      {/* recent transaction  */}
-      <div className="py-5">
-        <h3 className="text-3xl font-semibold text-slate-900">Recent Transactions</h3>
-        <div className="overflow-x-auto font-Poppins mt-3 shadow-2xl rounded-2xl">
-          <Table striped>
-            <TableHead className="text-lg text-normal text-white bg-slate-900 ">
-              <TableHeadCell>Date & Time</TableHeadCell>
-              <TableHeadCell >Customer Name</TableHeadCell>
-              <TableHeadCell>Address</TableHeadCell>
-              <TableHeadCell>Bill Amount</TableHeadCell>
-              <TableHeadCell>Amount Paid</TableHeadCell>
-              <TableHeadCell>Bill Period</TableHeadCell>
-              <TableHeadCell>Mode of Payment</TableHeadCell>
-              <TableHeadCell>Status</TableHeadCell>
-              <TableHeadCell>Total Overdue Bills</TableHeadCell>
-            </TableHead>
-            <TableBody className="font-Poppins odd:bg-gray-300">
-        {  dash.data.recentTransactions && dash.data.recentTransactions.length > 0 ? (dash.data.recentTransactions.map((x:IRecentTransaction,index) => 
-        <TableRow  className={
-                    index % 2 === 0
-                      ? "odd:bg-tableBackground"
-                      : "bg-white dark:border-gray-700 dark:bg-gray-800"
-                  }
-                  key={index}>
-                <TableCell>{x?.updated_at}</TableCell>
-                <TableCell>{x?.customerName}</TableCell>
-                <TableCell>{x.propertyAddress}</TableCell>
-                <TableCell>{Naira.format(parseFloat(x.totalAmount))}</TableCell>
-                                <TableCell>{Naira.format(parseFloat(x.totalAmount))}</TableCell>
-                <TableCell>{x.billPeriod}</TableCell>
-                                <TableCell>{x.paymentMode}</TableCell>
-                                                <TableCell><PaymentStatusBadge status={x.paymentStatus} /></TableCell>
-                                                                <TableCell>{x.paymentStatusLabel}</TableCell>
-              </TableRow>)) : (
-                <TableRow>
-                  <TableCell colSpan={9} className="px-6 py-4 text-center text-sm text-gray-500">
-                   <h2 className="text-xl font-semibold text-gray-100">No recent transactions found.</h2>
-                  </TableCell>
-                </TableRow>
+        <div className="w-full border border-gray-300 rounded-lg overflow-x-auto shadow-sm custom-scrollbar">
+          <table className="table-auto min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer Name</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Address</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-100">
+              {filteredTransactions?.map((activity: any) => (
+                <tr key={activity.id} className="hover:bg-blue-50/50 transition-colors group">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{dateformat(activity.paidDateTime)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{activity.customerName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{activity.propertyAddress}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">{Naira.format(parseFloat(activity.amountPaid))}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <PaymentStatusBadge status={activity.paymentStatus} />
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    {activity.receiptNo ? (
+                      <button
+                        onClick={() => setSelectedTransaction(activity)}
+                        className="px-4 py-2 text-sm font-semibold text-green hover:bg-green/10 rounded-lg transition-all border border-transparent hover:border-green/20"
+                      >
+                        View Receipt
+                      </button>
+                    ) : (
+                      <span className="text-xs font-medium text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100 italic">
+                        No Payment
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {(!filteredTransactions || filteredTransactions.length === 0) && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center">
+                    <div className="flex flex-col items-center">
+                      <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mb-3">
+                        <TbCurrencyNaira className="text-2xl text-gray-300" />
+                      </div>
+                      <p className="text-gray-500 text-sm italic">No recent activities found.</p>
+                    </div>
+                  </td>
+                </tr>
               )}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
         </div>
       </div>
+
+      <ReceiptModal
+        isOpen={!!selectedTransaction}
+        onClose={() => setSelectedTransaction(null)}
+        transaction={selectedTransaction}
+      />
     </main>
   );
 };
-
-export default Dash;
+export default AdminDash;
