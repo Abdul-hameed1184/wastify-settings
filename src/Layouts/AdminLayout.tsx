@@ -1,16 +1,10 @@
-import React, { ReactNode, useEffect, useState } from 'react'
-import AdminNavbar from './OperatorNavbar'
-import AdminSidebar from './OperatorSidebar'
-import { Zoom } from 'react-toastify';
-import SuperAdminNavbar from './SuperAdminNavbar';
-import SuperAdminSidebar from './SuperAdminSidebar';
-import { FaCircleUser, FaMoneyBill, FaToggleOff } from 'react-icons/fa6';
+import React, { useState } from 'react'
+import { FaCircleUser, FaToggleOff } from 'react-icons/fa6';
 import { HiX, HiMenuAlt3 } from 'react-icons/hi';
 import { useNavigate, useLocation, Link, Outlet } from 'react-router-dom';
 import { LogoWithText } from '../Component/Logo';
 import { logout } from '../Features/authSlice';
-import { GiSettingsKnobs } from 'react-icons/gi';
-import { IoWalletOutline, IoPeople } from 'react-icons/io5';
+import { IoPeople } from 'react-icons/io5';
 import { MdOutlineHeadsetMic } from 'react-icons/md';
 import { PiBuildingsBold } from 'react-icons/pi';
 import { TfiDashboard } from 'react-icons/tfi';
@@ -57,7 +51,7 @@ const navLinks = [
 //   { to: "/revenue", label: "Revenue", icon: <FaMoneyBill /> },
   { to: "/properties", label: "Properties", icon: <PiBuildingsBold /> },
 //   { to: "/transactions", label: "Transactions", icon: <IoWalletOutline /> },
-// { to: "/complaint", label: "Complaints", icon: <MdOutlineHeadsetMic /> },
+{ to: "/tickets", label: "Tickets", icon: <MdOutlineHeadsetMic /> },
   { to: "/operators", label: "Operators", icon: <IoPeople /> },
     { to: "/customers", label: "Customers", icon: <IoPeople /> },
 // { to: "/settings", label: "Settings", icon: <GiSettingsKnobs /> }
@@ -79,7 +73,7 @@ const AdminLayout:React.FC = () => {
     //   { to: "/revenue", label: "Revenue Update " },
      { to: "/properties", label: "Properties" },
     //   { to: "/transactions", label: "Transactions" },
-    //   { to: "/complaint", label: "Complaints" },
+      { to: "/tickets", label: "Tickets" },
      { to: "/operators", label: "Operators" },
     //   { to: "/settings", label: "Settings" }
     ]

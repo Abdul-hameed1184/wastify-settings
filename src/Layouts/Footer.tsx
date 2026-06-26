@@ -6,6 +6,9 @@ import { FaXTwitter } from "react-icons/fa6";
 import { Link, NavLink } from 'react-router-dom'
 import { LogoWithText } from '../Component/Logo';
 import { MdOutlineLocalPhone } from 'react-icons/md';
+import privacyPolicy from "../assets/files/WASTEEFY PRIVACY POLICY.pdf";
+import termsOfService from "../assets/files/WASTEEFY TERMS OF SERVICE.pdf";
+import cookiePolicy from "../assets/files/WASTEEFY COOKIE POLICY.pdf";
 
 const Footer = () => {
   return (
@@ -48,10 +51,33 @@ management. Simplify payments, track usage, and stay compliant.</p>
       </div>
       <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Legal</h4>
-        <NavLink to="/privacy" className="cursor-pointer">Privacy Policy</NavLink>
-        <NavLink to="/terms" className="cursor-pointer">Terms of Service</NavLink>
-        <NavLink to="/cookies" className="cursor-pointer">Cookie Policy</NavLink>
-        <NavLink to="/gdpr" className="cursor-pointer">GDPR</NavLink>
+        {/* <Link to={"files/privacy-policy.pdf"} className="cursor-pointer">Privacy Policy</Link>
+        <Link to={"files/terms-of-service.pdf"} className="cursor-pointer">Terms of Service</Link>
+        <Link to={"files/cookie-policy.pdf"} className="cursor-pointer">Cookie Policy</Link> */}
+        <a
+          href={privacyPolicy}
+          download
+          className="cursor-pointer"
+        >
+          Privacy Policy
+        </a>
+
+        <a
+          href={termsOfService}
+          download
+          className="cursor-pointer"
+        >
+          Terms of Service
+        </a>
+
+        <a
+          href={cookiePolicy}
+          download
+          className="cursor-pointer"
+        >
+          Cookie Policy
+        </a>
+        <Link to={"files/gdpr.pdf"} className="cursor-pointer">GDPR</Link>
       </div>
       </div>
     </div>

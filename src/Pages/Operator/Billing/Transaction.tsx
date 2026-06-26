@@ -142,7 +142,7 @@ const Transaction = () => {
               />
             </div>
             <Button onClick={() => setAutoX(true)} className="w-full md:w-auto px-5 py-2.5 text-sm mb-6 font-medium text-black bg-green rounded-lg hover:bg-green/90 transition-all shadow-sm hover:shadow-md whitespace-nowrap flex items-center gap-2 justify-center">
-              Auto Billing <FaLongArrowAltRight />
+              Setup AutoBill <FaLongArrowAltRight />
             </Button>
           </div>
         </div>

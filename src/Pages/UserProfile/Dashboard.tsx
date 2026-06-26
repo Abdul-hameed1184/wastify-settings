@@ -27,9 +27,6 @@ const Dashboard: React.FC = () => {
   return (
     <div className="min-h-screen p-4">
          {dashboard &&   <ProfileCard dashBoard={dashboard} />}
- 
-  
-
         <RecentActivities />
 
     </div>

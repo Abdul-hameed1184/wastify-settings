@@ -15,6 +15,8 @@ import { TicketTypeBadge } from "../../utils/TicketTypeBadge";
 import { Button } from "../../Component/Button";
 import { BsFillSendFill } from "react-icons/bs";
 import { createTicket } from "../../api/customer/ticket.service";
+import { ICreateComment } from "../../models/icreatecomment";
+import { postComment } from "../../api/tickets/tickets.service";
 
 
 // 🔹 Combined Page
@@ -24,6 +26,7 @@ const ContactUs: React.FC = () => {
   const [viewForm, setViewform] = useState(false);
   // const [apartment, setApartment] = useState<IApartment>(apartments[0]);
   const [selectedTicket, setSelectedTicket] = useState<any>(null);
+  const [replyMessage, setReplyMessage] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -63,6 +66,25 @@ const ContactUs: React.FC = () => {
       toast.error("Error creating ticket");
     }
   };
+
+  const handleCreateComment = async (ticketId: string, comment: string) => {  
+    try{
+    const data:ICreateComment = {
+      userId: customer.customerId,
+      ticketId: ticketId,
+      comment
+     }
+     const res =  await postComment(data);
+      console.log(res);
+
+    }catch(error){
+      console.log(error);
+      toast.error("Error sending comment");
+
+
+    }
+  };
+  
 
   const formik = useFormik({
     initialValues: {
@@ -115,7 +137,7 @@ const ContactUs: React.FC = () => {
           <div className="mt-6 w-full space-y-3 flex-1 overflow-y-auto">
             {displayTickets.length > 0 ? (
               displayTickets.map((ticket) => (
-                <button key={ticket.id} onClick={() => { setSelectedTicket(ticket); setViewform(false); }} className={`p-4 rounded-xl flex flex-row items-center cursor-pointer transition-all duration-200 border gap-3 ${selectedTicket?.id === ticket.id ? 'bg-primary/5 border-primary/20 shadow-sm' : 'border-transparent hover:bg-gray-50 hover:border-gray-200'}`}>
+                <button key={ticket.id} onClick={() => { setSelectedTicket(ticket); setViewform(false); }} className={`p-4 rounded-xl flex flex-row w-full items-center cursor-pointer transition-all duration-200 border gap-3 ${selectedTicket?.id === ticket.id ? 'bg-primary/5 border-primary/20 shadow-sm' : 'border-transparent hover:bg-gray-50 hover:border-gray-200'}`}>
                   <div className={`rounded-full p-2.5 ${selectedTicket?.id === ticket.id ? 'bg-primary/20 text-primary' : 'bg-gray-100 text-gray-500'}`}>
                     <FaRegCircleUser size={24} />
                   </div>
@@ -234,34 +256,43 @@ const ContactUs: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
-              {/* Messages Area */}
-              <div className="flex-1 p-4 lg:p-6 overflow-y-auto bg-[#F8F9FA] flex flex-col space-y-4">
-                {/* Initial Ticket Message */}
-                <div className="flex flex-col space-y-1 mb-2">
-                  <span className="text-xs text-gray-400 font-medium ml-1 self-end">You</span>
-                  <div className="self-end bg-primary text-white p-3.5 sm:p-4 rounded-2xl rounded-tr-sm max-w-[85%] break-words shadow-sm text-[15px] leading-relaxed">
-                    {selectedTicket.message}
-                  </div>
-                </div>
 
-                {/* Simulated Response or placeholder if we have responses in future */}
-                {selectedTicket.comment && (
-                  <div className="flex flex-col space-y-1 mt-4">
-                    <span className="text-xs text-gray-400 font-medium ml-1 self-start">Support Team</span>
-                    <div className="self-start bg-white text-gray-800 border border-gray-200 p-3.5 sm:p-4 rounded-2xl rounded-tl-sm max-w-[85%] break-words shadow-sm text-[15px] leading-relaxed">
-                      {selectedTicket.comment}
+              <div className="flex flex-col flex-1 min-h-0 bg-[#F8F9FA] overflow-hidden">
+                <div className="flex-1 min-h-0 overflow-y-auto p-4 lg:p-6 space-y-4">
+                  <div className="flex flex-col space-y-1">
+                    <span className="text-xs text-gray-400 font-medium ml-1 self-end">You</span>
+                    <div className="self-end bg-primary text-white p-3.5 sm:p-4 rounded-2xl rounded-tr-sm max-w-[85%] break-words shadow-sm text-[15px] leading-relaxed">
+                      {selectedTicket.message}
                     </div>
                   </div>
-                )}
-              </div>
-              
-              {/* Chat Input (Disabled for now unless API supports reply) */}
-             <div className="relative flex flex-grow flex-col w-full">
-              <textarea name="message" id="message" value={formik.values.message} onChange={formik.handleChange} className="w-full h-24 border border-gray-200 bg-white rounded-2xl p-4 pr-16 text-gray-700 outline-none focus:ring-2 focus:ring-green/50 shadow-sm transition-shadow resize-none" placeholder="Write a message..."></textarea>
-              <button type="submit" disabled={formik.isSubmitting} className="absolute bottom-4 right-4 rounded-full w-10 h-10 flex items-center justify-center bg-primary text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:hover:translate-y-0 cursor-pointer">
-                <BsFillSendFill className="w-4 h-4 ml-0.5" />
-              </button>
+
+                  {Array.isArray(selectedTicket.comments) && selectedTicket.comments.length > 0 ? (
+                    selectedTicket.comments.map((comment: any, index: number) => (
+                      <div key={comment.id || index} className={`flex flex-col space-y-1 ${comment.author?.toLowerCase() === 'support' ? 'self-start' : 'self-end'}`}>
+                        <span className="text-xs text-gray-400 font-medium ml-1">{comment.author === 'support' ? 'Support Team' : 'You'}</span>
+                        <div className={`max-w-[85%] break-words p-3.5 sm:p-4 rounded-2xl shadow-sm text-[15px] leading-relaxed ${comment.author?.toLowerCase() === 'support' ? 'self-start bg-white text-gray-800 border border-gray-200 rounded-tl-sm' : 'self-end bg-primary text-white rounded-tr-sm'}`}>
+                          {comment.message || comment.content || comment.text}
+                        </div>
+                      </div>
+                    ))
+                  ) : selectedTicket.comment ? (
+                    <div className="flex flex-col space-y-1">
+                      <span className="text-xs text-gray-400 font-medium ml-1 self-start">Support Team</span>
+                      <div className="self-start bg-white text-gray-800 border border-gray-200 p-3.5 sm:p-4 rounded-2xl rounded-tl-sm max-w-[85%] break-words shadow-sm text-[15px] leading-relaxed">
+                        {selectedTicket.comment}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="border-t border-gray-100 p-4 bg-white">
+                  <div className="relative">
+                    <textarea name="reply" id="reply" value={replyMessage} onChange={(e) => setReplyMessage(e.target.value)} className="w-full h-24 border border-gray-200 bg-white rounded-2xl p-4 pr-20 text-gray-700 outline-none focus:ring-2 focus:ring-green/50 shadow-sm transition-shadow resize-none" placeholder="Write a comment..." />
+                  <button type="button" onClick={()=>handleCreateComment(selectedTicket.id, replyMessage)} disabled={!replyMessage} className="absolute bottom-4 right-4 rounded-full w-10 h-10 flex items-center justify-center bg-primary text-white shadow-md hover:shadow-lg transition-all outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                      <BsFillSendFill className="w-4 h-4 ml-0.5" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           ) : (

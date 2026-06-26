@@ -44,6 +44,7 @@ import SuperAdminLogin from "./Pages/Auth/SuperAdminLogin";
 import AdminProperties from "./Pages/SuperAdmin/AdminProperties";
 import AdminOperators from "./Pages/SuperAdmin/AdminOperators";
 import AdminCustomers from "./Pages/SuperAdmin/AdminCustomers";
+import { AdminTickets } from "./Pages/SuperAdmin/AdminTickets";
 
 
 const App = () => {
@@ -135,6 +136,7 @@ const App = () => {
               <Route path="operators" element={<AdminOperators />} />
               <Route path="properties" element={<AdminProperties />} />
               <Route path="customers" element={<AdminCustomers />} />
+                     <Route path="tickets" element={<AdminTickets />} />
 
             </Route> 
           </Route>
