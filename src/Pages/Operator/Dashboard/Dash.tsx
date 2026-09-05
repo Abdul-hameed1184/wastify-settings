@@ -108,7 +108,7 @@ const Dash = () => {
       <div className="bg-white  mb-10 overflow-hidden shadow-sm flex flex-col p-4">
         <div className="p-4 mb-4  flex justify-between items-center bg-gray-50/50 flex-wrap gap-4">
           <h2 className="text-2xl text-gray-900 tracking-tight">Recent Activities</h2>
-          <div className="flex gap-2 text-sm">
+          {/* <div className="flex gap-2 text-sm">
              <select 
                className="text-black font-medium border p-2 rounded-xl border-gray-200 bg-transparent focus:outline-none cursor-pointer"
                value={activityFilter}
@@ -119,7 +119,7 @@ const Dash = () => {
                <option value="Pending">Pending</option>
                <option value="Overdue">Overdue</option>
              </select>
-          </div>
+          </div> */}
         </div>
 
         <div className="w-full border border-gray-300 rounded-lg overflow-x-auto shadow-sm custom-scrollbar">
@@ -130,6 +130,7 @@ const Dash = () => {
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer Name</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Address</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Payment Mode</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                 <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Action</th>
               </tr>
@@ -141,6 +142,11 @@ const Dash = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{activity.customerName}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{activity.propertyAddress}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">{Naira.format(parseFloat(activity.amountPaid))}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full">
+                      {activity.paymentMode}
+                    </span>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <PaymentStatusBadge status={activity.paymentStatus} />
                   </td>

@@ -143,7 +143,7 @@ const { data:customers } = useQuery({
       title={`Create Apartment`}
     >
       {!showCreateCustomer && (
-        <form onSubmit={createApartmentFormik.handleSubmit}  className="z-0 space-y-6 bg-gray-900/50 backdrop-blur-sm m-4">
+        <form onSubmit={createApartmentFormik.handleSubmit}  className="z-0 space-y-6  backdrop-blur-sm m-4">
             <div className="space-y-6">
               {errorMessage && <ParagraphError content={errorMessage} />}
               <div>
@@ -174,8 +174,8 @@ const { data:customers } = useQuery({
                   <select
                     className="   border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
           block w-full
-          border border-gray
-          text-base text-gray-800
+           border-gray
+         text-gray-800
           placeholder:text-gray-400
           transition-all duration-200 ease-in-out
           focus:outline-none focus:ring-2 focus:ring-offset-1"
