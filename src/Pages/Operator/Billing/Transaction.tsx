@@ -136,7 +136,7 @@ const Transaction = () => {
                 className="mb-2" 
                 icon={<IoSearchOutline />} 
                 type="text" 
-                placeholder="Search Property" 
+                placeholder="Search Customer name" 
                 value={localSearch}
                 onChange={handleSearchChange}
               />

@@ -102,7 +102,7 @@ const OperatorLayout:React.FC = () => {
                         className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-200 group
                           ${
                             isActive
-                              ? "bg-green/70 text-black shadow-sm font-semibold shadow-green/5 border-r-4 border-green/70"
+                              ? "bg-green/70 text-black shadow-sm font-semibold shadow-green/5 border-r-4 border-green/70 hover:bg-Oldgreen"
                               : "text-gray-500 hover:text-green hover:bg-green/10"
                           }
                         `}
@@ -121,7 +121,7 @@ const OperatorLayout:React.FC = () => {
               <div className="p-4 border-t border-gray-100/30">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 text-white font-bold bg-red-600 rounded-xl transition-all duration-200 border border-transparent hover:border-red-100 group"
+                  className="w-full flex items-center gap-3 px-4 py-3.5 text-white font-bold bg-red-600 hover:bg-red-800 rounded-xl transition-all duration-200 border border-transparent hover:border-red-100 group"
                 >
                   <FaToggleOff className="text-xl group-hover:scale-110 transition-transform" />
                   Logout
