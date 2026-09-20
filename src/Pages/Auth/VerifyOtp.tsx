@@ -97,7 +97,6 @@ const VerifyOtp = () => {
     }
     return (
         <main className='mt-10 md:mt-0 md:bg-green md:h-screen md:bg-bgdesktop-pattern md:bg-cover'>
-            <ToastContainer />
             <div className="md:mt-0 md:p-10 md:flex md:justify-between ">
                 <div className="hidden md:block md:p-10">
                     <ParagraphLargeWhite content={"Sign Up"} />

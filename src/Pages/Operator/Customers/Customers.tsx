@@ -1,24 +1,20 @@
-import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeadCell,
-  TableRow,
-} from "flowbite-react";
-import { ParagraphLargeGreen } from "../../../Component/Paragraph";
-import { ButtonsPrimaryIcon } from "../../../Component/Buttons";
+import React, { useState, useEffect } from "react";
 import Loader from "../../../Component/Loader";
-import { FaPlusCircle } from "react-icons/fa";
 import { GrOverview } from "react-icons/gr";
 
 import CreateCustomer from "../../../Component/Modal/CreateCustomer";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { IApartment } from "../../../models/apartment.interface";
 import { IOperator } from "../../../models/operator.interface";
 import { getCustomers } from "../../../api/psp-operator/psp-operator.service";
 import { Modal } from "../../../Component/Modal/Modal";
+import Card from "../../../Component/Card/Card";
+import { IoSearchOutline } from "react-icons/io5";
+import { PiUsersThree } from "react-icons/pi";
+import { Button } from "../../../Component/Button";
+import Input from "../../../Component/InputField";
+import { FaLongArrowAltRight } from "react-icons/fa";
 
 
 
@@ -27,14 +23,41 @@ const Customers: React.FC = () => {
   const [openCreateCustomer, setOpenCreateCustomer] = useState<boolean>(false);
   const [customerApartments, setCustomerApartments] = useState<IApartment[]>();
   const [ openViewCustomer, setOpenViewCustomer ] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [localSearch, setLocalSearch] = useState(searchParams.get("search") || "");
   const [page, setPage] = useState<number>(1);
-  const [ autoX, setAutoX ] = useState<boolean>(false)
 
+  const searchTerm = searchParams.get("search") || "";
+
+  const params = {
+    page: page,
+    perPage: 10,
+    searchTerm: searchTerm,
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchParams(prev => {
+        if (localSearch) {
+          prev.set("search", localSearch);
+        } else {
+          prev.delete("search");
+        }
+        return prev;
+      });
+      setPage(1);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [localSearch, setSearchParams]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalSearch(e.target.value);
+  };
 
   const { data: allcustomers, isLoading, isError } = useQuery({
-    queryKey: ['customers', page, operator.id],
+    queryKey: ['customers', operator.id, page, searchTerm],
     queryFn: async () => {
-      const xy = await getCustomers(page, operator.id);
+      const xy = await getCustomers(operator.id, params);
       return xy;
     }
   });
@@ -47,11 +70,13 @@ const Customers: React.FC = () => {
     customerId: string;
     customerFullname: string;
     customerPhone: string;
+    customerEmail: string;
   }
 
 
   const viewCustomer = (customerId: string) => {
     const dy = allcustomers?.data.data.data.filter(item => item.customerId === customerId);
+    
     setCustomerApartments(dy);
     console.log(dy)
     setOpenViewCustomer(true)
@@ -61,34 +86,36 @@ const Customers: React.FC = () => {
 
  
 
-const comp = <div>
-              <div className="flex justify-between items-center">
-            </div>
-            {isError && <p className="text-red-500">Error loading apartments</p>}
-            <Table striped>
-              <TableHead className="font-Poppins text-lg capitalize text-white bg-green dark:text-white">
-                <TableHeadCell>S/N</TableHeadCell>
-                <TableHeadCell>Apartment Type</TableHeadCell>
-                <TableHeadCell>Description</TableHeadCell>
-              </TableHead>
-              <TableBody className="font-Poppins text-xl">
-                {customerApartments && customerApartments.map((apartment:IApartment, index) => (
-                  <TableRow
-                    key={index}
-                    className={
-                      index % 2 === 0
-                        ? "odd:bg-tableBackground"
-                        : "bg-white dark:border-gray-700 dark:bg-gray-800"
-                    }
-                  >
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{apartment.apartmentTypeName}</TableCell>
-                    <TableCell>{apartment.propertyAddress}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table> 
-</div>
+const comp = (
+  <div className="p-1 w-full">
+    {isError && <p className="text-red-500 mb-4 text-sm font-medium">Error loading apartments</p>}
+    <div className="overflow-x-auto rounded-xl border border-gray-300 p-4">
+      <table className="table-auto min-w-full divide-y divide-gray-200">
+        <thead  className="bg-gray-100">
+          <tr>
+            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">S/N</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Apartment Type</th>
+            <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Address</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-100">
+          {customerApartments && customerApartments.map((apartment: IApartment, index) => (
+            <tr key={index} className="hover:bg-gray-50">
+              <td className="px-4 py-3 text-sm text-gray-600">{index + 1}</td>
+              <td className="px-4 py-3 text-sm text-gray-600">{apartment.apartmentTypeName}</td>
+              <td className="px-4 py-3 text-sm text-gray-600">{apartment.propertyAddress}</td>
+            </tr>
+          ))}
+          {(!customerApartments || customerApartments.length === 0) && (
+            <tr>
+              <td colSpan={3} className="px-6 py-10 text-center text-sm text-gray-500 italic">No apartments found for this customer.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
 
 
 
@@ -97,108 +124,104 @@ const comp = <div>
   }
 
   return (
-    <main>
-      <div className="p-5">
-        <ParagraphLargeGreen content={"Customers"} />
-        <div>
-          <div className="grid justify-items-end my-8">
-            <div className="md:w-1/3 w-full">
-              <ButtonsPrimaryIcon
-                icon={<FaPlusCircle />}
-                type="button"
-                name={"Add Customers"}
-                onClick={() => {
-                  setOpenCreateCustomer(!openCreateCustomer);
-                }}
-                loading={false}
+    <main className="mb-10  mx-auto px-2 md:px-8  sm:px-6 lg:px-8 py-6">
+      <div className="flex flex-col mb-8 px-4">
+        <h3 className="font-bold text-2xl text-gray-900 tracking-tight">Customers</h3>
+        <p className="text-gray-500 text-sm mt-1">{"Manage and view all your registered customers in one place."}</p>
+      </div>
+
+      <div className="flex items-center justify-between mb-8 gap-4">
+        <Card className="flex-1 max-w-sm rounded-2xl overflow-hidden p-2">
+          <div className="flex flex-row justify-between items-center px-4 py-2">
+            <div>
+              <p className="font-medium text-sm text-gray-500">Total Customers</p>
+              <p className="font-bold text-3xl text-gray-900 py-1">{allcustomers?.data.data.total || 0}</p>
+            </div>
+            <span className="bg-green/10 flex items-center justify-center text-green p-4 rounded-xl text-3xl shadow-sm">
+              <PiUsersThree />
+            </span>
+          </div>
+        </Card>
+      </div>
+
+      <div className="bg-white border border-gray-300 rounded-2xl mb-10 overflow-hidden shadow-sm flex flex-col p-4">
+        <div className="p-4 mb-4 flex justify-between rounded-lg items-center bg-gray-50/50 flex-wrap gap-4">
+          <h2 className="text-xl font-bold text-gray-900 tracking-tight">All Customers</h2>
+          <div className="flex gap-3 items-center w-full md:w-auto md:flex-row flex-col">
+            <div className="w-full md:w-auto">
+              <Input 
+                iconPosition="left" 
+                className="mb-2" 
+                icon={<IoSearchOutline />} 
+                type="text" 
+                placeholder="Search Customer" 
+                value={localSearch}
+                onChange={handleSearchChange}
               />
             </div>
+            <Button 
+              className="w-full md:w-auto px-5 py-2.5 text-sm mb-6 font-medium text-black bg-green rounded-lg hover:bg-green/90 transition-all shadow-sm hover:shadow-md whitespace-nowrap flex items-center gap-2 justify-center" 
+              onClick={() => setOpenCreateCustomer(!openCreateCustomer)}
+            >
+              Add Customer <FaLongArrowAltRight />
+            </Button>
           </div>
         </div>
 
-        {(page && allcustomers) && (
-          <div className="overflow-x-auto font-Poppins mt-3">
-            <Table striped>
-              <TableHead className=" font-Poppins text-lg capitalize text-white bg-green dark:text-white">
-                {/* <TableHeadCell>Property ID</TableHeadCell> */}
-                <TableHeadCell>Customer Name</TableHeadCell>
-                {/* <TableHeadCell>LGA</TableHeadCell> */}
-                <TableHeadCell>Phone Number</TableHeadCell>
-                {/* <TableHeadCell>Property code</TableHeadCell> */}
-            
-                <TableHeadCell>Details</TableHeadCell>
-              </TableHead>
-              <TableBody className=" font-Poppins text-xl ">
-                {
-                  allcustomers.data.data.data.map((item: Customerx, index) => (
-                    <TableRow
-                      className={
-                        index % 2 === 0
-                          ? "odd:bg-tableBackground"
-                          : "bg-white dark:border-gray-700 dark:bg-gray-800"
-                      }
-                      key={index}
-                    >
-                      {/* <TableCell>{item.id}</TableCell> */}
-                      <TableCell>
-                        {item.customerFullname}{" "}
-                      </TableCell>
-                      {/* <TableCell>{item.lgaName} </TableCell> */}
-                      <TableCell>{item.customerPhone}</TableCell>
-                      {/* <TableCell>{item.propertyCode}</TableCell> */}
-    
-                     
-                      <TableCell onClick={() => viewCustomer(item.customerId)}>
-            
-                        
-                        {/* <Link
-                          to={"" + item.customerId}
-                          state={{ customer: item }}
-                        >
-                          <ButtonsPrimary
-                            name={"View Details"}
-                            type={"button"}
-                            loading={undefined}
-                          />
-                        </Link> */}
-                        <GrOverview />
-                      </TableCell>
-                      {/* <TableCell> ... </TableCell> */}
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
+        {!isLoading && allcustomers?.data.data.data.length > 0 && (
+          <div className="w-full border border-gray-300 rounded-lg overflow-x-auto shadow-sm">
+            <table className="table-auto min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">S/N</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer Name</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Phone Number</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-100">
+                {allcustomers?.data.data.data.map((item: Customerx, index: number) => (
+                  <tr key={index} className="hover:bg-blue-50/50 transition-colors group">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {(page - 1) * (allcustomers?.data.data.per_page || 10) + index + 1}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">{item.customerFullname}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">{item.customerPhone}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">{item.customerEmail}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <button
+                        onClick={() => viewCustomer(item.customerId)}
+                        className="p-2 text-gray-500 hover:text-green hover:bg-green/10 rounded-lg transition-all inline-flex items-center gap-2"
+                        title="View Details"
+                      >
+                        <GrOverview className="text-xl" />
+                        <span className="text-sm font-medium">View Apartments</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
             {/* Pagination */}
-            <div className="flex justify-center items-center h-20 my-10 w-full ">
-              <div className="w-full h-10 flex items-center justify-center rounded-md px-5">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">
+              <p className="text-sm text-gray-500">
+                Page {page} of {Math.ceil((allcustomers?.data.data.total || 0) / (allcustomers?.data.data.per_page || 10))}
+                <span className="ml-2 text-gray-400">({allcustomers?.data.data.total || 0} total)</span>
+              </p>
+              <div className="flex gap-2">
                 <button
-                  className={`text-green font-weight-bold`}
                   onClick={() => setPage(page - 1)}
                   disabled={page === 1}
+                  className="px-4 py-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   Previous
                 </button>
-                <div className="mx-8 h-full">
-                  {Array.from({
-                    length: Math.ceil(allcustomers.data.data.total / allcustomers.data.data.per_page),
-                  }).map((_, index) => (
-                    <button
-                      className={`w-8 h-full  ${
-                        page === index + 1 ? "bg-green text-white " : ""
-                      } mr-2`}
-                      key={index}
-                      onClick={() => setPage(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
                 <button
-                  className={`text-green font-weight-bold`}
                   onClick={() => setPage(page + 1)}
-                  disabled={
-                    Math.ceil(allcustomers.data.data.total / allcustomers.data.data.per_page) <= page 
-                  }
+                  disabled={Math.ceil((allcustomers?.data.data.total || 0) / (allcustomers?.data.data.per_page || 10)) <= page}
+                  className="px-4 py-2 text-sm font-semibold rounded-lg bg-green text-white hover:bg-green/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   Next
                 </button>
@@ -206,7 +229,20 @@ const comp = <div>
             </div>
           </div>
         )}
+
+        {!isLoading && (!allcustomers?.data.data.data.length) && (
+          <div className="flex flex-col items-center justify-center p-12 bg-white border-t border-gray-100 border-dashed">
+            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-1">No Customers Found</h2>
+            <p className="text-gray-500 text-center max-w-sm">{"You haven't added any customers yet. Add a new customer to get started."}</p>
+          </div>
+        )}
       </div>
+
       {openCreateCustomer && (
         <CreateCustomer
           openModal={openCreateCustomer}

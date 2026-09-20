@@ -21,12 +21,13 @@ const TicketForm:React.FC<Props> = ({ handleOpen, isOpen}) => {
       sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]"
     );
       const [ apartment, setApartment ] = useState<IApartment>(customerApartments[0])
+      console.log(customerApartments[0])
   const initialValues = {
     subject: "",
     content: "",
     propertyId: apartment.propertyId,
     customerId: customer.customerId,
-    operatorId: 7,
+    operatorId:apartment.pspOperatorId,
     priority: "",
   };
 
@@ -53,10 +54,17 @@ const TicketForm:React.FC<Props> = ({ handleOpen, isOpen}) => {
 
   const handleSubmit = async (values, { resetForm }) => {
     try{
-   // console.log("Form Submitted:", values);
-    await createTicket(values)
-    toast.success("Ticket sent")
-    resetForm();
+      const payload = {
+        ...values,
+           propertyId: apartment.propertyId,
+    customerId: customer.customerId,
+    operatorId:apartment.pspOperatorId,
+     
+      };
+      console.log("Form Submitted with Payload:", payload);
+      await createTicket(payload)
+      toast.success("Ticket sent")
+      resetForm();
     }catch(e){
       console.log(e);
     }

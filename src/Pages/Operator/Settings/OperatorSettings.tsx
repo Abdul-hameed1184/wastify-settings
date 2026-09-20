@@ -2,11 +2,15 @@ import React from 'react'
 import { ImPriceTags } from "react-icons/im";
 import SettingsCard from '../../../Component/Card/SettingsCard'
 
-const All:React.FC = () => {
+export const OperatorSettings:React.FC = () => {
     return (
-        <main className="px-4">
-   
-       
+        <div className="mb-10 mx-auto px-4 md:px-8  sm:px-6 lg:px-8 py-6">
+            <div className="flex flex-col mb-8">
+                <h3 className="font-bold text-2xl text-gray-900 tracking-tight">Operator Settings</h3>
+                <p className="text-gray-500 text-sm mt-1">Manage all aspects of your waste management platform.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <SettingsCard path={'/operator/app-settings'} icon={
                     <svg width="100%" height="100%" viewBox="0 0 83 81" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M80.8856 70.0156L55.2853 44.4101C51.8952 41.0201 53.5319 38.5301 53.5319 38.5301L53.5163 38.5132C54.6485 36.1814 54.2672 33.3062 52.3349 31.37L42.3697 21.4048C39.9238 18.9576 35.9579 18.9576 33.5107 21.4048L31.9882 22.9248L31.8261 23.0882C31.8261 23.0882 31.1271 24.4784 34.3135 24.6639L34.3148 24.6678C34.3148 24.6678 35.7803 24.7923 37.212 26.224L40.7395 29.7515C42.0286 31.0393 42.0636 32.3829 42.004 32.9872C41.7096 34.6472 40.9444 36.2385 39.6592 37.5198C38.387 38.7959 36.8048 39.5546 35.1578 39.8503C34.4276 39.9177 33.0387 39.7919 31.5006 38.2538L28.8264 35.5758C27.1418 33.8911 26.7838 31.7176 26.7838 31.7176H26.7799C26.1276 28.762 25.2354 29.6828 25.2354 29.6828L23.5494 31.3687C21.1035 33.8133 21.1035 37.7805 23.5481 40.2277L33.512 50.1903C35.5481 52.2276 38.6308 52.5428 41.0209 51.1901L41.0391 51.2096C41.0391 51.2096 43.2321 49.8232 46.1838 52.7775L72.7516 79.3492C72.7516 79.3492 75.9808 82.5201 79.0272 79.475L81.5405 76.9616C82.3899 76.0123 84.1887 73.3187 80.8856 70.0156Z" fill="#625E5E" />
@@ -68,8 +72,7 @@ const All:React.FC = () => {
 
                 } title={"Pricing"} text={"Setup property price"} />
 
-        </main>
+            </div>
+        </div>
     )
 }
-
-export default All

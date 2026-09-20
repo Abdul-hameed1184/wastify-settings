@@ -122,6 +122,7 @@ const CreatePropertyModal: React.FC<Props> = ({
 
   return (
     <Modal
+    position="right"
       title="Create Property"
       isOpen={openModal}
       onClose={() => setOpenModal(false)}
@@ -157,25 +158,24 @@ const CreatePropertyModal: React.FC<Props> = ({
 
         {/* Property Address */}
         <div>
-          <ParagraphSmall2 content="Property Address" />
+
           <Input
             type="text"
             placeholder="Enter property address"
             name="propertyAddress"
             required
+            label="Property Address"
             value={formik.values.propertyAddress}
             onChange={formik.handleChange}
             error=""
             className=" focus:border-green-500"
           />
-          <Paragraph2Xl
-            content={`${operator.wardName}, ${operator.lgaName}, ${operator.stateName}`}
-          />
+          <p className="text-lg font-semibold">{`${operator.wardName}, ${operator.lgaName}, ${operator.stateName}`}</p>
         </div>
 
         {/* Property Type */}
         <div>
-          <ParagraphSmall2 content="Property Type" />
+          <p className="text-lg font-semibold">Property Type</p>
           <select
             id="propertyTypeId"
             className="          border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
@@ -210,7 +210,7 @@ const CreatePropertyModal: React.FC<Props> = ({
 
         {/* Description */}
         <div>
-          <ParagraphSmall2 content="Property Description" />
+          <p className="text-gray-500">Property Description</p>
           <textarea
             name="propertyDescription"
             rows={4}
@@ -234,12 +234,13 @@ const CreatePropertyModal: React.FC<Props> = ({
 
         {/* No of Apartments */}
         <div>
-          <ParagraphSmall2 content="Number of Apartments" />
+
           <Input
             type="number"
             name="noOfDistinctApartment"
             placeholder="0"
             required
+            label="Number of Apartments"
             value={formik.values.noOfDistinctApartment}
             onChange={(e) =>
               formik.setFieldValue("noOfDistinctApartment", e.target.value)
@@ -250,7 +251,7 @@ const CreatePropertyModal: React.FC<Props> = ({
 
         {/* Owner */}
         <div>
-          <ParagraphSmall2 content="Property Owner (Phone Number)" />
+          <p className="text-gray-500">Property Owner (Phone Number)</p>
           <input
             list="owners"
             className="          border-2 px-2 py-3 pl-5 bg-grayInput shadow-sm rounded-lg font-Poppins h-14 text-black text-base mt-1
@@ -279,14 +280,6 @@ const CreatePropertyModal: React.FC<Props> = ({
             />
           )}
         </div>
-
-        {/* Submit */}
-        {/* <button
-            type="submit"
-            className="w-full h-12 bg-red text-white font-medium rounded-lg shadow hover:bg-green-600 active:bg-green-700 transition-colors duration-200 focus:outline-none"
-          >
-            Create Property
-          </button> */}
 
         <Button type="submit" variant="primary" className="w-full">
           Create Property

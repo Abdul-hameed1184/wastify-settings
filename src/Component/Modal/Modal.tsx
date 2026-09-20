@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { MdCancel } from "react-icons/md";
+import { IoCloseSharp } from "react-icons/io5";
 
 type ModalProps = {
   isOpen: boolean;
+  closeButton?: boolean;
   onClose: () => void;
-  title?: string;
+  title?: string | React.ReactNode;
   children: React.ReactNode;
   footer?: React.ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
@@ -38,6 +39,7 @@ export const Modal: React.FC<ModalProps> = ({
   size = "md",
   position = "center",
   closeOnOverlay = true,
+  closeButton = true,
   className
 }) => {
   // Disable body scroll when modal is open
@@ -88,28 +90,31 @@ export const Modal: React.FC<ModalProps> = ({
     <div
       className={`fixed inset-0 z-50 flex ${overlayPositionClass} bg-black/50 backdrop-blur-sm px-4 py-6 overflow-y-auto`}
       onClick={closeOnOverlay ? onClose : undefined}
+      onKeyDown={(e) => closeOnOverlay && e.key === "Escape" && onClose()}
+      role="presentation"
+      tabIndex={-1}
     >
       <div
-        className={` m-2 relative w-full ${sizeClasses[size]} bg-white rounded-2xl shadow-lg max-h-[90vh] overflow-y-auto ${className}`}
+        className={` m-2 relative w-full border border-1 border-gray-200 ${sizeClasses[size]} bg-white rounded-2xl shadow-lg max-h-[90vh] overflow-y-auto ${className}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
         {/* Header */}
-        <div className="flex justify-between items-center px-4 pt-4">
+        <div className="flex justify-between items-center px-4 py-3 border-b border-1 border-gray-200">
           {title && (
-            <h2 id="modal-title" className="text-2xl font-bold m-2">
+            <h2 id="modal-title" className="font-medium text-[1.5em] leading-[2em] tracking-[0] text-center align-middle">
               {title}
             </h2>
           )}
-          <MdCancel
+  { closeButton &&       <IoCloseSharp
             onClick={onClose}
-            className="text-2xl text-red-500 cursor-pointer"
+            className=" p-2 rounded-md text-4xl hover:bg-red-500 hover:text-white cursor-pointer text-gray-500 border border-gray-200 "
             role="button"
             tabIndex={0}
             onKeyDown={(e) => e.key === "Enter" && onClose()}
-          />
+          />}
         </div>
 
         {/* Body */}

@@ -1,7 +1,8 @@
-import { Card } from 'flowbite-react'
+
 import React from 'react'
 import { IoChevronForwardSharp } from "react-icons/io5"
 import { IApartmentBillingTransaction } from '../../models/billdata.interface'
+import Card from './Card'
 
 const PaymentHistoryCard:React.FC<{data: IApartmentBillingTransaction}> = ({data}) => {
     return (

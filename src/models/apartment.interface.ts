@@ -13,4 +13,5 @@ export interface IApartment {
     propertyAddress: string;
     propertyCode: string;
     propertyId: number;
+    pspOperatorId: number;
 }

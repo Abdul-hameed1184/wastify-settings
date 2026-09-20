@@ -34,6 +34,14 @@ export const getCustomerReportPaginatedByCustomer = async(customerId: string) =>
     return await axios.get(`/customerReport/list-by-customer-id/${customerId}`);
 }
 
+export const getCustomerTickets = async(customerId: string) => {
+    return await axios.get(`/ticket/ticket-by-customer-id/${customerId}`);
+}
+
+export const ticketsByOperator = async(operatorId: number) => {
+    return await axios.get(`/ticket/ticket-by-psp-operator-id/${operatorId}`);
+}
+
 export const updateMessageReadStatus = async (reportId: number) => {
     return await axios.put(`/customerReport/update_read_status/${reportId}`, {});
 }
@@ -41,6 +49,14 @@ export const updateMessageReadStatus = async (reportId: number) => {
 export const updateCustomer = async (customerId: string, data ) => {
     console.log(data)
     return await axios.post(`/customer/${customerId}`, data, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+}
+
+export const uploadBulkCustomer = async (data: FormData) => {
+    return await axios.post(`/customer/import`, data, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },

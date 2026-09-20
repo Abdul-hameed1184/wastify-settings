@@ -31,7 +31,7 @@ export const LogoWithText: React.FC<LogoProps> = ({
     <div className={`flex items-center ${className}`}>
       <Logo size={size} />
       <span className={`ml-2 font-poppins font-semibold text-gray-800`} style={{ fontSize: textSize }}>
-        <span className='text-green font-semibold'>Was</span><span className="text-gray-700 font-semibold">teefy</span>
+        <span className='text-green font-bold'>Was</span><span className="text-gray-700 font-bold">teefy</span>
       </span>
     </div>
   );

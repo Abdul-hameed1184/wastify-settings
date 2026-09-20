@@ -7,8 +7,9 @@ import CreatePropertyModal from "../Component/Modal/CreatePropertyModal";
 import { IOperator } from "../models/operator.interface";
 
 import { useQuery } from "@tanstack/react-query";
+import { Outlet } from "react-router-dom";
 
-const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
+const PropertiesLayout:React.FC = () => {
   const operator:IOperator = JSON.parse(sessionStorage.getItem("AUTH_ADMIN_DETAILS")||"");
   const [ openCreateProperty, setOpenCreateProperty] = useState<boolean>(false);
 
@@ -35,24 +36,22 @@ const PropertiesLayout:React.FC<{children: React.ReactNode}> = ({children}) => {
   return (
 
     <main className="px-4">
-      <div className="flex flex-col lg:flex-row justify-between my-10">
+      <div className="flex flex-col lg:flex-row justify-between">
         {/* <div className="w-full lg:w-[45%]">
                     <AdminCard heading={"Total Customers"} amount={"300"} icon={<IoPeople className='text-green w-10 h-8' />} />
                 </div> */}
-        <div className="w-full mt-5 lg:mt-0 ">
+        {/* <div className="w-full mt-5 lg:mt-0 ">
           <AdminCard
             heading={"Total Property"}
             amount={allProperties?.data.data.total || "0"}
             icon={<FaHouse className="text-green w-10 h-6 mt-1" />}
           />
-        </div>
+        </div> */}
       </div>
 
-      <div className="py-5 rounded-3xl my-4">
-            {children}
-      </div>
-        <CreatePropertyModal openModal={openCreateProperty} setOpenModal={setOpenCreateProperty} operator={operator} />
-     </main>
+            <Outlet />
+  
+       </main>
 
   );
 };

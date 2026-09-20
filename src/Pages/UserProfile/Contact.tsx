@@ -1,175 +1,317 @@
 import React, { useEffect, useState } from "react";
-import { IoChevronBack, IoLogoFacebook } from "react-icons/io5";
-import { IoIosMail, IoLogoWhatsapp } from "react-icons/io";
-import { Link } from "react-router-dom";
-import { RiCustomerServiceFill, RiTwitterXLine } from "react-icons/ri";
+import { IoArrowForward, IoCallOutline } from "react-icons/io5";
+import { Link, NavLink } from "react-router-dom";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 
-import { getCustomerReportPaginatedByCustomer, sendMessage } from "../../api/customer/customer.service";
-import Input  from "../../Component/InputField";
+import { getCustomerReportPaginatedByCustomer, getCustomerTickets, sendMessage } from "../../api/customer/customer.service";
 import { customerReportSchema } from "../../utils/validators/CustomerReportSchema";
-import CustomerReports from "./CustomerReports";
 import { IApartment } from "../../models/apartment.interface";
-import { ButtonsPrimaryBlack, ButtonsWhite } from "../../Component/Buttons";
+import { FiFacebook } from "react-icons/fi";
+import { FaRegCircleUser, FaWhatsapp, FaXTwitter } from "react-icons/fa6";
+import { MdOutlineMailOutline } from "react-icons/md";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { TicketTypeBadge } from "../../utils/TicketTypeBadge";
+import { Button } from "../../Component/Button";
+import { BsFillSendFill } from "react-icons/bs";
+import { createTicket } from "../../api/customer/ticket.service";
+import { ICreateComment } from "../../models/icreatecomment";
+import { postComment } from "../../api/tickets/tickets.service";
+
 
 // 🔹 Combined Page
 const ContactUs: React.FC = () => {
   const customer = JSON.parse(sessionStorage.getItem("AUTH_USERDETAILS") || "{}");
   const apartments: IApartment[] = JSON.parse(sessionStorage.getItem("CUSTOMER_APARTMENT") || "[]") || [];
-
-  const [loading, setLoading] = useState(false);
   const [viewForm, setViewform] = useState(false);
-  const [apartmentId, setApartmentId] = useState<number>(apartments[0]?.id || 0);
+  // const [apartment, setApartment] = useState<IApartment>(apartments[0]);
+  const [selectedTicket, setSelectedTicket] = useState<any>(null);
+  const [replyMessage, setReplyMessage] = useState("");
 
-  useEffect(() => {
-    (async () => {
-      const data = await getCustomerReportPaginatedByCustomer(customer.customerId);
-      console.log("Reports: ", data.data.data);
-    })();
-  }, [customer.customerId]);
+  const queryClient = useQueryClient();
 
-  const handleSendMessage = async (message: any) => {
+
+    const { data: tickets, isLoading: loading } = useQuery({
+      queryKey: ["tickets", customer.customerId],
+      queryFn: async () => {
+        const res = await getCustomerTickets(customer.customerId);
+        console.log("tick", res);
+        console.log(apartments)
+        return res.data.data;
+      }
+    })
+
+      
+
+  const handleSendMessage = async (values: any) => {
     try {
-      const res = await sendMessage(message);
+      console.log("Submitting values:", values);
+      const selectedApartment = apartments.find((a: IApartment) => a.id == values.apartmentId);
+      console.log(selectedApartment);
+      console.log(customer);
+      const res = await createTicket({
+        customerId: customer.customerId,
+        apartmentId: values.apartmentId,
+        propertyId: values.propertyId,
+        operatorId: values.operatorId,
+        subject: values.subject,
+        content: values.message,
+      });
       console.log(res);
-      toast.success(`Report Sent`);
+      toast.success(`Ticket Created Successfully`);
       setViewform(false);
+      queryClient.invalidateQueries({ queryKey: ['tickets', customer.customerId] });
     } catch (error) {
       console.log(error);
-      toast.error("Error sending report");
+      toast.error("Error creating ticket");
     }
   };
+
+  const handleCreateComment = async (ticketId: string, comment: string) => {  
+    try{
+    const data:ICreateComment = {
+      userId: customer.customerId,
+      ticketId: ticketId,
+      comment
+     }
+     const res =  await postComment(data);
+      console.log(res);
+
+    }catch(error){
+      console.log(error);
+      toast.error("Error sending comment");
+
+
+    }
+  };
+  
 
   const formik = useFormik({
     initialValues: {
       customerId: customer.customerId,
-      apartmentId: apartmentId,
+      apartmentId: apartments[0]?.id || 0,
+      operatorId: apartments[0]?.pspOperatorId,
+      propertyId: apartments[0]?.propertyId,
       subject: "",
       message: "",
     },
     validationSchema: customerReportSchema,
     onSubmit: async (values, { resetForm }) => {
-      setLoading(true);
+      console.log(values)
       await handleSendMessage(values);
-      setLoading(false);
       resetForm();
     },
   });
 
+  const displayTickets = tickets?.data ? tickets.data : (Array.isArray(tickets) ? tickets : []);
+
   return (
-    <main className="bg-green min-h-screen">
-      {/* Back Button */}
-      <div className="flex justify-start pt-6 pl-4">
-        <Link to="/profile">
-          <IoChevronBack size={28} className="bg-gray text-white rounded-2xl p-1" />
-        </Link>
+    <div className="min-h-screen p-4">
+      <div className="flex items-center flex-row flex-start border border-gray-300 rounded p-2 flex-wrap">
+        <h2 className=" p-2">Contact Us  </h2>
+        <NavLink to="https://facebook.com/wasteefy"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+          <FiFacebook /> Facebook
+        </NavLink>
+        <NavLink to="https://x.com/wasteefy"  target="_blank" rel="noopener noreferrer"  className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+          <FaXTwitter />Twitter
+        </NavLink>
+        <NavLink to="https://mail.google.com/"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+          <MdOutlineMailOutline /> Email
+        </NavLink>
+        <NavLink to="https://wa.me/2348131415012"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+          <FaWhatsapp /> Whatsapp
+        </NavLink>
+        <NavLink to="tel:+2348131415012"  target="_blank" rel="noopener noreferrer" className="border border-gray-300 rounded-sm p-2 ml-2 flex items-center gap-1">
+          <IoCallOutline /> Call us
+        </NavLink>
       </div>
+      <div className="mt-6 flex flex-col lg:flex-row items-stretch border border-gray-200 shadow-sm rounded-2xl bg-white overflow-hidden">
 
-      {/* Page Header */}
-      <h3 className="text-3xl font-bold text-white text-center mb-6">Contact Us</h3>
-
-      <div className="flex flex-col lg:flex-row gap-6 px-6">
-        {/* 🔹 Left: Contact Options */}
-        <div className="lg:w-1/4 bg-white rounded-lg shadow-md p-6 space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Contact Us</h2>
-
-          <div className="space-y-4">
-            <Link to="https://www.facebook.com/yourPage" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 hover:text-green-600">
-              <IoLogoFacebook className="text-2xl text-green" />
-              <span className="font-medium">Facebook</span>
-            </Link>
-
-            <Link to="https://twitter.com/yourHandle" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 hover:text-green-600">
-              <RiTwitterXLine className="text-2xl text-green" />
-              <span className="font-medium">Twitter</span>
-            </Link>
-
-            <Link to="mailto:support@example.com" className="flex items-center space-x-3 hover:text-green-600">
-              <IoIosMail className="text-2xl text-green" />
-              <span className="font-medium">Email</span>
-            </Link>
-
-            <Link to="https://wa.me/2348012345678" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 hover:text-green-600">
-              <IoLogoWhatsapp className="text-2xl text-green" />
-              <span className="font-medium">WhatsApp</span>
-            </Link>
-
-            <Link to="tel:+2348012345678" className="flex items-center space-x-3 hover:text-green-600">
-              <RiCustomerServiceFill className="text-2xl text-green" />
-              <span className="font-medium">Call Us</span>
-            </Link>
+        {/* Left Side: Messages */}
+        <div className="w-full lg:w-1/2 p-6 flex flex-col flex-1 w-128 items-start border-b lg:border-b-0 lg:border-r border-gray-200">
+          <h2 className="font-semibold text-lg text-gray-800">Messages</h2>
+          <div className="flex flex-row gap-4 mt-4 w-full">
+            <Button variant="white" onClick={() => { setViewform(true); setSelectedTicket(null); }} className="flex-1 border border-primary p-2.5 rounded-xl text-primary font-medium hover:bg-primary/5 transition-colors shadow-sm">Create Ticket</Button>
+            <Button variant="white" onClick={() => { setViewform(true); setSelectedTicket(null); }}  className="flex-1 border border-primary p-2.5 rounded-xl text-primary font-medium hover:bg-primary/5 transition-colors shadow-sm">Report Issue</Button>
           </div>
+          <div className="mt-6 w-full space-y-3 flex-1 overflow-y-auto">
+            {displayTickets.length > 0 ? (
+              displayTickets.map((ticket) => (
+                <button key={ticket.id} onClick={() => { setSelectedTicket(ticket); setViewform(false); }} className={`p-4 rounded-xl flex flex-row w-full items-center cursor-pointer transition-all duration-200 border gap-3 ${selectedTicket?.id === ticket.id ? 'bg-primary/5 border-primary/20 shadow-sm' : 'border-transparent hover:bg-gray-50 hover:border-gray-200'}`}>
+                  <div className={`rounded-full p-2.5 ${selectedTicket?.id === ticket.id ? 'bg-primary/20 text-primary' : 'bg-gray-100 text-gray-500'}`}>
+                    <FaRegCircleUser size={24} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-center mb-0.5">
+                      <h3 className={`font-semibold truncate ${selectedTicket?.id === ticket.id ? 'text-primary' : 'text-gray-800'}`}>{ticket.subject || `Ticket #${ticket.id}`}</h3>
+                      <span className="text-xs text-gray-400 font-medium">#{ticket.id}</span>
+                    </div>
+                    <div className="flex flex-row justify-between items-center w-full mt-1">
+                      <p className="text-gray-500 text-sm truncate mr-2">{ticket.message}</p>
+                      <TicketTypeBadge type={"Ticket"} />
+                    </div>
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center h-40 text-gray-400">
+                <MdOutlineMailOutline className="w-10 h-10 mb-2 opacity-50" />
+                <p className="text-sm">No messages found.</p>
+              </div>
+            )}
+          </div>
+          {tickets?.current_page && (
+            <div className="flex justify-center items-center gap-6 mt-6 w-full pt-4 border-t border-gray-100">
+              <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+                <IoArrowForward className="rotate-180 w-5 h-5" />
+              </button>
+              <span className="text-sm font-medium text-gray-600">
+                Page {tickets?.current_page} of {tickets?.last_page}
+              </span>
+              <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+                <IoArrowForward className="w-5 h-5" />
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* 🔹 Right: Reports / Form */}
-        <div className="lg:w-3/4 bg-white rounded-lg shadow-md p-6">
+        {/* Right Side: Form or Chat */}
+        <div className="w-full lg:w-1/2 p-4 lg:p-6 flex flex-col h-[600px] lg:h-auto bg-gray-50/30">
+          
           {viewForm ? (
-            <form onSubmit={formik.handleSubmit} className="space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900">Send Us a Message</h2>
-
-              {/* Subject */}
-              <div>
-                <label htmlFor="subject" className="block text-gray-700 mb-2">
-                  Subject
-                </label>
-                <Input
-                  type="text"
-                  name="subject"
-                  value={formik.values.subject}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                  placeholder="Enter your subject"
-                />
-                {formik.errors.subject && <p className="text-red-500 text-sm mt-1">{formik.errors.subject}</p>}
+            <div className="flex flex-col h-full bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-5">
+                <h2 className="font-semibold text-lg text-gray-800">Create New Ticket</h2>
+                <button type="button" onClick={() => setViewform(false)} className="text-sm text-gray-400 hover:text-gray-700 font-medium transition-colors cursor-pointer">Close</button>
               </div>
 
-              {/* Message */}
-              <div>
-                <label htmlFor="message" className="block text-gray-700 mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={6}
-                  value={formik.values.message}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2"
-                  placeholder="Type your message here..."
-                />
-                {formik.errors.message && <p className="text-red-500 text-sm mt-1">{formik.errors.message}</p>}
+              <form onSubmit={formik.handleSubmit} className="flex flex-col flex-1 gap-5 overflow-hidden">
+                <div className="flex flex-col gap-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                  <div className="flex flex-col gap-1.5 w-full">
+                    <label htmlFor="subject" className="text-sm font-medium text-gray-700">Subject</label>
+                    <input type="text" name="subject" id="subject" value={formik.values.subject} onChange={formik.handleChange} onBlur={formik.handleBlur} className={`w-full border ${formik.touched.subject && formik.errors.subject ? 'border-red-500' : 'border-gray-200'} rounded-xl p-3 bg-gray-50 text-gray-700 outline-none focus:bg-white focus:ring-2 focus:ring-primary/50 shadow-sm transition-all`} placeholder="Brief summary of your issue" />
+                    {formik.touched.subject && formik.errors.subject && (
+                      <span className="text-xs text-red-500 font-medium">{String(formik.errors.subject)}</span>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex flex-col gap-1.5 flex-1">
+                      <label htmlFor="apartmentId" className="text-sm font-medium text-gray-700">Property</label>
+                      <select 
+                        name="apartmentId" 
+                        id="apartmentId" 
+                        value={formik.values.apartmentId } 
+                        onChange={(e) => {
+                          formik.handleChange(e);
+
+                          const selectedAp = apartments.find((a: IApartment) => String(a.id) === String(e.target.value));
+                          if (selectedAp) {
+                            console.group(selectedAp)
+                            formik.setFieldValue("operatorId", selectedAp.pspOperatorId);
+                            formik.setFieldValue("propertyId", selectedAp.propertyId);
+                          }
+                        }} 
+                        onBlur={formik.handleBlur} 
+                        className="w-full border border-gray-200 rounded-xl p-3 bg-gray-50 text-gray-700 outline-none focus:bg-white focus:ring-2 focus:ring-primary/50 shadow-sm transition-all"
+                      >
+                        {apartments.map((apartment: IApartment) => (
+                          <option key={apartment.id} value={apartment.id}>{apartment.propertyAddress} - {apartment.apartmentTypeName}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 flex-1 w-full min-h-[150px]">
+                    <label htmlFor="message" className="text-sm font-medium text-gray-700">Message</label>
+                    <textarea name="message" id="message" value={formik.values.message} onChange={formik.handleChange} onBlur={formik.handleBlur} className={`w-full flex-1 border ${formik.touched.message && formik.errors.message ? 'border-red-500' : 'border-gray-200'} bg-gray-50 rounded-xl p-4 text-gray-700 outline-none focus:bg-white focus:ring-2 focus:ring-primary/50 shadow-sm transition-all resize-none`} placeholder="Describe your issue in detail..."></textarea>
+                    {formik.touched.message && formik.errors.message && (
+                      <span className="text-xs text-red-500 font-medium">{String(formik.errors.message)}</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-4 border-t border-gray-100">
+                  <Button type="submit" disabled={formik.isSubmitting || !formik.isValid || !formik.values.message || !formik.values.subject} className="px-6 py-2.5 bg-primary text-white rounded-xl shadow-sm hover:shadow transition-all font-medium flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                    {formik.isSubmitting ? "Sending..." : "Submit Ticket"}
+                    <BsFillSendFill className="w-4 h-4 ml-1" />
+                  </Button>
+                </div>
+              </form>
+            </div>
+          ) : selectedTicket ? (
+            <div className="flex flex-col h-full bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              {/* Chat Header */}
+              <div className="flex items-center justify-between p-4 lg:p-5 border-b border-gray-100 bg-white">
+                <div className="flex items-center gap-3 w-full overflow-hidden">
+                  <div className="bg-primary/10 text-primary w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                    <FaRegCircleUser size={24} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-800 text-lg truncate pr-2">{selectedTicket.subject || `Ticket #${selectedTicket.id}`}</h3>
+                    <p className="text-xs text-gray-500 font-medium">Ticket ID: #{selectedTicket.id}</p>
+                  </div>
+                  <div className="flex-shrink-0">
+                    <TicketTypeBadge type={"Active"} />
+                  </div>
+                </div>
               </div>
 
-              {/* Apartment */}
-              <div>
-                <select
-                  className="w-full border border-gray-300 px-3 py-2 rounded-lg"
-                  onChange={(e) => setApartmentId(parseInt(e.target.value, 10))}
-                  value={apartmentId}
-                >
-                  {apartments.map((x) => (
-                    <option key={x.id} value={x.id}>
-                      {x.apartmentTypeName} - {x.propertyAddress}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <div className="flex flex-col flex-1 min-h-0 bg-[#F8F9FA] overflow-hidden">
+                <div className="flex-1 min-h-0 overflow-y-auto p-4 lg:p-6 space-y-4">
+                  <div className="flex flex-col space-y-1">
+                    <span className="text-xs text-gray-400 font-medium ml-1 self-end">You</span>
+                    <div className="self-end bg-primary text-white p-3.5 sm:p-4 rounded-2xl rounded-tr-sm max-w-[85%] break-words shadow-sm text-[15px] leading-relaxed">
+                      {selectedTicket.message}
+                    </div>
+                  </div>
 
-              {/* Actions */}
-              <div className="flex gap-3">
-                <ButtonsWhite type="submit" className="bg-green text-white px-4 py-2 rounded-lg" name={loading ? "Sending..." : "Send Message"} />
-                <ButtonsPrimaryBlack onClick={() => setViewform(false)} name="Cancel" />
+                  {Array.isArray(selectedTicket.comments) && selectedTicket.comments.length > 0 ? (
+                    selectedTicket.comments.map((comment: any, index: number) => (
+                      <div key={comment.id || index} className={`flex flex-col space-y-1 ${comment.author?.toLowerCase() === 'support' ? 'self-start' : 'self-end'}`}>
+                        <span className="text-xs text-gray-400 font-medium ml-1">{comment.author === 'support' ? 'Support Team' : 'You'}</span>
+                        <div className={`max-w-[85%] break-words p-3.5 sm:p-4 rounded-2xl shadow-sm text-[15px] leading-relaxed ${comment.author?.toLowerCase() === 'support' ? 'self-start bg-white text-gray-800 border border-gray-200 rounded-tl-sm' : 'self-end bg-primary text-white rounded-tr-sm'}`}>
+                          {comment.message || comment.content || comment.text}
+                        </div>
+                      </div>
+                    ))
+                  ) : selectedTicket.comment ? (
+                    <div className="flex flex-col space-y-1">
+                      <span className="text-xs text-gray-400 font-medium ml-1 self-start">Support Team</span>
+                      <div className="self-start bg-white text-gray-800 border border-gray-200 p-3.5 sm:p-4 rounded-2xl rounded-tl-sm max-w-[85%] break-words shadow-sm text-[15px] leading-relaxed">
+                        {selectedTicket.comment}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="border-t border-gray-100 p-4 bg-white">
+                  <div className="relative">
+                    <textarea name="reply" id="reply" value={replyMessage} onChange={(e) => setReplyMessage(e.target.value)} className="w-full h-24 border border-gray-200 bg-white rounded-2xl p-4 pr-20 text-gray-700 outline-none focus:ring-2 focus:ring-green/50 shadow-sm transition-shadow resize-none" placeholder="Write a comment..." />
+                  <button type="button" onClick={()=>handleCreateComment(selectedTicket.id, replyMessage)} disabled={!replyMessage} className="absolute bottom-4 right-4 rounded-full w-10 h-10 flex items-center justify-center bg-primary text-white shadow-md hover:shadow-lg transition-all outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                      <BsFillSendFill className="w-4 h-4 ml-0.5" />
+                    </button>
+                  </div>
+                </div>
               </div>
-            </form>
+            </div>
           ) : (
-            <CustomerReports handleFormView={() => setViewform(true)} />
+             <div className="flex-1 p-4 lg:p-6 overflow-y-auto bg-[#F8F9FA] flex flex-col space-y-4">
+                {/* Initial Ticket Message */}
+                <div className="flex flex-col space-y-1 mb-2">
+                  <span className="text-xs text-gray-400 font-medium ml-1 self-end">You</span>
+                  <div className="self-end bg-primary text-white p-3.5 sm:p-4 rounded-2xl rounded-tr-sm max-w-[85%] break-words shadow-sm text-[15px] leading-relaxed">
+                    {selectedTicket?.message}
+                  </div>
+                </div>
+            </div>
           )}
         </div>
       </div>
-    </main>
+    </div>
+
+
+
   );
 };
 

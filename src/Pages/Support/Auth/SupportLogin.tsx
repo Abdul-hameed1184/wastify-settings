@@ -133,10 +133,10 @@ const SupportLogin:React.FC = () => {
               Login to{" "}
               <span className="text-green">Wasteefy Support System</span>
             </p>
-            <ToastContainer 
+            {/* <ToastContainer 
        position="top-center"
        autoClose={5000}
-       hideProgressBar
+               hideProgressBar={true}
        newestOnTop={false}
        closeOnClick
        rtl={false}
@@ -145,7 +145,7 @@ const SupportLogin:React.FC = () => {
        pauseOnHover
        theme="light"
        transition={Zoom}
-      />
+      /> */}
 
             <div className="w-full flex flex-col justify-left my-4">
               <label className="font-semibold text-gray text-left">{"Email"}</label>

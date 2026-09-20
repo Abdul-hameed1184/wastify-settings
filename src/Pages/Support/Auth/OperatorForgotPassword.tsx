@@ -6,7 +6,7 @@ import {
   ParagraphExtraSmallError,
   ParagraphSmall2,
 } from "../../../Component/Paragraph";
-import { InputFieldGray } from "../../../Component/InputField";
+import Input, { InputFieldGray } from "../../../Component/InputField";
 import { ButtonsPrimary } from "../../../Component/Buttons";
 import { AdminLogo } from "../../../Component/AlternateLogos";
 import baseUrl from "../../../utils/apiConfig";
@@ -88,7 +88,7 @@ const OperatorForgotPassword:React.FC = () => {
               Reset Password{" "}
               <span className="text-green">Wasteefy Management System</span>
             </p>
-            <ToastContainer />
+
 
             <div className="w-full lg:w-4/5">
               <ParagraphSmall2 content={"Email"} />

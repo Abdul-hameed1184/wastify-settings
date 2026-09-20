@@ -1,8 +1,8 @@
-import { Card } from 'flowbite-react'
-import React from 'react'
+
 import { PiCopySimple } from "react-icons/pi";
 import { Link } from 'react-router-dom';
 import { Paragraph2, ParagraphLargeNoMargin, ParagraphSmall2 } from '../Paragraph'
+import Card from './Card';
 
 const ViewPropertyCard = () => {
     return (

@@ -1,40 +1,52 @@
 import { ICreateApartmentBill } from "../../models/createApartmentBill.interface";
-import axios from "../api.config";
+import api from "../api.config";
 
 export const getPspOperatorDashboard = async (id:number) => {
-    return await axios.get(`/dashboard/psp-operator/${id}`)
+    return await api.get(`/dashboard/psp-operator/${id}`)
 }
 
 export const createCustomer = async (data) => {
-    return await axios.post(`/customer`, data)
+    return await api.post(`/customer`, data)
 }
 
 export const getPropertyByOperator = async (operatorId: number, params) => {
-    return await axios.get(`/property/${operatorId}/list-by-operator`, { params});
+    return await api.get(`/property/${operatorId}/list-by-operator`, { params});
 }
 
 export const createApartmentBill = async (bill:ICreateApartmentBill) => {
-    return await axios.post(`/apartmentBilling`, bill)
+    return await api.post(`/apartmentBilling`, bill)
 }
 
 export const getCustomerReports =  async (operatorId:string) => {
-    return await axios.get(`/customerReport/list-by-psp-operator-id/${operatorId}`);
+    return await api.get(`/customerReport/list-by-psp-operator-id/${operatorId}`);
 }
 
-export const getCustomers = async (page:number, operatorId:number ) => {
-    return await axios.get(`/customer/psp-operator/${operatorId}?page=${page}`);
+export const getCustomers = async (operatorId: number, params: any) => {
+    return await api.get(`/customer/psp-operator/${operatorId}`, { params });
 }
 
 export const getProfile = async (userId: string) => {
-    return await axios.get(`/pspOperator/${userId}`);
+    return await api.get(`/pspOperator/${userId}`);
 }
 
 export const updateProfile = async (userId: string, data: any ) => {
-    return await axios.put(`/pspOperator/${userId}`, data);
+    return await api.put(`/pspOperator/${userId}`, data);
 }
 
 export const getOperatorRevenue = async (operatorId: number) => {
-    return await axios.get(`/billPayment/monthly-summary-by-operator-id/${operatorId}`);
+    return await api.get(`/billPayment/monthly-summary-by-operator-id/${operatorId}`);
+}
+
+export const getStates = async () =>  {
+    return await api.get(`/state/list`);
+}
+
+export const getLGAs = async (stateId: number) => {
+    return await api.get(`/lga/stateid/${stateId}`)
+}
+
+export const getWards = async (lgaId:number) => {
+    return await api.get(`/ward/lgaid/${lgaId}`)
 }
 
 // export const getPropertyByOperator = async (operatorId: string, params: any) => {

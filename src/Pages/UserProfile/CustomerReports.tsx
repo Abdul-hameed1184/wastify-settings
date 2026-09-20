@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   getCustomerReportPaginatedByCustomer,
+  getCustomerTickets,
   updateMessageReadStatus,
 } from "../../api/customer/customer.service";
 import { IPaginatedCustomerReports } from "../../models/paginated.customerReports.interface";
@@ -19,6 +20,7 @@ import InfoModal from "../../Component/Modal/InfoModal";
 import Loader from "../../Component/Loader";
 import TicketForm from "../../Component/TicketForm";
 import { Button } from "../../Component/Button";
+import { useQuery } from "@tanstack/react-query";
 
 type Props = {
   handleFormView: () => void;
@@ -38,17 +40,16 @@ const CustomerReports: React.FC<Props> = ({ handleFormView }) => {
   const [report, setReport] = useState<IReport>({} as IReport);
   const [viewMessage, setViewMessage] = useState<boolean>(false);
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const data = await getCustomerReportPaginatedByCustomer(
-        customer.customerId,
-        page
-      );
-      setReportsData(data.data.data);
-      setLoading(false);
-    })();
-  }, [customer.customerId, page]);
+
+
+  const { data: tickets } = useQuery({
+    queryKey: ["tickets", customer.customerId],
+    queryFn: async () => {
+      const res = await getCustomerTickets(customer.customerId);
+      console.log("tick", res);
+      return res.data.data;
+    }
+  })
 
   const handleViewMessage = async (x: IReport) => {
     setReport(x);

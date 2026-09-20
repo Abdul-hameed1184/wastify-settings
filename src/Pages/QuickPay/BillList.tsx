@@ -122,7 +122,7 @@ const BillList = () => {
         handleBillPayment={handleBillPayment}
         bill={selectedBill}
         isOpen={isBillModalOpen}
-        handleOpen={() => setIsBillModalOpen(!isBillModalOpen)}
+        onClose={() => setIsBillModalOpen(!isBillModalOpen)}
       />
     </main>
   );

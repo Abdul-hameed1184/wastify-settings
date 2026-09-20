@@ -1,8 +1,8 @@
 import React from "react";
-import { Card } from "flowbite-react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Card from "../Card/Card";
 
 const tips = [
   {
@@ -35,11 +35,11 @@ const sliderSettings = {
 
 const ProfileSlider: React.FC = () => {
   return (
-    <Card className="w-full h-screen p-0 border-none shadow-none rounded-xl">
+    <Card className="h-screen p-0 border-none shadow-none rounded-xl">
       <Slider {...sliderSettings}>
         {tips.map((tip, index) => (
           <div key={index}>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-8 px-6 md:px-16 py-12 w-full">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 px-6 md:px-16 py-12">
               
               {/* Text */}
               <div className="flex-1 text-center md:text-left">

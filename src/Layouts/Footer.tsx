@@ -3,20 +3,23 @@ import { CiLocationOn, CiMail } from "react-icons/ci";
 import {
   AiFillFacebook, AiOutlineInstagram} from "react-icons/ai"
 import { FaXTwitter } from "react-icons/fa6";
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { LogoWithText } from '../Component/Logo';
 import { MdOutlineLocalPhone } from 'react-icons/md';
+import privacyPolicy from "../assets/files/WASTEEFY PRIVACY POLICY.pdf";
+import termsOfService from "../assets/files/WASTEEFY TERMS OF SERVICE.pdf";
+import cookiePolicy from "../assets/files/WASTEEFY COOKIE POLICY.pdf";
 
 const Footer = () => {
   return (
     <footer className=' md:p-14 bg-black px-8 py-5 flex flex-col md:text-lg text-sm'>
       <div className='flex flex-col md:flex-row '>
       <div className='flex flex-col flex-grow'>
-      <Link to="/" className="w-14 h-14" >
+      <Link to="/" className="w-14 h-14 cursor-pointer" >
     
           <LogoWithText />
       </Link>
-      <div className='ml-4 text-gray-200 mt-4  text-gray-500'>
+      <div className='ml-4 text-gray-200 mt-4  text-gray-500' id="contact">
       <p className='my-4'>The modern platform for digital waste bill
 management. Simplify payments, track usage, and stay compliant.</p>
 <p className='mt-4 flex flex-row gap-2 items-center'><span><CiMail className='text-xl'/></span><span>support@wasteefy.com</span></p>
@@ -27,31 +30,54 @@ management. Simplify payments, track usage, and stay compliant.</p>
       <div className='grid grid-cols-2 md:grid-cols-4 gap-8 mt-10 md:mt-0 w-full flex-wrap justify-between'>
       <div className='text-gray-500 flex-1 flex flex-col mt-4 gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Product</h4>
-        <p>Features</p>
-        <p>Pricing</p>
-        <p>How It Works</p>
-        <p>API Documentation</p>
+        <NavLink to="/#features" className="cursor-pointer">Features</NavLink>
+        <NavLink to="/pricing" className="cursor-pointer">Pricing</NavLink>
+        <NavLink to="/#howItWorks" className="cursor-pointer">How It Works</NavLink>
+        <NavLink to="/faq" className="cursor-pointer">FAQ</NavLink>
       </div>
         <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Company</h4>
-        <p>About Us</p>
-        <p>Careers</p>
-        <p>Press</p>
-        <p>Contact</p>
+        <NavLink to="/about" className="cursor-pointer">About Us</NavLink>
+        <NavLink to="/careers" className="cursor-pointer">Careers</NavLink>
+        <NavLink to="/press" className="cursor-pointer">Press</NavLink>
+        <NavLink to="/contact" className="cursor-pointer">Contact</NavLink>
       </div>
       <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Resources</h4>
-        <p>Help Center</p>
-        <p>Blog</p>
-        <p>Community</p>
-        <p>Webinars</p>
+        <NavLink to="/help" className="cursor-pointer">Help Center</NavLink>
+        <NavLink to="/blog" className="cursor-pointer">Blog</NavLink>
+        <NavLink to="/community" className="cursor-pointer">Community</NavLink>
+        <NavLink to="/webinars" className="cursor-pointer">Webinars</NavLink>
       </div>
       <div className='text-gray-500 mt-4 flex-1 flex flex-col gap-4 tracking-tight'>
         <h4 className='text-white font-bold mb-2'>Legal</h4>
-        <p>Privacy Policy</p>
-        <p>Terms of Service</p>
-        <p>Cookie Policy</p>
-        <p>GDPR</p>
+        {/* <Link to={"files/privacy-policy.pdf"} className="cursor-pointer">Privacy Policy</Link>
+        <Link to={"files/terms-of-service.pdf"} className="cursor-pointer">Terms of Service</Link>
+        <Link to={"files/cookie-policy.pdf"} className="cursor-pointer">Cookie Policy</Link> */}
+        <a
+          href={privacyPolicy}
+          download
+          className="cursor-pointer"
+        >
+          Privacy Policy
+        </a>
+
+        <a
+          href={termsOfService}
+          download
+          className="cursor-pointer"
+        >
+          Terms of Service
+        </a>
+
+        <a
+          href={cookiePolicy}
+          download
+          className="cursor-pointer"
+        >
+          Cookie Policy
+        </a>
+        <Link to={"files/gdpr.pdf"} className="cursor-pointer">GDPR</Link>
       </div>
       </div>
     </div>
@@ -60,9 +86,9 @@ management. Simplify payments, track usage, and stay compliant.</p>
         <p className='text-center md:text-right text-sm mb-4 '>&copy; 2025 Wasteefy. All rights reserved.</p>
         </div>
         <div className="text-gray-500 font-bold text-xl flex flex-row gap-2">
-          <span><FaXTwitter /></span>
-          <span><AiOutlineInstagram /></span>
-          <span><AiFillFacebook /></span>
+          <span><NavLink to="https://x.com/wasteefy"  target="_blank" rel="noopener noreferrer"><FaXTwitter /></NavLink></span>
+          <span><NavLink to="https://instagram.com/wasteefy"  target="_blank" rel="noopener noreferrer"><AiOutlineInstagram /></NavLink></span>
+          <span><NavLink to="https://facebook.com/wasteefy"  target="_blank" rel="noopener noreferrer"><AiFillFacebook /></NavLink></span>
         </div>
     </div>
     

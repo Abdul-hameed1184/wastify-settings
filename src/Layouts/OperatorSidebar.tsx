@@ -60,7 +60,7 @@ const OperatorSidebar: React.FC = () => {
         className={`admin-sidebar fixed transform  ease-in-out duration-500 delay-300 ${toggle ? "translate-x-0" : "-translate-x-full"} w-4/5 lg:w-1/5 py-10 mt-10 h-screen lg:flex flex-col bg-white shadow-2xl font-Poppins z-20 overflow-auto`}
       >
         <NavLink
-          to="/operator/"
+          to="/operator"
           className={` w-full p-4 ${isActive === "/operator/" ? "lg:bg-green lg:text-white text-green" : " text-grayRounded"} hover:lg:bg-green  hover:lg:text-white`}
           onClick={() => handleOptionClick("/operator")}
         >

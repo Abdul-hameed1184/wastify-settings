@@ -63,7 +63,7 @@ const SignUp = () => {
     return (
         <main className=' md:bg-green md:h-screen md:bg-bgdesktop-pattern md:bg-cover  '>
             <div className="md:mt-0 md:p-10 md:flex md:justify-between">
-                <ToastContainer />
+                {/* <ToastContainer /> */}
                 <div className="hidden md:block md:p-10">
                     <ParagraphLargeWhite content={"Sign Up"} />
                 </div>

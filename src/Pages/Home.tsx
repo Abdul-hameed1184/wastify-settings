@@ -11,11 +11,15 @@ import { RiSecurePaymentLine } from "react-icons/ri";
 import { IoMdKeypad, IoMdNotificationsOutline } from "react-icons/io";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { GrNotes } from "react-icons/gr";
-import { FaCaretDown } from "react-icons/fa";
 import { BsPhone } from "react-icons/bs";
+import { Accordion } from "../Component/Accordion";
+
+
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [openCustomer, setOpenCustomer] = React.useState<number | null>(null);
+  const [openOperator, setOpenOperator] = React.useState<number | null>(null);
 
   const formik = useFormik({
     initialValues: {
@@ -35,10 +39,10 @@ const Home: React.FC = () => {
   return (
     <Layout>
       <main className="w-full">
-        <div className="w-full px-6 md:px-12 lg:px-20">
+        <div className="w-full px-6 md:px-12 lg:px-20 h-100">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-col max-w-2xl text-center md:text-left mx-2 mt-4 md:mt-0">
-              <h2 className="flex flex-col font-extrabold text-[3.5em] p-0 m-0 tracking-tight leading loose">
+              <h2 className="flex flex-col font-extrabold text-[3.5em] p-0 m-0 tracking-tight leading-[1.25]">
                 Pay & Manage Waste Bills Easily With
               </h2>
 
@@ -47,7 +51,7 @@ const Home: React.FC = () => {
                   <span className="text-green font-extrabold text-[1.5em] p-0 m-0 text-lg tracking-tight">
                     Was
                   </span>
-                  <span className="text-gray font-extrabold text-[1.5em] p-0 m-0 text-lg tracking-tight">
+                  <span className="text-gray-500 font-extrabold text-[1.5em] p-0 m-0 text-lg tracking-tight">
                     teefy
                   </span>
                 </span>
@@ -58,13 +62,13 @@ const Home: React.FC = () => {
                 with our secure digital platform.
               </p>
             </div>
-            <Card className="max-w-lg rounded-xl shadow-lg border p-4">
+            <Card className="max-w-lg rounded-xl shadow-lg border p-4 ">
               <form onSubmit={formik.handleSubmit}>
                 <div className="px-4">
                   <h3 className="font-bold text-[1.5em] p-0 m-0 pt-2 text-lg tracking-tight">
                     QuickPay
                   </h3>
-                  <p className="font-normal text-[0.875em] pt-2 text-gray">
+                  <p className="font-normal text-[0.875em] pt-2 text-gray-500">
                     QuickPay lets you pay your waste bill instantly using your
                     phone number and property code, no login required.
                   </p>
@@ -80,7 +84,7 @@ const Home: React.FC = () => {
                         onChange={formik.handleChange}
                         value={formik.values.phoneNumber}
                         placeholder={"  Enter your phone number"}
-                        className="border px-2.5 py-3.5 pl-5 shadow-sm rounded-lg block text-xl  w-full h-14 text-black text-base mt-1 placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:ring-purple"
+      
                       />
                     </div>
                     <div className="mt-4">
@@ -92,8 +96,7 @@ const Home: React.FC = () => {
                         onChange={formik.handleChange}
                         value={formik.values.propertyCode}
                         placeholder={"  Enter Property code"}
-                        className="border px-2.5 py-3.5 pl-5 shadow-sm rounded-lg block text-xl  w-full h-14 text-black text-base mt-1 placeholder:text-grayRounded focus:outline-none focus:ring-2 focus:ring-purple"
-                      />
+                                            />
                     </div>
                     <div className="w-full mt-4">
                       <Button
@@ -110,8 +113,9 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-16 flex justify-center text-center md:mt-32">
+        <div className="mt-32  flex justify-center text-center" id="whoWeAre">
           <div className="w-[960px] mx-auto">
+                        <p className="text-green"><span className="bg-green/20 rounded-lg py-2 px-4 ">Features</span></p>
             <h3 className="font-semibold text-[3em] tracking-[-0.02em] p-0 m-0 pt-2 text-lg leading-[58px] text-center">
               Who We Are
             </h3>
@@ -120,12 +124,12 @@ const Home: React.FC = () => {
               operators (waste collectors) efficiently manage properties,
               customers, payments, and daily operations in one place.
             </p>
-            <div className="flex flex-col md:flex-row gap-4 w-full p-0 justify-center md:justify-between">
+            <div className="flex flex-col md:flex-row gap-4 w-full p-0 justify-center md:justify-between space-y-4 space-x-4">
               <CardTextIcon
                 className="flex-1 max-w-sm"
                 icon={<LuCreditCard />}
                 title="Easy Wastebill Payment"
-                description="we're on a mission to simplify the waste bill payment process. We understand the hassles and fraustrations that often comes with waste payment and managing waste bills."
+                description="We're on a mission to simplify the waste bill payment process. We understand the hassles and fraustrations that often comes with waste payment and managing waste bills."
               />
               <CardTextIcon
                 className="flex-1 max-w-sm"
@@ -157,9 +161,9 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-    <div className="flex flex-col justify-center text-center md:my-24">
+    <div className="flex flex-col justify-center text-center md:my-24" id="howItWorks">
           <div className="mx-auto">
-            <p className="text-green">Things you should know</p>
+            <p className="text-green"><span className="bg-green/20 rounded-lg py-2 px-4 ">Things you should know</span></p>
             <h3 className="font-semibold text-[3em] tracking-[-0.02em] p-0 m-0 pt-2 text-lg leading-[58px] text-center">
               How It Works
             </h3>
@@ -168,118 +172,87 @@ const Home: React.FC = () => {
               simple steps to take control of your payments today.
             </p>
           </div>
-          <div className="flex flex-col md:flex-row  gap-4 w-full p-4 justify-center md:justify-between">
-            <div className="bg-green flex-1 rounded-2xl m-4 ">
+          <div className="flex flex-col md:flex-row gap-4 w-full p-4 items-stretch">
+            <div className="bg-green flex-1 rounded-2xl m-4 flex flex-col">
               <h3 className="font-bold text-xl p-2">Customers</h3>
-              <div className="bg-white rounded-2xl border border-green p-4">
-                <div className="flex flex-row items-center justify-between border mt-2 px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      1
-                    </span>
-                    <span>
-                      <p className="text-xl">Get Onboarded</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
+              <div className="bg-white rounded-2xl border border-green p-4 flex-1">
+                                <Accordion 
+                  itemNumber={"1"}
+                  titleText="Get Onboarded"
+                  infolist={[
+                    "Your psp operator registers your property on Wasteefy.",
+                    "You’ll receive bills linked to your phone number and property code."
+                  ]} 
+                  isOpen={openCustomer == 1} 
+                  onToggle={() => setOpenCustomer(openCustomer === 1 ? null : 1)} />
+                                                  <Accordion 
+                  itemNumber={"2"}
+                  titleText={"Login or Quickpay (No login required)"}
+                  infolist={[
+                    "Enter your registered phone number and last name as password to log in or use QuickPay."
+                  ]} 
+                      isOpen={openCustomer == 2} 
+                  onToggle={() => setOpenCustomer(openCustomer === 2 ? null : 2)}
+                  />
+                                                  <Accordion 
+                  itemNumber={"3"}
+                  titleText="Pay & Stay Updated"
+                  infolist={[
+                    "Pay your waste bill securely and receive instant confirmation.",
+                    "Get SMS reminders so you never miss a payment."
+                  ]}
+                      isOpen={openCustomer == 3} 
+                  onToggle={() => setOpenCustomer(openCustomer === 3 ? null : 3)}
+                  />
 
-                <div className="flex flex-row items-center justify-between border border-gray-200 mt-2 px-4 py-4 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      2
-                    </span>
-                    <span>
-                      <p className="text-xl">
-                        {"Login or Quickpay (No login required)"}
-                      </p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
-                <div className="flex flex-row items-center justify-between mt-2 border px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      3
-                    </span>
-                    <span>
-                      <p className="text-xl">Pay & Stay Updated</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
-                        <div className="flex flex-row items-center justify-between  px-4 py-[2.55em]">
-                  <div className="flex items-center ">
-                    
-                  </div>
-             
-                </div>
               </div>
             </div>
-                        <div className="bg-green flex-1 rounded-2xl m-4 ">
+                        <div className="bg-green flex-1 rounded-2xl m-4 flex flex-col">
               <h3 className="font-bold text-xl p-2">Operators</h3>
-              <div className="bg-white  rounded-2xl border border-green p-4">
-                <div className="flex flex-row items-center justify-between border mt-2 px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      1
-                    </span>
-                    <span>
-                      <p className="text-xl">Create an Operator Account</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
+              <div className="bg-white rounded-2xl border border-green p-4 flex-1">
+                <Accordion 
+                  itemNumber={"1"}
+                  titleText="Create an Operator Account"
+                  infolist={[
+                    "Register your business on Wasteefy to access the operator dashboard.",
+                    "This account is used to manage properties, customers, and billings."
+                  ]}
+                      isOpen={openOperator == 1} 
+                  onToggle={() => setOpenOperator(openOperator === 1 ? null : 1)}
+                  />
 
-                <div className="flex flex-row items-center justify-between border border-gray-200 mt-2 px-4 py-4 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      2
-                    </span>
-                    <span>
-                      <p className="text-xl">
-                        {"Register Properties & Customers"}
-                      </p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
-                <div className="flex flex-row items-center justify-between mt-2 border px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      3
-                    </span>
-                    <span>
-                      <p className="text-xl">Generate & Send Bills</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
-                                <div className="flex flex-row items-center justify-between mt-2 border px-4 py-4 border-gray-200 rounded-2xl">
-                  <div className="flex items-center ">
-                    <span className="text-center px-4 py-2 bg-green/10 rounded-md mr-4">
-                      4
-                    </span>
-                    <span>
-                      <p className="text-xl">Track Payments</p>
-                    </span>
-                  </div>
-                  <span>
-                    <FaCaretDown className="text-lg" />
-                  </span>
-                </div>
+                                  <Accordion 
+                  itemNumber={"2"}
+                  titleText={"Register Properties & Customers"}
+                  infolist={[
+                    "Add properties (estates or buildings) and register households under each property using their phone numbers.",
+                    "Each property is assigned a unique property code for billing and payments."
+                  ]}
+                    isOpen={openOperator == 2} 
+                  onToggle={() => setOpenOperator(openOperator === 2 ? null : 2)}
+                  />
+
+                   <Accordion 
+                  itemNumber={"3"}
+                  titleText={"Generate & Send Bills"}
+                  infolist={[
+                    "Create waste bills and send them to customers via the Wasteefy platform."
+                  ]}
+                    isOpen={openOperator == 3} 
+                  onToggle={() => setOpenOperator(openOperator === 3 ? null : 3)}
+                  />
+
+              <Accordion 
+                  itemNumber={"4"}
+                  titleText={"Track Payments"}
+                  infolist={[
+                    "Monitor payments in real time and access transaction history per property or customer."
+                  ]} 
+                  
+                    isOpen={openOperator ==4} 
+                  onToggle={() => setOpenOperator(openOperator === 4 ? null : 4)}
+                  />
+
               </div>
             </div>
           </div>

@@ -5,7 +5,6 @@ export const tail = {
     "./src/**/*.{js,jsx,ts,tsx}",
     './Component/**/*.{js,ts,jsx,tsx,mdx}',
     './Pages/**/*.{js,ts,jsx,tsx,mdx}',
-    'node_modules/flowbite-react/lib/esm/**/*.js',
   ],
   theme: {
     fontSize: {
@@ -31,7 +30,7 @@ export const tail = {
         tertiary: '#c4c4c4',
         black: '#000000',
         secondary: '#555861',
-     lightGreen: '#77963cff', 
+     lightGreen: '#f3f8e7', 
    //lightGreen:'#c7f76d',
         green: '#95c53c',
         Oldgreen: '#96C63D',
@@ -53,7 +52,7 @@ export const tail = {
     },
   },
   plugins: [
-    import('flowbite/plugin')
+    
   ],
 }
 
