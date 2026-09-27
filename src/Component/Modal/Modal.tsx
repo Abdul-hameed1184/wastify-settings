@@ -21,6 +21,7 @@ type ModalProps = {
     | "bottom-right";
   closeOnOverlay?: boolean;
   className?: string;
+  drawer?: boolean;
 };
 
 const sizeClasses: Record<NonNullable<ModalProps["size"]>, string> = {
@@ -40,7 +41,8 @@ export const Modal: React.FC<ModalProps> = ({
   position = "center",
   closeOnOverlay = true,
   closeButton = true,
-  className
+  className,
+  drawer = false
 }) => {
   // Disable body scroll when modal is open
   useEffect(() => {
@@ -88,14 +90,14 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex ${overlayPositionClass} bg-black/50 backdrop-blur-sm px-4 py-6 overflow-y-auto`}
+      className={`fixed inset-0 z-50 flex ${drawer ? "items-stretch justify-end p-4" : `${overlayPositionClass} px-4 py-6 overflow-y-auto`} bg-black/50 backdrop-blur-sm`}
       onClick={closeOnOverlay ? onClose : undefined}
       onKeyDown={(e) => closeOnOverlay && e.key === "Escape" && onClose()}
       role="presentation"
       tabIndex={-1}
     >
       <div
-        className={` m-2 relative w-full border border-1 border-gray-200 ${sizeClasses[size]} bg-white rounded-2xl shadow-lg max-h-[90vh] overflow-y-auto ${className}`}
+        className={`relative w-full border border-1 border-gray-200 ${drawer ? "max-w-md lg:max-w-xl 2xl:max-w-2xl" : sizeClasses[size]} bg-white rounded-2xl shadow-lg ${drawer ? "h-full flex flex-col overflow-hidden" : "m-2 max-h-[90vh] overflow-y-auto"} ${className ?? ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}
@@ -118,7 +120,7 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
 
         {/* Body */}
-        <div className="px-4 py-3">{children}</div>
+        <div className={`px-4 py-3 ${drawer ? "flex-1 overflow-y-auto" : ""}`}>{children}</div>
 
         {/* Footer */}
         {footer && <div className="border-t px-4 py-3">{footer}</div>}
